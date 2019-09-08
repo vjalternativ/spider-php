@@ -23,7 +23,7 @@ class VJSiteEntryPoint {
         
         if(file_exists($this->sitebasePath.'/pages/'.$this->page.'/controller.php')) {
            
-            require_once 'include/vjlib/libs/EntryPointController.php';
+            require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/EntryPointController.php';
            
             if(file_exists($this->sitebasePath.'/bootstrap.php')) {
                 require_once $this->sitebasePath.'/bootstrap.php';

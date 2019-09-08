@@ -4,8 +4,8 @@ require_once 'include/language/lang.php';
 require_once 'include/language/'.$vjconfig['defaultlang'].'.string.php';
 
 $seoparams = array ();
-require_once 'include/utils.php';
-require_once 'include/vjlib/libs/Modal.php';
+require_once $vjconfig['fwbasepath'].'/include/utils.php';
+require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/Modal.php';
 class VJFramework {
 	public $module;
 	public $action;
@@ -93,7 +93,7 @@ class VJFramework {
 			
 			require_once $filepath;
 			if(isset($entrypoints[$entrypoint]['type']) && $entrypoints[$entrypoint]['type']=='siteEntryPoint') {
-			    require_once 'include/vjlib/libs/VJSiteEntryPoint.php';
+			    require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/VJSiteEntryPoint.php';
 			    $siteEntryPoint = new VJSiteEntryPoint();
 			    
 			    
@@ -122,7 +122,10 @@ class VJFramework {
 		
 		global $vjlib,$vjconfig,$current_user,$entity,$smarty;
 		
-		$smarty->assign("baseurl",$vjconfig['baseurl']);
+		$vjconfig['basepath'] = $vjconfig['fwbasepath'];
+		$vjconfig['baseurl'] = $vjconfig['fwbaseurl'];
+		
+		$smarty->assign("baseurl",$vjconfig['fwbaseurl']);
 		
 		$vjlib->loadlib('VJController');
 		

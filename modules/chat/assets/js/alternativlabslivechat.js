@@ -4,7 +4,7 @@ function createIframe() {
 	
 	var resizerScript = document.createElement("script");
 	resizerScript.type="text/javascript";
-	resizerScript.src=baseurl+"modules/chat/assets/js/iframeResizer.min.js";
+	resizerScript.src=fwbaseurl+"modules/chat/assets/js/iframeResizer.min.js";
 	document.head.appendChild(resizerScript);
 	resizerScript.onload = function(event){
 		var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
@@ -28,7 +28,7 @@ function createIframe() {
 	iframe.setAttribute("seamless","seamless");
 	iframe.setAttribute("scrolling","no");
 	iframe.setAttribute("allowtransparency","true");
-	iframe.setAttribute("src","index.php?module=chat");
+	iframe.setAttribute("src",fwbaseurl+"index.php?module=chat");
 	
 	document.body.appendChild(iframe);
 	
