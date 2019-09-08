@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+.margin-top-10 {margin-top:10px;}
+.margin-right-10{margin-right:10px;}
+@media (max-width: 797px) {
+    body { 
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+.padding-10 {
+	padding:10px;
+}
+
+.a-none,a:hover {text-decoration:none;}
+
+.navbar {
+	border-radius : 0 !important;
+}
+.logo-label:hover {color:white !important;}
+@media (min-width: 768px)
+.navbar {
+     border-radius: 0 !important; 
+} 
+
+
+.modal-body {
+	max-height:380px;
+	overflow-y:auto;	
+}
+
+.pagination {
+	margin:0 !important;
+}
+
+.bootstrap-datetimepicker-widget {
+  display: block;
+}
+
+
+.form-control {
+	height:auto;
+}
+

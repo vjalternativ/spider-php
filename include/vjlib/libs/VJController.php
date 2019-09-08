@@ -1,0 +1,352 @@
+<?php
+class VJController  {
+		public $view = false;
+		//private $data;
+		public $params;
+		public $entity;
+		public $nonauth = array();
+		public $listview = array('tpl'=>'include/tpls/listview.tpl','pageinfo'=>array());
+		public $editview =  array('tpl'=>'include/tpls/editview.tpl','pageinfo'=>array());
+		public $detailview = array('tpl'=>'include/tpls/detailview.tpl','pageinfo'=>array());
+		public $basicview = array('tpl'=>'include/tpls/detailview.tpl','pageinfo'=>array());
+		
+		public $tpls = array();
+		public $seourl = false;
+		public $seoparams = array();
+		public $ignoreRecords = array();
+		
+		
+	/* 	public function __get($varName){
+		
+			if (!array_key_exists($varName,$this->data)){
+				//this attribute is not defined!
+				die("Class not found".$varName);
+			}
+			else return $this->data[$varName];
+		
+		}
+		
+		public function __set($varName,$value){
+			$this->data[$varName] = $value;
+		} */
+		
+		function defaultPaginate($sql) {
+			global $vjlib,$db,$vjconfig;
+			
+			$paginate = $vjlib->Paginate;
+			$paginate->url = 'index.php?module='.$this->entity.'&pageindex=';
+			$paginate->index =1;
+			$paginate->noresult = 10;
+			$paginate->endto = 10;
+			$paginate->sql = $sql;
+			$paginate->db = $db;
+			
+			$url = $vjconfig['baseurl']."index.php?module=".$this->entity."&action=detailview&record=key_id";
+			$url = processUrl($url);
+			$paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
+		}
+		
+		
+		function setIgnoreRecords($ignoreRecords =array()) {
+		    $this->ignoreRecords = $ignoreRecords;
+		}
+		 
+		function action_index() {
+			global $vjconfig;
+			$this->results();
+			$this->tpls[] = $this->listview['tpl'];
+			$this->view = "list";
+			
+		}
+		
+		function action_editview() {
+			global $vjconfig,$entity;
+			if(isset($_REQUEST['record'])) {
+				//$mod  = $_REQUEST['module'];
+				
+				//$id = $_REQUEST['id'];
+				//$entity->get($mod,$id);
+			}
+			$this->tpls[] = $this->editview['tpl'];
+			$this->view = "edit";
+				
+		}
+		
+		function action_detailview() {
+			global $vjconfig;
+			$this->tpls[] = $this->detailview['tpl'];
+			$this->view = "detail";
+		
+		}
+		
+		function action_basicview() {
+			global $vjconfig;
+			$this->tpls[] = $this->basicview['tpl'];
+			$this->view = "basic";
+		
+		}
+		// url : index.php?module=user&action=save
+		function action_save() {
+		    global $entity,$db,$globalEntityList,$globalModuleList;
+			$data = $_POST;
+			
+			$module = $this->entity;
+			$keyvalue =array();
+			$table = $module;
+			$keyvalue['isnew'] = 1;
+			if(isset($data['id']) && !empty($data['id'])) {
+			    $keyvalue =$entity->get($table,$data['id']);
+			    $keyvalue['isnew'] = 0;
+			}
+			
+			foreach($data as $key=>$val) {
+			    $keyvalue[$key] = $val;
+			}
+			
+			
+			$tableinfo = $globalModuleList[$table];
+			
+			
+			if(isset($globalModuleList[$table]['metadata_info']['editview']['fields'])) {
+			    foreach($globalModuleList[$table]['metadata_info']['editview']['fields'] as $fkey=>$fval) {
+			        
+			        $field = $tableinfo['tableinfo']['fields'][$fkey];
+			        if($field['type'] == "checkbox") {
+			            if(!isset($_REQUEST[$field['name']])) {
+			                $keyvalue[$field['name']] = 0;
+			            }
+			        }
+			    }
+			}
+			
+			
+			foreach($tableinfo['tableinfo']['fields'] as $field) {
+			    
+			    if($field['type']=="file"  && isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error']==0) {
+			        
+			        $mediaKeyValue=array();
+			        
+			        if(!$keyvalue['isnew'] || !empty($keyvalue[$field['name']])) {
+			            $mediaKeyValue = $entity->get("media_files",$keyvalue[$field['name']]);
+			            if(isset($mediaKeyValue['file_path'])) {
+			                
+			                unlink($mediaKeyValue['file_path']);
+			            }
+			        }
+			        $strArray = explode("/",$_FILES[$field['name']]['type']);
+			        $fileId = create_guid();
+			        $dir = "media_files/".date("Y").'/'.date("m").'/'.date("d").'/'.$_FILES[$field['name']]['type'];
+			        if(!is_dir($dir)) {
+			         mkdir($dir, 0755, true);
+			        }
+			        $target = $dir.'/'.$fileId;
+			        $tmp = $_FILES[$field['name']]['tmp_name'];
+			        move_uploaded_file($tmp, $target);
+			        $mediaKeyValue['name'] =$_FILES[$field['name']]['name'];
+			        $mediaKeyValue['file_path'] = $target;
+			        $mediaKeyValue['file_type'] = $_FILES[$field['name']]['type'];
+			        $mediaId  = $entity->save("media_files",$mediaKeyValue);
+			        
+			        $keyvalue[$field['name']] = $mediaId;
+			        
+			    }
+			}
+			$id = $entity->save($module,$keyvalue);
+			
+			
+			
+			$sql = "select * from relationships where secondarytable = '".$tableinfo['id']."' and deleted=0 and rtype='1_M'";
+			$rlist  = $db->fetchRows($sql);
+			
+			
+			foreach($rlist as $relData) {
+			    
+			    if(isset($data[$relData['name']])) {
+			        if(isset($_REQUEST['rel']) && $_REQUEST['rel']==$data[$relData['name']]) {
+			            continue;
+			        }
+			        
+			            $parentId = $data[$relData['name']];
+			            $sql = "delete  from ".$relData['name'] . " where deleted=0 and ".$globalEntityList[$relData["secondarytable"]]['name']."_id='".$id."'";
+			            $db->query($sql);
+			            
+			            $entity->record = $parentId;
+			            $entity->addRelationship($relData['name'],$id);
+			    }
+			}
+			
+			
+		
+			
+			if(isset($_REQUEST['parent_module']) && isset($_REQUEST['parent_record']) && isset($_REQUEST['rel'])) {
+			    $relationship = $_REQUEST['rel'];
+			    $parentModule = $_REQUEST['parent_module'];
+			    $entity->record = $_REQUEST['parent_record'];
+			    $entity->addRelationship($relationship,$id);
+			    redirect($parentModule,"detailview",array("record"=>$entity->record));
+			    exit();
+			}
+			redirect($module);
+		}
+		
+		
+		
+		
+		
+		
+		
+		function results($sql = false,$paginate=true,$url=false) {
+			global $vjlib,$current_url;
+			
+			$vardef = getvardef($this->entity);
+			$listviewdef = $vardef['metadata']['listview'];
+			$this->listview['metadata'] = $listviewdef;
+			$this->listview['searchlayout'] = $vardef['metadata']['searchview'];
+			$this->listview['fieldmetadata'] = $vardef['fields'];
+			
+			$table = $this->entity;
+			$fields = array();
+			
+			$tableList = array(); 
+			foreach($listviewdef as $field=>$def) {
+					
+			        if(isset($def['rmodule'])) {
+			            $rtable = "";
+			            if(isset($tableList[$def['rmodule']])) {
+			                
+    			            $rtable= $def['rmodule'].$tableList[$def['rmodule']];
+    			            $tableList[$def['rmodule']] = $tableList[$def['rmodule']]+1;
+    			        } else {
+    			            $rtable = $def['rmodule'];
+    			            $tableList[$def['rmodule']] = 1;
+    			        }
+					
+					    $fields[] = $rtable."_r.name as ".$field."_name";
+					    
+					    
+					    
+					} else {
+						$fields[] = $table.".".$field;					
+				}
+			
+			}
+			$paginate = $vjlib->Paginate;
+			
+			$paginate->module = $this->entity;
+			$paginate->href = $current_url;
+			$paginate->extrafields = array();
+				
+					
+			$url = "index.php?module=".$this->entity."&page=";
+			if(!$sql) {
+				
+				$sql = "SELECT ".$table.".id, ".implode(',',$fields)." FROM ".$table." ";
+				
+				$tableList = array();
+				
+				foreach($listviewdef as $field=>$def) {
+					if(isset($def['rmodule'])) {
+						$rtable ="";
+					    if(isset($tableList[$def['rmodule']])) {
+					        
+					        $rtable= $def['rmodule'].$tableList[$def['rmodule']];
+					        $tableList[$def['rmodule']] = $tableList[$def['rmodule']]+1;
+					    } else {
+					        $rtable = $def['rmodule'];
+					        $tableList[$def['rmodule']] = 1;
+					    }
+					    
+					    if($def['type']=="nondb") {
+					        $sql .= " LEFT JOIN ".$def['name']."  ON ".$table.".id =".$def['name'].".".$table."_id AND ".$def['name'].".deleted=0 ";
+					        $sql .= " LEFT JOIN ".$def['rmodule']." ".$rtable."_r  ON ".$def['name'].".".$def['rmodule']."_id =".$rtable."_r.id AND ".$rtable."_r.deleted=0 ";
+					    } else {
+					        $sql .= " LEFT JOIN ".$def['rmodule']." ".$rtable."_r  ON ".$table.".".$field."=".$rtable."_r.id AND ".$rtable."_r.deleted=0";
+					        
+					    }
+					}
+				}
+				
+				$sql .= " where ".$table.".deleted=0 ";
+				$searchview = $vardef['metadata']['searchview'];
+			
+				
+				if(isset($_POST['listfilter'])) {
+				    $_SESSION['listfilter'][$_REQUEST['module']] = $_POST;
+				}
+				
+				if(isset($_SESSION['listfilter'][$_REQUEST['module']])) {
+				    
+				    $this->params = $_SESSION['listfilter'][$_REQUEST['module']];
+				foreach($searchview as $key=>$filter) {
+				    
+				    if($filter['type']=='varchar' && isset($_SESSION['listfilter'][$_REQUEST['module']][$key])) {
+				        $trimkey = trim($_SESSION['listfilter'][$_REQUEST['module']][$key]);
+				        if(!empty($trimkey)) {
+				        $sql .= " AND ".$table.".".$key." like '".addslashes($_SESSION['listfilter'][$_REQUEST['module']][$key])."' ";
+				        
+				        }
+				      }
+				}
+				}
+				
+				
+				foreach($this->ignoreRecords as $field=>$records) {
+				    $sql .= " AND ".$field." NOT IN ('".implode("','",$records)."') ";
+				}
+				$sql .= " order by ".$table.".date_entered DESC";	
+			 
+			}
+            $this->defaultPaginate($sql);
+			if(isset($_REQUEST['pageindex'])) {
+			    $paginate->index = $_REQUEST['pageindex'];
+			}
+			$this->listview['pageinfo'] = $paginate->process();
+			$this->listview['pageinfo']['resultperpage'] = $paginate->noresult;
+			
+		}
+		
+		
+		function action_getAjaxSubPanelData() {
+		    global $entity,$vjlib,$smarty;
+		    $ptable = $_REQUEST['ptable'];
+		    $relname = $_REQUEST['relname'];
+		    $record = $_REQUEST['record'];
+		    
+		    $index = $_REQUEST['page']; 
+		    $entity->load_relationships();
+		    
+		    $pageinfo = $entity->get_relationships($relname,$index);
+		    $rows = $pageinfo['data'];
+		    $rows = array_slice($rows, 0,$pageinfo['resultperpage'],true);
+            $params = array('headers' => array('name','date_entered'));
+		    
+		    $headers = array();
+		    $headers['name']['name'] = "name";
+		    $headers['name']['label'] = "Name";
+		    $headers['date_entered']['name'] = "date_entered";
+		    $headers['date_entered']['label'] = "Created";
+		    
+		    $smarty->assign("headers",$headers);
+		    $smarty->assign("rows",$rows);
+		    
+		    $extraPostFields  = array();
+		    $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$relname.'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
+		    $extraPostFields['id']['header']['html'] = '';
+		    $smarty->assign("extraPostFields",$extraPostFields);
+		    $table =  $smarty->fetch("include/vjlib/libs/tpls/table.tpl");
+		    
+		    $pageinfo['url'] = "./index.php?module=".$ptable."&action=getAjaxSubPanelData";
+		    
+		    $pageinfo['container_id'] =  $_REQUEST['container_id'];
+		    
+		    $pageinfo['record'] =  $entity->record;
+		    $pagingHtml = $vjlib->Paginate->getPagingHtml($pageinfo,true);
+		    
+		    $table .= $pagingHtml;
+		    echo $table;
+		    
+		    die;
+		}
+		
+}
+?>
