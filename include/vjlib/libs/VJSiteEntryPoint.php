@@ -99,6 +99,7 @@ class VJSiteEntryPoint {
         $smarty->assign("params",$this->view->params);
         $smarty->assign("bootparams",$this->bootparams);
         echo "<script>var baseurl = '".$vjconfig['baseurl']."';</script>";
+        echo "<script>var fwbaseurl = '".$vjconfig['fwbaseurl']."';</script>";
         echo $smarty->fetch($this->sitebasePath.'/tpls/'.$this->bootparams['sitetpl'].'/header.tpl');
         
         

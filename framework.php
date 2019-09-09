@@ -27,7 +27,8 @@ class SpiderPhpFramework {
         
         $strarray = explode("/",$vjfwpath);
         $fwfolder = end($strarray);
-        
+        $dir = __DIR__;
+        $dir .= "/";
         
         //error_reporting(0);
        // set_include_path(__DIR__);
@@ -37,7 +38,7 @@ class SpiderPhpFramework {
         if($backendMode) {
             unset($vjconfig['framework']['default_mode']);
         } else {
-            require_once 'seomanager.php';
+            require_once $dir.'seomanager.php';
             
         }
         $vjconfig['fwbasepath'] = $vjfwpath."/";
@@ -53,8 +54,8 @@ class SpiderPhpFramework {
         }
         
         date_default_timezone_set($vjconfig['timezone']);
-        require_once 'include/vjlib/VJLib.php';
-        require_once 'include/Smarty/Smarty.class.php';
+        require_once $dir.'include/vjlib/VJLib.php';
+        require_once $dir.'include/Smarty/Smarty.class.php';
         
         $vjlib = new VJLib();
         $vjlib->loadlibs(array("Entity","BootStrap","MysqliLib","Paginate","Logger"));
