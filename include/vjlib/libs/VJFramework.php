@@ -29,7 +29,7 @@ class VJFramework {
 		$smarty->assign("urlbasepath",$vjconfig['urlbasepath']);
 		$smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
 		$db->connect($vjconfig['mysql']['host'],$vjconfig['mysql']['user'],$vjconfig['mysql']['password'],$vjconfig['mysql']['database']);
-		$vjlib->BootStrap->vars['path'] =$vjconfig['fwbasepath']."include/vjlib/assets/";
+		$vjlib->BootStrap->vars['path'] ="include/vjlib/assets/";
 		$this->seourl = $seourl;
 		
 		
