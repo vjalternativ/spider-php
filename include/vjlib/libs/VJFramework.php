@@ -1,11 +1,11 @@
 <?php 
 global $seoparams,$db,$current_user,$current_url,$app_list_strings,$vjconfig,$mod_string,$log,$smarty,$globalRelationshipList,$globalEntityList,$globalModuleList; 
-require_once 'include/language/lang.php';
-require_once 'include/language/'.$vjconfig['defaultlang'].'.string.php';
+require_once $vjconfig['fwbasepath'].'include/language/lang.php';
+require_once $vjconfig['fwbasepath'].'include/language/'.$vjconfig['defaultlang'].'.string.php';
 
 $seoparams = array ();
-require_once $vjconfig['fwbasepath'].'/include/utils.php';
-require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/Modal.php';
+require_once $vjconfig['fwbasepath'].'include/utils.php';
+require_once $vjconfig['fwbasepath'].'include/vjlib/libs/Modal.php';
 class VJFramework {
 	public $module;
 	public $action;
@@ -29,7 +29,7 @@ class VJFramework {
 		$smarty->assign("urlbasepath",$vjconfig['urlbasepath']);
 		$smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
 		$db->connect($vjconfig['mysql']['host'],$vjconfig['mysql']['user'],$vjconfig['mysql']['password'],$vjconfig['mysql']['database']);
-		$vjlib->BootStrap->vars['path'] ="include/vjlib/assets/";
+		$vjlib->BootStrap->vars['path'] =$vjconfig['fwbasepath']."include/vjlib/assets/";
 		$this->seourl = $seourl;
 		
 		
@@ -85,14 +85,15 @@ class VJFramework {
 		if(isset($_REQUEST['entryPoint'])) {
 			$entrypoint = $_REQUEST['entryPoint'];
 			
-			require_once "include/entrypointregistry.php";
+			require_once $vjconfig['fwbasepath']."include/entrypointregistry.php";
+			$vjlib->loadf("custom/include/entrypointregistry.php",false);
 			if(!isset($entrypoints[$entrypoint])) {
 				die("entry point not found in entry point registry");
 			}
 				
-			$filepath = $entrypoints[$entrypoint]['path'];
+			//$filepath = $entrypoints[$entrypoint]['path'];
 			
-			require_once $filepath;
+			//require_once $filepath;
 			if(isset($entrypoints[$entrypoint]['type']) && $entrypoints[$entrypoint]['type']=='siteEntryPoint') {
 			    require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/VJSiteEntryPoint.php';
 			    $siteEntryPoint = new VJSiteEntryPoint();
@@ -130,14 +131,14 @@ class VJFramework {
 		
 		$vjlib->loadlib('VJController');
 		
-		$vjlib->loadf('include/views/View.php');
+		$vjlib->loadf($vjconfig['fwbasepath'].'include/views/View.php');
 		
 		$class = "VJController";
 		
 		$filepath = 'custom/modules/' . $this->module . '/controller.php';
 		$iscustom = $vjlib->loadf ($filepath,false);
 		
-		$filepath = 'modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
+		$filepath = $vjconfig['fwbasepath'].'modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
 		$vjlib->loadf ($filepath,false);
 		
 		$filepath = 'custom/modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
@@ -146,7 +147,7 @@ class VJFramework {
 		
 		$prefix = "";
 		if($iscustom) {
-		$prefix = "custom/";
+		    $prefix = $vjconfig['fwbasepath']."custom/";
 		}
 		
 		$filepath = $prefix.'modules/' . $this->module . '/controller.php';
