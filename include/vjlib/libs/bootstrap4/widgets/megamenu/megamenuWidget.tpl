@@ -1,11 +1,32 @@
+<div class="card  rounded-0 border-top-0" >
+    <div class="card-body padding-10">
+    			
+
+
+
+
+
+
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
+ 
+  
+ 
   <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none">MegaMenu</a>
   <button type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
           <span class="navbar-toggler-icon"></span>
       </button>
   <div id="navbarContent" class="collapse navbar-collapse">
-    <ul class="navbar-nav mx-auto">
+    <ul class="navbar-nav ">
       <!-- Megamenu-->
+      <li class="nav-item">
+      <a href="#" class="nav-link font-weight-bold text-uppercase">
+  
+  <img src="assets/enr/images/logo.jpg" height="40" width="50" />
+  </a>
+ 
+      </li>
       <li class="nav-item dropdown megamenu"><a id="megamneu" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle font-weight-bold text-uppercase">Mega Menu</a>
         <div aria-labelledby="megamneu" class="dropdown-menu border-0 p-0 m-0">
           <div class="container">
@@ -63,3 +84,6 @@
     </ul>
   </div>
 </nav>
+
+    </div>
+</div>
