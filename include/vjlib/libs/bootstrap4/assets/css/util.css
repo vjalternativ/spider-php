@@ -1,0 +1,13 @@
+.padding-10 {
+	padding:10px;
+}
+
+.megamenu {
+  position: static;
+}
+
+.megamenu .dropdown-menu {
+  background: none;
+  border: none;
+  width: 100%;
+}

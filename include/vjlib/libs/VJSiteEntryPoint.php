@@ -23,7 +23,7 @@ class VJSiteEntryPoint {
         
         if(file_exists($this->sitebasePath.'/pages/'.$this->page.'/controller.php')) {
            
-            require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/EntryPointController.php';
+            require_once $vjconfig['fwbasepath'].'include/vjlib/libs/EntryPointController.php';
            
             if(file_exists($this->sitebasePath.'/bootstrap.php')) {
                 require_once $this->sitebasePath.'/bootstrap.php';
@@ -46,7 +46,7 @@ class VJSiteEntryPoint {
             if(!empty($pageController->view)) {
                 
                
-                require_once 'include/views/EntryPointView.php';
+                require_once $vjconfig['fwbasepath'].'include/views/EntryPointView.php';
                 
                 $filepath =$this->sitebasePath.'/pages/' . $this->page .'/views/view.'.$pageController->view.'.php';
                 
@@ -91,7 +91,7 @@ class VJSiteEntryPoint {
     
     function loadHeader(){
         
-        global $smarty,$vjconfig;
+        global $smarty,$vjconfig,$vjlib;
         
         
         $smarty->assign("basepath",$vjconfig['basepath']);
@@ -100,17 +100,34 @@ class VJSiteEntryPoint {
         $smarty->assign("bootparams",$this->bootparams);
         echo "<script>var baseurl = '".$vjconfig['baseurl']."';</script>";
         echo "<script>var fwbaseurl = '".$vjconfig['fwbaseurl']."';</script>";
-        echo $smarty->fetch($this->sitebasePath.'/tpls/'.$this->bootparams['sitetpl'].'/header.tpl');
+        
+        $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'HeaderController.php',false);
+        
+        if($isfile) {
+            $class = $vjconfig['sitetpl'].'HeaderController';
+            
+            $headerController = new $class;
+            $headerController->loadHeader();
+        }
+        echo $smarty->fetch($this->sitebasePath.'/tpls/'.$vjconfig['sitetpl'].'/header.tpl');
         
         
     }
     
     function loadFooter(){
-        global $smarty,$vjconfig;
+        global $smarty,$vjconfig,$vjlib;
         $smarty->assign("basepath",$vjconfig['basepath']);
         $smarty->assign("baseurl",$vjconfig['baseurl']);
         $smarty->assign("params",$this->view->params);
-        echo $smarty->fetch($this->sitebasePath.'/tpls/'.$this->bootparams['sitetpl'].'/footer.tpl');
+        
+        $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/footer.php',false);
+        if($isfile) {
+            $class = $this->bootparams['sitetpl'].'footerController';
+            
+            $headerController = new $class;
+            $headerController->loadFooter();
+        }
+        echo $smarty->fetch($this->sitebasePath.'/tpls/'.$vjconfig['sitetpl'].'/footer.tpl');
     }
    
   
