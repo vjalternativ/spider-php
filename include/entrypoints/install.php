@@ -11,11 +11,6 @@ class Installer {
 		$keyvalue['user_hash'] = md5("workst@48");
 		$keyvalue['user_type'] = 'developer';
 		$entity->save('user',$keyvalue);
-		$keyvalue['name'] = "admin";
-		$keyvalue['user_name'] = "admin";
-		$keyvalue['user_hash'] = md5("admin");
-		$keyvalue['user_type'] = 'admin';
-		$entity->save('user',$keyvalue);
 		
 	}
 	
