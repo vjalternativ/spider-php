@@ -196,7 +196,7 @@ class Installer {
 		$entity->createRelationship('server_context','server_preference_store','1_M',"Server Context","Prefrences");
 		$keyvalue=array();
 		$keyvalue['name'] = "system";
-		$context_id = $entity->save("server_context",$keyvalue);
+		$entity->save("server_context",$keyvalue);
 		
 		
 		
