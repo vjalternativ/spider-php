@@ -1,7 +1,7 @@
 <?php
 require_once 'modules/user/authenticate/Authenticate.php';
 
-class adminController extends VJController
+class adminareaController extends VJController
 {
 
     public $repairTables = array();

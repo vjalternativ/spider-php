@@ -91,7 +91,7 @@ class View {
 		if(!empty($current_user->id)) {
 			$logout = getelement('a','Logout',array('class'=>array('value'=>'btn btn-info pull-right'),'href'=>array('value' => $href)));
 			if($current_user->user_type == 'developer') {
-			    $href = processUrl("index.php?module=admin&action=home");
+			    $href = processUrl("index.php?module=adminarea&action=home");
 
 			    $adminarea = getelement('a','Administrator',array('class'=>array('value'=>'btn btn-success margin-right-10 pull-right'),'href'=>array('value' => $href)));
 			}
