@@ -66,6 +66,7 @@ class Installer {
 		$metafields['listview']['label'] =  $fields['label'];
 		$metafields['detailview']['label'] =  array("fields" => array(array('field'=>$fields['label'],'gridsize'=>6),array('field'=>$fields['tabletype'],'gridsize'=>6)),'type'=>'row');
 		$metafields['editview']['label'] =  array("fields" => array(array('field'=>$fields['label'],'gridsize'=>6)),'type'=>'row');
+		$metafields['editview']['tabletype'] =  array("fields" => array(array('field'=>$fields['tabletype'],'gridsize'=>6)),'type'=>'row');
 		$entity->createEntity('tableinfo',array('type'=>'basic',"label"=>"Modules",'fields'=>$fields,'metadata'=>$metafields,'skiptableinfoentry'=>true));
 		
 	}
