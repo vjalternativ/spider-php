@@ -1,7 +1,7 @@
 <?php
-class adminViewRoles extends View {
+class adminareaViewRoles extends View {
 	function display() {
-		$path = 'modules/admin/tpls/roles.tpl';
+		$path = 'modules/adminarea/tpls/roles.tpl';
 		parent::display($path);
 	}
 }

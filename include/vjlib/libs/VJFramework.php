@@ -133,7 +133,6 @@ class VJFramework {
 		
 		global $vjlib,$vjconfig,$current_user,$entity,$smarty;
 		
-		$vjconfig['basepath'] = $vjconfig['fwbasepath'];
 		$vjconfig['baseurl'] = $vjconfig['fwbaseurl'];
 		
 		$smarty->assign("baseurl",$vjconfig['fwbaseurl']);

@@ -25,8 +25,8 @@ class adminareaController extends VJController
 
     function action_repair()
     {
-        global $db,$entity;
-        $data = json_decode(file_get_contents("schemajson/schema.json"),1);
+        global $db,$entity,$vjconfig;
+        $data = json_decode(file_get_contents($vjconfig['basepath']."schemajson/schema.json"),1);
         
         $rows = $data['tableinfo'];
         
@@ -155,7 +155,7 @@ class adminareaController extends VJController
     }
     
     function action_updateschema() {
-            global $db;
+            global $db,$vjconfig;
             
             
 
@@ -169,8 +169,7 @@ class adminareaController extends VJController
                 $data[$table] = $db->fetchRows($sql,array("id"));
                 
             }
-               
-            file_put_contents("schemajson/schema.json",json_encode($data));
+            file_put_contents($vjconfig['basepath']."schemajson/schema.json",json_encode($data));
             
             
     }

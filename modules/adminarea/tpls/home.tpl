@@ -29,9 +29,9 @@
 		</tr>
 		
 		<tr>
-			<td><a href="index.php?module=admin&action=updateschema">Update Schema</a></td>
+			<td><a href="index.php?module=adminarea&action=updateschema">Update Schema</a></td>
 			<td>To update the db structure</td>
-			<td><a href="index.php?module=admin&action=repair">Repair</a></td>
+			<td><a href="index.php?module=adminarea&action=repair">Repair</a></td>
 			<td>Repair the db structure and modules</td>
 		</tr>
 		

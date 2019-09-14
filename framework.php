@@ -35,6 +35,8 @@ class SpiderPhpFramework {
         require_once $this->configpath.'/config.php';
         require_once $this->configpath.'/extraconfig.php';
         require_once $this->configpath.'/seoconfig.php';
+        $vjconfig['basepath'] = $this->configpath.'/';
+        
         if($backendMode) {
             unset($vjconfig['framework']['default_mode']);
         } else {

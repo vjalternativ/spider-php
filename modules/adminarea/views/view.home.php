@@ -1,7 +1,7 @@
 <?php
-class adminViewHome extends View {
+class adminareaViewHome extends View {
 	function display() {
-		$this->tpl = 'modules/admin/tpls/home.tpl';
+		$this->tpl = 'modules/adminarea/tpls/home.tpl';
 		parent::display();
 	}
 }
