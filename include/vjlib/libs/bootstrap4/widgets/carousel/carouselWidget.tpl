@@ -4,20 +4,16 @@
   <ul class="carousel-indicators">
     <li data-target="#demo" data-slide-to="0" class="active"></li>
     <li data-target="#demo" data-slide-to="1"></li>
-    <li data-target="#demo" data-slide-to="2"></li>
   </ul>
   
   <!-- The slideshow -->
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="assets/enr/images/la.jpg" alt="Los Angeles" width="1100" height="500">
+    {foreach from=$params.slides item=slide}
+    <div class="carousel-item {if $slide.active}active{/if}">
+      <img src="{$slide.url}" alt="">
     </div>
-    <div class="carousel-item">
-      <img src="assets/enr/images/chicago.jpg" alt="Chicago" width="1100" height="500">
-    </div>
-    <div class="carousel-item">
-      <img src="assets/enr/images/ny.jpg" alt="New York" width="1100" height="500">
-    </div>
+    {/foreach}
+    
   </div>
   
   <!-- Left and right controls -->

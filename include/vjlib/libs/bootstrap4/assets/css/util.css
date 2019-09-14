@@ -1,23 +1,13 @@
 .padding-10 {
 	padding:10px;
 }
-
-.megamenu {
-  position: static;
+.border {
+	
+	border:1px solid rgba(0,0,0,.125);
 }
 
-.megamenu .dropdown-menu {
-  background: none;
-  border: none;
-  width: 100%;
+.padding-0 {
+	padding:0px;
 }
 
-/* Make the image fully responsive */
 
-.carousel {
-	max-height:300px;
-}
-  .carousel-inner img {
-      width: 100%;
-      height: 100%;
-  }

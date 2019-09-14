@@ -1,0 +1,16 @@
+.megamenu {
+  position: static;
+}
+
+.megamenu .dropdown-menu {
+  background: none;
+  border: none;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+}

@@ -9,25 +9,26 @@
 
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
  
   
  
-  <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none">MegaMenu</a>
+  <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none"><img src="{$params.logo.src}"  width="70" height="40" /></a>
+ 
+ 
   <button type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
           <span class="navbar-toggler-icon"></span>
       </button>
   <div id="navbarContent" class="collapse navbar-collapse">
     <ul class="navbar-nav ">
       <!-- Megamenu-->
-      <li class="nav-item">
-      <a href="#" class="nav-link font-weight-bold text-uppercase">
   
-  <img src="{$params.logo.src}"  width="70" height="40" />
-  </a>
- 
-      </li>
-      
+  <li class="nav-item">
+  
+  	<a href="#" class="nav-link border"><img src="{$params.logo.src}"  width="50" height="20" /></a>
+  
+  </li>
+           
      {foreach from=$params.headermenu key=key item=item}
      
      {if $item.type && $item.type eq "mega"}
@@ -38,7 +39,7 @@
      		</a>
      		
      		   <div aria-labelledby="megamneu" class="dropdown-menu border-0 p-0 m-0">
-          <div class="container">
+          <div class="container border padding-0">
             <div class="row bg-white rounded-0 m-0 shadow-sm">
               <div class="col-lg-7 col-xl-8">
                 <div class="p-4">
