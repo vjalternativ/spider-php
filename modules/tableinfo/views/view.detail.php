@@ -204,20 +204,20 @@ return $db->getrows($sql,'id');
 		$smarty->assign("table",$listviewLayoutTable);
 		$smarty->assign("view",'searchview');
 		$smarty->assign("tbid",$params['tbid']);
-		$listviewfilterhtml = $smarty->fetch($vjconfig['basepath'].'modules/tableinfo/tpls/listview.tpl');
+		$listviewfilterhtml = $smarty->fetch('modules/tableinfo/tpls/listview.tpl');
 		$listviewfiltertabcontent = $bs->getelement('div',$listviewfilterhtml,array("id"=>'listviewfilterlayout-tab',"class"=>"tab-pane fade"));
 		
    
 		$smarty->assign('viewtype','editview');
 		$smarty->assign("metadata",$tableinfo['metadata']['editview']);
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
-		$editviewhtml = $smarty->fetch($vjconfig['basepath'].'modules/tableinfo/tpls/editview.tpl');
+		$editviewhtml = $smarty->fetch('modules/tableinfo/tpls/editview.tpl');
 		$editviewtabcontent = $bs->getelement('div',$editviewhtml,array("id"=>'editviewlayout-tab',"class"=>"tab-pane fade"));
 		
 		$smarty->assign('viewtype','detailview');
 		$smarty->assign("metadata",$tableinfo['metadata']['detailview']);
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
-		$detailviewhtml = $smarty->fetch($vjconfig['basepath'].'modules/tableinfo/tpls/editview.tpl');
+		$detailviewhtml = $smarty->fetch('modules/tableinfo/tpls/editview.tpl');
 		$detailviewtabcontent = $bs->getelement('div',$detailviewhtml,array("id"=>'detailviewlayout-tab',"class"=>"tab-pane fade"));
 		
 			
@@ -270,9 +270,8 @@ return $db->getrows($sql,'id');
 		$url = "index.php?module=tableinfo&action=dropdowneditor";
 		$url = processurl($url);
 		$smarty->assign("dropdownurl",$url);
-		$basepath = $vjconfig['basepath'];
 		
-		$path = $basepath."modules/tableinfo/tpls/layoutmanager.tpl";
+		$path = "modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
 		$script = getelement('script','',array("src"=>'modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;

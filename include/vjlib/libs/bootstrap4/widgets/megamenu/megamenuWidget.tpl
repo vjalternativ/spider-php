@@ -23,64 +23,81 @@
       <li class="nav-item">
       <a href="#" class="nav-link font-weight-bold text-uppercase">
   
-  <img src="assets/enr/images/logo.jpg" height="40" width="50" />
+  <img src="{$params.logo.src}"  width="70" height="40" />
   </a>
  
       </li>
-      <li class="nav-item dropdown megamenu"><a id="megamneu" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle font-weight-bold text-uppercase">Mega Menu</a>
-        <div aria-labelledby="megamneu" class="dropdown-menu border-0 p-0 m-0">
+      
+     {foreach from=$params.headermenu key=key item=item}
+     
+     {if $item.type && $item.type eq "mega"}
+     		
+     	<li class="nav-item dropdown megamenu">
+     		<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle font-weight-bold text-uppercase">
+     			{$item.name}
+     		</a>
+     		
+     		   <div aria-labelledby="megamneu" class="dropdown-menu border-0 p-0 m-0">
           <div class="container">
             <div class="row bg-white rounded-0 m-0 shadow-sm">
               <div class="col-lg-7 col-xl-8">
                 <div class="p-4">
                   <div class="row">
+                    
+                    
+                    {if $item.menu}
+                    
+                    	{foreach from=$item.menu key=catkey item=catitem}
+                    	
                     <div class="col-lg-6 mb-4">
-                      <h6 class="font-weight-bold text-uppercase">MegaMenu heading</h6>
+                      <h6 class="font-weight-bold text-uppercase">{$catitem.name}</h6>
+                      
+                      {if $catitem.menu}
+                      
+                      
                       <ul class="list-unstyled">
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0">Unique Features</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Image Responsive</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Auto Carousel</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Newsletter Form</a></li>
+                      
+                      	{foreach from=$catitem.menu key=subcatkey item=subcatitem}
+                      	<li class="nav-item"><a href="" class="nav-link text-small pb-0">{$subcatitem.name}</a></li>
+                        
+                      	{/foreach}
                       </ul>
+                      
+                      {/if}
                     </div>
-                    <div class="col-lg-6 mb-4">
-                      <h6 class="font-weight-bold text-uppercase">MegaMenu heading</h6>
-                      <ul class="list-unstyled">
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Unique Features</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Image Responsive</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Auto Carousel</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Newsletter Form</a></li>
-                      </ul>
-                    </div>
-                    <div class="col-lg-6 mb-4">
-                      <h6 class="font-weight-bold text-uppercase">MegaMenu heading</h6>
-                      <ul class="list-unstyled">
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Unique Features</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Image Responsive</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Auto Carousel</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Newsletter Form</a></li>
-                      </ul>
-                    </div>
-                    <div class="col-lg-6 mb-4">
-                      <h6 class="font-weight-bold text-uppercase">MegaMenu heading</h6>
-                      <ul class="list-unstyled">
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Unique Features</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Image Responsive</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Auto Carousel</a></li>
-                        <li class="nav-item"><a href="" class="nav-link text-small pb-0 ">Newsletter Form</a></li>
-                      </ul>
-                    </div>
+                    	
+                    	{/foreach}
+                    
+                    {/if}
+                    
+                
+             
+       
                   </div>
                 </div>
               </div>
-              <div class="col-lg-5 col-xl-4 px-0 d-none d-lg-block" style="background: center center url(https://res.cloudinary.com/mhmd/image/upload/v1556990826/mega_bmtcdb.png)no-repeat; background-size: cover;"></div>
+{* 
+             <div class="col-lg-5 col-xl-4 px-0 d-none d-lg-block" style="background: center center url(https://res.cloudinary.com/mhmd/image/upload/v1556990826/mega_bmtcdb.png)no-repeat; background-size: cover;"></div> 
+*}
             </div>
           </div>
         </div>
-      </li>
-      <li class="nav-item"><a href="" class="nav-link font-weight-bold text-uppercase">About</a></li>
-      <li class="nav-item"><a href="" class="nav-link font-weight-bold text-uppercase">Services</a></li>
-      <li class="nav-item"><a href="" class="nav-link font-weight-bold text-uppercase">Contact</a></li>
+     		
+     		
+         </li>
+         
+     {else}
+         
+     	<li class="nav-item">
+     		<a  class="nav-link font-weight-bold text-uppercase">
+     		  {$item.name}
+     		</a>
+         </li>
+         
+     {/if}
+     
+     {/foreach}
+      
     </ul>
   </div>
 </nav>
