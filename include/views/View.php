@@ -37,7 +37,7 @@ class View {
 		
 		$this->preDisplay();
 		
-		echo $smarty->fetch($vjconfig['basepath'].$this->tpl);
+		echo $smarty->fetch($this->tpl);
 	}
 	
 	function afterDisplay() {
@@ -104,7 +104,7 @@ class View {
 			$smarty->assign("logout",$logout);
 			$smarty->assign("adminarea",$adminarea);
 			$smarty->assign("vjconfig",$vjconfig);
-			$path = $vjconfig['basepath'];
+			$path = $vjconfig['fwbasepath'];
 				
 			$smarty->assign("baseurl",$vjconfig['baseurl']);
 			echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
@@ -114,7 +114,7 @@ class View {
 			$smarty->assign("menudata",$menudata);
 			$smarty->assign("current_user",$current_user);
 			
-			echo $smarty->fetch($path.'include/vjlib/libs/tpls/header.tpl');
+			echo $smarty->fetch('include/vjlib/libs/tpls/header.tpl');
 		
 		
 		
@@ -123,7 +123,7 @@ class View {
 	}
 	function loadFooter() {
 		global $vjconfig,$current_user;
-		$path = $vjconfig['basepath'];
+		$path = $vjconfig['fwbasepath'];
 		$smarty = new Smarty();
 		$smarty->assign("logout",$this->isLoggedIn);
 		if($this->isLoggedIn && isset($current_user->privileges['agent.live.chat'])) {
@@ -132,7 +132,7 @@ class View {
 		$smarty->assign("showchatContainer",$this->showChatContainer);
 		
 		$smarty->assign("relatemodal",$path."include/vjlib/libs/tpls/relatemodal.tpl");
-		echo $smarty->fetch($path.'include/vjlib/libs/tpls/footer.tpl');
+		echo $smarty->fetch('include/vjlib/libs/tpls/footer.tpl');
 		
 	}
 	

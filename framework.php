@@ -56,8 +56,8 @@ class SpiderPhpFramework {
         }
         
         date_default_timezone_set($vjconfig['timezone']);
-        require_once $dir.'include/vjlib/VJLib.php';
-        require_once $dir.'include/Smarty/Smarty.class.php';
+        require_once $vjconfig['fwbasepath'].'include/vjlib/VJLib.php';
+        require_once $vjconfig['fwbasepath'].'include/Smarty/Smarty.class.php';
         
         $vjlib = new VJLib();
         $vjlib->loadlibs(array("Entity","BootStrap","MysqliLib","Paginate","Logger"));

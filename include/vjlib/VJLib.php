@@ -65,6 +65,8 @@ class VJLib {
 			}
 		} else {
 			if($die) {
+			    echo "<pre>";
+			    debug_print_backtrace();
 			die("File not found : ".$filepath);
 			}
 			return false;

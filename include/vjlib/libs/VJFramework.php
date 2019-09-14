@@ -207,17 +207,16 @@ class VJFramework {
 					
 			if(!empty($controller->view)) {
 				$entity->record = $this->record;
-				$vjlib->loadf($vjconfig['basepath'].'include/views/view.basic.php');
+				$vjlib->loadf($vjconfig['fwbasepath'].'include/views/view.basic.php');
 				
 				$vjlib->loadf('include/views/view.'.$controller->view.'.php',false);
 				$filepath =$prefix.'modules/' . $this->module .'/views/view.'.$controller->view.'.php';
 				
-				//die($vjconfig['basepath'].$filepath);
 				
-				$customview = $vjlib->loadf($vjconfig['basepath'].$filepath,false);
+				$isview = $vjlib->loadf($vjconfig['fwbasepath'].$filepath,false);
 				$class = $this->module.'View'.ucfirst($controller->view);
 				
-				if(!$customview) {
+				if(!$isview) {
 				$class = 'View'.ucfirst($controller->view);
 				} 
 				
