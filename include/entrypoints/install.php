@@ -174,6 +174,12 @@ class Installer {
 	//	$entity->createRelationship('roles','roles_item','1_M',"Roles","Role Items");
 		$entity->createRelationship('roles','user','1_M',"Roles","Users");
 		
+		$entity->createEntity('privilege');
+		
+		$entity->createRelationship('roles','privilege','1_M',"Role","Privileges");
+		
+		
+		
 	}
 	
 	function install() {
