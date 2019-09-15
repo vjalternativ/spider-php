@@ -387,8 +387,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		$logicHook[$table] = array("before_save"=>array(),"after_save"=>array());
 		$globalLogicHook = array("before_save"=>array(),"after_save"=>array());
 		
-		$vjlib->loadf("include/logic_hooks.php",true,false);
-		$vjlib->loadf("modules/".$table."/logic_hooks.php",false,false);
+		$vjlib->loadf($vjconfig['fwbasepath']."include/logic_hooks.php",true,false);
+		$vjlib->loadf($vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php",false,false);
 		$vjlib->loadf($vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php",false,true);
 		if(isset($keyvalue['hook_skip']) && $keyvalue['hook_skip']) {
 		    $logicHook[$table] = array("before_save"=>array(),"after_save"=>array());
@@ -441,6 +441,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		
 		
 		foreach($logicHook[$table]['before_save'] as $hook) {
+		    echo "loading file ".$vjconfig['basepath'].$hook[1]."<br />";
+		    
 		    $vjlib->loadf($vjconfig['basepath'].$hook[1]);
 		    $hookobj = new $hook[2];
 		    
@@ -464,7 +466,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		
 		
 		foreach($globalLogicHook['after_save'] as $hook) {
-		    $vjlib->loadf($hook[1]);
+		    $vjlib->loadf($vjconfig['fwbasepath'].$hook[1]);
 		    $hookobj = new $hook[2];
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);

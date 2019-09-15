@@ -185,7 +185,9 @@ class MysqliLib {
 	        }
 	        if($dim) {
 	            foreach($dim as $index){
-	                $temp[$row[$index]] = false;
+	                if(!isset($temp[$row[$index]])) {
+	                   $temp[$row[$index]] = false;
+	                }
 	                $temp = &$temp[$row[$index]];
 	            }
 	            if($val) {
