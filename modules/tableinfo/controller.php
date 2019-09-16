@@ -693,11 +693,11 @@ class tableinfoController extends VJController {
     	    $sql = "select * from ".$mod." where deleted=0";
     	    $rows = $db->fetchRows($sql,array('id'));
     	    foreach($rows as $row) {
-    	        if(!isset($row['alias'])) {
+    	        
+    	        if(!array_key_exists("alias", $row)) {
     	            break;
     	        }
     	        
-    	        echo "saving row for ".print_r($row,1)."<br />";
     	        $entity->save($mod,$row);
     	    }
     	    
