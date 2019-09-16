@@ -2,13 +2,37 @@
 class AliasLogicHook {
     
     
+    public static function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        
+        // trim
+        $text = trim($text, '-');
+        
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+        
+        // lowercase
+        $text = strtolower($text);
+        
+        if (empty($text)) {
+            return 'n-a';
+        }
+        
+        return $text;
+    }
     
     function beforeSave(&$keyvalue) {
-        $alias=strtolower($keyvalue['name']);
-        $alias=str_replace(' ', '-', $alias);
-        if(!isset($keyvalue['alias']) || empty($keyvalue['alias'])) {
-            $keyvalue['alias']=$alias;
-        }
+        $alias=self::slugify($keyvalue['name']);
+        $keyvalue['alias']=$alias;
+        
         
     }
     

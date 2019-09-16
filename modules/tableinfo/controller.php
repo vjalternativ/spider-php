@@ -681,4 +681,28 @@ class tableinfoController extends VJController {
 	    //header("location:index.php?module=".$module."&process=1");
 	}
 	
+	
+	function action_updateAlias(){
+	    
+    	    
+    	    
+    	    global $db,$entity;
+    	    $mod = $_REQUEST['mod'];
+    	    
+    	    
+    	    $sql = "select * from ".$mod." where deleted=0";
+    	    $rows = $db->fetchRows($sql,array('id'));
+    	    foreach($rows as $row) {
+    	        if(!isset($row['alias'])) {
+    	            break;
+    	        }
+    	        
+    	        echo "saving row for ".print_r($row,1)."<br />";
+    	        $entity->save($mod,$row);
+    	    }
+    	    
+    	    
+	    
+	    
+	}
 }

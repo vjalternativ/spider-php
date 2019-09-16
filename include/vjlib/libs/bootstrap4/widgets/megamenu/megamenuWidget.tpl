@@ -41,7 +41,7 @@
      		   <div aria-labelledby="megamneu" class="dropdown-menu border-0 p-0 m-0">
           <div class="container border padding-0">
             <div class="row bg-white rounded-0 m-0 shadow-sm">
-              <div class="col-lg-7 col-xl-8">
+              <div class="col-lg-12 col-xl-12">
                 <div class="p-4">
                   <div class="row">
                     
@@ -50,8 +50,10 @@
                     
                     	{foreach from=$item.menu key=catkey item=catitem}
                     	
-                    <div class="col-lg-6 mb-4">
-                      <h6 class="font-weight-bold text-uppercase">{$catitem.name}</h6>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xm-12 margin-top-10">
+                      <a href="{$baseurl}{$catitem.alias}" class="font-weight-bold text-uppercase megamenu-category">
+                      	{$catitem.name}
+                      </a>
                       
                       {if $catitem.menu}
                       
@@ -59,7 +61,7 @@
                       <ul class="list-unstyled">
                       
                       	{foreach from=$catitem.menu key=subcatkey item=subcatitem}
-                      	<li class="nav-item"><a href="" class="nav-link text-small pb-0">{$subcatitem.name}</a></li>
+                      	<li class="nav-item"><a href="" class="nav-link text-small pb-0 link">{$subcatitem.name}</a></li>
                         
                       	{/foreach}
                       </ul>

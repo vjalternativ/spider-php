@@ -389,12 +389,11 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		
 		$vjlib->loadf($vjconfig['fwbasepath']."include/logic_hooks.php",true,false);
 		$vjlib->loadf($vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php",false,false);
-		$vjlib->loadf($vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php",false,true);
+		$vjlib->loadf($vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php",false,false);
 		if(isset($keyvalue['hook_skip']) && $keyvalue['hook_skip']) {
 		    $logicHook[$table] = array("before_save"=>array(),"after_save"=>array());
 		    $globalLogicHook = array("before_save"=>array(),"after_save"=>array());
 		}
-		
 		if((!isset($keyvalue['id']) || empty($keyvalue['id'])) && !$where) {
 			$isnew = true;
 			$id = create_guid();
@@ -441,7 +440,6 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		
 		
 		foreach($logicHook[$table]['before_save'] as $hook) {
-		    echo "loading file ".$vjconfig['basepath'].$hook[1]."<br />";
 		    
 		    $vjlib->loadf($vjconfig['basepath'].$hook[1]);
 		    $hookobj = new $hook[2];
