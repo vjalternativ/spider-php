@@ -42,6 +42,7 @@ class VJSiteEntryPoint {
                 $this->method="action_index";
             } 
             $pageController->{$this->method}();
+            $this->bootparams = $pageController->bootparams;
             
             if(!empty($pageController->view)) {
                 
