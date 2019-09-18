@@ -26,7 +26,6 @@ class SpiderPhpFramework {
         $vjfwpath = __DIR__;
         
         $strarray = explode("/",$vjfwpath);
-        $fwfolder = end($strarray);
         $dir = __DIR__;
         $dir .= "/";
         
@@ -47,13 +46,9 @@ class SpiderPhpFramework {
         $strarray = explode("/",$vjconfig['baseurl']);
         
         array_pop($strarray);
+       
+        $vjconfig['fwbaseurl'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].str_replace($_SERVER['DOCUMENT_ROOT'],"",$dir);
         
-        if($fwfolder==end($strarray)) {
-            $vjconfig['fwbaseurl'] = $vjconfig['baseurl'];
-        } else {
-            $vjconfig['fwbaseurl'] = $vjconfig['baseurl'].$fwfolder."/";
-            
-        }
         
         date_default_timezone_set($vjconfig['timezone']);
         require_once $vjconfig['fwbasepath'].'include/vjlib/VJLib.php';
