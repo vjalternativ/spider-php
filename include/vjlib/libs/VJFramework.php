@@ -158,6 +158,12 @@ class VJFramework {
 		    $prefix = $vjconfig['fwbasepath']."custom/";
 		}
 		
+		$filepath = $vjconfig['basepath'].'custom/modules/' . $this->module . '/controller.php';
+		$iscustom = $vjlib->loadf ($filepath,false);
+		if($iscustom) {
+		    $prefix = $vjconfig['basepath']."custom/";
+		}
+		
 		$filepath = $prefix.'modules/' . $this->module . '/controller.php';
 		$iscustom = $vjlib->loadf ($filepath,false);
 		if($iscustom) {
