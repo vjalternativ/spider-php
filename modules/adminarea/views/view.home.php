@@ -1,7 +1,8 @@
 <?php
 class adminareaViewHome extends View {
 	function display() {
-		$this->tpl = $this->vjconfig['fwbasepath'].'modules/adminarea/tpls/home.tpl';
+	    $vjconfig;
+	    $this->tpl = $vjconfig['fwbasepath'].'modules/adminarea/tpls/home.tpl';
 		parent::display();
 	}
 }
