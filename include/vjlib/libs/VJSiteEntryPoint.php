@@ -58,7 +58,7 @@ class VJSiteEntryPoint {
                 $view = new $class;
                 $view->sitetpl = $vjconfig['sitetpl'];
                 $view->bootparams = $this->bootparams;
-                
+                $view->pagetplpath = $this->sitebasePath.'/pages/' . $this->page .'/tpls/'.$vjconfig['sitetpl'].'/';
                 if(!empty($pageController->params)) {
                     $view->params = $pageController->params;
                 }
