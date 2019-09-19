@@ -19,6 +19,7 @@ class SpiderPhpFramework {
     
     function setConfigPath($path) {
         $this->configpath = $path;
+        set_include_path($path);
     }
     
     function execute($backendMode = false) {
