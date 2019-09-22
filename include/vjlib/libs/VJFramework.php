@@ -244,6 +244,8 @@ class VJFramework {
 					    $view->data = $controller->params['data'];
 					}
 				}
+				
+				$view->loadHeader();
 				$view->preDisplay();
 				$view->display();
 				$view->afterDisplay();
