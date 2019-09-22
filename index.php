@@ -1,6 +1,6 @@
 <?php
 require_once 'framework.php';
 $fw = new SpiderPhpFramework();
-$fw->setconfigPath('../examnreview/');
+$fw->setconfigPath(__DIR__.'/../');
 $fw->execute(true);
 ?>
