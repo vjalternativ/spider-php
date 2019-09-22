@@ -61,7 +61,7 @@
                       <ul class="list-unstyled">
                       
                       	{foreach from=$catitem.menu key=subcatkey item=subcatitem}
-                      	<li class="nav-item"><a href="" class="nav-link text-small pb-0 link">{$subcatitem.name}</a></li>
+                      	<li class="nav-item"><a href="{$baseurl}{$subcatitem.alias}" class="nav-link text-small pb-0 link">{$subcatitem.name}</a></li>
                         
                       	{/foreach}
                       </ul>
