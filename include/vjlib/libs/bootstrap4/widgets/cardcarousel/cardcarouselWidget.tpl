@@ -1,6 +1,6 @@
   
 
-<div id="cardcarousel" class="carousel slide" data-ride="carousel">
+<div id="cardcarousel" class="carousel slide cardcarousel" data-ride="carousel">
 
   <!-- Indicators -->
   <ul class="carousel-indicators">
@@ -10,12 +10,12 @@
   
   <!-- The slideshow -->
   <div class="carousel-inner">
-    {foreach from=$params.cardslides item=slidelist}
+    {foreach from=$params.cardslides item=slide}
     <div class="carousel-item {if $slide.active}active{/if}">
     	
     			<div class = "row">
     	
-    				{foreach from=$slidelist item=slideitem} 
+    				{foreach from=$slide.list item=slideitem} 
     					<div class="col-sm">
     					<div classs="d-block w-100">
     						<div class="card">
@@ -49,9 +49,7 @@
 
 {literal}
 <script>
-$('#cardcarousel').carousel({
-    interval: 5000
-});
+$('#cardcarousel').carousel();
 </script>
 
 {/literal}

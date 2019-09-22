@@ -35,7 +35,6 @@ class View {
 			$smarty->assign($key,$val);
 		}
 		
-		$this->preDisplay();
 		
 		echo $smarty->fetch($this->tpl);
 	}

@@ -173,7 +173,7 @@ return $db->getrows($sql,'id');
 		$smarty->assign("view",'listview');
 		$smarty->assign("record",$this->record);
 				
-		$listviewhtml = $smarty->fetch($vjconfig['basepath'].'modules/tableinfo/tpls/listview.tpl');
+		$listviewhtml = $smarty->fetch('modules/tableinfo/tpls/listview.tpl');
 		$listviewtabcontent = $bs->getelement('div',$listviewhtml,array("id"=>'listviewlayout-tab',"class"=>"tab-pane fade"));
 		
 		

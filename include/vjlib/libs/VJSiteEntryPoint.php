@@ -8,12 +8,17 @@ class VJSiteEntryPoint {
     public $view;
     public $bootparams = array();
     function __construct() {
-       global $vjconfig; 
+       global $vjconfig,$seoParams,$db;
+       
        $this->sitebasePath = 'include/entrypoints/'.$_REQUEST['entryPoint'];
        
        
         if(isset($_REQUEST['page'])) {
             $this->page = $_REQUEST['page'];
+            
+        }   
+        if(isset($seoParams[0]) && file_exists($this->sitebasePath.'/pages/'.$seoParams[0].'/controller.php')) {
+                $this->page = $seoParams[0];
         }
         
         
@@ -22,6 +27,42 @@ class VJSiteEntryPoint {
         }
         
         if(file_exists($this->sitebasePath.'/pages/'.$this->page.'/controller.php')) {
+         
+            if($this->page=="page") {
+                if(isset($seoParams[0]) && $seoParams[0]) {
+                    $sql ="select * from page where alias='".$seoParams[0]."' and deleted=0";
+                    $row = $db->getrow($sql);
+                    if($row) {
+                        
+                        $seoParams['pagedata'] = $row;
+                        $this->page= "page";
+                    }
+                    
+                    
+                    
+                }
+                
+                
+            }  else {
+                $sql="select * from page where alias='".$this->page."' and deleted=0 ";
+                $GLOBALS['seoParams']['pagedata'] = $db->getrow($sql);
+                
+            }
+            
+             
+            
+            
+                
+            
+        } else {
+            
+                die("404 page not found");
+                
+            
+                
+            
+        }
+        
            
             require_once $vjconfig['fwbasepath'].'include/vjlib/libs/EntryPointController.php';
            
@@ -30,6 +71,7 @@ class VJSiteEntryPoint {
                 $mainController = new bootstrapController();
                 $this->bootparams = $mainController->params;
             }
+            global $db;
             
             
             require_once $this->sitebasePath.'/'.'pages/'.$this->page.'/controller.php';
@@ -73,9 +115,7 @@ class VJSiteEntryPoint {
             
             
             
-        } else {
-            die("404 page not found");
-        }
+        
         
         
         
@@ -121,10 +161,9 @@ class VJSiteEntryPoint {
         $smarty->assign("baseurl",$vjconfig['baseurl']);
         $smarty->assign("params",$this->view->params);
         
-        $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/footer.php',false);
+        $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'FooterController.php',false);
         if($isfile) {
-            $class = $this->bootparams['sitetpl'].'footerController';
-            
+            $class = $vjconfig['sitetpl'].'footerController';
             $headerController = new $class;
             $headerController->loadFooter();
         }

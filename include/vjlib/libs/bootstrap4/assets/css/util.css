@@ -10,7 +10,10 @@
 	padding:0px;
 }
 
-.margin-top-10 {
-	margin-top:10px;
+.bg-none {
+	background:none;
 }
 
+.page-content {
+	min-height:300px;
+}

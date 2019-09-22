@@ -4,8 +4,8 @@ class ViewEdit  extends View {
 	public $datatypeFields = array();
 	public $tpl = 'include/tpls/editview.tpl';
 	public $def;
+	
 	function __construct() {
-		global $vjlib;
 		$datatypes = array();
 		$datatypes['varchar'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control')));
 		$datatypes['int'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control')));
@@ -23,15 +23,21 @@ class ViewEdit  extends View {
 		$this->datatypeFields = $datatypes;
 	}
 	
+	function preDisplay() {
+	    
+	    global $entity;
+	    $tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
+	    $vardef = json_decode(base64_decode($tableinfo['description']),1);
+	    $this->def = $vardef;
+	    
+	    
+	 
+	}
+	
 	function display() {
-		global $vjlib,$entity,$vjconfig;
-		$bs = $vjlib->BootStrap;
-		$tpl = $this->tpl;
-		$headers = array("id","name","date_entered");
 		$module = ucfirst($this->module);
 		$href = "index.php?module=tableinfo&action=editview";
-		
-		$defaultLayout = $this->getDefaultLayout();
+		$defaultLayout  = $this->getDefaultLayout();
 		$href = processUrl($href);
 		$data = $this->data;
 		$this->params = array('module'=>$module,'panel'=>$defaultLayout,'data'=>$data);
@@ -40,13 +46,18 @@ class ViewEdit  extends View {
 	}
 	
 	function getDefaultLayout() {
-		global $db,$entity,$vjlib,$globalModuleList;
+		global $vjlib,$globalModuleList;
 		$bs = $vjlib->BootStrap;
 		
-		$tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
-		$vardef = json_decode(base64_decode($tableinfo['description']),1);
+		//$tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
+		//$vardef = json_decode(base64_decode($tableinfo['description']),1);
 		
-		$this->def = $vardef;
+		
+		
+		//$this->def = $vardef;
+		
+		
+		$vardef =$this->def;
 		
 		$metadata = $vardef['metadata'];
 		
@@ -81,19 +92,11 @@ class ViewEdit  extends View {
 	
 	
 	function getattr($type,$name,$value='') {
-		global $vjlib;
-		$bs = $vjlib->BootStrap;
-		
 		$attr = $this->datatypeFields[$type];
-		
-		
 		//to do make data type associative
-		
 		$element = $attr['element'][0];
-		
 		$newattr = array();
 		$newattr[] = $element;
-		
 		$atr = $attr['element'][1];
 		foreach($atr as $key=>$at) {
 		if($key=='value') {
@@ -102,15 +105,11 @@ class ViewEdit  extends View {
 			$atr[$key] = $name;
 		}
 		}
-		
 		$newattr[] = $atr;
-		
 		if(isset($attr['isdualtag'])) {
 			$newattr[] = $attr['isdualtag'];
 		}
-		
 		return $newattr;
-		
 		
 	}
 	
@@ -122,7 +121,7 @@ class ViewEdit  extends View {
 			if($item['type']=='row') {
 				if(isset($item['fields'])) {
 					$col = "";
-					foreach($item['fields'] as $fieldkey=>$fieldinfo) {
+					foreach($item['fields'] as $fieldinfo) {
 					    
 					    $fieldarray = $this->def['fields'][$fieldinfo['field']['name']];
 						
@@ -150,7 +149,6 @@ class ViewEdit  extends View {
 						
 						if($fieldarray['type']=='relate') {
 						    
-                            $sql = "select name from ".$fieldarray['rmodule'];
                             $field = $bs->getelement('input','',array("class"=>"form-control","id"=>$fieldarray['name'].'_name', "value"=>$this->data[$fieldarray['name']."_name"], "name"=>$fieldarray['name'].'_name',"autocomplete"=>"off","onkeyup"=>"relatemodule('".$fieldarray['rmodule']."',this.value,'".$fieldarray['name']."')"),false);
                             $field .= $bs->getelement('input','',array("class"=>"form-control","name"=>$fieldarray['name'],"id"=>$fieldarray['name'],"type"=>"hidden","value"=>$this->data[$fieldarray['name']]),false);
 							
@@ -162,7 +160,6 @@ class ViewEdit  extends View {
 						}
 						else if($fieldarray['type']=='nondb' && isset($fieldarray['rmodule'])) {
 						   
-						    $sql = "select name from ".$fieldarray['rmodule']." where deleted=0";
 						    $field = $bs->getelement('input','',array("class"=>"form-control","id"=>$fieldarray['name'].'_name', "value"=>$this->data[$fieldarray['name']."_name"], "name"=>$fieldarray['name'].'_name',"autocomplete"=>"off","onkeyup"=>"relatemodule('".$fieldarray['rmodule']."',this.value,'".$fieldarray['name']."')"),false);
 						    $field .= $bs->getelement('input','',array("class"=>"form-control","name"=>$fieldarray['name'],"id"=>$fieldarray['name'],"type"=>"hidden","value"=>$this->data[$fieldarray['name']]),false);
 						    
@@ -171,26 +168,28 @@ class ViewEdit  extends View {
 						
 						
 						if(!isset($fieldarray['options']) || !isset($app_list_strings[$fieldarray['options']])) {
-						die("option is not defined for field".$fieldarray['name']);
+						    $fieldarray['options'] = false;
+						   // die("option is not defined for field".$fieldarray['name']);
 						}
 						
-						$options = $app_list_strings[$fieldarray['options']];
 						$optionhtml = "";
-						foreach($options as $okey=>$oval) {
-						    $opattr = array("value"=>$okey);
-						    if($val==$okey) {
-						        $opattr['selected'] = "selected";
-						    }
-							$optionhtml .= getelement('option',$oval,$opattr);
+						if(isset($app_list_strings[$fieldarray['options']])) {
+    						$options = $app_list_strings[$fieldarray['options']];
+    						foreach($options as $okey=>$oval) {
+    						    $opattr = array("value"=>$okey);
+    						    if($val==$okey) {
+    						        $opattr['selected'] = "selected";
+    						    }
+    							$optionhtml .= getelement('option',$oval,$opattr);
+    						}
 						}
-						
 						$field = getelement($attr[0],$optionhtml,$attr[1],$isdualtag);
 						
 						
 						} else if($fieldarray['type']=="checkbox") {
 						    if($val=='1') {
 						      $attr[1]['checked'] = "checked";
-						      $field = getelement($attr[0],$optionhtml,$attr[1],$isdualtag);
+						      $field = getelement($attr[0],"",$attr[1],$isdualtag);
 						    }
 						    $field = getelement("div",$field,array("class"=>"form-control"));
 						}

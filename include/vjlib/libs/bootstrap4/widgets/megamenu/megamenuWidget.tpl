@@ -25,7 +25,7 @@
   
   <li class="nav-item">
   
-  	<a href="#" class="nav-link border"><img src="{$params.logo.src}"  width="50" height="20" /></a>
+  	<a href="{$baseurl}" class="nav-link border"><img src="{$baseurl}{$params.logo.src}"  width="50" height="20" /></a>
   
   </li>
            

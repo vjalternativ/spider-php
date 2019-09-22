@@ -4,7 +4,6 @@ class tableinfoLogicHook {
     function afterSave(&$keyvalue) {
         global $entity;
         if($keyvalue['hook_isnew'] && $keyvalue['tabletype']=="user") {
-            echo "executing tableinfo after save hook <br />";
             $id = $keyvalue['id'];
             $data = array();
             $data['name'] = $keyvalue['name'];

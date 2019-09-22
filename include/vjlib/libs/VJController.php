@@ -87,7 +87,7 @@ class VJController  {
 		}
 		// url : index.php?module=user&action=save
 		function action_save() {
-		    global $entity,$db,$globalEntityList,$globalModuleList;
+		    global $entity,$db,$globalEntityList,$globalModuleList,$vjconfig;
 			$data = $_POST;
 			
 			$module = $this->entity;
@@ -135,7 +135,7 @@ class VJController  {
 			        }
 			        $strArray = explode("/",$_FILES[$field['name']]['type']);
 			        $fileId = create_guid();
-			        $dir = "media_files/".date("Y").'/'.date("m").'/'.date("d").'/'.$_FILES[$field['name']]['type'];
+			        $dir = $vjconfig['basepath']."media_files/".date("Y").'/'.date("m").'/'.date("d").'/'.$_FILES[$field['name']]['type'];
 			        if(!is_dir($dir)) {
 			         mkdir($dir, 0755, true);
 			        }

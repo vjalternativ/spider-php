@@ -216,10 +216,12 @@ class VJFramework {
 				$vjlib->loadf($vjconfig['fwbasepath'].'include/views/view.basic.php');
 				
 				$vjlib->loadf('include/views/view.'.$controller->view.'.php',false);
-				$filepath =$prefix.'modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+				$filepath= $vjconfig['basepath'].'custom/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+				if(!file_exists($filepath)) {
+				    $filepath =$prefix.'modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+				}
+				$isview = $vjlib->loadf($filepath,false);
 				
-				
-				$isview = $vjlib->loadf($vjconfig['fwbasepath'].$filepath,false);
 				$class = $this->module.'View'.ucfirst($controller->view);
 				
 				if(!$isview) {
@@ -242,6 +244,7 @@ class VJFramework {
 					    $view->data = $controller->params['data'];
 					}
 				}
+				$view->preDisplay();
 				$view->display();
 				$view->afterDisplay();
 				$view->loadFooter();
