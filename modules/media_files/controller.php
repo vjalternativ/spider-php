@@ -1,6 +1,10 @@
 <?php
 class media_filesController extends VJController  {
     
+    function __construct() {
+        $this->nonauth['download'] = '';
+    }
+    
     function action_download() {
        global $entity;
        ob_end_clean();
