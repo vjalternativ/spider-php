@@ -75,8 +75,8 @@ class View {
 	function loadHeader() {
 		global $vjlib,$current_user,$vjconfig,$smarty;
 		$bs = $vjlib->BootStrap;
-		$bs->vars['cssList']['bootstrap']= '<link rel="stylesheet" href="'.$vjconfig['baseurl'].$bs->vars['path'].'bootstrap/css/bootstrap.min.css" />';
-		$bs->vars['cssList']['custom']= '<link rel="stylesheet" href="'.$vjconfig['baseurl'].$bs->vars['path'].'css/custom.css" />';
+		$bs->vars['cssList']['bootstrap']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].$bs->vars['path'].'bootstrap/css/bootstrap.min.css" />';
+		$bs->vars['cssList']['custom']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].$bs->vars['path'].'css/custom.css" />';
 		
 		
 		//$bs->vars['jsList']['jquery']= '<script  href="'.$bs->vars['path'].'js/jquery-3.1.1.min.js" ><script>';

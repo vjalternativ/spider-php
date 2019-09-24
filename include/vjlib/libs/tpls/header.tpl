@@ -7,13 +7,13 @@
 
 {$css}
 {/foreach}
-<link rel="stylesheet" href="{$baseurl}include/vjlib/assets/font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" href="{$baseurl}include/vjlib/assets/css/jquery-ui.css" />
-<link rel="stylesheet" href="{$baseurl}include/vjlib/assets/css/jquery-ui.css" />
+<link rel="stylesheet" href="{$fwbaseurl}include/vjlib/assets/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" href="{$fwbaseurl}include/vjlib/assets/css/jquery-ui.css" />
+<link rel="stylesheet" href="{$fwbaseurl}include/vjlib/assets/css/jquery-ui.css" />
 
-<link rel="stylesheet" href="{$baseurl}include/vjlib/assets/css/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" href="{$fwbaseurl}include/vjlib/assets/css/bootstrap-datetimepicker.css" />
 
-<script src="{$baseurl}include/vjlib/assets/js/jquery-3.1.1.min.js"></script>
+<script src="{$fwbaseurl}include/vjlib/assets/js/jquery-3.1.1.min.js"></script>
 
 
 
