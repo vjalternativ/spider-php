@@ -84,6 +84,7 @@ class SystemLogicHook
         $id = $data['id'];
         unset($data['id']);
         unset($data['deleted']);
+        unset($data['session_id']);
 
         foreach ($fields as $key => $field) {
             if ($field['type'] == "relate" || $field['type'] == "file" || $field['type'] == "nondb") {

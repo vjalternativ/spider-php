@@ -105,7 +105,7 @@ class View {
 				
 			$smarty->assign("baseurl",$vjconfig['baseurl']);
 			echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
-			
+			echo "<script> var fwbaseurl ='".$vjconfig['fwbaseurl']."' </script>";
 			
 			$menudata = $this->getAllMenu();
 			$smarty->assign("menudata",$menudata);

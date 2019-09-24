@@ -6,6 +6,7 @@ class ViewDetail  extends View {
 	public $data = array();
 	public $tableinfo = array();
 	public $subpanels = array();
+	public $additionalContent = '';
 	function __construct() {
 		
 	
@@ -136,9 +137,9 @@ class ViewDetail  extends View {
        
 		$html = $this->parseDetailViewDef($metadata['detailview']);
 		$editButton= getelement("a","EDIT",array("href"=>"index.php?module=".$this->module."&action=editview&record=".$this->record,"class"=>"btn btn-primary pull-right"));
+		$editButton .= $this->additionalContent;
 		$editButton .= getelement("div","",array("class"=>"clearfix"));
-		
-		$panelheading = $bs->getelement('div',ucfirst($globalModuleList[$this->module]['label']).' | Detail View'.$editButton,array('class'=>array('value'=>'panel-heading')));
+        $panelheading = $bs->getelement('div',ucfirst($globalModuleList[$this->module]['label']).' | Detail View'.$editButton,array('class'=>array('value'=>'panel-heading')));
 		$panelbody = $bs->getelement('div',$html,array('class'=>array('value'=>'panel-body')));
 		$panelfooter = $bs->getelement('div','',array('class'=>array('value'=>'panel-footer')));
 		$panel = $bs->getelement('div',$panelheading.$panelbody,array('class'=>array('value'=>'panel panel-info')));

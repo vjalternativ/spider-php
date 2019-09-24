@@ -1,7 +1,6 @@
 
 
 function createIframe() {
-	
 	var resizerScript = document.createElement("script");
 	resizerScript.type="text/javascript";
 	resizerScript.src=fwbaseurl+"modules/chat/assets/js/iframeResizer.min.js";
@@ -29,10 +28,11 @@ function createIframe() {
 	iframe.setAttribute("scrolling","no");
 	iframe.setAttribute("allowtransparency","true");
 	iframe.setAttribute("src",fwbaseurl+"index.php?module=chat");
-	
 	document.body.appendChild(iframe);
 	
 }
+
+
 
 
 function openchat() {
@@ -40,6 +40,9 @@ function openchat() {
 	iframe.height="340px";
 	iframe.width="250px";
 } 
+
+
+
 
 function minimizechat() {
 	var iframe = document.getElementById("alternativlabschatbox");
@@ -61,12 +64,24 @@ function connectChatWindow() {
 	
 }
 
+var chatFrameloadedBool  = false;
+function setChatFrameLoaded(b) {
+	chatFrameloadedBool = b;
+}
+
+
+
+function isChatFrameLoaded() {
+	return chatFrameloadedBool;
+}
+
+
+
 
 window.onload = function() {
-
-	
-	createIframe();
-	
+	createIframe();	
 }
+
+
 
 

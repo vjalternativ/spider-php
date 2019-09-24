@@ -10,7 +10,7 @@ function getIsChannelOpen() {
 }
 
 function preUpdateUI(event) {
-	if(event=="connected" && isAgentLiveChat) {
+	if(event == "connected" && isAgentLiveChat) {
 		$("#alternativlabs-chatpanel").removeClass("hide");
 		updatePresetUI();
 	}
@@ -87,7 +87,7 @@ function chatDisconnect(callback) {
 	    
 	  var chatob = chat;
 
-	  $.post(baseurl+"index.php?module=chat&action=ajaxDisconnectChat",{},function(response) {
+	  $.post(fwbaseurl+"index.php?module=chat&action=ajaxDisconnectChat",{},function(response) {
 		  	
 			$("#stchathistory").html("");
 		  	window.parent.minimizechat();
@@ -117,6 +117,7 @@ class LiveChat {
 		  this.disableMessage = true;
 		  this.connectMessage = {"mtype":"success","type":"message","message":"Connecting To user please wait...","timestamp":new Date()};
 		  this.connectedMessage = {"mtype" : "success","type":"message","message":"You are successfully connected with agent.","timestamp":new Date()};
+		  this.connectedMessageUser = {"mtype" : "success","type":"message","message":"You are successfully connected with user.","timestamp":new Date()};
 		  this.noUserAvailableMessage = {"mype":"warning","type":"message","message":"Sorry, no users are available. Please try again later.","timestamp":new Date()};
 		  this.connectBtnText = 'Connect';
 		  this.chatId = '';
@@ -224,8 +225,11 @@ class LiveChat {
   }
   
   onConnect() {
-	window.parent.connectChatWindow();  
-    var now = new Date();
+	  if(!isAgentLiveChat) {
+		  window.parent.connectChatWindow();  
+		    
+	  }
+	var now = new Date();
   	this.disableConnectButton = true;
   	this.connectAttempt++;
   	this.chatHistory = [];
@@ -318,7 +322,12 @@ document.body.addEventListener("dataChannelEvents",function(data){
 				 chat.disableMessage = false;
 				 chat.chatId = "aaa"; 
 				 chat.isChatStarted = true;
-				 document.body.dispatchEvent(new CustomEvent('chatMessage', { type: 'success', detail:chat.connectedMessage })); 
+				 if(isAgentLiveChat) {
+					 document.body.dispatchEvent(new CustomEvent('chatMessage', { type: 'success', detail:chat.connectedMessageUser })); 
+				 } else {
+					 document.body.dispatchEvent(new CustomEvent('chatMessage', { type: 'success', detail:chat.connectedMessage })); 
+					 	 
+				 }
 				 preUpdateUI(data.detail.event);
 				 updateUI();
 				 
@@ -382,8 +391,40 @@ function onDisconnect() {
 }
 
 
+
+function chat_message_window() {
+	 chat.disableConnectButton =false; 
+	 chat.showConnect = false; 
+	 chat.showSendBtn = true;
+	 chat.connectBtnText = 'Connect'; 
+	 chat.disableMessage = false;
+	 chat.chatId = "aaa"; 
+	 chat.isChatStarted = true;
+	 
+	 $("#alternativlabs-chatpanel").removeClass("hide");
+	 updatePresetUI();
+	 updateUI();
+}
+
+function frameMessage(evt) {
+		chat_message_window();
+		if(evt.data.event=="startChatWithUser") {
+			
+		} else if(evt.data.event=="connectIncomingChat") {
+			 var info = {};
+			 info.name = "message";
+			 info.description = evt.data.message;
+			 document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
+		}
+}
+
+
 $(document).ready(function(){
 	if(isAgentLiveChat) {
 		onConnect();
 	} 
+	
+	
+	window.addEventListener("message", frameMessage, false);
+	window.parent.setChatFrameLoaded(true);
 });

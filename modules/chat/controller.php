@@ -11,6 +11,7 @@ class chatController extends VJController {
         $this->nonauth['ajaxReadPackets'] = 1;
         $this->nonauth['ajaxhandlesignal'] = 1;
         $this->nonauth['ajaxPostMessage'] = 1;
+        $this->nonauth['ajaxDisconnectChat'] =1;
         $userTypeVsChatUserTypeMap = array();
         $userTypeVsChatUserTypeMap['user'] = "agent";
         
@@ -162,6 +163,8 @@ class chatController extends VJController {
         $sessionId = session_id();
         
         $sql = "delete from webrtcsignal where session_id='".$sessionId."'";
+        $db->query($sql);
+        $sql = "delete from strangerchat where name='".$sessionId."'";
         $db->query($sql);
         
         $sql = "select * from strangerchat where status='available' and usertype='".$targetUser."' and name !='".$sessionId."' and deleted=0 limit 1";

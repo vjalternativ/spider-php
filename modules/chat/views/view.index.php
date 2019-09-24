@@ -19,6 +19,9 @@ class chatViewIndex extends ViewBasic {
     
     
     function loadHeader() {
+        global $vjconfig;
+        echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
+        echo "<script> var fwbaseurl ='".$vjconfig['fwbaseurl']."' </script>";
         
     }
     
