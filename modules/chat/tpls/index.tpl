@@ -129,7 +129,7 @@
 
 
 	</div>
-	<script src="{$baseurl}modules/chat/assets/js/xhrchat.js?v=50"></script>
+	<script src="{$baseurl}modules/chat/assets/js/xhrchat.js?v=51"></script>
 
 </body>
 </html>
