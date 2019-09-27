@@ -1,4 +1,4 @@
-<div class="card  rounded-0 border-top-0" >
+<div class="card  rounded-0 border-top-0 border-right-0" >
     <div class="card-body padding-10">
     			
 
@@ -13,7 +13,7 @@
  
   
  
-  <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none"><img src="{$params.logo.src}"  width="70" height="40" /></a>
+  <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none"><img src="{$baseurl}{$params.logo.src}"  width="70" height="40" /></a>
  
  
   <button type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
@@ -92,7 +92,7 @@
      {else}
          
      	<li class="nav-item">
-     		<a  class="nav-link font-weight-bold text-uppercase">
+     		<a href="{$item.alias}" class="nav-link font-weight-bold text-uppercase">
      		  {$item.name}
      		</a>
          </li>

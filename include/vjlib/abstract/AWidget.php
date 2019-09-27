@@ -49,5 +49,27 @@ abstract class AWidget {
     }
     
     
+    
+    
+    static function loadWidget($widgetName,$params) {
+        global $smarty,$vjconfig;
+        $params = self::processParams($widgetName, $params);
+        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
+            $smarty->assign("params",$params);
+            
+            $html = $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
+            if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.css")) {
+                $link ='<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/widgets/'.$widgetName.'/'.$widgetName.'Widget.css" />';
+                $html = $link.$html;
+            }
+            
+        } else {
+            die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
+            
+        }
+        return $html;
+    }
+    
+    
 }
 ?>

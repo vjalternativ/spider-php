@@ -17,7 +17,9 @@ class sqlcardpicrowWidget extends AWidget {
         
         global $db,$vjconfig,$seoParams;
         $sql = $params['attrs']['sql'];
-        
+        if(!$params['attrs']['sql']) {
+            echo "<pre>";print_r($params);die;
+        }
         if(isset($params['attrs']['seoparam']) && isset($seoParams[$params['attrs']['seoparam']]) && isset($seoParams['widget']['alias'][$seoParams[$params['attrs']['seoparam']]])) {
                 $sql = str_replace("@seoparam_id", $seoParams['widget']['alias'][$seoParams[$params['attrs']['seoparam']]], $sql);
             }
@@ -39,7 +41,9 @@ class sqlcardpicrowWidget extends AWidget {
                 
                 
             }
-            
+            if(!isset($row[$params['attrs']['imagefield']])) {
+                //echo "<pre>";print_r($row);die;
+            }
             $param['body'] = '<img class="img-thumbnail" alt="'.$row['name'].'" src="'.$vjconfig['fwbaseurl'].'index.php?module=media_files&action=download&id='.$row[$params['attrs']['imagefield']].'" />';
             $param['footer'] ='<a href="'.$vjconfig['baseurl'].$params['attrs']['linkprefix'].$row[$params['attrs']['linkfield']].'"> '. $row[$params['attrs']['titlefield']].'</a>';
             $cardWidget->addcard($param);

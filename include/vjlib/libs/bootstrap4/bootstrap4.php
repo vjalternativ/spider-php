@@ -58,11 +58,7 @@ class Bootstrap4  {
             $params[$id] = AWidget::processParams($row['widget_type'],$params[$id]);
             
         }
-        if($row['id']=='2f24c1ac-431e-6769-1555-5d8735a6883b') {
-           
-           // echo "<pre>";print_r($params);die;
         
-        }
         return self::loadWidget($row['widget_type'],$params);
         
         //AWidget::rendorWidget($row['widget_type'],$rows);
@@ -86,10 +82,7 @@ class Bootstrap4  {
         
         $dir = __DIR__;
         $smarty->assign("params",$params);
-        if($widgetName=="topheader") {
-        //    echo "<pre>";print_r($params);echo "</pre>";
-          //  die;
-        }
+        
         if(file_exists($dir."/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
             
             $html = $smarty->fetch($dir."/widgets/".$widgetName."/".$widgetName."Widget.tpl");

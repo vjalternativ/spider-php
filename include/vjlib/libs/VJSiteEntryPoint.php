@@ -148,6 +148,7 @@ class VJSiteEntryPoint {
             $class = $vjconfig['sitetpl'].'HeaderController';
             
             $headerController = new $class;
+            $headerController->bootparams = $this->bootparams;
             $headerController->loadHeader();
         }
         echo $smarty->fetch($this->sitebasePath.'/tpls/'.$vjconfig['sitetpl'].'/header.tpl');
