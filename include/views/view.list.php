@@ -3,15 +3,12 @@ class ViewList  extends View {
 	public $datatypeFields = array();
 	public $metadata =array();
 	function __construct() {
-		global $vjlib;
 		$datatypes = array();
-		//$datatypes['varchar'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','placeholder'=>'name','name'=>'name','type'=>'text','value'=>'','class'=>'form-control')));
-		//$datatypes['text'] = array('element'=>array('textarea',array('id'=>'name','placeholder'=>'name','name'=>'name','class'=>'form-control')));
-	
+		
 		$this->datatypeFields = $datatypes;
 	}
 	function display() {
- 		global $vjlib,$entity,$mod_string,$globalModuleList;
+ 		global $vjlib,$mod_string,$globalModuleList;
  		$bs = $vjlib->BootStrap;
  		$rows = $this->listview['pageinfo']['data'];
  		$rows = array_slice($rows, 0,$this->listview['pageinfo']['resultperpage'],true);

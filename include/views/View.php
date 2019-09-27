@@ -17,7 +17,7 @@ class View {
 	
 	function display() {
 	       
-	    global $entity,$vjconfig,$smarty;
+	    global $entity,$smarty;
 		$entity->module = $this->module;
 		
 		

@@ -16,20 +16,6 @@ class VJController  {
 		public $ignoreRecords = array();
 		
 		
-	/* 	public function __get($varName){
-		
-			if (!array_key_exists($varName,$this->data)){
-				//this attribute is not defined!
-				die("Class not found".$varName);
-			}
-			else return $this->data[$varName];
-		
-		}
-		
-		public function __set($varName,$value){
-			$this->data[$varName] = $value;
-		} */
-		
 		function defaultPaginate($sql) {
 			global $vjlib,$db,$vjconfig;
 			
@@ -41,7 +27,7 @@ class VJController  {
 			$paginate->sql = $sql;
 			$paginate->db = $db;
 			
-			$url = $vjconfig['baseurl']."index.php?module=".$this->entity."&action=detailview&record=key_id";
+			$url = $vjconfig['fwbaseurl']."index.php?module=".$this->entity."&action=detailview&record=key_id";
 			$url = processUrl($url);
 			$paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
 		}
@@ -52,7 +38,6 @@ class VJController  {
 		}
 		 
 		function action_index() {
-			global $vjconfig;
 			$this->results();
 			$this->tpls[] = $this->listview['tpl'];
 			$this->view = "list";
@@ -60,7 +45,6 @@ class VJController  {
 		}
 		
 		function action_editview() {
-			global $vjconfig,$entity;
 			if(isset($_REQUEST['record'])) {
 				//$mod  = $_REQUEST['module'];
 				
@@ -73,19 +57,16 @@ class VJController  {
 		}
 		
 		function action_detailview() {
-			global $vjconfig;
 			$this->tpls[] = $this->detailview['tpl'];
 			$this->view = "detail";
 		
 		}
 		
 		function action_basicview() {
-			global $vjconfig;
 			$this->tpls[] = $this->basicview['tpl'];
 			$this->view = "basic";
 		
 		}
-		// url : index.php?module=user&action=save
 		function action_save() {
 		    global $entity,$db,$globalEntityList,$globalModuleList,$vjconfig;
 			$data = $_POST;
@@ -133,7 +114,6 @@ class VJController  {
 			                unlink($mediaKeyValue['file_path']);
 			            }
 			        }
-			        $strArray = explode("/",$_FILES[$field['name']]['type']);
 			        $fileId = create_guid();
 			        $dir = $vjconfig['basepath']."media_files/".date("Y").'/'.date("m").'/'.date("d").'/'.$_FILES[$field['name']]['type'];
 			        if(!is_dir($dir)) {
@@ -310,7 +290,6 @@ class VJController  {
 		    global $entity,$vjlib,$smarty;
 		    $ptable = $_REQUEST['ptable'];
 		    $relname = $_REQUEST['relname'];
-		    $record = $_REQUEST['record'];
 		    
 		    $index = $_REQUEST['page']; 
 		    $entity->load_relationships();
@@ -318,8 +297,7 @@ class VJController  {
 		    $pageinfo = $entity->get_relationships($relname,$index);
 		    $rows = $pageinfo['data'];
 		    $rows = array_slice($rows, 0,$pageinfo['resultperpage'],true);
-            $params = array('headers' => array('name','date_entered'));
-		    
+            
 		    $headers = array();
 		    $headers['name']['name'] = "name";
 		    $headers['name']['label'] = "Name";
