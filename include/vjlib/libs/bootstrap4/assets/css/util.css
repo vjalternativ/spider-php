@@ -17,3 +17,8 @@
 .page-content {
 	min-height:300px;
 }
+
+.img-thumbnail {
+	width:200px ;
+	height:200px;
+}
