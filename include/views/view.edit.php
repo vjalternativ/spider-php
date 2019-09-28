@@ -30,7 +30,12 @@ class ViewEdit  extends View {
 	    $vardef = json_decode(base64_decode($tableinfo['description']),1);
 	    $this->def = $vardef;
 	    
-	    
+	    if(!$this->data) {
+	        $this->data['id'] = "";
+	        $this->data['name'] = "";
+	    //    $this->data['description'] = "";
+	        
+	    }
 	 
 	}
 	
@@ -114,7 +119,7 @@ class ViewEdit  extends View {
 	}
 	
 	function parseEditViewDef($def) {
-		global $vjlib,$app_list_strings,$mod_string;
+		global $vjlib,$app_list_strings,$mod_string,$entity;
 		$bs = $vjlib->BootStrap;
 		$formgroup = '';
 		foreach($def as $item) {
@@ -122,12 +127,17 @@ class ViewEdit  extends View {
 				if(isset($item['fields'])) {
 					$col = "";
 					foreach($item['fields'] as $fieldinfo) {
-					    
 					    $fieldarray = $this->def['fields'][$fieldinfo['field']['name']];
-						
+					    
+					    
+					    
 						$val = "";
 						$attr = $this->getattr($fieldarray['type'], $fieldarray['name']);
 						$isdualtag = true;
+						
+						if(!isset($this->data[$fieldarray['name']])) {
+						    $this->data[$fieldarray['name']]= "";
+						}
 						$val = $this->data[$fieldarray['name']];
 						
 						if(isset($attr[2])) {
@@ -160,7 +170,23 @@ class ViewEdit  extends View {
 						}
 						else if($fieldarray['type']=='nondb' && isset($fieldarray['rmodule'])) {
 						   
-						    $field = $bs->getelement('input','',array("class"=>"form-control","id"=>$fieldarray['name'].'_name', "value"=>$this->data[$fieldarray['name']."_name"], "name"=>$fieldarray['name'].'_name',"autocomplete"=>"off","onkeyup"=>"relatemodule('".$fieldarray['rmodule']."',this.value,'".$fieldarray['name']."')"),false);
+						    
+						    
+						    
+						    if($fieldarray['type']=="nondb" && isset($_REQUEST['parent_module']) && $_REQUEST['parent_module']==$fieldarray['rmodule']) {
+						        $this->data[$fieldarray['name']] = $_REQUEST['parent_record'];
+						        $pmodule = $_REQUEST['parent_module'];
+						        $nondbData = $entity->get($pmodule,$this->data[$fieldarray['name']]);
+						        if($nondbData) {
+						            $this->data[$fieldarray['name']] = $nondbData['id'];
+						            $this->data[$fieldarray['name'].'_name'] = $nondbData['name'];
+						        }
+						        
+						    }
+						    
+						    
+						    
+						    $field = $bs->getelement('input','',array("class"=>"form-control","id"=>$fieldarray['name'].'_name', "value"=>$this->data[$fieldarray['name'].'_name'], "name"=>$fieldarray['name'].'_name',"autocomplete"=>"off","onkeyup"=>"relatemodule('".$fieldarray['rmodule']."',this.value,'".$fieldarray['name']."')"),false);
 						    $field .= $bs->getelement('input','',array("class"=>"form-control","name"=>$fieldarray['name'],"id"=>$fieldarray['name'],"type"=>"hidden","value"=>$this->data[$fieldarray['name']]),false);
 						    
 						}
