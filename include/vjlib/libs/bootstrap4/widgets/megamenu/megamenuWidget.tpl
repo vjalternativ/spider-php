@@ -43,7 +43,7 @@
                       
                             
                             
-                              <li><a href="{$subcatitem.alias}">{$subcatitem.name} <span class="wstmenutag"></span></a></li>
+                              <li><a href="{$baseurl}{$subcatitem.alias}">{$subcatitem.name} <span class="wstmenutag"></span></a></li>
 							{/foreach}
 
                             </ul>

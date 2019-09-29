@@ -185,10 +185,43 @@ class MysqliLib {
 	        }
 	        if($dim) {
 	            foreach($dim as $index){
-	                if(!isset($temp[$row[$index]])) {
-	                   $temp[$row[$index]] = false;
+	                $cols = false;
+	                if(is_array($index)) {
+	                    $cols = $index['cols'];
+	                    $index = $index['key'];
+	                } 
+	                
+	                
+	                if($cols) {
+	                
+	                    if( !isset($temp[$row[$index]])) {
+	                        
+	                        
+	                        foreach($cols as $col) {
+	                            $temp[$row[$index]][$col] = $row[$col];
+	                            
+	                        }
+	                        $temp[$row[$index]]['items'] = false;
+	                        
+	                    }
+	                    
+	                } else {
+	                    if(!isset($temp[$row[$index]])) {
+	                        $temp[$row[$index]] = false;
+	                    }
 	                }
-	                $temp = &$temp[$row[$index]];
+	                
+	                
+	                 
+	                
+	                if($cols) {
+	                    $temp = &$temp[$row[$index]]['items'];
+	                } else {
+	                    
+	                    $temp = &$temp[$row[$index]];
+	                }
+	                
+	                
 	            }
 	            if($val) {
 	                $temp = $row[$val];

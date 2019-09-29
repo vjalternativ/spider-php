@@ -105,7 +105,12 @@ class ViewEdit  extends View {
 		$atr = $attr['element'][1];
 		foreach($atr as $key=>$at) {
 		if($key=='value') {
-			$atr[$key] = $this->data[$name];
+		    $atr[$key] = "";
+		    
+		    if(isset($this->data[$name])) {
+		        $atr[$key] = $this->data[$name];
+		        
+		    } 
 		} else if($at=='name'){
 			$atr[$key] = $name;
 		}
@@ -158,12 +163,17 @@ class ViewEdit  extends View {
 						$addon = getelement('span',$label,array("class"=>'input-group-addon'));
 						
 						if($fieldarray['type']=='relate') {
-						    
+						    if(!isset($this->data[$fieldarray['name']."_name"])) {
+						        $this->data[$fieldarray['name']."_name"] = "";
+						    }
                             $field = $bs->getelement('input','',array("class"=>"form-control","id"=>$fieldarray['name'].'_name', "value"=>$this->data[$fieldarray['name']."_name"], "name"=>$fieldarray['name'].'_name',"autocomplete"=>"off","onkeyup"=>"relatemodule('".$fieldarray['rmodule']."',this.value,'".$fieldarray['name']."')"),false);
                             $field .= $bs->getelement('input','',array("class"=>"form-control","name"=>$fieldarray['name'],"id"=>$fieldarray['name'],"type"=>"hidden","value"=>$this->data[$fieldarray['name']]),false);
 							
 						}
 						else if($fieldarray['type']=='dependent_relate') {
+						    if(!isset($this->data[$fieldarray['name']."_name"])) {
+						        $this->data[$fieldarray['name']."_name"] = "";
+						    }
 						    $field = $bs->getelement('input','',array("class"=>"form-control","value"=>$this->data[$fieldarray['name']."_name"],"id"=>$fieldarray['name'].'_name',  "name"=>$fieldarray['name'].'_name',"autocomplete"=>"off","onkeyup"=>"dependentRelatemodule('".$fieldarray['relate_relationship']."','".$fieldarray['dependent_relate_field']."','".$fieldarray['rmodule']."',this.value,'".$fieldarray['name']."')"),false);
 						    $field .= $bs->getelement('input','',array("class"=>"form-control","name"=>$fieldarray['name'],"id"=>$fieldarray['name'],"type"=>"hidden","value"=>$this->data[$fieldarray['name']]),false);
 						    

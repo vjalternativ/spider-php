@@ -84,7 +84,28 @@ class VJSiteEntryPoint {
                 $this->method="action_index";
             } 
             $pageController->{$this->method}();
+            
             $this->bootparams = $pageController->bootparams;
+            
+            
+            if($pageController->redirectView) {
+                $this->page = $pageController->redirectView['page'];
+                $this->method = $pageController->redirectView['method'];
+                require_once $this->sitebasePath.'/'.'pages/'.$this->page.'/controller.php';
+                $class = $this->page.'Controller';
+                
+                $pageController = new $class();
+                
+                $pageController->bootparams = $this->bootparams;
+                if(!method_exists($pageController,$this->method)) {
+                    $this->method="action_index";
+                }
+                $pageController->{$this->method}();
+                
+                $this->bootparams = $pageController->bootparams;
+                
+                
+            }
             
             if(!empty($pageController->view)) {
                 
