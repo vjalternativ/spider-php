@@ -1,9 +1,31 @@
 <?php 
 class tabWidget extends AWidget {
     
-    
-    function __construct() {
+    var $params = array();
+    var $checkFirst = true;
+    var $id = false;
+    function __construct($id) {
+        $this->id = $id;
         $this->registerField("sql", "text");
+    }
+    
+    function addTab($params=array()) {
+        
+        $params['id'] = $this->id;
+        
+        if($this->checkFirst) {
+            $params['isfirst'] = true;
+            $this->checkFirst = false;
+        } 
+        $this->params['tabs'][]= $params;
+        
+        
+        
+    }
+    
+    function getWidget() {
+        
+        return parent::rendorWidget("tab", $this->params);
     }
     
     public function processWidgetParams($params)

@@ -1,9 +1,9 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs">
   
-  {foreach from=$params.tabs item=tab}
+  {foreach from=$params.tabs key=key item=tab}
   <li class="nav-item">
-    <a class="nav-link {if $tab.isfirst}active{/if}" data-toggle="tab" href="#tab-{$tab.id}">{$tab.name}</a>
+    <a class="nav-link {if $tab.isfirst}active{/if}" data-toggle="tab" href="#tab-{$params.id}-{$key}">{$tab.name}</a>
   </li>
   {/foreach}
 </ul> 
@@ -11,14 +11,25 @@
 <!-- Tab panes -->
 <div class="tab-content">
   {foreach from=$params.tabs item=tab}
-  <div class="tab-pane container border border-top-0 pt-2 pb-2 {if $tab.isfirst}active{else}fade{/if}" id="tab-{$tab.id}">
-  	{foreach from=$tab.items item=row}
+  <div class="tab-pane container border border-top-0 pt-2 pb-2 bg-white {if $tab.isfirst}active{else}fade{/if}" id="tab-{$params.id}-{$key}">
+  	
+  	{if $tab.content}
+  		{$tab.content}
+  	{/if}
+  	
+  	
+  	{if $tab.cards}
+  	{foreach from=$tab.cards item=row}
   			<div class="card">
 			<div class="card-body">{$row.name}</div>
 			</div>
-		{/foreach} 
-  
+	{/foreach} 
+  	{/if}
+  	
+  	
   </div>
 	
   {/foreach}
 </div>
+
+<br />

@@ -1,8 +1,13 @@
-<div class="card mb-2">
+<div class="card mb-2 {if !$params.title}border-0{/if}">
+	
+	{if $params.title}
 	<div class="card-body bg-primary text-white">
+	
 		<b>{$params.title}</b>
 	</div>
-	<div class="card-body">
+	{/if}
+	
+	<div class="card-body ">
 		
 		{foreach from=$params.data item=row}
 		

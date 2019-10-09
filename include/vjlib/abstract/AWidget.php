@@ -5,7 +5,6 @@ abstract class AWidget {
     protected $fields;
     private $widgetInstance = null;
     
-    
     private function getField($name,$type) {
         $fieldData = array();
         $fieldData['name'] = $name;
@@ -50,10 +49,8 @@ abstract class AWidget {
     
     
     
-    
-    static function loadWidget($widgetName,$params) {
-        global $smarty,$vjconfig;
-        $params = self::processParams($widgetName, $params);
+    static function rendorWidget($widgetName,$params) {
+        global $vjconfig,$smarty;
         if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
             $smarty->assign("params",$params);
             
@@ -68,6 +65,12 @@ abstract class AWidget {
             
         }
         return $html;
+    }
+    
+    
+    static function loadWidget($widgetName,$params) {
+        $params = self::processParams($widgetName, $params);
+        return  self::rendorWidget($widgetName,$params);
     }
     
     

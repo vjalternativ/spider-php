@@ -17,6 +17,8 @@ class cardrowWidget extends AWidget {
     
     private $cardindex  = 0;
     
+    private $checkMaxRows = false;
+    
     
     private $title ="";
     
@@ -27,11 +29,19 @@ class cardrowWidget extends AWidget {
         $this->title=$title;
         $this->maxrows = $maxrow;
         $this->maxcards = $maxcards;
+        $this->checkMaxRows = $maxrow;
     }
+    
+  
     
     
     function addcard($param=array("header"=>false,"body"=>true,"footer"=>true)) {
         $card = Bootstrap4::loadWidget(IBootstrapWidgetConstant::$CARD,$param);
+        
+        
+        if(!$this->checkMaxRows) {
+            $this->maxrows = $this->rowindex+1; 
+        }
         if($this->rowindex < $this->maxrows) {
             if($this->cardindex <  $this->maxcards) {
                 $this->data[$this->rowindex][$this->cardindex] = $card;
