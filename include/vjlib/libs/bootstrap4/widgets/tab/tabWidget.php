@@ -5,13 +5,12 @@ class tabWidget extends AWidget {
     var $checkFirst = true;
     var $id = false;
     function __construct($id) {
-        $this->id = $id;
+        $this->params['id'] = $id;
         $this->registerField("sql", "text");
     }
     
     function addTab($params=array()) {
         
-        $params['id'] = $this->id;
         
         if($this->checkFirst) {
             $params['isfirst'] = true;
