@@ -7,7 +7,6 @@ header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Credentials: true");
 ini_set("memory_limit",-1);
 set_time_limit(0);
-ini_set("display_errors",0);
 error_reporting(E_ALL);
 global $vjlib,$vjconfig,$seoParams;
 
