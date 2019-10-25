@@ -8,6 +8,10 @@ class IBootstrapWidgetConstant {
      static $CARDROW = "cardrow";
      static $CARD = "card";
      static $BREADCRUMB = "breadcrumb";
+     static $ELEMENT = "element";
+     static $BUTTON = "button";
+     
+     
 }
 
 

@@ -4,7 +4,6 @@ class breadcrumbWidget extends AWidget {
     {
         
         global $vjconfig;
-        
         if(is_array($params)) {
         $foundkey = false;
         
@@ -19,9 +18,9 @@ class breadcrumbWidget extends AWidget {
         foreach($params as $key=>$val) {
             $foundkey = $key;
             $params[$key] = $val;
-           
-            $alias .= "/".$val['alias'];
-            
+            if($val['alias']) {
+                $alias .= "/".$val['alias'];
+            }
             $val['link'] = $alias;
             
             

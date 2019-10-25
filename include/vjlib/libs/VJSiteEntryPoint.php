@@ -78,7 +78,7 @@ class VJSiteEntryPoint {
           
             $class = $this->page.'Controller';
             $pageController = new $class();
-            $pageController->bootparams = $this->bootparams;
+            $pageController->bootparams += $this->bootparams;
             
             if(!method_exists($pageController,$this->method)) {
                 $this->method="action_index";

@@ -169,8 +169,17 @@ class MysqliLib {
 	    $rows = array();
 	    $temp = &$rows;
 	    $qry = mysqli_query($this->con,$sql) or die("wrong query ".$sql." ". mysqli_error($this->con));
+	    $checkFirst  = true;
 	   
 	    while($row = mysqli_fetch_assoc($qry)) {
+	        
+	        if($checkFirst) {
+	            $row['isfirstrow'] = true;
+	            $checkFirst = false;
+	        } else {
+	            $row['isfirstrow'] = false;
+	            
+	        }
 	        if(isset($this->processHook['enumList']) && $this->processHook['enumList']) {
 	            foreach($this->processHook['enumList'] as $col => $enumkey) {
 	                $row[$col] = $this->getEnumValue($enumkey,$row[$col]);
@@ -184,11 +193,18 @@ class MysqliLib {
 	            }
 	        }
 	        if($dim) {
-	            foreach($dim as $index){
+	            foreach($dim as $dimkey=> $index){
 	                $cols = false;
 	                if(is_array($index)) {
-	                    $cols = $index['cols'];
-	                    $index = $index['key'];
+	                    
+	                    if(isset($index['cols'])) {
+	                        $cols = $index['cols'];
+	                        $index = $index['key'];
+	                        
+	                    } else {
+	                        $cols = $index;
+	                        $index = $dimkey;
+	                    }
 	                } 
 	                
 	                

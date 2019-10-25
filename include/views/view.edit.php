@@ -67,7 +67,7 @@ class ViewEdit  extends View {
 		$metadata = $vardef['metadata'];
 		
 		$html = $this->parseEditViewDef($metadata['editview']);
-		$html .= $bs->getelement('input','',array('name'=>'id','value'=>$this->data['id'],'type'=>'hidden'));
+		$html .= $bs->getelement('input','',array('name'=>'id','id'=>'id','value'=>$this->data['id'],'type'=>'hidden'));
 		$save =  $bs->getelement("button","Save",array("type"=>array("value"=>"submit"),"class"=>array("value"=>"btn btn-primary pull-right")));
 		$save .= '<div class="clearfix"></div>';
 		

@@ -1,11 +1,14 @@
 <?php 
 class tabWidget extends AWidget {
     
-    var $params = array();
     var $checkFirst = true;
     var $id = false;
-    function __construct($id) {
-        $this->params['id'] = $id;
+    
+    
+    function __construct($id = false) {
+        if($id) {
+            $this->params['id'] = $id;
+        }
         $this->registerField("sql", "text");
     }
     

@@ -4,7 +4,7 @@ abstract class AWidget {
     
     protected $fields;
     private $widgetInstance = null;
-    
+    protected $params;
     private function getField($name,$type) {
         $fieldData = array();
         $fieldData['name'] = $name;
@@ -36,13 +36,16 @@ abstract class AWidget {
     
     static function processParams($widget,$params) {
         global $vjconfig;
+        
         if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
             require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
             $class = $widget.'Widget';
             $ob = new $class;
             return $ob->processWidgetParams($params);
         } else {
-            die("mai yaha");
+            echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+            
+            die("widget not found ".$widget);
             return $params;
         }
     }
@@ -71,6 +74,14 @@ abstract class AWidget {
     static function loadWidget($widgetName,$params) {
         $params = self::processParams($widgetName, $params);
         return  self::rendorWidget($widgetName,$params);
+    }
+    
+    public  function rendor($params=array()) {
+        //echo get_class(self);
+        $class = get_called_class();
+        $widget = str_replace("Widget", "", $class);
+       return $this->rendorWidget($widget,$this->params);
+    
     }
     
     

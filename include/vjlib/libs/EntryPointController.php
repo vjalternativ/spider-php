@@ -6,6 +6,16 @@ class EntryPointController {
     public $view=  "";
     public $bootparams = array();
     public $redirectView = false;
+    public $routes = array();
+    function __construct() {
+        global $vjconfig;
+        $class = get_called_class();
+        $class = str_replace("Controller", "", $class);
+        
+        $this->bootparams['controller_path']  = 'include/entrypoints/site/pages/'.$class.'/';
+        $this->bootparams['controller_tpl_path']  = 'include/entrypoints/site/pages/'.$class.'/tpls/'.$vjconfig['sitetpl'].'/';
+        
+    }
     
     function displayView($view) {
         global $vjconfig;
@@ -28,10 +38,48 @@ class EntryPointController {
         $this->redirectView['page'] = $page;
         $this->redirectView['method'] = 'action_'.$method;
     }
+    
+    
+    function rendorTpl($tpl,$params=array()) {
+        global $smarty,$vjconfig;
+        
+        
+        $smarty->assign("params",$params);
+        $smarty->assign("baseurl",$vjconfig['baseurl']);    
+        $class = get_called_class();
+        $class = str_replace("Controller", "", $class);
+        
+        $this->bootparams['controller_path']  = 'include/entrypoints/site/pages/'.$class.'/';
+        $this->bootparams['controller_tpl_path']  = 'include/entrypoints/site/pages/'.$class.'/tpls/'.$vjconfig['sitetpl'].'/';
+        
+        return $smarty->fetch($this->bootparams['controller_tpl_path'].$tpl);
+    
+    }
+    
+    
+    function registerBreadcrumb($id,$title,$alias) {
+        $this->bootparams['breadcrumb'][$id]['title'] = $title;
+        $this->bootparams['breadcrumb'][$id]['alias'] = $alias;
+        
+    }
+    
+    function action_index() {
+        
+        global $seoParams;
+        
+        $this->bootparams['breadcrumb']['home']['title'] = "Home";
+        $this->bootparams['breadcrumb']['home']['alias'] = '';
+        
+        if($this->routes) {
+            foreach($this->routes as $key=>$val) {
+                if(isset($seoParams[$key])) {
+                    $method = 'action_'.$val;
+                    $this->{$method}();
+                }
+            }
+        }
+        
+    }
 }
 
-//$p = new EntryPointController();
-
-
-//var_dump($params);
 ?>

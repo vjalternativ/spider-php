@@ -18,14 +18,15 @@
   	{/if}
   	
   	
-  	{if $tab.cards}
-  	{foreach from=$tab.cards item=row}
+  	{if $tab.items}
+  	{foreach from=$tab.items item=row}
   			<div class="card">
 			<div class="card-body">{$row.name}</div>
 			</div>
 	{/foreach} 
   	{/if}
   	
+  		<div class="clearfix"></div>
   	
   </div>
 	
