@@ -14,7 +14,7 @@ class EntryPointController {
         
         $this->bootparams['controller_path']  = 'include/entrypoints/site/pages/'.$class.'/';
         $this->bootparams['controller_tpl_path']  = 'include/entrypoints/site/pages/'.$class.'/tpls/'.$vjconfig['sitetpl'].'/';
-        
+        $this->bootparams['current_url'] = $_SERVER['REQUEST_URI'];
     }
     
     function displayView($view) {

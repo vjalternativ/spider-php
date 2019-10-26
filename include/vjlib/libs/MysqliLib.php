@@ -165,12 +165,13 @@ class MysqliLib {
 	
 	
 	
-	function fetchRows($sql = "",$dim=false,$val=false) {
+	function fetchRows($sql = "",$dim=false,$val=false,$debug=false) {
 	    $rows = array();
 	    $temp = &$rows;
 	    $qry = mysqli_query($this->con,$sql) or die("wrong query ".$sql." ". mysqli_error($this->con));
 	    $checkFirst  = true;
-	   
+	    $dimindexer = array();
+	    
 	    while($row = mysqli_fetch_assoc($qry)) {
 	        
 	        if($checkFirst) {
@@ -180,6 +181,8 @@ class MysqliLib {
 	            $row['isfirstrow'] = false;
 	            
 	        }
+	        
+	        
 	        if(isset($this->processHook['enumList']) && $this->processHook['enumList']) {
 	            foreach($this->processHook['enumList'] as $col => $enumkey) {
 	                $row[$col] = $this->getEnumValue($enumkey,$row[$col]);
@@ -218,7 +221,6 @@ class MysqliLib {
 	                            
 	                        }
 	                        $temp[$row[$index]]['items'] = false;
-	                        
 	                    }
 	                    
 	                } else {
@@ -228,7 +230,24 @@ class MysqliLib {
 	                }
 	                
 	                
-	                 
+	                
+	                
+	                if(isset($dimindexer[$index]["row_index"])) {
+	                    if(!isset($dimindexer[$index][$row[$index]])) {
+	                        $dimindexer[$index]["row_index"]++;
+	                        $dimindexer[$index][$row[$index]]=$dimindexer[$index]["row_index"];
+	                    }
+	                } else {
+	                    $dimindexer[$index]["row_index"] = 0;
+	                    $dimindexer[$index][$row[$index]] = 0;
+	                }
+	                
+	                
+	                
+	                $temp[$row[$index]]['seq_index'] =  $dimindexer[$index][$row[$index]];
+	                $temp[$row[$index]]['seq_index_a'] =  $dimindexer[$index][$row[$index]]+1;
+	                $temp[$row[$index]]['seq_last'] =  $dimindexer[$index]["row_index"];
+	                $temp[$row[$index]]['seq_count'] =  $dimindexer[$index]["row_index"]+1;
 	                
 	                if($cols) {
 	                    $temp = &$temp[$row[$index]]['items'];
@@ -239,9 +258,13 @@ class MysqliLib {
 	                
 	                
 	            }
+	            
+	            
+	            
 	            if($val) {
 	                $temp = $row[$val];
 	            } else {
+	                
 	                $temp = $row;
 	            }
 	        } else {
