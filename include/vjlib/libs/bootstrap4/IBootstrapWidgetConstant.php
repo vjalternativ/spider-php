@@ -10,6 +10,8 @@ class IBootstrapWidgetConstant {
      static $BREADCRUMB = "breadcrumb";
      static $ELEMENT = "element";
      static $BUTTON = "button";
+     static $ACCORDION = "accordion";
+     static $MODAL = "modal";
      
      
 }

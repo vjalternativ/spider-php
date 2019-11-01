@@ -3,6 +3,10 @@ $(document).ready(function(){
   $('.datepicker').datetimepicker({
         format: 'YYYY-MM-DD'
     });
+  
+  $('.datetimepicker').datetimepicker({
+      format: 'YYYY-MM-DD H:m'
+  });
 });
 
 

@@ -19,6 +19,7 @@ class ViewEdit  extends View {
 		$datatypes['checkbox'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'checkbox','value'=>'name','class'=>'')));
 		$datatypes['date'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control  datepicker')));
 		$datatypes['md5'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control')));
+		$datatypes['datetime'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control  datetimepicker')));
 		
 		$this->datatypeFields = $datatypes;
 	}

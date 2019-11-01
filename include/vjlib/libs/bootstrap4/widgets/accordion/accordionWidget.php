@@ -1,7 +1,5 @@
 <?php 
-require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/AWidget.php';
-
-class cardWidget extends AWidget {
+class accordionWidget extends AWidget {
     public function processWidgetParams($params)
     {
         return $params;
@@ -11,4 +9,5 @@ class cardWidget extends AWidget {
 
     
 }
+
 ?>

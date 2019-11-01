@@ -1,5 +1,9 @@
 <?php 
 
+require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/AWidget.php';
+require_once $vjconfig['fwbasepath'].'include/vjlib/libs/bootstrap4/bootstrap4.php';
+require_once $vjconfig['fwbasepath'].'include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
+
 class cardrowWidget extends AWidget {
     public function processWidgetParams($params)
     {

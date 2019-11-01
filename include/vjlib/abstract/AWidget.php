@@ -52,7 +52,7 @@ abstract class AWidget {
     
     
     
-    static function rendorWidget($widgetName,$params) {
+    static function rendorWidget($widgetName,$params=array()) {
         global $vjconfig,$smarty;
         if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
             $smarty->assign("params",$params);
