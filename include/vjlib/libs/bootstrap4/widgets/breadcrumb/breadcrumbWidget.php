@@ -18,7 +18,7 @@ class breadcrumbWidget extends AWidget {
         foreach($params as $key=>$val) {
             $foundkey = $key;
             $params[$key] = $val;
-            if($val['alias']) {
+            if(isset($val['alias']) && $val['alias']) {
                 $alias .= "/".$val['alias'];
             }
             $val['link'] = $alias;

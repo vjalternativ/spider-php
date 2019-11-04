@@ -57,9 +57,10 @@ class EntryPointController {
     }
     
     
-    function registerBreadcrumb($id,$title,$alias) {
+    function registerBreadcrumb($id,$title,$alias,$params=array()) {
         $this->bootparams['breadcrumb'][$id]['title'] = $title;
         $this->bootparams['breadcrumb'][$id]['alias'] = $alias;
+        $this->bootparams['breadcrumb'][$id]['params'] = $params;
         
     }
     
