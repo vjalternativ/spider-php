@@ -278,6 +278,10 @@ class MysqliLib {
 	    }
 	   
 	    $this->resetHook();
+	    if($debug)  {
+	       // echo "<pre>";print_r($rows);die;
+	        
+	    }
 	    return $rows;
 	}
 	
