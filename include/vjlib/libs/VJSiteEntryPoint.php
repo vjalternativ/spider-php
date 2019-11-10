@@ -160,8 +160,6 @@ class VJSiteEntryPoint {
         $smarty->assign("baseurl",$vjconfig['baseurl']);
         $smarty->assign("params",$this->view->params);
         $smarty->assign("bootparams",$this->bootparams);
-        echo "<script>var baseurl = '".$vjconfig['baseurl']."';</script>";
-        echo "<script>var fwbaseurl = '".$vjconfig['fwbaseurl']."';</script>";
         
         $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'HeaderController.php',false);
         
@@ -173,6 +171,8 @@ class VJSiteEntryPoint {
             $headerController->loadHeader();
         }
         echo $smarty->fetch($this->sitebasePath.'/tpls/'.$vjconfig['sitetpl'].'/header.tpl');
+        echo "<script>var baseurl = '".$vjconfig['baseurl']."';</script>";
+        echo "<script>var fwbaseurl = '".$vjconfig['fwbaseurl']."';</script>";
         
         
     }
