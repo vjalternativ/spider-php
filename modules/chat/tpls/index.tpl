@@ -97,7 +97,7 @@
 		
 		
 			<div  class="row">
-				<div class="col-xs-6">
+				<div class="col-xs-4">
 					<div class="form-group hide" id="entertosend">
 							<div class="input-group">
 								<div class="input-group-addon">
@@ -107,8 +107,8 @@
 							</div>
 						</div>
 				</div>
-			<div class="col-xs-6">
-					<div class="form-group">
+			<div class="col-xs-8">
+			<div class="form-group pull-right">
 
 				<button class="btn btn-primary pull-right" id="stconnectbtn"
 					onclick="onUserConnect()" type="button">Connect</button>
@@ -118,6 +118,8 @@
 					onclick="onDisconnect()" style="display: none" type="button">Disconnect</button>
 				<div class="clearfix"></div>
 			</div>
+			<div class="clearfix"></div>
+		
 			</div>
 			
 		</div>

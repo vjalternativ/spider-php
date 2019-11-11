@@ -59,7 +59,7 @@ function resetchat() {
 
 function connectChatWindow() {
 	var iframe = document.getElementById("alternativlabschatbox");
-	iframe.width="400px";
+	iframe.width="370px";
 	iframe.height="430px";
 	
 }
