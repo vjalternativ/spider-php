@@ -44,7 +44,7 @@ class sqlcardpicrowWidget extends AWidget {
             if(!isset($row[$params['attrs']['imagefield']])) {
                 //echo "<pre>";print_r($row);die;
             }
-            $param['body'] = '<img class="img-thumbnail" alt="'.$row['name'].'" src="'.$vjconfig['fwbaseurl'].'index.php?module=media_files&action=download&id='.$row[$params['attrs']['imagefield']].'" />';
+            $param['body'] = '<img class="img-thumbnail" alt="'.$row['name'].'" src="'.$vjconfig['urlbasepath'].'index.php?module=media_files&action=download&id='.$row[$params['attrs']['imagefield']].'" />';
             $param['footer'] ='<a href="'.$vjconfig['baseurl'].$params['attrs']['linkprefix'].$row[$params['attrs']['linkfield']].'"> '. $row[$params['attrs']['titlefield']].'</a>';
             $cardWidget->addcard($param);
         }

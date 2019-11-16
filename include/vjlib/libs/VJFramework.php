@@ -91,6 +91,16 @@ class VJFramework {
 		      
 		}
 		
+		if(isset($_REQUEST['spiderphp_mode'])) {
+		    
+		    if($_REQUEST['spiderphp_mode']=="rest") {
+		        require_once $vjconfig['fwbasepath'].'service/rest/restController.php';
+		        $ob  = new restController();
+		        $ob->execute();
+		        exit();
+		    }
+		    
+		}		
 		if(isset($_REQUEST['entryPoint'])) {
 			$entrypoint = $_REQUEST['entryPoint'];
 			$entrypoints =array();
@@ -142,8 +152,6 @@ class VJFramework {
 		
 		$class = "VJController";
 		
-		$filepath = 'custom/modules/' . $this->module . '/controller.php';
-		$iscustom = $vjlib->loadf ($filepath,false);
 		
 		$filepath = $vjconfig['fwbasepath'].'modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
 		$vjlib->loadf ($filepath,false);
@@ -152,22 +160,33 @@ class VJFramework {
 		$vjlib->loadf ($filepath,false);
 		
 		
+		
+		$filepath = 'custom/modules/' . $this->module . '/controller.php';
+		$iscustom = $vjlib->loadf ($filepath,false);
+		
 		$prefix = "";
 		if($iscustom) {
 		    $prefix = $vjconfig['fwbasepath']."custom/";
+		    $class = $this->module.'Controller';
 		}
 		
 		$filepath = $vjconfig['basepath'].'custom/modules/' . $this->module . '/controller.php';
 		$iscustom = $vjlib->loadf ($filepath,false);
 		if($iscustom) {
 		    $prefix = $vjconfig['basepath']."custom/";
+		    $class = $this->module.'Controller';
+		    
+		} else {
+		    $filepath = $vjconfig['fwbasepath'].'/modules/' . $this->module . '/controller.php';
+		    $iscustom = $vjlib->loadf ($filepath,false);
+		    if($iscustom) {
+		        $prefix = $vjconfig['basepath']."/";
+		        $class = $this->module.'Controller';
+		        
+		    }
 		}
 		
-		$filepath = $prefix.'modules/' . $this->module . '/controller.php';
-		$iscustom = $vjlib->loadf ($filepath,false);
-		if($iscustom) {
-		$class = $this->module.'Controller';
-		}
+		
 		$methods = get_class_methods ( $class );
 		
 		$controller = new $class;
@@ -175,6 +194,7 @@ class VJFramework {
 		$controller->seoparams = $this->seoparams;
 		$controller->entity = strtolower($this->module);
 
+		
 			$current_user = sessioncheck('current_user');
 		
 			$entity->module = $this->module;
@@ -209,16 +229,18 @@ class VJFramework {
 				
 			}
 			
-					
 			if(!empty($controller->view)) {
 				$entity->record = $this->record;
 				$vjlib->loadf($vjconfig['fwbasepath'].'include/views/view.basic.php');
 				
-				$vjlib->loadf('include/views/view.'.$controller->view.'.php',false);
+				$vjlib->loadf($vjconfig['fwbasepath'].'include/views/view.'.$controller->view.'.php',false);
 				$filepath= $vjconfig['basepath'].'custom/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
 				if(!file_exists($filepath)) {
-				    $filepath =$prefix.'modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+				    $filepath =$vjconfig['fwbasepath'].'modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+				
 				}
+				
+				
 				$isview = $vjlib->loadf($filepath,false);
 				
 				$class = $this->module.'View'.ucfirst($controller->view);
@@ -226,7 +248,6 @@ class VJFramework {
 				if(!$isview) {
 				$class = 'View'.ucfirst($controller->view);
 				} 
-				
 				
 				
 				$view = new $class;

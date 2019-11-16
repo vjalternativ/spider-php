@@ -53,7 +53,7 @@ class userController extends VJController  {
 	function action_logout() {
 		global $vjconfig;
 		session_destroy();
-		header('location:'.$vjconfig['fwbaseurl']);
+		header('location:'.$vjconfig['fwurlbasepath']);
 	}
 	
 	function action_changePwd(){

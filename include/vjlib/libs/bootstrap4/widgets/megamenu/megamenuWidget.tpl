@@ -9,25 +9,33 @@
 
 
 
-
+<div class="container-fluid">
+   <div class="row">
+   	<div class="col-md-8">
+  
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
  
   
- 
+  
   <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none"><img src="{$baseurl}{$params.logo.src}"  width="70" height="40" /></a>
  
  
   <button type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
           <span class="navbar-toggler-icon"></span>
       </button>
+      
+   	
+   	   
   <div id="navbarContent" class="collapse navbar-collapse">
     <ul class="navbar-nav ">
       <!-- Megamenu-->
   
   <li class="nav-item">
   
-  	<a href="{$baseurl}" class="nav-link border"><img src="{$baseurl}{$params.logo.src}"  width="50" height="20" /></a>
+  	<a href="{$baseurl}" class="nav-link border">
+  	<img src="{$baseurl}{$params.logo.src}"  width="50" height="20" >
+  	</a>
   
   </li>
            
@@ -104,8 +112,18 @@
      {/foreach}
       
     </ul>
+    
   </div>
+
 </nav>
+
+</div>
+   	<div class="col-md-4">
+   	<div class="float-right">{$params.content_right}</div>
+    <div class="clearfix"></div>
+   	</div>
+   </div>
+</div>
 
 
 

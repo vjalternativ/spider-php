@@ -14,6 +14,27 @@ class SpiderPhpFramework {
     
     
     public $configpath;
+    function __construct() {
+        $idir = __DIR__;
+        $dir = substr($idir,0,strrpos($idir,"/"));
+        $newdir = $_SERVER['SCRIPT_FILENAME'];
+        $newdir = str_replace($dir.'/', "", $newdir);
+        $newdir = substr($newdir, 0,strpos($newdir,"/"));
+        //if path is same as framework then
+        if(substr($idir,strrpos($idir,"/"))=='/'.$newdir) {
+            if(file_exists($dir.'/'.'config.php')) {
+                $this->configpath = $dir;
+            }
+        } else {
+            //no symlink is same
+            if($newdir) {
+                $this->configpath = $dir."/".$newdir;
+            } else {
+                $this->configpath = $dir;
+            }
+        }
+        
+    }
     
     
     function setConfigPath($path) {
@@ -25,18 +46,14 @@ class SpiderPhpFramework {
         global $vjlib,$vjconfig,$seoParams;
         $vjfwpath = __DIR__;
         
-        $strarray = explode("/",$vjfwpath);
         $dir = __DIR__;
         $dir .= "/";
         
-        //error_reporting(0);
-       // set_include_path(__DIR__);
         require_once $this->configpath.'/config.php';
         require_once $this->configpath.'/extraconfig.php';
         require_once $this->configpath.'/seoconfig.php';
         $vjconfig['basepath'] = $this->configpath.'/';
         if(isset($vjconfig['display_errors'])) {
-            
             ini_set("display_errors",$vjconfig['display_errors']);
         } else {
             ini_set("display_errors",false);
@@ -49,13 +66,13 @@ class SpiderPhpFramework {
             
         }
         $vjconfig['fwbasepath'] = $vjfwpath."/";
-        $strarray = explode("/",$vjconfig['baseurl']);
         
-        array_pop($strarray);
-       
+        
         $vjconfig['fwbaseurl'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].str_replace($_SERVER['DOCUMENT_ROOT'],"",$dir);
-        
-        
+        $fwurlbasepath = str_replace($_SERVER['DOCUMENT_ROOT'],"",$dir);
+        if(!isset($vjconfig['fwurlbasepath'])) {
+            $vjconfig['fwurlbasepath'] = $fwurlbasepath;
+        }
         date_default_timezone_set($vjconfig['timezone']);
         require_once $vjconfig['fwbasepath'].'include/vjlib/VJLib.php';
         require_once $vjconfig['fwbasepath'].'include/Smarty/Smarty.class.php';
