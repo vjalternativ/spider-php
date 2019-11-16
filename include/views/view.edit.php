@@ -183,7 +183,7 @@ class ViewEdit  extends View {
 						   
 						    
 						    
-						    
+						    $this->data[$fieldarray['name'].'_name'] ="";
 						    if($fieldarray['type']=="nondb" && isset($_REQUEST['parent_module']) && $_REQUEST['parent_module']==$fieldarray['rmodule']) {
 						        $this->data[$fieldarray['name']] = $_REQUEST['parent_record'];
 						        $pmodule = $_REQUEST['parent_module'];
