@@ -28,7 +28,6 @@ class Entity {
 	public $password = array('name'=>'password','type'=>'varchar','len'=>255,'label'=>'LBL_PASSWORD');
 	public $ownership_id = array('name'=>'ownership_id','type'=>'relate','rmodule'=>'user','notnull'=>true,'label'=>'LBL_OWNERSHIP');
 	
-	
 	public $user_additonalFields = array("username","password","ownership_id");
 	public $userExcludeFields = array("description");
 	function __construct() {
@@ -457,7 +456,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
 		
-		
+		$this->data = $keyvalue;
 		$sql .= $table." ".$this->getupdateByIdString($keyvalue,$isnew,$columns,$where);
 		//$log->fatal("Going to save data ".$sql);
 		
@@ -466,7 +465,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		
 		$qry = $db->query($sql,$return);
 		if($qry) {
-		    
+		    $this->beandata[$table]= $keyvalue;
 		} else {
 		    return $qry;
 		}

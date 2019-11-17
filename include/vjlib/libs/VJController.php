@@ -27,7 +27,7 @@ class VJController  {
 			$paginate->sql = $sql;
 			$paginate->db = $db;
 			
-			$url = $vjconfig['fwbaseurl']."index.php?module=".$this->entity."&action=detailview&record=key_id";
+			$url = $vjconfig['fwurlbasepath']."index.php?module=".$this->entity."&action=detailview&record=key_id";
 			$url = processUrl($url);
 			$paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
 		}

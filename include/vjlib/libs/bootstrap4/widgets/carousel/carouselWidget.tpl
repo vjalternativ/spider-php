@@ -10,7 +10,7 @@
   <div class="carousel-inner">
     {foreach from=$params item=slide}
     <div class="carousel-item {if $slide.isfirst}active{/if}">
-      <img src="{$fwbaseurl}index.php?module=media_files&action=download&id={$slide.attrs.image}" alt="">
+      <img src="./index.php?module=media_files&action=download&id={$slide.attrs.image}" alt="">
     </div>
     {/foreach}
     

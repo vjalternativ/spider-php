@@ -21,7 +21,7 @@ class restController {
             
             $data = array();
             if($encodeType == "base64") {
-                   $data = json_decode(base64_decode($params),1); 
+                   $data = json_decode(base64_decode($params),1);
             } else {
                 $data = json_decode($params,1);
             }
