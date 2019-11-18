@@ -141,4 +141,23 @@ class View {
 	    }
 	    echo $smarty->fetch($path);
 	}
+	
+	function loadTpl($tpl,$params=array()) {
+	    global $smarty,$vjconfig;
+	    
+	    $module = $this->module;
+	    
+	   // $smarty->assign('bootparams',$this->bootparams);
+	    $this->params += $params;
+	    $smarty->assign('params',$this->params);
+	    
+	    $path = $vjconfig['basepath'].'custom/modules/'.$module.'/tpls/'.$tpl;
+	    $content = "";
+	    if(file_exists($path)) {
+	        $content =  $smarty->fetch($path);
+	    }
+	    
+	    return $content;
+	    
+	}
 }

@@ -477,9 +477,12 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
-		
 		foreach($logicHook[$table]['after_save'] as $hook) {
-		    $vjlib->loadf($hook[1]);
+		    
+		    $found = $vjlib->loadf($vjconfig['basepath'].$hook[1],false);
+		    if(!$found) {
+		        $vjlib->loadf($hook[1]);
+		    }
 		    $hookobj = new $hook[2];
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);

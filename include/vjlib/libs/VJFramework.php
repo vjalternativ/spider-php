@@ -90,6 +90,7 @@ class VJFramework {
 		    $_REQUEST['entryPoint'] = $vjconfig['framework']['default_entrypoint'];
 		      
 		}
+		$current_user = sessioncheck('current_user');
 		
 		if(isset($_REQUEST['spiderphp_mode'])) {
 		    
@@ -141,7 +142,7 @@ class VJFramework {
 	}
 	function loadController() {
 		
-		global $vjlib,$vjconfig,$current_user,$entity,$smarty;
+	    global $vjlib,$vjconfig,$current_user,$entity,$smarty,$globalModuleList;
 		
 		
 		$smarty->assign("baseurl",$vjconfig['fwbaseurl']);
@@ -195,7 +196,6 @@ class VJFramework {
 		$controller->entity = strtolower($this->module);
 
 		
-			$current_user = sessioncheck('current_user');
 		
 			$entity->module = $this->module;
 			$tableinfo = $entity->getwhere("tableinfo","name='".$this->module."'");
@@ -219,6 +219,14 @@ class VJFramework {
 				    if(isset($controller->nonauth[$this->action]) && $current_user && isset($controller->nonauth[$this->action]['redirect'])) {
 						redirect($controller->nonauth[$this->action]['redirect']['module'], $controller->nonauth[$this->action]['redirect']['action']);
 					} 
+					
+					if(!isset($controller->nonauth[$this->action]) && $current_user) {
+					    if(!$current_user->isDeveloper) {
+					        if(!(isset($globalModuleList[$this->module]) && isset($current_user->module_access[$globalModuleList[$this->module]['id']])  && $current_user->module_access[$globalModuleList[$this->module]['id']]['module_access'])) {
+    					           die("Access denied !");       
+    					    }
+					    }
+					}
 				}
 		
 				$controller->{'action_' . $this->action} ();

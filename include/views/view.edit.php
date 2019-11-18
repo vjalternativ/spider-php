@@ -261,7 +261,14 @@ class ViewEdit  extends View {
 				
 			
 			
-		}
+			} else if($item['type']=="hr") {
+			    $formgroup .= $bs->getelement("div",$item['label'],array("class"=>"hr_additional"));
+			    $formgroup .= $bs->getelement("hr",false,false,false);
+			    
+			} else if($item['type']=="custom_html") {
+			    $content = $bs->getelement("div",$item['html'],array("class"=>"col-md-12"));
+			    $formgroup .= $bs->getelement("div",$content,array("class"=>"row"));
+			}
 		
 		
 		

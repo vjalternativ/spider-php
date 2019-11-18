@@ -24,13 +24,25 @@ class userRest extends ARest
             if (is_array($jsonArray) && isset($jsonArray['email'])) {
                 $sql = "select * from " . $mod . " where username = '" . $jsonArray['email'] . "' and deleted=0";
                 $userData = $db->getrow($sql);
-                $userData['name'] = $jsonArray['name'];
-                $userData['username'] = $jsonArray['email'];
-                $userData['password'] = rand(10000, 99999);
-                $entity->save($mod, $userData);
-
-                if (isset($entity->beandata['user'])) {
-                    $autheticate->processSession($entity->beandata['user']);
+                
+                $beanData = array();
+                
+                if($userData) {
+                    $sql = "select * from user where id='".$userData['ownership_id']."' and deleted=0 ";
+                    $beanData = $db->getrow($sql);  
+                } else {
+                    $userData['name'] = $jsonArray['name'];
+                    $userData['username'] = $jsonArray['email'];
+                    $userData['password'] = rand(10000, 99999);
+                    $entity->save($mod, $userData);
+                    
+                    if (isset($entity->beandata['user'])) {
+                        $beanData = $entity->beandata['user'];
+                    }
+                    
+                }
+                if ($beanData) {
+                    $autheticate->processSession($beanData);
 
                     $status = array(
                         "status" => true
@@ -40,5 +52,10 @@ class userRest extends ARest
         }
 
         echo json_encode($status);
+    }
+    
+    
+    public function action_logout() {
+        session_destroy();
     }
 }
