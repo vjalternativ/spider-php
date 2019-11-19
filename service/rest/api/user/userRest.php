@@ -7,7 +7,7 @@ class userRest extends ARest
 
     public function action_authenticate($data)
     {
-        global $entity, $db;
+        global $entity, $db,$current_user;
         $status = array(
             "status" => false
         );
