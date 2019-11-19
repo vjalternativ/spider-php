@@ -3,6 +3,8 @@ class tableinfoController extends VJController {
     
     function __construct() {
         $this->nonauth['updateschema'] = array();
+        $this->nonauth['ajaxrelatemodal'] = array();
+        
     }
 	
 	function action_editview() {
