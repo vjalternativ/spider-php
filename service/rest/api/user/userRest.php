@@ -11,8 +11,14 @@ class userRest extends ARest
         $status = array(
             "status" => false
         );
+        
+        if($current_user && $current_user->id) {
+            echo json_encode($status);
+            exit();
+        }
+        
         $autheticate = new Authenticate();
-        if (isset($data["auth_type"]) && $data['auth_type'] == "google") {
+        if (isset($data["auth_type"]) && $data['auth_type'] == "google" ) {
             $mod = "user";
             if (isset($data['user_type'])) {
                 $mod = $data['user_type'];
