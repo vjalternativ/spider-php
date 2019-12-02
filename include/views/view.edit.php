@@ -4,6 +4,7 @@ class ViewEdit  extends View {
 	public $datatypeFields = array();
 	public $tpl = 'include/tpls/editview.tpl';
 	public $def;
+	public $additionalContent;
 	
 	function __construct() {
 		$datatypes = array();
@@ -72,7 +73,7 @@ class ViewEdit  extends View {
 		$save =  $bs->getelement("button","Save",array("type"=>array("value"=>"submit"),"class"=>array("value"=>"btn btn-primary pull-right")));
 		$save .= '<div class="clearfix"></div>';
 		
-		$panelheading = $bs->getelement('div',ucfirst($globalModuleList[$this->module]['label']).' | Edit View',array('class'=>array('value'=>'panel-heading')));
+		$panelheading = $bs->getelement('div',ucfirst($globalModuleList[$this->module]['label']).' | Edit View'.$this->additionalContent,array('class'=>array('value'=>'panel-heading')));
 		$panelbody = $bs->getelement('div',$html,array('class'=>array('value'=>'panel-body')));
 		$panelfooter = $bs->getelement('div',$save,array('class'=>array('value'=>'panel-footer')));
 		$panel = $bs->getelement('div',$panelheading.$panelbody.$panelfooter,array('class'=>array('value'=>'panel panel-info')));
@@ -182,8 +183,9 @@ class ViewEdit  extends View {
 						else if($fieldarray['type']=='nondb' && isset($fieldarray['rmodule'])) {
 						   
 						    
-						    
-						    $this->data[$fieldarray['name'].'_name'] ="";
+						    if(!isset($this->data[$fieldarray['name']."_name"])) {
+						        $this->data[$fieldarray['name'].'_name'] ="";
+						    }
 						    if($fieldarray['type']=="nondb" && isset($_REQUEST['parent_module']) && $_REQUEST['parent_module']==$fieldarray['rmodule']) {
 						        $this->data[$fieldarray['name']] = $_REQUEST['parent_record'];
 						        $pmodule = $_REQUEST['parent_module'];
