@@ -63,7 +63,7 @@ class ViewDetail  extends View {
 	
 		foreach($this->subpanels  as $key=>$subpanels) {
 		  
-    		$pageinfo = $entity->get_relationships($subpanels['name']);
+    		$pageinfo = $entity->get_relationships($subpanels['name'],false,$subpanels);
     		$rows = $pageinfo['data'];
     		
     		$rows = array_slice($rows, 0,$pageinfo['resultperpage'],true);
