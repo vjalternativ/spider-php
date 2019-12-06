@@ -76,7 +76,12 @@ class MysqliLib {
 	function getrow($sql) {
 		//echo $sql."<br />";
 		$qry = mysqli_query($this->con,$sql);
-		return mysqli_fetch_assoc($qry);
+		if($qry) {
+		    return mysqli_fetch_assoc($qry);
+		} else {
+		    return false;
+		}
+		
 	}
 	
 	
