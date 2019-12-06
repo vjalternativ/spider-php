@@ -80,6 +80,7 @@ class MysqliLib {
 		    return mysqli_fetch_assoc($qry);
 		} else {
 		    echo "wrong query for get row ".$sql;
+		    echo "<pre>";print_r(debug_print_backtrace());
 		    die;
 		}
 		
