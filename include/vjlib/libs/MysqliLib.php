@@ -79,7 +79,8 @@ class MysqliLib {
 		if($qry) {
 		    return mysqli_fetch_assoc($qry);
 		} else {
-		    return false;
+		    echo "wrong query for get row ".$sql;
+		    die;
 		}
 		
 	}
