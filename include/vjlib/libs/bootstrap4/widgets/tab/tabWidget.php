@@ -16,7 +16,7 @@ class tabWidget extends AWidget {
         
         
         if($this->checkFirst) {
-            $params['isfirst'] = true;
+            $params['isfirstrow'] = true;
             $this->checkFirst = false;
         } 
         $this->params['tabs'][]= $params;
@@ -43,7 +43,7 @@ class tabWidget extends AWidget {
             $checkFirst = true;
             foreach($params['tabs'] as $key=>$val) {
                 if($checkFirst) {
-                    $val['isfirst'] = true;
+                    $val['isfirstrow'] = true;
                     $checkFirst = false;
                 }
                 $val['name']  = $val[$params['attrs']["tabheader_name_field"]];
@@ -51,7 +51,7 @@ class tabWidget extends AWidget {
             }
             
             
-        }
+        } 
         
         return $params;
         

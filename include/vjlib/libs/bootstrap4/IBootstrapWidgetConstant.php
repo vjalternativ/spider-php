@@ -12,7 +12,7 @@ class IBootstrapWidgetConstant {
      static $BUTTON = "button";
      static $ACCORDION = "accordion";
      static $MODAL = "modal";
-     
+     static $TAB = "tab";
      
 }
 
