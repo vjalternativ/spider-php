@@ -7,16 +7,16 @@
 	</div>
 	{/if}
 	
-	<div class="card-body ">
+	<div class="card-body {if !$params.title}p-0{/if}" >
 		
 		{foreach from=$params.data item=row}
 		
 			<div class="row mb-2">
 			
 				{foreach from=$row item=card}
-					<div class="col-sm">
+					<div class="{if $card.size}col-sm-{$card.size}{else}col-sm{/if}">
 						
-						{$card}
+						{$card.content}
 											
 					</div>
 					
