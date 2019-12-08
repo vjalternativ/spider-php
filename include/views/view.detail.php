@@ -23,6 +23,7 @@ class ViewDetail  extends View {
 		$datatypes['nondb'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','disabled'=>'disabled','placeholder'=>'name','name'=>'name','type'=>'text','value'=>'','class'=>'form-control')));
 		$datatypes['file'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','disabled'=>'disabled','placeholder'=>'name','name'=>'name','type'=>'text','value'=>'','class'=>'form-control')));
 		$datatypes['checkbox'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','disabled'=>'disabled','placeholder'=>'name','name'=>'name','type'=>'checkbox','value'=>'','class'=>'form-control')));
+		$datatypes['date'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','disabled'=>'disabled','placeholder'=>'name','name'=>'name','type'=>'text','value'=>'','class'=>'form-control')));
 		
 		$this->datatypeFields = $datatypes;
 		
@@ -157,9 +158,7 @@ class ViewDetail  extends View {
 
 
 	function getattr($type,$name,$value='') {
-		global $vjlib;
-		$bs = $vjlib->BootStrap;
-
+		
 		$attr = $this->datatypeFields[$type];
 		if($type=="relate" || $type=="dependent_relate" || ($type=="nondb" && isset($this->data[$name.'_name']))) {
 		    $name  = $name."_name";
