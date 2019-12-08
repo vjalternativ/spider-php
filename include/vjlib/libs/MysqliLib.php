@@ -205,8 +205,10 @@ class MysqliLib {
 	        if($dim) {
 	            foreach($dim as $dimkey=> $index){
 	                $cols = false;
+	                $isIndexArray = false;
+	                
 	                if(is_array($index)) {
-	                    
+	                    $isIndexArray = true;
 	                    if(isset($index['cols'])) {
 	                        $cols = $index['cols'];
 	                        $index = $index['key'];
@@ -216,28 +218,18 @@ class MysqliLib {
 	                        $index = $dimkey;
 	                    }
 	                } 
-	                
-	                
 	                if($cols) {
-	                
 	                    if( !isset($temp[$row[$index]])) {
-	                        
-	                        
 	                        foreach($cols as $col) {
 	                            $temp[$row[$index]][$col] = $row[$col];
-	                            
 	                        }
 	                        $temp[$row[$index]]['items'] = false;
 	                    }
-	                    
 	                } else {
 	                    if(!isset($temp[$row[$index]])) {
 	                        $temp[$row[$index]] = false;
 	                    }
 	                }
-	                
-	                
-	                
 	                
 	                if(isset($dimindexer[$index]["row_index"])) {
 	                    if(!isset($dimindexer[$index][$row[$index]])) {
@@ -249,13 +241,12 @@ class MysqliLib {
 	                    $dimindexer[$index][$row[$index]] = 0;
 	                }
 	                
-	                
-	                
-	                $temp[$row[$index]]['seq_index'] =  $dimindexer[$index][$row[$index]];
-	                $temp[$row[$index]]['seq_index_a'] =  $dimindexer[$index][$row[$index]]+1;
-	                $temp[$row[$index]]['seq_last'] =  $dimindexer[$index]["row_index"];
-	                $temp[$row[$index]]['seq_count'] =  $dimindexer[$index]["row_index"]+1;
-	                
+	                if($isIndexArray) {
+    	                $temp[$row[$index]]['seq_index'] =  $dimindexer[$index][$row[$index]];
+    	                $temp[$row[$index]]['seq_index_a'] =  $dimindexer[$index][$row[$index]]+1;
+    	                $temp[$row[$index]]['seq_last'] =  $dimindexer[$index]["row_index"];
+    	                $temp[$row[$index]]['seq_count'] =  $dimindexer[$index]["row_index"]+1;
+	                }
 	                if($cols) {
 	                    $temp = &$temp[$row[$index]]['items'];
 	                } else {
