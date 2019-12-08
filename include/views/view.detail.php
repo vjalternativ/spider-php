@@ -10,7 +10,7 @@ class ViewDetail  extends View {
 	function __construct() {
 		
 	
-	    global $vjlib,$entity;
+	    global $entity;
 		$datatypes = array();
 		$datatypes['varchar'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','disabled'=>'disabled','placeholder'=>'name','name'=>'name','type'=>'text','value'=>'','class'=>'form-control')));
 		$datatypes['int'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','disabled'=>'disabled','placeholder'=>'name','name'=>'name','type'=>'text','value'=>'','class'=>'form-control')));
@@ -36,16 +36,7 @@ class ViewDetail  extends View {
 
 	function display() {
 	    
-	    global $globalModuleList;
-	    /*  echo "<pre>";
-	    print_r($globalModuleList);
-	    die; */
-	    //$id = create_guid();
-	    //die($id); 
-	    global $vjlib,$entity,$vjconfig;
-		$bs = $vjlib->BootStrap;
-		$headers = array("id","name","date_entered");
-		$module = ucfirst($this->module);
+	    $module = ucfirst($this->module);
 		$href = "index.php?module=tableinfo&action=editview";
 		$defaultLayout = $this->getDefaultLayout();
 		$href = processUrl($href);
@@ -57,18 +48,17 @@ class ViewDetail  extends View {
 
 
 	function afterDisplay() {
-		global $db,$entity,$vjlib,$smarty;
+		global $entity,$vjlib,$smarty;
 		$bs = $vjlib->BootStrap;
 		
 	
 	
-		foreach($this->subpanels  as $key=>$subpanels) {
+		foreach($this->subpanels  as $subpanels) {
 		  
     		$pageinfo = $entity->get_relationships($subpanels['name'],false,$subpanels);
     		$rows = $pageinfo['data'];
     		
     		$rows = array_slice($rows, 0,$pageinfo['resultperpage'],true);
-    		$params = array('headers' => array('name','date_entered'));
     		
     		$headers = array();
     		$headers['name']['name'] = "name";
@@ -125,27 +115,18 @@ class ViewDetail  extends View {
 	}
 
 	function getDefaultLayout() {
-	    global $db,$entity,$vjlib,$globalModuleList;
+	    global $entity,$vjlib,$globalModuleList;
 		$bs = $vjlib->BootStrap;
-		
 		$tableinfo =$entity->getwhere("tableinfo","name ='".$this->module."'");
-		
-		
 		$vardef = json_decode(base64_decode($tableinfo['description']),1);
-		
-	$metadata = $vardef['metadata'];
-
-       
+	    $metadata = $vardef['metadata'];
 		$html = $this->parseDetailViewDef($metadata['detailview']);
 		$editButton= getelement("a","EDIT",array("href"=>"index.php?module=".$this->module."&action=editview&record=".$this->record,"class"=>"btn btn-primary pull-right"));
 		$editButton .= $this->additionalContent;
 		$editButton .= getelement("div","",array("class"=>"clearfix"));
         $panelheading = $bs->getelement('div',ucfirst($globalModuleList[$this->module]['label']).' | Detail View'.$editButton,array('class'=>array('value'=>'panel-heading')));
 		$panelbody = $bs->getelement('div',$html,array('class'=>array('value'=>'panel-body')));
-		$panelfooter = $bs->getelement('div','',array('class'=>array('value'=>'panel-footer')));
 		$panel = $bs->getelement('div',$panelheading.$panelbody,array('class'=>array('value'=>'panel panel-info')));
-
-
 		return $panel;
 
 
