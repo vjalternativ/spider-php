@@ -3,6 +3,8 @@ class MysqliLib {
 	
 	public $con;
 	public $processHook = array("instance"=>"","method"=>"","enumList"=>array());
+	public $dimindexer  =array();
+	
 	function connect($host="locahost",$user="root",$password="",$database="framework") {
 		
 				$this->con = mysqli_connect($host,$user,$password,$database) or die("database connection failed");
@@ -169,7 +171,65 @@ class MysqliLib {
 	}
 	
 	
-	
+	function processDimIndexer($row,$dim,$dimindexer) {
+	    
+	    $seqdim= array();
+	    foreach($dim as $key=>$val) {
+	        if(is_array($val)) {
+	            $seqdim[] = $key;
+	        } else {
+	            $seqdim[] = $val;
+	        }
+	    }
+	    
+	    $keys = array();
+	    $key = "seq";
+	    $val = "val";
+	    foreach($seqdim as $index => $dimkey) {
+	           $key .= "_".$dimkey;
+	           foreach($seqdim as $dindex => $dkey) {
+	                   $val .= "_".$row[$dkey];
+	                   if(($index) == $dindex) {
+	                       break;
+	                   }
+	          }
+	          $keys[$key] = $val;
+	          $ikey = "iseq_".$dimkey;
+	          if(isset($dimindexer[$ikey])) {
+	              if(!isset($dimindexer[$ikey]['vals'][$row[$dimkey]])) {
+	                  $dimindexer[$ikey]['counter_index_seq']++;
+	                  $dimindexer[$ikey]['vals'][$row[$dimkey]] = $dimindexer[$ikey]['counter_index_seq'];
+	              }
+	          } else {
+	              $dimindexer[$ikey]['vals'][$row[$dimkey]] = 0;
+	              $dimindexer[$ikey]['counter_index_seq'] = 0;
+	          }
+	          $row[$ikey] = $dimindexer[$ikey]['vals'][$row[$dimkey]];
+	          $dimindexer['last_iseq_indexes'][$ikey] = $dimindexer[$ikey]['vals'][$row[$dimkey]];
+	    }
+	    
+	    foreach($keys as $key=>$val) {
+	         if(isset($dimindexer[$key])) {
+	             if(!isset($dimindexer[$key]['vals'][$val])) {
+	                 $dimindexer[$key]['counter_index_seq']++;
+	                 $dimindexer[$key]['vals'][$val] = $dimindexer[$key]['counter_index_seq'];
+	             }
+	             
+	         } else {
+	             $dimindexer[$key]['vals'][$val] = 0;
+	             $dimindexer[$key]['counter_index_seq'] =0;
+	         }
+	         
+	         
+	         $row[$key] = $dimindexer[$key]['vals'][$val];
+	         $dimindexer['last_seq_indexes'][$key] = $row[$key];
+	         
+	    }
+	    
+	    
+	    return array("row"=>$row,"dimindexer"=>$dimindexer);
+	    
+	}
 	
 	
 	function fetchRows($sql = "",$dim=false,$val=false,$debug=false) {
@@ -177,7 +237,7 @@ class MysqliLib {
 	    $temp = &$rows;
 	    $qry = mysqli_query($this->con,$sql) or die("wrong query ".$sql." ". mysqli_error($this->con));
 	    $checkFirst  = true;
-	    $dimindexer = array();
+	    $this->dimindexer = array();
 	    
 	    while($row = mysqli_fetch_assoc($qry)) {
 	        
@@ -203,12 +263,16 @@ class MysqliLib {
 	            }
 	        }
 	        if($dim) {
+	            
+	            if($debug) {
+	               $data = $this->processDimIndexer($row, $dim, $this->dimindexer);
+	               $this->dimindexer = $data['dimindexer'];
+	               $row = $data['row'];
+	            }
 	            foreach($dim as $dimkey=> $index){
 	                $cols = false;
-	                $isIndexArray = false;
 	                
 	                if(is_array($index)) {
-	                    $isIndexArray = true;
 	                    if(isset($index['cols'])) {
 	                        $cols = $index['cols'];
 	                        $index = $index['key'];
@@ -221,32 +285,18 @@ class MysqliLib {
 	                if($cols) {
 	                    if( !isset($temp[$row[$index]])) {
 	                        foreach($cols as $col) {
-	                            $temp[$row[$index]][$col] = $row[$col];
+	                            if(isset($row[$col])) {
+	                                $temp[$row[$index]][$col] = $row[$col];
+	                            }
 	                        }
 	                        $temp[$row[$index]]['items'] = false;
-	                    }
+	                    } 
 	                } else {
 	                    if(!isset($temp[$row[$index]])) {
 	                        $temp[$row[$index]] = false;
 	                    }
 	                }
 	                
-	                if(isset($dimindexer[$index]["row_index"])) {
-	                    if(!isset($dimindexer[$index][$row[$index]])) {
-	                        $dimindexer[$index]["row_index"]++;
-	                        $dimindexer[$index][$row[$index]]=$dimindexer[$index]["row_index"];
-	                    }
-	                } else {
-	                    $dimindexer[$index]["row_index"] = 0;
-	                    $dimindexer[$index][$row[$index]] = 0;
-	                }
-	                
-	                if($isIndexArray) {
-    	                $temp[$row[$index]]['seq_index'] =  $dimindexer[$index][$row[$index]];
-    	                $temp[$row[$index]]['seq_index_a'] =  $dimindexer[$index][$row[$index]]+1;
-    	                $temp[$row[$index]]['seq_last'] =  $dimindexer[$index]["row_index"];
-    	                $temp[$row[$index]]['seq_count'] =  $dimindexer[$index]["row_index"]+1;
-	                }
 	                if($cols) {
 	                    $temp = &$temp[$row[$index]]['items'];
 	                } else {
