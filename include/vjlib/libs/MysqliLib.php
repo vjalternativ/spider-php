@@ -4,6 +4,17 @@ class MysqliLib {
 	public $con;
 	public $processHook = array("instance"=>"","method"=>"","enumList"=>array());
 	public $dimindexer  =array();
+	private $processSeq = false;
+	private $debug = false;
+	
+	
+	function setProcessSequence($b) {
+	    $this->processSeq = $b;
+	}
+	
+	function setDebugMode($b) {
+	    $this->debug= $b;
+	}
 	
 	function connect($host="locahost",$user="root",$password="",$database="framework") {
 		
@@ -224,7 +235,7 @@ class MysqliLib {
 	
 	
 	
-	function fetchRows($sql = "",$dim=false,$val=false,$processSeq=false,$debug=false) {
+	function fetchRows($sql = "",$dim=false,$val=false) {
 	    $rows = array();
 	    $temp = &$rows;
 	    $qry = mysqli_query($this->con,$sql) or die("wrong query ".$sql." ". mysqli_error($this->con));
@@ -256,7 +267,7 @@ class MysqliLib {
 	        }
 	        if($dim) {
 	            
-	            if($processSeq) {
+	            if($this->processSeq) {
 	               $row = $this->processDimIndexer($row, $dim);
 	            }
 	            foreach($dim as $dimkey=> $index){
@@ -313,12 +324,10 @@ class MysqliLib {
 	        }
 	        $temp = &$rows;
 	    }
+	    
 	   
 	    $this->resetHook();
-	    if($debug)  {
-	       // echo "<pre>";print_r($rows);die;
-	        
-	    }
+	    $this->processSeq= false;
 	    return $rows;
 	}
 	
