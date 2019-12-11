@@ -5,6 +5,7 @@ class tableinfoController extends VJController {
         $this->nonauth['updateschema'] = array();
         $this->nonauth['ajaxrelatemodal'] = array();
         $this->nonauth['ajaxRemoveRelationship'] = array();
+        $this->nonauth['deleteRecord'] = array();
     }
 	
 	function action_editview() {

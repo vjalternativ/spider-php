@@ -171,8 +171,7 @@ class MysqliLib {
 	}
 	
 	
-	function processDimIndexer($row,$dim,$dimindexer) {
-	    
+	function processDimIndexer($row, $dim) {
 	    $seqdim= array();
 	    foreach($dim as $key=>$val) {
 	        if(is_array($val)) {
@@ -181,58 +180,51 @@ class MysqliLib {
 	            $seqdim[] = $val;
 	        }
 	    }
-	    
-	    $keys = array();
-	    $key = "seq";
-	    $val = "val";
-	    foreach($seqdim as $index => $dimkey) {
-	           $key .= "_".$dimkey;
-	           foreach($seqdim as $dindex => $dkey) {
-	                   $val .= "_".$row[$dkey];
-	                   if(($index) == $dindex) {
-	                       break;
-	                   }
-	          }
-	          $keys[$key] = $val;
-	          $ikey = "iseq_".$dimkey;
-	          if(isset($dimindexer[$ikey])) {
-	              if(!isset($dimindexer[$ikey]['vals'][$row[$dimkey]])) {
-	                  $dimindexer[$ikey]['counter_index_seq']++;
-	                  $dimindexer[$ikey]['vals'][$row[$dimkey]] = $dimindexer[$ikey]['counter_index_seq'];
-	              }
-	          } else {
-	              $dimindexer[$ikey]['vals'][$row[$dimkey]] = 0;
-	              $dimindexer[$ikey]['counter_index_seq'] = 0;
-	          }
-	          $row[$ikey] = $dimindexer[$ikey]['vals'][$row[$dimkey]];
-	          $dimindexer['last_iseq_indexes'][$ikey] = $dimindexer[$ikey]['vals'][$row[$dimkey]];
+	    $skey = "seq";
+	    $sval = false;
+	    $vval = "val_";
+	    $ikey = "rseq";
+	    foreach($seqdim as $index) {
+	        $vval .= "_".$row[$index];
+	        $skey .="_".$index;
+	        $ikey .="_".$index;
+	        if(isset($this->dimindexer['last_seq_indexes'][$skey])) {
+	            if(!isset($this->dimindexer['vals'][$skey][$vval])) {
+	                $this->dimindexer['last_seq_indexes'][$skey]++;
+	                $this->dimindexer['vals'][$skey][$vval] =$this->dimindexer['last_seq_indexes'][$skey];
+	            }
+	            
+	        } else {
+	            $this->dimindexer['last_seq_indexes'][$skey]=0;
+	            $this->dimindexer['vals'][$skey][$vval] = 0;
+	        }
+	        $row[$skey] = $this->dimindexer['last_seq_indexes'][$skey];
+	        
+	        if($sval) {
+	            if(isset($this->dimindexer['last_iseq_indexes'][$ikey."_".$sval])) {
+	                if(!isset($this->dimindexer['vals'][$ikey."_".$sval][$vval])) {
+	                    $this->dimindexer['last_iseq_indexes'][$ikey."_".$sval]++;
+	                    $this->dimindexer['vals'][$ikey."_".$sval][$vval] = $this->dimindexer['last_iseq_indexes'][$ikey."_".$sval];
+	                }
+	            } else {
+	                $this->dimindexer['last_iseq_indexes'][$ikey."_".$sval]=0;
+	                $this->dimindexer['vals'][$ikey."_".$sval][$vval]=$this->dimindexer['last_iseq_indexes'][$ikey."_".$sval];
+	            }
+	            $row[$ikey] = $this->dimindexer['last_iseq_indexes'][$ikey."_".$sval];
+	            $sval .= "_".$row[$index];
+	        }else {
+	            $sval = "val_".$row[$index];
+	        }
 	    }
-	    
-	    foreach($keys as $key=>$val) {
-	         if(isset($dimindexer[$key])) {
-	             if(!isset($dimindexer[$key]['vals'][$val])) {
-	                 $dimindexer[$key]['counter_index_seq']++;
-	                 $dimindexer[$key]['vals'][$val] = $dimindexer[$key]['counter_index_seq'];
-	             }
-	             
-	         } else {
-	             $dimindexer[$key]['vals'][$val] = 0;
-	             $dimindexer[$key]['counter_index_seq'] =0;
-	         }
-	         
-	         
-	         $row[$key] = $dimindexer[$key]['vals'][$val];
-	         $dimindexer['last_seq_indexes'][$key] = $row[$key];
-	         
-	    }
-	    
-	    
-	    return array("row"=>$row,"dimindexer"=>$dimindexer);
+	    return $row;
 	    
 	}
 	
 	
-	function fetchRows($sql = "",$dim=false,$val=false,$debug=false) {
+	
+	
+	
+	function fetchRows($sql = "",$dim=false,$val=false,$processSeq=false,$debug=false) {
 	    $rows = array();
 	    $temp = &$rows;
 	    $qry = mysqli_query($this->con,$sql) or die("wrong query ".$sql." ". mysqli_error($this->con));
@@ -264,10 +256,8 @@ class MysqliLib {
 	        }
 	        if($dim) {
 	            
-	            if($debug) {
-	               $data = $this->processDimIndexer($row, $dim, $this->dimindexer);
-	               $this->dimindexer = $data['dimindexer'];
-	               $row = $data['row'];
+	            if($processSeq) {
+	               $row = $this->processDimIndexer($row, $dim);
 	            }
 	            foreach($dim as $dimkey=> $index){
 	                $cols = false;
@@ -281,7 +271,8 @@ class MysqliLib {
 	                        $cols = $index;
 	                        $index = $dimkey;
 	                    }
-	                } 
+	                }
+	                
 	                if($cols) {
 	                    if( !isset($temp[$row[$index]])) {
 	                        foreach($cols as $col) {
@@ -300,10 +291,8 @@ class MysqliLib {
 	                if($cols) {
 	                    $temp = &$temp[$row[$index]]['items'];
 	                } else {
-	                    
 	                    $temp = &$temp[$row[$index]];
 	                }
-	                
 	                
 	            }
 	            
