@@ -30,9 +30,15 @@ class AliasLogicHook {
     }
     
     function beforeSave(&$keyvalue) {
+        global $db;
         $alias=self::slugify($keyvalue['name']);
         $keyvalue['alias']=$alias;
-        
+        if($keyvalue['isnew']) {
+            $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$keyvalue['alias']."' ");
+            if($isExist) {
+                die($keyvalue['hook_table']." record already exist with alias ".$alias);
+            }
+        }
         
     }
     
