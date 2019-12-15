@@ -106,7 +106,10 @@ class VJFramework {
 			$entrypoint = $_REQUEST['entryPoint'];
 			$entrypoints =array();
 			require_once $vjconfig['fwbasepath']."include/entrypointregistry.php";
-			$vjlib->loadf("custom/include/entrypointregistry.php",false);
+			if(file_exists($vjconfig['basepath']."custom/include/entrypointregistry.php")) {
+			    require_once $vjconfig['basepath']."custom/include/entrypointregistry.php";
+			}
+			
 			if(!isset($entrypoints[$entrypoint])) {
 				die("entry point not found in entry point registry");
 			}

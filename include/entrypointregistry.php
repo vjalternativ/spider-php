@@ -1,5 +1,5 @@
 <?php
-$entrypoints = array();
+global $entrypoints;
 $entrypoints['install'] = array("path"=>"include/entrypoints/install.php",'auth'=>false);
 $entrypoints['patch'] = array("path"=>"include/entrypoints/patch.php",'auth'=>false);
 $entrypoints['site'] = array("path"=>"include/entrypoints/site/index.php",'auth'=>false,'type'=>'siteEntryPoint');
