@@ -22,9 +22,9 @@ class VJFramework {
 	    require_once $vjconfig['fwbasepath'].'cache/relationship_list.php';
 	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
 	    require_once $vjconfig['fwbasepath'].'cache/module_list.php';
-	    
-	    return false;
-	    
+	    if($globalModuleList) {
+	       return false;
+	    }
 	    $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"));
 	    
 	    
