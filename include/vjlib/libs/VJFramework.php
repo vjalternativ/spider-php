@@ -17,7 +17,14 @@ class VJFramework {
 	//TO DO : to explore global variable vs class data attribute which is best way
 	
 	function initModules() {
-	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList;
+	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig;
+	    
+	    require_once $vjconfig['fwbasepath'].'cache/relationship_list.php';
+	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
+	    require_once $vjconfig['fwbasepath'].'cache/module_list.php';
+	    
+	    return false;
+	    
 	    $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"));
 	    
 	    
