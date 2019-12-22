@@ -119,6 +119,19 @@ class ViewDetail  extends View {
 		$bs = $vjlib->BootStrap;
 		$tableinfo =$entity->getwhere("tableinfo","name ='".$this->module."'");
 		$vardef = json_decode(base64_decode($tableinfo['description']),1);
+		
+		$languages= $entity->getRelatedData("tableinfo_language_m_m", "tableinfo_id", $tableinfo['id']);
+		
+		if($languages) {
+		    foreach($languages as $lang) {
+		        $suffix = $lang['name'];
+		        $langTable = $this->module.'_'.$suffix;
+		        if(isset($globalModuleList[$langTable])) {
+		            $vardef = $this->processDefForLang($suffix,$vardef,"detailview");
+		        }
+		    }
+		}
+		
 	    $metadata = $vardef['metadata'];
 		$html = $this->parseDetailViewDef($metadata['detailview']);
 		$editButton= getelement("a","EDIT",array("href"=>"index.php?module=".$this->module."&action=editview&record=".$this->record,"class"=>"btn btn-primary pull-right"));
