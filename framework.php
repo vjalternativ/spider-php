@@ -54,9 +54,9 @@ class SpiderPhpFramework {
         require_once $this->configpath.'/seoconfig.php';
         $vjconfig['basepath'] = $this->configpath.'/';
         if(isset($vjconfig['display_errors'])) {
-            ini_set("display_errors",true);
+            ini_set("display_errors",$vjconfig['display_errors']);
         } else {
-            ini_set("display_errors",true);
+            ini_set("display_errors",false);
             
         }
         if($backendMode) {
