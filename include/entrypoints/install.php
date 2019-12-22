@@ -266,9 +266,13 @@ class Installer {
 		$metafields['detailview']['file_type']=  array("fields" => array(array('field'=>$fields['file_type'],'gridsize'=>6)),'type'=>'row');
 		$entity->createEntity('media_files',array('type'=>'basic','fields'=>$fields,'metadata'=>$metafields,"label"=>"Media Files"));
 		
-		
+	   	$entity->createEntity("language");
+		$entity->createRelationship('tableinfo','language','M_M',"Modules","Languages");
 		
 	}
+	
+	
+	
 }
 $framework = new Installer();
 $framework->install();

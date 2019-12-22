@@ -346,21 +346,6 @@ class tableinfoController extends VJController {
 	    die;
 	}
 	
-	
-	function action_addSubpanelRelationship() {
-	    global $entity;
-	    $relname = $_REQUEST['relname'];
-	    $record = $_REQUEST['record'];
-	    foreach($_REQUEST['recordList'] as $relId) {
-	        $entity->record = $record;
-	        $entity->addRelationship($relname,$relId);
-	    }
-	    $primaryModule = $_REQUEST['primaryModule'];
-	    header("location:index.php?module=".$primaryModule."&action=detailview&record=".$record);
-	    
-	}
-	
-	
 	function action_ajaxRemoveRelationship() {
 	    $record= $_REQUEST['record'];
 	    $relname = $_REQUEST['relname'];

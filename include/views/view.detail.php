@@ -109,7 +109,7 @@ class ViewDetail  extends View {
 		$modal->heading = getLabel("LBL_RELATED_RECORDS");
 		$modal->afterheader = $filterhtml;
 		$modal->extrafooter = '<button type="submit" class="btn btn-primary">Select</button>';
-		$modal->formaction = 'index.php?module=tableinfo&action=addSubpanelRelationship&record='.$_GET['record'].'&primaryModule='.$_GET['module'];
+		$modal->formaction = 'index.php?module='.$_GET['module'].'&action=addSubpanelRelationship&record='.$_GET['record'].'&primaryModule='.$_GET['module'];
 		$smarty->assign("modal",$modal);
 		echo $modal->html();
 	}

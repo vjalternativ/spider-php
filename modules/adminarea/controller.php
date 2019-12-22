@@ -16,6 +16,10 @@ class adminareaController extends VJController
         $this->repairTables["roles_item"]=1;
         $this->repairTables["privilege"]=1;
         $this->repairTables["roles_privilege_1_m"]=1;
+        $this->repairTables["language"]=1;
+        $this->repairTables["tableinfo_language_m_m"]=1;
+        
+        
     }
     
     function action_home()

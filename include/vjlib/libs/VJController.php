@@ -67,6 +67,16 @@ class VJController  {
 			$this->view = "basic";
 		
 		}
+		function getLanguageFieldData($suffix,$fields) {
+		    $data = array();
+		    foreach($fields as $field) {
+		        if(isset($_POST[$field['name'].'_'.$suffix])) {
+		            $data[$field['name']] = $_POST[$field['name'].'_'.$suffix];
+		        }
+		    }
+		    return $data;
+		}
+		
 		function action_save() {
 		    global $entity,$db,$globalEntityList,$globalModuleList,$vjconfig;
 			$data = $_POST;
@@ -133,7 +143,33 @@ class VJController  {
 			}
 			$id = $entity->save($module,$keyvalue);
 			
+			$languages= $entity->getRelatedData("tableinfo_language_m_m", "tableinfo_id", $tableinfo['id']);
 			
+			$vardef = json_decode(base64_decode($tableinfo['description']),1);
+			
+			foreach($languages as $lang) {
+			    $suffix = $lang['name'];
+			    $langTable = $tableinfo['name'].'_'.$suffix;
+			    if(isset($globalModuleList[$langTable])) {
+			        
+			        
+			        $idata = $this->getLanguageFieldData($suffix,$vardef['fields']);
+			        if($idata) {
+			          $data = array();
+			          $langData = $entity->get($langTable,$id);
+			          if(!$langData) {
+			              $data['new_with_id'] = true;
+			          }
+			          $data['id'] = $id;
+			          $data['name'] = $idata['name'];
+			          unset($idata['name']);
+			          $data['description'] = json_encode($idata);
+			          $entity->save($langTable,$data);
+			        }
+			        
+			        
+			    }
+			}
 			
 			$sql = "select * from relationships where secondarytable = '".$tableinfo['id']."' and deleted=0 and rtype='1_M'";
 			$rlist  = $db->fetchRows($sql);
@@ -324,6 +360,20 @@ class VJController  {
 		    echo $table;
 		    
 		    die;
+		}
+		
+		function action_addSubpanelRelationship() {
+		    global $entity;
+		    $relname = $_REQUEST['relname'];
+		    $record = $_REQUEST['record'];
+		    
+		    foreach($_REQUEST['recordList'] as $relId) {
+		        $entity->record = $record;
+		        $entity->addRelationship($relname,$relId);
+		    }
+		    $primaryModule = $_REQUEST['primaryModule'];
+		    header("location:index.php?module=".$primaryModule."&action=detailview&record=".$record);
+		    
 		}
 		
 }

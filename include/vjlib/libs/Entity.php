@@ -567,6 +567,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	   
 	  
 		$data =  $this->getwhere($table, "id='".$id."'");
+		if(!$data) {
+		    return false;
+		}
 		foreach($fields as $key => $field) {
 		    if(($field['type']=="relate" || $field['type']=="dependent_relate")) {
 		        $data[$key."_name"] = "";
@@ -855,6 +858,27 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	       
 	       
 	     
+	}
+	
+	
+	function getRelatedData($table,$col,$value) {
+	    global $globalRelationshipList,$globalEntityList,$db;
+	    
+	    if(isset($globalRelationshipList[$table])) {
+	        $coltable = substr($col, 0,strrpos($col,"_id"));
+	        $isSecondary = false;
+	        $rtable = $globalEntityList[$globalRelationshipList[$table]['primarytable']]['name'];
+	        if($rtable == substr($table,0,strlen($coltable))) {
+	            $isSecondary = true;
+	            $rtable = $globalEntityList[$globalRelationshipList[$table]['secondarytable']]['name'];
+	        }
+	        $joincol = $rtable."_id";
+	        $sql = "select ".$rtable.".* FROM ".$table." INNER JOIN ".$rtable." ON ".$table.".".$joincol."=".$rtable.".id and ".$rtable.".deleted=0 and ".$table.".deleted=0 and ".$table.".".$col."='".$value."'";
+    	    return $db->fetchRows($sql,array("id"));
+	    } else {
+	      return false;  
+	    }
+	    
 	}
 	
 }

@@ -27,18 +27,32 @@ class ViewEdit  extends View {
 	
 	function preDisplay() {
 	    
-	    global $entity;
+	    global $entity,$globalModuleList;
+	    $entity = new Entity();
+	    
 	    $tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
 	    $vardef = json_decode(base64_decode($tableinfo['description']),1);
-	    $this->def = $vardef;
 	    
+	    
+	    
+	    $languages= $entity->getRelatedData("tableinfo_language_m_m", "tableinfo_id", $tableinfo['id']);
+	    
+	    if($languages) {
+	        foreach($languages as $lang) {
+	            $suffix = $lang['name'];
+	            $langTable = $this->module.'_'.$suffix;
+	            if(isset($globalModuleList[$langTable])) {
+	                $vardef = $this->processDefForLang($suffix,$vardef,"editview");
+	            }
+	        }
+	    }
+	    $this->def = $vardef;
 	    if(!$this->data) {
 	        $this->data['id'] = "";
 	        $this->data['name'] = "";
-	    //    $this->data['description'] = "";
-	        
 	    }
-	 
+	    
+	    
 	}
 	
 	function display() {
@@ -140,6 +154,9 @@ class ViewEdit  extends View {
 					    
 						$val = "";
 						$attr = $this->getattr($fieldarray['type'], $fieldarray['name']);
+						if(isset($fieldarray['extraclass'])) {
+						    $attr[1]['class'] .= $fieldarray['extraclass'];
+						}
 						$isdualtag = true;
 						
 						if(!isset($this->data[$fieldarray['name']])) {
@@ -281,6 +298,69 @@ class ViewEdit  extends View {
 		
 		return $formgroup;
 		
+	}
+	
+	function processDefForLang($suffix,$vardef,$deftype="editview") {
+	    global $globalModuleList,$entity;
+	    $langTable = $this->module."_".$suffix;
+	    
+	    
+	    if(isset($globalModuleList[$langTable]) && strlen($this->data['id'])==36) {
+	        
+	        
+	        $langData  = $entity->get($langTable,$this->data['id']);
+	        if($langData) {
+	            $this->data['name_'.$suffix] = $langData['name'];
+	            $jsonData = json_decode($langData['description'],1);
+	            if($jsonData) {
+    	            foreach($jsonData as $key=>$val) {
+    	                $this->data[$key."_".$suffix] = $val;
+    	            }
+	            }
+    	        
+	        }
+	        
+	    }
+	    
+	    $newDef = $vardef['metadata'][$deftype];
+	    
+	    foreach($vardef['metadata'][$deftype] as $row) {
+	        
+	        $addTempRow = false;
+	        $temprow = $row;
+	        
+	        if($row['type']=="row" && isset($row['fields'])) {
+	            
+	            foreach($row['fields'] as $colkey => $col) {
+	                if(isset($col['field']) && ($col['field']['type']=="varchar" || $col['field']['type']=="text")) {
+	                    $addTempRow = true;
+	                    
+	                    if(isset($vardef['fields'][$col['field']['name']])) {
+	                        $tempCol = $vardef['fields'][$col['field']['name']];
+	                        $tempCol['name'] .= "_".$suffix;
+	                        $tempCol['extraclass'] = " language_".$suffix;
+	                        $tempCol['label'] = $tempCol['name'];
+	                        $vardef['fields'][$tempCol['name']] = $tempCol;
+	                        $temprow['fields'][$colkey]['field'] = $tempCol;
+	                        
+	                    }
+	                    
+	                    
+	                
+	                } else {
+	                    unset($temprow['fields'][$colkey]);
+	                }
+	                
+	            }
+	        }
+	        
+	        if($addTempRow) {
+	            $newDef[] = $temprow;
+	        }
+	    }
+	    
+	    $vardef['metadata'][$deftype] = $newDef;
+	    return $vardef;
 	}
 }
 ?>
