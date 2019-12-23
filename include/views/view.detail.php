@@ -165,7 +165,12 @@ class ViewDetail  extends View {
 		$newattr[] = $element;
 
 		$atr = $attr['element'][1];
+		
+		if(!isset($this->data[$name])) {
+		    $this->data[$name]  = '';
+		}
 		foreach($atr as $key=>$at) {
+		    
 			$atr[$key] = array('value'=>str_replace('name',$this->data[$name],$at));
 		}
 		
