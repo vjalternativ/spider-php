@@ -1,6 +1,6 @@
 <?php
-global $entrypoints;
-$entrypoints['install'] = array("path"=>"include/entrypoints/install.php",'auth'=>false);
+global $entrypoints,$vjconfig;
+$entrypoints['install'] = array("path"=>$vjconfig['fwbasepath']."include/entrypoints/install.php",'auth'=>false);
 $entrypoints['patch'] = array("path"=>"include/entrypoints/patch.php",'auth'=>false);
 $entrypoints['site'] = array("path"=>"include/entrypoints/site/index.php",'auth'=>false,'type'=>'siteEntryPoint');
 $entrypoints['boomerangvacations'] = array("path"=>"include/entrypoints/boomerangvacations/index.php",'auth'=>false,'type'=>'siteEntryPoint');
