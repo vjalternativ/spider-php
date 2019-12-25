@@ -312,7 +312,7 @@ class Installer {
 		$entity->createEntity('page',array('type'=>'basic','fields'=>$fields,'metadata'=>$metafields,"label"=>"Page"));
 		
 		
-		$entity->createRelationship('page','lwidget','M_M',"Pages","Widgets");
+		$entity->createRelationship('page','widget','M_M',"Pages","Widgets");
 		
 	}
 	
