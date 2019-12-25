@@ -481,7 +481,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		    
 		    $found = $vjlib->loadf($vjconfig['basepath'].$hook[1],false);
 		    if(!$found) {
-		        $vjlib->loadf($hook[1]);
+		        $vjlib->loadf($vjconfig['fwbasepath'].$hook[1],false);
 		    }
 		    $hookobj = new $hook[2];
 		    $this->hookTable = $table;
