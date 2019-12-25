@@ -268,7 +268,31 @@ class Installer {
 		
 	   	$entity->createEntity("language");
 		$entity->createRelationship('tableinfo','language','M_M',"Modules","Languages");
-		$entity->createEntity("widget");
+		
+		
+		$fields = array();
+		$fields['position']['name'] =  'position';
+		$fields['position']['type'] =  'varchar';
+		$fields['position']['required'] =  false;
+		$fields['position']['label'] =  "Alias";
+		$fields['position']['len'] =  '255';
+		
+		
+		$fields['status']['name'] =  'status';
+		$fields['status']['type'] =  'enum';
+		$fields['status']['label'] =  "Status";
+		$fields['status']['options'] =  "status_list";
+		
+		$metafields = array();
+		$metafields['listview']['status'] =  $fields['status'];
+		$metafields['listview']['position'] =  $fields['position'];
+		
+		$metafields['editview']['alias'] =  array("fields" => array(array('field'=>$fields['status'],'gridsize'=>6),array('field'=>$fields['position'],'gridsize'=>6)),'type'=>'row');
+		$metafields['detailview']['alias'] =  array("fields" => array(array('field'=>$fields['status'],'gridsize'=>6),array('field'=>$fields['position'],'gridsize'=>6)),'type'=>'row');
+		
+		$entity->createEntity('widget',array('type'=>'basic','fields'=>$fields,'metadata'=>$metafields,"label"=>"Page"));
+		
+		
 		$entity->createEntity("widget_attr");
 		$entity->createRelationship('widget','widget_attr','1_M',"Widget","Widget Attrs");
 		
