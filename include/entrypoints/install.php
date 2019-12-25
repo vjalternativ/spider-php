@@ -275,10 +275,10 @@ class Installer {
 		
 		$fields = array();
 		$fields['alias']['name'] =  'alias';
-		$fields['file_type']['type'] =  'varchar';
-		$fields['file_type']['required'] =  false;
-		$fields['file_type']['label'] =  "Alias";
-		$fields['file_type']['len'] =  '255';
+		$fields['alias']['type'] =  'varchar';
+		$fields['alias']['required'] =  false;
+		$fields['alias']['label'] =  "Alias";
+		$fields['alias']['len'] =  '255';
 		
 		$metafields = array();
 		$metafields['listview']['alias'] =  $fields['alias'];
