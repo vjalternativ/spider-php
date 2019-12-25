@@ -268,6 +268,9 @@ class Installer {
 		
 	   	$entity->createEntity("language");
 		$entity->createRelationship('tableinfo','language','M_M',"Modules","Languages");
+		$entity->createEntity("widget");
+		$entity->createEntity("widget_attr");
+		$entity->createRelationship('widget','widget_attr','1_M',"Widget","Widget Attrs");
 		
 	}
 	

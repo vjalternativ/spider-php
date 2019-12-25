@@ -20,29 +20,7 @@ class enrHeaderController extends EntryPointController {
         $menus['exam']['menu'] = array();
         
         
-        $sql = "SELECT ec.id as ecid,esc.id as escid, ec.name as ecname,esc.name as escname,ec.alias as ecalias,esc.alias as escalias FROM exam_category_exam_subcategory_1_m ecesc 
-                INNER JOIN exam_category ec on ecesc.exam_category_id = ec.id and ec.deleted=0 and ecesc.deleted=0
-                INNER JOIN exam_subcategory esc on ecesc.exam_subcategory_id  = esc.id    
-                 where ec.deleted=0";
-        $rows = $db->fetchRows($sql,array("ecid","escid"));
         
-        $checkFirst =true;
-        
-        foreach($rows as $id=>$cat) {
-            foreach($cat as $sid=> $subcat) {
-                if($checkFirst) {
-                    $menus['exam']['menu'][$id]['isfirst'] = true;
-                    $checkFirst = false;    
-                    
-                }
-                $menus['exam']['menu'][$id]['name'] = $subcat['ecname'];
-                $menus['exam']['menu'][$id]['alias'] = $subcat['ecalias'];
-                $menus['exam']['menu'][$id]['menu'][$sid]['name'] = $subcat['escname'];
-                $menus['exam']['menu'][$id]['menu'][$sid]['alias'] = $subcat['ecalias'].'/'.$subcat['escalias'];
-                
-            }
-            
-        }
         
         $menus['courses']['name'] = "Courses";
         $menus['courses']['alias'] = $vjconfig['baseurl']."course";
