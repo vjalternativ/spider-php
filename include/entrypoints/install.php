@@ -272,6 +272,21 @@ class Installer {
 		$entity->createEntity("widget_attr");
 		$entity->createRelationship('widget','widget_attr','1_M',"Widget","Widget Attrs");
 		
+		
+		$fields = array();
+		$fields['alias']['name'] =  'alias';
+		$fields['file_type']['type'] =  'varchar';
+		$fields['file_type']['required'] =  false;
+		$fields['file_type']['label'] =  "Alias";
+		$fields['file_type']['len'] =  '255';
+		
+		$metafields = array();
+		$metafields['listview']['alias'] =  $fields['alias'];
+		$metafields['editview']['alias'] =  array("fields" => array(array('field'=>$fields['alias'],'gridsize'=>6)),'type'=>'row');
+		$metafields['detailview']['alias'] =  array("fields" => array(array('field'=>$fields['alias'],'gridsize'=>6)),'type'=>'row');
+		
+		$entity->createEntity('page',array('type'=>'basic','fields'=>$fields,'metadata'=>$metafields,"label"=>"Page"));
+		
 	}
 	
 	
