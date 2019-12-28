@@ -43,7 +43,7 @@ class EntryPointController {
     function rendorTpl($tpl,$params=array()) {
         global $smarty,$vjconfig;
         
-        
+        $params +=  $this->params;
         $smarty->assign("params",$params);
         $smarty->assign("baseurl",$vjconfig['baseurl']);    
         $class = get_called_class();

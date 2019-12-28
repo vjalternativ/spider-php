@@ -1,4 +1,3 @@
-<div class="container mt-2">
 <nav>
     <ol class="breadcrumb">
        	{foreach from=$params item=data}
@@ -15,4 +14,3 @@
         {/foreach}
     </ol>
 </nav>
-</div>

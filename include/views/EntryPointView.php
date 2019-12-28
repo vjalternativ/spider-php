@@ -19,7 +19,9 @@ abstract class EntryPointView
     
     function fetch($tpl) {
         global $smarty;
-        
+        $smarty->assign('bootparams',$this->bootparams);
+        $this->params += $params;
+        $smarty->assign('params',$this->params);
         return $smarty->fetch($this->pagetplpath.$tpl);
     }
 

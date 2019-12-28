@@ -61,7 +61,7 @@ class Entity {
 	
 	
 	function createEntity($entityName,$params=array(),$repair=false) {
-		if(isset($this->instanceType['db'])) {
+		if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
 		
 			$result = $this->createSQLModule($entityName,$params,$repair);
 			
@@ -675,11 +675,15 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	}
 	
     function createRelationship($primary =false,$secondary=false,$type=false,$label=false,$secondlabel=false) {
-		global $entity;
+		global $entity,$globalModuleList;
     	if(!$primary || !$secondary || !$type) {
 			die("Incorrect parameters for create relationship ".$primary." ".$secondary." ".$type);
 		}
+		$name = strtolower($primaryinfo['name'].'_'.$secondaryinfo['name'].'_'.$type);
 		
+		if(isset($globalModuleList[$name])) {
+		    return false;
+		}
 		if($type=='1_1') {
 			$fields = array();
 			$fields[$secondary.'_id']['name'] = $secondary.'_id';
@@ -695,7 +699,6 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		$secondaryinfo = $this->getwhere('tableinfo',"name='".$secondary."'");
 		if($primaryinfo && $secondaryinfo) {
 			
-			$name = strtolower($primaryinfo['name'].'_'.$secondaryinfo['name'].'_'.$type);
 			
 			$alias = $this->createAlias('relationships',$name);
 			$fields = array();

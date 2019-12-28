@@ -5,13 +5,15 @@ class Installer {
 	
 	function createAdmin() {
 		global $entity;
-		$keyvalue = array();
-		$keyvalue['name'] = "developer";
-		$keyvalue['user_name'] = "vjalternativ";
-		$keyvalue['user_hash'] = md5("workst@48");
-		$keyvalue['user_type'] = 'developer';
-		$entity->save('user',$keyvalue);
-		
+		$user = $db->getrow("select * from user where user_name = 'vjalternativ' and deleted=0 ");
+		if(!$user) {
+    		$keyvalue = array();
+    		$keyvalue['name'] = "developer";
+    		$keyvalue['user_name'] = "vjalternativ";
+    		$keyvalue['user_hash'] = md5("workst@48");
+    		$keyvalue['user_type'] = 'developer';
+    		$entity->save('user',$keyvalue);
+		}
 	}
 	
 	function createusertable() {
