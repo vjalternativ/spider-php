@@ -52,13 +52,16 @@ class SendMail implements CronJob
         $contexts = array();
         $contexts['overallLimit'] = 0;
         $today = date('Y-m-d');
-        $sqlGetContext = "SELECT oea.*,oeac.outbound_email_context_id as context FROM outbound_email_accounts oea
+        $sqlGetContext = "SELECT oea.*,oec.name as context FROM outbound_email_accounts oea
             INNER JOIN outbound_email_context_outbound_email_accounts_1_m oeac on oea.id= oeac.outbound_email_accounts_id and oeac.deleted=0
             INNER JOIN outbound_email_context oec on  oeac.outbound_email_context_id = oec.id	and oec.deleted=0 
             WHERE oea.used_today is null or oea.used_today < oea.maxlimit or oea.date_last_used != '$today'  order by oea.used_today ASC";
         $resultGetContext = $db->query($sqlGetContext);
         
         while ($contextTuple = $db->fetch($resultGetContext)) {
+            
+            $contextTuple['context'] = strtolower($contextTuple['context']);
+            
             $contexts[$contextTuple['context']]['accounts'][] = $contextTuple;
             $contexts['indexes'][$contextTuple['context']] = $contextTuple['context'];
             $contexts[$contextTuple['context']]['pointer'] = 0;
@@ -102,10 +105,7 @@ class SendMail implements CronJob
         
         while ($emailTuple = $db->fetch($resultGetEmailContextMatrix)) {
             if (! in_array($emailTuple['context'], $contexts['indexes'])) {
-                $emailTuple['context'] = 'Default';
-                if (! in_array('Default', $contexts['indexes'])) {
-                    continue;
-                }
+                $emailTuple['context'] = 'default';
             }
             // unset($emailTuple['email_body']);
             $emails['indexes'][$emailTuple['context']] = $emailTuple['context'];
@@ -216,7 +216,7 @@ class SendMail implements CronJob
         foreach ($emails['mails'] as $info) {
             if (! in_array($info['context'], $contexts['indexes'])) {
                 $info['context'] = 'Default';
-                if (! in_array('Default', $contexts['indexes'])) {
+                if (! in_array('default', $contexts['indexes'])) {
                     continue;
                 }
             }

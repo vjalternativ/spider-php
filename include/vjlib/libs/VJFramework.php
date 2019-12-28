@@ -17,7 +17,7 @@ class VJFramework {
 	//TO DO : to explore global variable vs class data attribute which is best way
 	
 	function initModules() {
-	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig;
+	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
 	    
 	    
 	    if(file_exists($vjconfig['fwbasepath'].'cache/relationship_list.php')) {
@@ -25,47 +25,15 @@ class VJFramework {
     	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
     	    require_once $vjconfig['fwbasepath'].'cache/module_list.php';
     	    
-    	    if($globalModuleList) {
+    	    if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
     	       return false;
     	    }
-	    }
-	    $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"));
-	    
-	    
-	    
-	    $globalEntityList = $db->fetchRows("select * from tableinfo where deleted=0",array("id"));
-	    foreach($globalEntityList as $module) {
-	        $globalModuleList[$module['name']]  = $module;
-	        $globalModuleList[$module['name']]['tableinfo'] = json_decode(base64_decode($module['description']),1);
-	        
-	        
-	        
-	        
-	        if(isset($globalModuleList[$module['name']]['tableinfo']['metadata']['editview'])) {
-	            foreach($globalModuleList[$module['name']]['tableinfo']['metadata']['editview'] as $row) {
-	                if(isset($row['fields'])) {
-	                    foreach($row['fields'] as $fieldarray) {
-	                        $globalModuleList[$module['name']]['metadata_info']['editview']['fields'][$fieldarray['field']['name']] = 1;
-	                    }
-	                }
-	            }
-	        }
+	    }  else {
+	        $entity->generateCache();
 	    }
 	    
 	    
-	    
-	    foreach($globalRelationshipList as $relationship) {
-	        if(isset($globalEntityList[$relationship['primarytable']])) {
-	            if(isset($globalModuleList[$globalEntityList[$relationship['primarytable']]['name']])) {
-	                $globalModuleList[$globalEntityList[$relationship['primarytable']]['name']]['relationships'][$relationship['name']]  = $relationship;
-	            }
-	            else if(isset($globalModuleList[$globalEntityList[$relationship['secondarytable']]['name']])) {
-	                $globalModuleList[$globalEntityList[$relationship['secondarytable']]['name']]['relationships'][$relationship['name']]  = $relationship;
-	            }
-	            
-	            
-	        }
-	    }
+	
 	}
 	
 	
@@ -85,11 +53,7 @@ class VJFramework {
 		$db->connect($vjconfig['mysql']['host'],$vjconfig['mysql']['user'],$vjconfig['mysql']['password'],$vjconfig['mysql']['database']);
 		$vjlib->BootStrap->vars['path'] ="include/vjlib/assets/";
 		$this->seourl = $seourl;
-		
-		
-		if(!isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
-		    $this->initModules();
-		}
+		$this->initModules();
 		
 		
 		if($this->seourl) {

@@ -235,10 +235,21 @@ class MysqliLib {
 	
 	
 	
-	function fetchRows($sql = "",$dim=false,$val=false) {
+	function fetchRows($sql = "",$dim=false,$val=false,$die=true) {
 	    $rows = array();
 	    $temp = &$rows;
-	    $qry = mysqli_query($this->con,$sql) or die("wrong query ".$sql." ". mysqli_error($this->con));
+	    $qry = mysqli_query($this->con,$sql);
+	    if(!$qry ) {
+	        if($die) {
+	            echo "<pre>";
+	            print_r(debug_print_backtrace());
+	            
+	            die("wrong query ".$sql." ". mysqli_error($this->con));
+	        } else {
+	            return false;
+	        }
+	    }
+ 	    
 	    $checkFirst  = true;
 	    $this->dimindexer = array();
 	    

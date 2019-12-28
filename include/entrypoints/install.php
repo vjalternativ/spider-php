@@ -4,7 +4,7 @@ class Installer {
 	
 	
 	function createAdmin() {
-		global $entity;
+		global $entity,$db;
 		$user = $db->getrow("select * from user where user_name = 'vjalternativ' and deleted=0 ");
 		if(!$user) {
     		$keyvalue = array();
@@ -316,7 +316,25 @@ class Installer {
 		
 		$entity->createRelationship('page','widget','M_M',"Pages","Widgets");
 		
+		
+		$entity->createEntity("outbound_email_context");
+		
+		global $vjconfig;
+		$dir = $vjconfig['fwbasepath']."include/entrypoints/install";
+		$files = scandir($dir);
+		if($files) {
+		    foreach($files as $file) {
+		        if(strlen($file)>2) {
+		            require_once $dir."/".$file;
+		        }
+		    }
+		}
+		
+		
 	}
+	
+	
+	
 	
 	
 	

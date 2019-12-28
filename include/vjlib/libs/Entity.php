@@ -61,7 +61,10 @@ class Entity {
 	
 	
 	function createEntity($entityName,$params=array(),$repair=false) {
-		if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
+	    global $globalModuleList;
+	    $this->generateCache();
+	    
+	    if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
 		
 			$result = $this->createSQLModule($entityName,$params,$repair);
 			
@@ -87,6 +90,11 @@ class Entity {
 					}
 					
 			}
+			
+			$this->generateCache();
+			
+		} else {
+		    echo $entityName ." already exist <br />";
 		}
 		
 	}
@@ -679,6 +687,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
     	if(!$primary || !$secondary || !$type) {
 			die("Incorrect parameters for create relationship ".$primary." ".$secondary." ".$type);
 		}
+		$primaryinfo = $this->getwhere('tableinfo',"name='".$primary."'");
+		$secondaryinfo = $this->getwhere('tableinfo',"name='".$secondary."'");
+		
 		$name = strtolower($primaryinfo['name'].'_'.$secondaryinfo['name'].'_'.$type);
 		
 		if(isset($globalModuleList[$name])) {
@@ -695,8 +706,6 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			return true;
 		}
 		
-		$primaryinfo = $this->getwhere('tableinfo',"name='".$primary."'");
-		$secondaryinfo = $this->getwhere('tableinfo',"name='".$secondary."'");
 		if($primaryinfo && $secondaryinfo) {
 			
 			
@@ -884,4 +893,72 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    
 	}
 	
+	public function generateCache() {
+	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig;
+	    
+	    $globalModuleList = array();
+	    $globalRelationshipList = array();
+	    $globalEntityList  = array();
+	    
+	    
+	    $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"),false,false);
+	    
+	    
+	    
+	    $globalEntityList = $db->fetchRows("select * from tableinfo where deleted=0",array("id"),false,false);
+	    
+	    if($globalEntityList) {
+	        foreach($globalEntityList as $module) {
+	            $globalModuleList[$module['name']]  = $module;
+	            $globalModuleList[$module['name']]['tableinfo'] = json_decode(base64_decode($module['description']),1);
+	            
+	            
+	            
+	            
+	            if(isset($globalModuleList[$module['name']]['tableinfo']['metadata']['editview'])) {
+	                foreach($globalModuleList[$module['name']]['tableinfo']['metadata']['editview'] as $row) {
+	                    if(isset($row['fields'])) {
+	                        foreach($row['fields'] as $fieldarray) {
+	                            $globalModuleList[$module['name']]['metadata_info']['editview']['fields'][$fieldarray['field']['name']] = 1;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	        
+	        
+	    }
+	    
+	    if($globalRelationshipList) {
+	        foreach($globalRelationshipList as $relationship) {
+	            if(isset($globalEntityList[$relationship['primarytable']])) {
+	                if(isset($globalModuleList[$globalEntityList[$relationship['primarytable']]['name']])) {
+	                    $globalModuleList[$globalEntityList[$relationship['primarytable']]['name']]['relationships'][$relationship['name']]  = $relationship;
+	                }
+	                else if(isset($globalModuleList[$globalEntityList[$relationship['secondarytable']]['name']])) {
+	                    $globalModuleList[$globalEntityList[$relationship['secondarytable']]['name']]['relationships'][$relationship['name']]  = $relationship;
+	                }
+	                
+	                
+	            }
+	        }
+	    }
+	    
+	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/relationship_list.php');
+	    $content = str_replace("__RELACE_PART__", var_export($globalRelationshipList,1), $content);
+	    file_put_contents($vjconfig['fwbasepath'].'cache/relationship_list.php', $content);
+	    
+	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/entity_list.php');
+	    $content = str_replace("__RELACE_PART__", var_export($globalEntityList,1), $content);
+	    file_put_contents($vjconfig['fwbasepath'].'cache/entity_list.php', $content);
+	    
+	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/module_list.php');
+	    $content = str_replace("__RELACE_PART__", var_export($globalModuleList,1), $content);
+	    file_put_contents($vjconfig['fwbasepath'].'cache/module_list.php', $content);
+	    
+	    require_once $vjconfig['fwbasepath'].'cache/relationship_list.php';
+	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
+	    require_once $vjconfig['fwbasepath'].'cache/module_list.php';
+	    
+	}
 }

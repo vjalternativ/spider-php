@@ -130,7 +130,7 @@ class adminareaController extends VJController
     
     
     private function generateCache() {
-            global $globalRelationshipList,$globalModuleList,$db,$globalEntityList;
+            global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig;
             $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"));
             
             
