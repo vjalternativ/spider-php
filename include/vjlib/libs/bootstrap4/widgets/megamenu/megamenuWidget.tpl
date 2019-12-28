@@ -60,7 +60,7 @@
                     
                     	{foreach from=$item.menu key=catkey item=catitem}
                     	
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xm-12 margin-top-10">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xm-12 mt-2">
                       <a href="{$baseurl}{$catitem.alias}" class="font-weight-bold text-uppercase megamenu-category">
                       	{$catitem.name}
                       </a>
