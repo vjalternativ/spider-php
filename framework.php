@@ -1,64 +1,61 @@
 <?php 
-session_name('ATVPHPSESSID');
-ini_set('session.gc_maxlifetime', 28800);
-session_set_cookie_params(28800);
-session_start();
-header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Credentials: true");
-ini_set("memory_limit",-1);
-set_time_limit(0);
-error_reporting(E_ALL);
 global $vjlib,$vjconfig,$seoParams;
 
 class SpiderPhpFramework {
     
     
     public $configpath;
-    function __construct() {
-        
-        $newdir = $_SERVER['SCRIPT_FILENAME'];
-        
-        $newdir = substr($newdir, 0,strrpos($newdir,"/"));
-        $this->configpath = $newdir;
-        
-        /*
-        $idir = __DIR__;
-        $dir = substr($idir,0,strrpos($idir,"/"));
-        echo "<pre>";print_r($_SERVER);die;
+    public $backendMode = false;
+    public $sessionName = "ATVPHPSESSID";
+    
+    function initSession() {
         
         
-        
-        //if path is same as framework then
-        
-        
-         if(substr($idir,strrpos($idir,"/"))=='/'.$newdir) {
-            if(file_exists($dir.'/'.'config.php')) {
-                $this->configpath = $dir;
-            }
-        } else {
-            //no symlink is same
-            if($newdir) {
-                $this->configpath = $dir."/".$newdir;
-            } else {
-                $this->configpath = $dir;
-            }
-        } */
+        if($this->backendMode) {
+            $this->sessionName .= "_CA";
+        }
+        session_name($this->sessionName);
+        ini_set('session.gc_maxlifetime', 28800);
+        session_set_cookie_params(28800);
+        session_start();
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Credentials: true");
+        ini_set("memory_limit",-1);
+        set_time_limit(0);
+        error_reporting(E_ALL);
         
     }
     
+    function calculateconfigPath() {
+        $newdir = $_SERVER['SCRIPT_FILENAME'];
+        $this->configpath = substr($newdir, 0,strrpos($newdir,"/"));;
+        $idir = __DIR__;
+        $dir  = substr($this->configpath,0,strrpos($this->configpath,"/"));
+        if(file_exists($dir.'/'.'config.php')) {
+            $this->configpath = $dir;
+        }
+        
+    }
+    
+    function __construct($backendMode = false,$sessName =false) {
+        $this->backendMode = $backendMode;
+        if($sessName) {
+            $this->sessionName = $sessName;
+        }
+        
+        $this->initSession();
+        $this->calculateconfigPath();
+    }
     
     function setConfigPath($path) {
         $this->configpath = $path;
-        //set_include_path($path);
     }
     
-    function execute($backendMode = false) {
+    function execute() {
         global $vjlib,$vjconfig,$seoParams;
         $vjfwpath = __DIR__;
-        
         $dir = __DIR__;
         $dir .= "/";
-        
         require_once $this->configpath.'/config.php';
         require_once $this->configpath.'/extraconfig.php';
         require_once $this->configpath.'/seoconfig.php';
@@ -67,13 +64,11 @@ class SpiderPhpFramework {
             ini_set("display_errors",$vjconfig['display_errors']);
         } else {
             ini_set("display_errors",false);
-            
         }
-        if($backendMode) {
+        if($this->backendMode) {
             unset($vjconfig['framework']['default_mode']);
         } else {
             require_once $dir.'seomanager.php';
-            
         }
         $vjconfig['fwbasepath'] = $vjfwpath."/";
         
@@ -82,9 +77,10 @@ class SpiderPhpFramework {
             $vjconfig['fwbaseurl'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].str_replace($_SERVER['DOCUMENT_ROOT'],"",$dir);
         }
         
-        $vjconfig['fwurlbasepath'] = str_replace($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'], "", $vjconfig['fwbaseurl']);
-        $vjconfig['urlbasepath'] = str_replace($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'], "", $vjconfig['baseurl']);
-        
+        $vjconfig['urlbasepath'] = str_replace('://', "", $vjconfig['baseurl']);
+        $vjconfig['urlbasepath'] = substr($vjconfig['urlbasepath'],strpos($vjconfig['urlbasepath'], "/"));
+        $vjconfig['fwurlbasepath'] = str_replace('://', "", $vjconfig['fwbaseurl']);
+        $vjconfig['fwurlbasepath'] = substr($vjconfig['fwurlbasepath'],strpos($vjconfig['fwurlbasepath'], "/"));
         
         date_default_timezone_set($vjconfig['timezone']);
         require_once $vjconfig['fwbasepath'].'include/vjlib/VJLib.php';

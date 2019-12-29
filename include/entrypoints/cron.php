@@ -48,7 +48,6 @@ class AlternativCron {
                      $jobdata['jobstatus'] = "pending";
                      $entity->save("scheduler",$jobdata);
                  }
-                 $log->fatal("going to start the thread");
                  shell_exec("php ".$vjconfig['basepath']."cronthread.php > /dev/null 2>/dev/null &");
                  
              }

@@ -1,7 +1,7 @@
 <?php
-
-require_once 'include/lib/PHPMailer-master/src/SMTP.php';
-require_once 'include/lib/PHPMailer-master/src/PHPMailer.php';
+global $vjconfig;
+require_once $vjconfig['fwbasepath'].'include/lib/PHPMailer-master/src/SMTP.php';
+require_once $vjconfig['fwbasepath'].'include/lib/PHPMailer-master/src/PHPMailer.php';
 
 class SendMail implements CronJob
 {
