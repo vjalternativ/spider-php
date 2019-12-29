@@ -32,9 +32,9 @@ $tableInfoData = array (
     'context' => 
     array (
       'name' => 'context',
-      'type' => 'relate',
+      'type' => 'varchar',
       'rmodule' => 'outbound_email_context',
-      'len' => '36',
+      'len' => '255',
     ),
     'is_sent_successfully' => 
     array (
