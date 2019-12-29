@@ -86,8 +86,6 @@ class SpiderPhpFramework {
         $vjconfig['urlbasepath'] = str_replace($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'], "", $vjconfig['baseurl']);
         
         
-        echo "<pre>";
-        print_r($vjconfig);die;
         date_default_timezone_set($vjconfig['timezone']);
         require_once $vjconfig['fwbasepath'].'include/vjlib/VJLib.php';
         require_once $vjconfig['fwbasepath'].'include/Smarty/Smarty.class.php';
