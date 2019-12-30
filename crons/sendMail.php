@@ -1,5 +1,6 @@
 <?php
 global $vjconfig;
+require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 require_once $vjconfig['fwbasepath'].'include/lib/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'].'include/lib/PHPMailer-master/src/PHPMailer.php';
 
