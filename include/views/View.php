@@ -11,6 +11,7 @@ class View {
 	public $tpl;
 	public $isLoggedIn = false;
 	public $showChatContainer = false;
+	public $activeMenuId = false;
 	function preDisplay() {
 	    
 	}
@@ -65,7 +66,24 @@ class View {
 	    
 	    $qry =  $db->query($sql);
 	    $rows = array();
+	    $module = $this->module;
+	    global $globalModuleList;
+	    $moduleTableId = $globalModuleList[$module]['id'];
+	    $this->activeMenuId = false;
+	    
 	    while($row = $db->fetch($qry)) {
+	        
+	        
+	        if(!isset($rows[$row['menu_id']]['items'][$row['tableinfo_id']])) {
+	            $rows[$row['menu_id']]['first_module_name'] = $row['name'];
+	        }
+	        if($row['tableinfo_id'] == $moduleTableId) {
+	            $rows[$row['menu_id']]['isactive_menu']  = true;
+	            $row['isactive_submenu'] = true;
+	            $this->activeMenuId = $row['menu_id'];
+	            
+	        }
+	        
 	        $rows[$row['menu_id']]['menu'] = $row['menu'];
 	        $rows[$row['menu_id']]['items'][$row['tableinfo_id']] = $row;
 	    }
@@ -101,7 +119,6 @@ class View {
 			$smarty->assign("logout",$logout);
 			$smarty->assign("adminarea",$adminarea);
 			$smarty->assign("vjconfig",$vjconfig);
-			$path = $vjconfig['fwbasepath'];
 				
 			$smarty->assign("baseurl",$vjconfig['baseurl']);
 			echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
@@ -109,6 +126,7 @@ class View {
 			
 			$menudata = $this->getAllMenu();
 			$smarty->assign("menudata",$menudata);
+			$smarty->assign("activeMenuId",$this->activeMenuId);
 			$smarty->assign("current_user",$current_user);
 			
 			echo $smarty->fetch('include/vjlib/libs/tpls/header.tpl');

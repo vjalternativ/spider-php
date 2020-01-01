@@ -22,7 +22,7 @@
 <body>
 
 <div class="container-fluid bg-primary padding-10">
-<a class="h1 a-none logo-label" href="{$baseurl}">{$vjconfig.sitename}</a>
+<a class="h2 a-none logo-label" href="{$baseurl}">{$vjconfig.sitename}</a>
 {if $logout}
 	{$logout}
 	{$adminarea} 
@@ -46,14 +46,17 @@
     <ul class="nav navbar-nav">
     
     {foreach from=$menudata key=menu_id item=menuinfo}		
-      <li class="dropdown">
+      <li class="{if $menuinfo.isactive_menu} active {/if}">
+      <a href="index.php?module={$menuinfo.first_module_name}">{$menuinfo.menu|upper} </a>
+      </li>
+      <li class="dropdown hide">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">{$menuinfo.menu|upper}
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
         
         
-		     {foreach from=$menuinfo.items key=tableinfo_id item=menudata}		
-		          <li><a href="index.php?module={$menudata.name}">{$menudata.module|upper}</a></li>
+		     {foreach from=$menuinfo.items key=tableinfo_id item=menu}		
+		          <li><a href="index.php?module={$menu.name}">{$menu.module|upper}</a></li>
 		     {/foreach}
         </ul>
       </li>
@@ -67,6 +70,17 @@
 <div class="container-fluid margin-top-10"> 
 
 
+{if $activeMenuId}
 
-
+<ul class="nav nav-tabs">
+  		{assign var=menuinfo value=$menudata[$activeMenuId]}
+  	    
+  	     {foreach from=$menuinfo.items key=tableinfo_id item=menudata}		
+		          <li class="{if $menudata.isactive_submenu}active{/if} pull-right"><a href="index.php?module={$menudata.name}">{$menudata.module|upper}</a></li>
+		 {/foreach}
+    
+ </ul>
+<div class="clearfix"></div>
+<br />
+{/if}
 
