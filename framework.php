@@ -5,15 +5,10 @@ class SpiderPhpFramework {
     
     
     public $configpath;
-    public $backendMode = false;
-    public $sessionName = "ATVPHPSESSID";
-    
+    public $sessionName = "ATVSESS";
+    public $frameworkMode = "FRONTEND";
     function initSession() {
         
-        
-        if($this->backendMode) {
-            $this->sessionName .= "_CA";
-        }
         session_name($this->sessionName);
         ini_set('session.gc_maxlifetime', 28800);
         session_set_cookie_params(28800);
@@ -29,7 +24,6 @@ class SpiderPhpFramework {
     function calculateconfigPath() {
         $newdir = $_SERVER['SCRIPT_FILENAME'];
         $this->configpath = substr($newdir, 0,strrpos($newdir,"/"));;
-        $idir = __DIR__;
         $dir  = substr($this->configpath,0,strrpos($this->configpath,"/"));
         if(file_exists($dir.'/'.'config.php')) {
             $this->configpath = $dir;
@@ -37,12 +31,12 @@ class SpiderPhpFramework {
         
     }
     
-    function __construct($backendMode = false,$sessName =false) {
-        $this->backendMode = $backendMode;
-        if($sessName) {
-            $this->sessionName = $sessName;
-        }
+    function __construct() {
         
+        if(isset($_REQUEST['spiderphp_mode'])) {
+            $this->frameworkMode = $_REQUEST['spiderphp_mode'];
+        }
+        $this->sessionName .= '_'.$_REQUEST['spiderphp_mode'];
         $this->initSession();
         $this->calculateconfigPath();
     }
@@ -57,6 +51,7 @@ class SpiderPhpFramework {
         $dir = __DIR__;
         $dir .= "/";
         require_once $this->configpath.'/config.php';
+        $vjconfig['fw_mode'] = $this->frameworkMode;
         
         if(isset($vjconfig['display_errors'])) {
             ini_set("display_errors",$vjconfig['display_errors']);
@@ -67,9 +62,7 @@ class SpiderPhpFramework {
         require_once $this->configpath.'/seoconfig.php';
         $vjconfig['basepath'] = $this->configpath.'/';
         
-        if($this->backendMode) {
-            unset($vjconfig['framework']['default_mode']);
-        } else {
+        if($this->frameworkMode == "FRONTEND" ) {
             require_once $dir.'seomanager.php';
         }
         $vjconfig['fwbasepath'] = $vjfwpath."/";
@@ -85,6 +78,7 @@ class SpiderPhpFramework {
         $vjconfig['fwurlbasepath'] = substr($vjconfig['fwurlbasepath'],strpos($vjconfig['fwurlbasepath'], "/"));
         
         date_default_timezone_set($vjconfig['timezone']);
+        
         require_once $vjconfig['fwbasepath'].'include/vjlib/VJLib.php';
         require_once $vjconfig['fwbasepath'].'include/Smarty/Smarty.class.php';
         

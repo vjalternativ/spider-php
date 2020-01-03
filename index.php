@@ -1,5 +1,5 @@
 <?php
-require_once 'framework.php';
-$fw = new SpiderPhpFramework(true);
+require_once 'SpiderBackendFramework.php';
+$fw = new SpiderBackendFramework();
 $fw->execute();
 ?>

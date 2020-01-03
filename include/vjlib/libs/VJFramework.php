@@ -18,8 +18,6 @@ class VJFramework {
 	
 	function initModules() {
 	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
-	    
-	    
 	    if(file_exists($vjconfig['fwbasepath'].'cache/relationship_list.php')) {
     	    require_once $vjconfig['fwbasepath'].'cache/relationship_list.php';
     	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
@@ -61,62 +59,77 @@ class VJFramework {
 		}
 		
 		
-		if(!isset($_REQUEST['module']) && !isset($_REQUEST['entryPoint']) && isset($vjconfig['framework']['default_mode']) && $vjconfig['framework']['default_mode']=="entryPoint") {
-		    $_REQUEST['entryPoint'] = $vjconfig['framework']['default_entrypoint'];
-		      
-		}
+		
+		
 		$current_user = sessioncheck('current_user');
 		
-		if(isset($_REQUEST['spiderphp_mode'])) {
-		    
-		    if($_REQUEST['spiderphp_mode']=="rest") {
-		        require_once $vjconfig['fwbasepath'].'service/rest/restController.php';
-		        $ob  = new restController();
-		        $ob->execute();
-		        exit();
-		    }
-		    
-		}		
-		if(isset($_REQUEST['entryPoint'])) {
-			$entrypoint = $_REQUEST['entryPoint'];
-			$entrypoints =array();
-			require_once $vjconfig['fwbasepath']."include/entrypointregistry.php";
-			if(file_exists($vjconfig['basepath']."custom/include/entrypointregistry.php")) {
-			    require_once $vjconfig['basepath']."custom/include/entrypointregistry.php";
-			}
-			
-			if(!isset($entrypoints[$entrypoint])) {
-				die("entry point not found in entry point registry");
-			}
-			if(isset($entrypoints[$entrypoint]['type']) && $entrypoints[$entrypoint]['type']=='siteEntryPoint') {
-			    require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/VJSiteEntryPoint.php';
-			    new VJSiteEntryPoint();
-			    
-			    
-			} else {
-			    $filepath = $entrypoints[$entrypoint]['path'];
-			    require_once $filepath;
-			    
-			}
-			return;
-			
-		}
+		
 		if (isset ( $_REQUEST ['module'] )) {
-			$this->module = $_REQUEST ['module'];
-			if(!isset($_REQUEST['action'])) {
-			    $this->action = 'index';
-			}
+		    $this->module = $_REQUEST ['module'];
+		    if(!isset($_REQUEST['action'])) {
+		        $this->action = 'index';
+		    }
 		}
 		if (isset ( $_REQUEST ['action'] )) {
-			$this->action = $_REQUEST ['action'];
+		    $this->action = $_REQUEST ['action'];
 		}
 		
 		if (isset ( $_REQUEST ['record'] )) {
-			$this->record = $_REQUEST ['record'];
-		
+		    $this->record = $_REQUEST ['record'];
 		}
 		
-		$this->loadController ();
+		
+		if($vjconfig['fw_mode']=="REST") {
+		    
+		        require_once $vjconfig['fwbasepath'].'service/rest/restController.php';
+		        $ob  = new restController();
+		        $ob->execute();
+		} else {
+		    
+		   if($vjconfig['fw_mode']=="FRONTEND" ) {
+		        if(!isset($_REQUEST['entryPoint'])) {
+		            $_REQUEST['entryPoint'] = $vjconfig['framework']['default_entrypoint'];
+		        }
+		   }
+		    
+		    
+		   if(isset($_REQUEST['entryPoint'])) {
+		       $entrypoint = $_REQUEST['entryPoint'];
+		       $entrypoints =array();
+		       require_once $vjconfig['fwbasepath']."include/entrypointregistry.php";
+		       if(file_exists($vjconfig['basepath']."custom/include/entrypointregistry.php")) {
+		           require_once $vjconfig['basepath']."custom/include/entrypointregistry.php";
+		       }
+		       
+		       if(!isset($entrypoints[$entrypoint])) {
+		           die("entry point not found in entry point registry");
+		       }
+		       if(isset($entrypoints[$entrypoint]['type']) && $entrypoints[$entrypoint]['type']=='siteEntryPoint') {
+		           require_once $vjconfig['fwbasepath'].'/include/vjlib/libs/VJSiteEntryPoint.php';
+		           new VJSiteEntryPoint();
+		           
+		           
+		       } else {
+		           $filepath = $entrypoints[$entrypoint]['path'];
+		           require_once $filepath;
+		           
+		       }
+		       
+		   } else if($vjconfig['fw_mode']=="BACKEND") {
+		       $this->loadController ();
+		   }
+		    
+		    
+		    
+		    
+		    
+		}
+		
+		
+		
+		
+	
+	
 	}
 	function loadController() {
 		

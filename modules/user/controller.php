@@ -1,5 +1,6 @@
 <?php 
-require_once 'modules/user/authenticate/Authenticate.php';
+global $vjconfig;
+require_once $vjconfig['fwbasepath'].'modules/user/authenticate/Authenticate.php';
 class userController extends VJController  {
 	
 	function __construct() {

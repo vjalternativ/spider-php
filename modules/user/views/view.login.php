@@ -4,8 +4,7 @@ class userViewLogin extends View {
 		
 		global $vjlib,$vjconfig;
 		$bs = $vjlib->BootStrap->vars;
-		$path = $vjconfig['basepath'];
-		$this->tpl = 'modules/user/tpls/login.tpl';
+		$this->tpl = $vjconfig['fwbasepath'].'modules/user/tpls/login.tpl';
 		$error = '';
 		if(!empty($this->params['error'])) {
 		$error = $this->params['error'];

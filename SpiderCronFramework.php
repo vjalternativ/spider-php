@@ -3,13 +3,13 @@ require_once __DIR__.'/framework.php';
 class SpiderCronFramework extends SpiderPhpFramework {
     
     function __construct() {
-        
+            $_REQUEST['spiderphp_mode'] = 'CRON';
             parent::__construct();
     }
     
     function execute() {
         
-        global $vjlib,$vjconfig,$seoParams,$cronconfig;
+        global $cronconfig;
         
         $lockfile = $this->configpath.'/locks/cronlock.lock';
         $lockfilehandle = fopen ( $lockfile, 'w' );

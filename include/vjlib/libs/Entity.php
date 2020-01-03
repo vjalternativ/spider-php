@@ -946,19 +946,19 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/relationship_list.php');
 	    $content = str_replace("__RELACE_PART__", var_export($globalRelationshipList,1), $content);
-	    file_put_contents($vjconfig['fwbasepath'].'cache/relationship_list.php', $content);
+	    file_put_contents($vjconfig['basepath'].'cache/relationship_list.php', $content);
 	    
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/entity_list.php');
 	    $content = str_replace("__RELACE_PART__", var_export($globalEntityList,1), $content);
-	    file_put_contents($vjconfig['fwbasepath'].'cache/entity_list.php', $content);
+	    file_put_contents($vjconfig['basepath'].'cache/entity_list.php', $content);
 	    
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/module_list.php');
 	    $content = str_replace("__RELACE_PART__", var_export($globalModuleList,1), $content);
-	    file_put_contents($vjconfig['fwbasepath'].'cache/module_list.php', $content);
+	    file_put_contents($vjconfig['basepath'].'cache/module_list.php', $content);
 	    
-	    require_once $vjconfig['fwbasepath'].'cache/relationship_list.php';
-	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
-	    require_once $vjconfig['fwbasepath'].'cache/module_list.php';
+	    require_once $vjconfig['basepath'].'cache/relationship_list.php';
+	    require_once $vjconfig['basepath'].'cache/entity_list.php';
+	    require_once $vjconfig['basepath'].'cache/module_list.php';
 	    
 	}
 }

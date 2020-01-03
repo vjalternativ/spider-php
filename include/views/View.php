@@ -12,6 +12,13 @@ class View {
 	public $isLoggedIn = false;
 	public $showChatContainer = false;
 	public $activeMenuId = false;
+	public $isLoadHeaderFoooter =true;
+	
+	
+	function setLoadHeaderFooter($b=true) {
+	    $this->isLoadHeaderFoooter= $b;
+	}
+	
 	function preDisplay() {
 	    
 	}
@@ -129,7 +136,7 @@ class View {
 			$smarty->assign("activeMenuId",$this->activeMenuId);
 			$smarty->assign("current_user",$current_user);
 			
-			echo $smarty->fetch('include/vjlib/libs/tpls/header.tpl');
+			echo $smarty->fetch($vjconfig['fwbasepath'].'include/vjlib/libs/tpls/header.tpl');
 		
 		
 		
@@ -137,17 +144,17 @@ class View {
 	
 	}
 	function loadFooter() {
-		global $vjconfig,$current_user;
+		global $vjconfig,$current_user,$smarty;
 		$path = $vjconfig['fwbasepath'];
-		$smarty = new Smarty();
 		$smarty->assign("logout",$this->isLoggedIn);
+		
 		if($this->isLoggedIn && isset($current_user->privileges['agent.live.chat'])) {
 		  $this->showChatContainer = true;  
 		}
 		$smarty->assign("showchatContainer",$this->showChatContainer);
-		
 		$smarty->assign("relatemodal",$path."include/vjlib/libs/tpls/relatemodal.tpl");
-		echo $smarty->fetch('include/vjlib/libs/tpls/footer.tpl');
+		
+		echo $smarty->fetch($path.'include/vjlib/libs/tpls/footer.tpl');
 		
 	}
 	

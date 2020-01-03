@@ -4,7 +4,7 @@
 
 
 
-{include file="include/vjlib/libs/tpls/relatemodal.tpl"}
+{include file=$relatemodal}
 
 <script src="{$baseurl}include/vjlib/assets/js/jquery-ui.js"></script>
 <script src="{$baseurl}include/vjlib/assets/js/bootstrap.min.js"></script>
