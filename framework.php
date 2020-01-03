@@ -57,7 +57,6 @@ class SpiderPhpFramework {
         $dir = __DIR__;
         $dir .= "/";
         require_once $this->configpath.'/config.php';
-        require_once $this->configpath.'/extraconfig.php';
         require_once $this->configpath.'/seoconfig.php';
         $vjconfig['basepath'] = $this->configpath.'/';
         if(isset($vjconfig['display_errors'])) {
