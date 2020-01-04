@@ -36,7 +36,7 @@ class SpiderPhpFramework {
         if(isset($_REQUEST['spiderphp_mode'])) {
             $this->frameworkMode = $_REQUEST['spiderphp_mode'];
         }
-        $this->sessionName .= '_'.$_REQUEST['spiderphp_mode'];
+        $this->sessionName .= '_'.$this->frameworkMode;
         $this->initSession();
         $this->calculateconfigPath();
     }

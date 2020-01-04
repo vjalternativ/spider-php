@@ -54,15 +54,91 @@ class View {
 	    if(!$current_user) {
 	        return array();
 	    }
+	    if(!$current_user->isDeveloper) {
+	        if(!$current_user->role_id) {
+	            return array();
+	        }
+	    }
 	    
+	    /*
+	   
+	    $roleModules = array();
+	    
+	    if(!$current_user->isDeveloper) {
+	       
+	        $sql = "SELECT * from roles_item 
+                WHERE deleted=0 and role_id = '".$current_user->role_id."'
+
+                ";
+	        $roleModules  = $db->fetchRows($sql,array("module_id"));
+	        
+	    }
+	    $sql = "select m.id as menu_id,m.name as menu,t.* from menu_tableinfo_1_m mt
+                INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
+                INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
+	    
+	    $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu"),"id"));
+	   
+	    
+	    $sql = "select m.id as menu_id,sm.id as submenu_id,m.name as menu_name,sm.name as submenu_name,t.* from 
+                menu_submenu_1_m ms  
+                INNER JOIN menu m on ms.menu_id=m.id and m.deleted=0 and ms.deleted=0
+                INNER JOIN submenu sm on ms.submenu_id=sm.id and sm.deleted=0
+                INNER JOIN submenu_tableinfo_1_m st on sm.id=st.submenu_id and st.deleted=0
+                INNER JOIN tableinfo t on st.tableinfo_id = t.id and t.deleted=0 ";
+	    
+	    $submenumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_id"=>"menu_name"),"submenu_id"=>array("submenu_name"),"id"));
+	    
+	    
+	    $menuData = array();
+	    
+	    foreach($submenumodules as $mid=>$menus) {
+	        
+	        
+	        foreach($menus['items'] as $smid=>$modules) {
+	            
+	            foreach($modules['items'] as $mdid => $module) {
+	                if($current_user->isDeveloper) {
+	                    $menuData[$mid]['menu_name'] = $menus['menu_name'];
+	                    $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
+	                    $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
+	                } else {
+	                    if(isset($roleModules[$mdid])) {
+	                        $menuData[$mid]['menu_name'] = $menus['menu_name'];
+	                        $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
+	                        $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
+	                        
+	                    }
+	                }
+	            }
+	            
+	        }
+	        
+	        if(isset($menumodules[$mid])) {
+	            foreach($menumodules['items'] as $mdid=>$module) {
+	                if($current_user->isDeveloper) {
+	                    $menuData[$mid]['menu_name'] = $menus['menu_name'];
+	                    $menuData[$mid]['module_items'][$mdid] = $module;
+	                } else {
+	                    if(isset($roleModules[$mdid])) {
+	                        $menuData[$mid]['menu_name'] = $menus['menu_name'];
+	                        $menuData[$mid]['module_items'][$mdid] = $module;
+	                    }
+	                }
+	            
+	            }
+	        }
+	        
+	    }
+	    
+	    
+	    echo "<pre>";print_r($menuData);die;
+	    */
 	    $sql = "select m.name as menu,t.label as module,m.id as menu_id,t.id as tableinfo_id,t.* from menu_tableinfo_1_m mt 
                 INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
                 INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
         
 	    if(!$current_user->isDeveloper) {
-	        if(!$current_user->role_id) {
-	            return array();
-	        }
 	        $sql .= "INNER JOIN roles_item ri on t.id = ri.module_id and ri.role_id ='".$current_user->role_id."'";   
 	    }
 	    
