@@ -47,16 +47,16 @@
     
     {foreach from=$menudata key=menu_id item=menuinfo}		
       <li class="{if $menuinfo.isactive_menu} active {/if}">
-      <a href="index.php?module={$menuinfo.first_module_name}">{$menuinfo.menu|upper} </a>
+      <a href="index.php?module={$menuinfo.first_module_name}">{$menuinfo.menu_name|upper} </a>
       </li>
       <li class="dropdown hide">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{$menuinfo.menu|upper}
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{$menuinfo.menu_name|upper}
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
         
         
 		     {foreach from=$menuinfo.items key=tableinfo_id item=menu}		
-		          <li><a href="index.php?module={$menu.name}">{$menu.module|upper}</a></li>
+		          <li><a href="index.php?module={$menu.name}">{$menu.name|upper}</a></li>
 		     {/foreach}
         </ul>
       </li>
@@ -69,6 +69,50 @@
 {/if} 
 <div class="container-fluid margin-top-10"> 
 
+
+{if $activeSubmenuId}
+
+<ul class="nav nav-tabs">
+  		{assign var=menuinfo value=$menudata[$activeMenuId]}
+  	    
+  	     {foreach from=$menuinfo.items key=submenu_id item=smenudata}		
+		          <li class="{if $smenudata.isactive_submenu}active{/if} "><a href="index.php?module={$smenudata.first_module_name}">{$smenudata.submenu_name|upper}</a></li>
+		 {/foreach}
+    
+ </ul>
+<div class="clearfix"></div>
+<br />
+{/if}
+
+{if $activeMenuId}
+
+<ul class="nav nav-tabs">
+
+  		{assign var=activemenuinfo value=$menudata[$activeMenuId]}
+		{if $activeSubmenuId}
+  		
+  		{assign var=submenuinfo value=$activemenuinfo.items[$activeSubmenuId]}
+		 
+	     
+		 		{foreach from=$submenuinfo.items key=mdid item=moduledata}		
+		 
+		          	<li class="{if $activeModuleId==$mdid}active{/if} pull-right"><a href="index.php?module={$moduledata.name}">{$moduledata.name|upper}</a></li>
+		 		{/foreach}
+		 {/if}
+
+  		{assign var=menuinfo value=$menudata[$activeMenuId]}
+  	    
+  	   	{if $menuinfo.module_items}
+  	     {foreach from=$menuinfo.module_items key=mdid item=menudata}		
+		          <li class="{if $activeModuleId == $mdid}active{/if} pull-right"><a href="index.php?module={$menudata.name}">{$menudata.name|upper}</a></li>
+		 {/foreach}
+   		{/if}
+ </ul>
+<div class="clearfix"></div>
+<br />
+{/if}
+
+{*
 
 {if $activeMenuId}
 
@@ -84,3 +128,4 @@
 <br />
 {/if}
 
+*}

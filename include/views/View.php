@@ -12,6 +12,8 @@ class View {
 	public $isLoggedIn = false;
 	public $showChatContainer = false;
 	public $activeMenuId = false;
+	public $activeSubmenuId = false;
+	public $activeModuleId = false;
 	public $isLoadHeaderFoooter =true;
 	
 	
@@ -60,7 +62,7 @@ class View {
 	        }
 	    }
 	    
-	    /*
+	    
 	   
 	    $roleModules = array();
 	    
@@ -73,22 +75,25 @@ class View {
 	        $roleModules  = $db->fetchRows($sql,array("module_id"));
 	        
 	    }
-	    $sql = "select m.id as menu_id,m.name as menu,t.* from menu_tableinfo_1_m mt
+	    $sql = "select m.id as menu_id,m.name as menu_name,t.* from menu_tableinfo_1_m mt
                 INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
                 INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
 	    
-	    $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu"),"id"));
+	    $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"id"));
 	   
-	    
 	    $sql = "select m.id as menu_id,sm.id as submenu_id,m.name as menu_name,sm.name as submenu_name,t.* from 
                 menu_submenu_1_m ms  
                 INNER JOIN menu m on ms.menu_id=m.id and m.deleted=0 and ms.deleted=0
                 INNER JOIN submenu sm on ms.submenu_id=sm.id and sm.deleted=0
                 INNER JOIN submenu_tableinfo_1_m st on sm.id=st.submenu_id and st.deleted=0
-                INNER JOIN tableinfo t on st.tableinfo_id = t.id and t.deleted=0 ";
+                INNER JOIN tableinfo t on st.tableinfo_id = t.id and t.deleted=0 order by ms.date_modified,st.date_modified";
 	    
-	    $submenumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_id"=>"menu_name"),"submenu_id"=>array("submenu_name"),"id"));
+	    $submenumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"submenu_id"=>array("submenu_name"),"id"));
 	    
+	    
+	    $module = $this->module;
+	    global $globalModuleList;
+	    $moduleTableId = isset($globalModuleList[$module]['id']) ? $globalModuleList[$module]['id'] : false;
 	    
 	    $menuData = array();
 	    
@@ -99,11 +104,42 @@ class View {
 	            
 	            foreach($modules['items'] as $mdid => $module) {
 	                if($current_user->isDeveloper) {
+	                    
+	                    
+	                    if(!isset($menuData[$mid])) {
+	                        $menuData[$mid]['first_module_name'] = $module['name'];
+	                        
+	                    }
+	                    if(!isset($menuData[$mid]['items'][$smid]['items'][$mdid])) {
+	                        $menuData[$mid]['items'][$smid]['first_module_name'] = $module['name'];
+	                    }
+	                    
+	                    if($mdid == $moduleTableId) {
+	                        $menuData[$mid]['isactive_menu']  = true;
+	                        $menuData[$mid]['items'][$smid]['isactive_submenu']  = true;
+	                        $this->activeMenuId = $mid;
+	                        $this->activeSubmenuId = $smid;
+	                        $this->activeModuleId = $mdid;
+	                        
+	                    }
 	                    $menuData[$mid]['menu_name'] = $menus['menu_name'];
 	                    $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
 	                    $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
+	                    
 	                } else {
 	                    if(isset($roleModules[$mdid])) {
+	                        
+	                        if(!isset($menuData[$mid]['items'][$smid]['items'][$mdid])) {
+	                            $menuData[$mid]['first_module_name'] = $module['name'];
+	                        }
+	                        if($mdid == $moduleTableId) {
+	                            $menuData[$mid]['isactive_menu']  = true;
+	                            $menuData[$mid]['items'][$smid]['isactive_submenu']  = true;
+	                            $this->activeMenuId = $mid;
+	                            $this->activeSubmenuId = $smid;
+	                            $this->activeModuleId = $mdid;
+	                        }
+	                        
 	                        $menuData[$mid]['menu_name'] = $menus['menu_name'];
 	                        $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
 	                        $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
@@ -114,26 +150,48 @@ class View {
 	            
 	        }
 	        
-	        if(isset($menumodules[$mid])) {
-	            foreach($menumodules['items'] as $mdid=>$module) {
-	                if($current_user->isDeveloper) {
-	                    $menuData[$mid]['menu_name'] = $menus['menu_name'];
-	                    $menuData[$mid]['module_items'][$mdid] = $module;
-	                } else {
-	                    if(isset($roleModules[$mdid])) {
-	                        $menuData[$mid]['menu_name'] = $menus['menu_name'];
-	                        $menuData[$mid]['module_items'][$mdid] = $module;
-	                    }
-	                }
-	            
-	            }
-	        }
+	        
 	        
 	    }
 	    
 	    
+	    
+	    foreach($menumodules as $mid=>$menu) {
+	        foreach($menu['items'] as $mdid=>$module) {
+	                if($current_user->isDeveloper) {
+	                    
+	                    if(!isset($menuData[$mid]['first_module_name']) && !isset($menuData[$mid]['module_items'][$mdid])) {
+	                        $menuData[$mid]['first_module_name'] = $module['name'];
+	                    }
+	                    if($mdid == $moduleTableId) {
+	                        $menuData[$mid]['isactive_menu']  = true;
+	                        $this->activeMenuId = $mid;
+	                        $this->activeModuleId = $mdid;
+	                    }
+	                    $menuData[$mid]['menu_name'] = $menu['menu_name'];
+	                    $menuData[$mid]['module_items'][$mdid] = $module;
+	                } else {
+	                    if(isset($roleModules[$mdid])) {
+	                        if(!isset($menuData[$mid]['module_items'][$mdid][$mdid])) {
+	                            $menuData[$mid]['first_module_name'] = $module['name'];
+	                        }
+	                        if($mdid == $moduleTableId) {
+	                            $menuData[$mid]['isactive_menu']  = true;
+	                            $this->activeMenuId = $mid;
+	                            $this->activeModuleId = $mdid;
+	                            
+	                        }
+	                        $menuData[$mid]['menu_name'] = $menu['menu_name'];
+	                        $menuData[$mid]['module_items'][$mdid] = $module;
+	                    }
+	                }
+	                
+	            }
+	        
+	    }
+	    return $menuData;
 	    echo "<pre>";print_r($menuData);die;
-	    */
+	    
 	    $sql = "select m.name as menu,t.label as module,m.id as menu_id,t.id as tableinfo_id,t.* from menu_tableinfo_1_m mt 
                 INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
                 INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
@@ -148,10 +206,6 @@ class View {
 	    
 	    $qry =  $db->query($sql);
 	    $rows = array();
-	    $module = $this->module;
-	    global $globalModuleList;
-	    $moduleTableId = isset($globalModuleList[$module]['id']) ? $globalModuleList[$module]['id'] : false;
-	    $this->activeMenuId = false;
 	    
 	    while($row = $db->fetch($qry)) {
 	        
@@ -209,6 +263,8 @@ class View {
 			$menudata = $this->getAllMenu();
 			$smarty->assign("menudata",$menudata);
 			$smarty->assign("activeMenuId",$this->activeMenuId);
+			$smarty->assign("activeSubmenuId",$this->activeSubmenuId);
+			$smarty->assign("activeModuleId",$this->activeModuleId);
 			$smarty->assign("current_user",$current_user);
 			
 			echo $smarty->fetch($vjconfig['fwbasepath'].'include/vjlib/libs/tpls/header.tpl');
