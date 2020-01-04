@@ -327,7 +327,7 @@ class tableinfoController extends VJController {
 	
 	
 	function action_ajaxFetchSubpanleList() {
-	    global $entity,$smarty;
+	    global $entity,$smarty,$vjconfig;
 	    try {
 	        $rtable = $_REQUEST['rtable'];
 	        $relname = $_REQUEST['relname'];
@@ -339,7 +339,7 @@ class tableinfoController extends VJController {
 	        $extraPreFields['id']['header']['html'] = '';
 	        $smarty->assign("extraPreFields",$extraPreFields);
 	        echo '<input type="hidden" name="relname" value="'.$relname.'" />';
-	        echo $smarty->fetch("include/vjlib/libs/tpls/table.tpl");
+	        echo $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/table.tpl");
 	       
 	    } catch(Exception $e) {
             die("Invalid Input parameters");	        

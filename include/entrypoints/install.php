@@ -318,6 +318,9 @@ class Installer {
 		
 		
 		$entity->createEntity("outbound_email_context");
+		$entity->createEntity("submenu");
+		$entity->createRelationship('menu','submenu','1_M',"Menu","Submenus");
+		$entity->createRelationship('submenu','tableinfo','1_M',"Submenu","Modules");
 		
 		global $vjconfig;
 		$dir = $vjconfig['fwbasepath']."include/entrypoints/install";

@@ -105,7 +105,7 @@ class ViewDetail  extends View {
 		}
 		
 		
-	   $filterhtml = $smarty->fetch("include/tpls/subpanelfilter.tpl");	
+	   $filterhtml = $smarty->fetch($vjconfig['fwbasepath']."include/tpls/subpanelfilter.tpl");	
 		
 		$modal = new Modal();
 		$modal->id = "subpanel";
