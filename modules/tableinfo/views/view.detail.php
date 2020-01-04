@@ -128,10 +128,11 @@ return $db->getrows($sql,'id');
 		
 		$smarty = new Smarty();
 		
-		$listviewfields = $tableinfo['metadata']['listview'];
-		
-		$listviewfieldarray = array_keys($listviewfields);
-		
+		$listviewfieldarray = array();
+		if(isset($tableinfo['metadata']['listview'])) {
+    		$listviewfields = $tableinfo['metadata']['listview'];
+    		$listviewfieldarray = array_keys($listviewfields);
+		}
 		
 		
 		
@@ -206,13 +207,13 @@ return $db->getrows($sql,'id');
 		
    
 		$smarty->assign('viewtype','editview');
-		$smarty->assign("metadata",$tableinfo['metadata']['editview']);
+		$smarty->assign("metadata",isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array());
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
 		$editviewhtml = $smarty->fetch('modules/tableinfo/tpls/editview.tpl');
 		$editviewtabcontent = $bs->getelement('div',$editviewhtml,array("id"=>'editviewlayout-tab',"class"=>"tab-pane fade"));
 		
 		$smarty->assign('viewtype','detailview');
-		$smarty->assign("metadata",$tableinfo['metadata']['detailview']);
+		$smarty->assign("metadata",isset($tableinfo['metadata']['detailview']) ? $tableinfo['metadata']['detailview'] : array());
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
 		$detailviewhtml = $smarty->fetch('modules/tableinfo/tpls/editview.tpl');
 		$detailviewtabcontent = $bs->getelement('div',$detailviewhtml,array("id"=>'detailviewlayout-tab',"class"=>"tab-pane fade"));

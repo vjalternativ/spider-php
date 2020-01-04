@@ -434,7 +434,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		$keyvalue['hook_isnew'] = $isnew;
 		$keyvalue['hook_table'] = $table;
 		$keyvalue['hook_tabletype'] = "basic";
-		$keyvalue['hook_table_id'] = $globalModuleList[$table]['id'];
+		$keyvalue['hook_table_id'] = isset($globalModuleList[$table]['id']) ? $globalModuleList[$table]['id'] : false;
 		
 		if(isset($globalModuleList[$table]['tabletype'])) {
 		    $keyvalue['hook_tabletype'] = $globalModuleList[$table]['tabletype'];
