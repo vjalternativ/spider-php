@@ -12,7 +12,7 @@ return $db->getrows($sql,'id');
 	function display() {
 		parent::display();
 		
-		global $db,$entity,$vjlib,$vjconfig,$app_list_strings,$globalEntityList,$globalRelationshipList;
+		global $db,$entity,$vjlib,$app_list_strings,$globalEntityList,$globalRelationshipList;
 		$bs = $vjlib->BootStrap;
 		
 		
@@ -35,7 +35,6 @@ return $db->getrows($sql,'id');
 		 where r.primarytable ='".$tableid."' and r.deleted=0";
 		$relationships = $db->getrows($sql);
 		$tableinfo =json_decode(base64_decode($this->data['description']),1);
-		$metadata = $tableinfo['metadata'];
 		$fields = $tableinfo;
 		unset($fields['metadata']);
 		$tbheader = array('name','type','len','notnull','action');
@@ -94,7 +93,6 @@ return $db->getrows($sql,'id');
 		$tabs = array();
 		
 		$uli = array();
-		$tabcontents = array();
 		$counter =0;
 		foreach($list as $key=>$val) {
 			$class ="";
@@ -107,7 +105,6 @@ return $db->getrows($sql,'id');
 			$anchor['a']['attr'] = array("href"=> '#'.$key,"data-toggle"=>"tab");
 			$anchor['a']['content'] = $val['name'];
 			$uli[$key]['li']['content'] = $anchor;
-			$tab = array();
 			$tabs[] = array("div",$tabs,array());
 		}
 		
@@ -251,13 +248,11 @@ return $db->getrows($sql,'id');
 		
 		
 		
-		$panelfooter = $bs->getelement('div','',array('class'=>array('value'=>'panel-footer')));
-		
-		
-		
 		echo $bs->processhtml($panel);
 		
-		$smarty = new Smarty();
+		global $smarty,$vjconfig;
+		
+		
 		$tables = $this->getalltables();
 		
 		$smarty->assign("record",$this->data['id']);
@@ -270,10 +265,10 @@ return $db->getrows($sql,'id');
 		$url = "index.php?module=tableinfo&action=dropdowneditor";
 		$url = processurl($url);
 		$smarty->assign("dropdownurl",$url);
-		
-		$path = "modules/tableinfo/tpls/layoutmanager.tpl";
+		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."modules/tableinfo/tpls/relationshipmodel.tpl");
+		$path = $vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
-		$script = getelement('script','',array("src"=>'modules/tableinfo/assets/layoutmanager.js'));
+		$script = getelement('script','',array("src"=>$vjconfig['fwbasepath'].'modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;
 		
 	

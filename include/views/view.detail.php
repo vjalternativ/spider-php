@@ -27,6 +27,10 @@ class ViewDetail  extends View {
 		
 		$this->datatypeFields = $datatypes;
 		
+		global $vjconfig;
+		$this->tpl = $vjconfig['fwbasepath'].'include/tpls/detailview.tpl';
+		
+		
         $entity->load_relationships();
        
         $this->subpanels = $entity->relationships;
@@ -48,7 +52,7 @@ class ViewDetail  extends View {
 
 
 	function afterDisplay() {
-		global $entity,$vjlib,$smarty;
+		global $entity,$vjlib,$smarty,$vjconfig;
 		$bs = $vjlib->BootStrap;
 		
 	
@@ -67,14 +71,13 @@ class ViewDetail  extends View {
     		$headers['date_entered']['label'] = "Created";
     		
             $smarty->assign("headers",$headers);
- //           $smarty->assign("headers",$entity->listview['metadata']);
             $smarty->assign("rows",$rows);
             
             $extraPostFields  = array();
             $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$subpanels['name'].'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
             $extraPostFields['id']['header']['html'] = '';
             $smarty->assign("extraPostFields",$extraPostFields);
-            $table =  $smarty->fetch("include/vjlib/libs/tpls/table.tpl");
+            $table =  $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/table.tpl");
             
             $pageinfo['url'] = "./index.php?module=".$this->module."&action=getAjaxSubPanelData";
             

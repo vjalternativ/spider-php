@@ -1,5 +1,6 @@
 <?php 
-require_once 'include/vjlib/abstract/APosition.php';
+global $vjconfig;
+require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/APosition.php';
 class widgetController extends VJController {
     
     function action_ajaxGetPositions() {

@@ -9,9 +9,9 @@ class Modal {
     public $body = false;
     
     function html() {
-        global $smarty;
+        global $smarty,$vjconfig;
         $smarty->assign("modal",$this);
-        return $smarty->fetch("include/vjlib/libs/tpls/genericmodal.tpl");
+        return $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/genericmodal.tpl");
     }
     
 }

@@ -8,6 +8,7 @@ class ViewList  extends View {
 		$this->datatypeFields = $datatypes;
 		
 		    global $vjconfig;
+		    $this->listview['tpl'] = $vjconfig['fwbasepath'].'include/tpls/listview.tpl';
 		    $this->listview['tpls']['filter']['varchar'] = $vjconfig['fwbasepath'].'include/tpls/filters/varchar.tpl';
 		
 	}

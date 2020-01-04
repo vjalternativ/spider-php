@@ -5,7 +5,7 @@ class VJController  {
 		public $params;
 		public $entity;
 		public $nonauth = array();
-		public $listview = array('tpl'=>'include/tpls/listview.tpl','pageinfo'=>array());
+		public $listview = array('pageinfo'=>array());
 		public $editview =  array('tpl'=>'include/tpls/editview.tpl','pageinfo'=>array());
 		public $detailview = array('tpl'=>'include/tpls/detailview.tpl','pageinfo'=>array());
 		public $basicview = array('tpl'=>'include/tpls/detailview.tpl','pageinfo'=>array());

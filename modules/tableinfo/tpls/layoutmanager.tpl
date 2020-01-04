@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="modules/tableinfo/assets/layoutmanager.css" />
+<link rel="stylesheet" href="{$fwbaseurl}modules/tableinfo/assets/layoutmanager.css" />
 <div id="newfieldmodal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -178,7 +178,7 @@
   </div>
 </div>
 
-{include file="modules/tableinfo/tpls/relationshipmodel.tpl"}
+{include file=$relationshipmodal}
 
 
 
