@@ -63,7 +63,7 @@ class tableinfoViewDropdownEditor extends ViewBasic
         $smarty->assign('isform', true);
         $smarty->assign('footbutton', $submit);
         $smarty->assign('url', $url);
-        $basepath = $vjconfig['basepath'];
+        $basepath = $vjconfig['fwbasepath'];
         $path = $basepath . "include/tpls/modal.tpl";
         $html .= $smarty->fetch($path);
         $html = $button . $html;

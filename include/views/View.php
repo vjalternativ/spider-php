@@ -41,7 +41,6 @@ class View {
 			$smarty->assign($key,$val);
 		}
 		
-		
 		echo $smarty->fetch($this->tpl);
 	}
 	
@@ -75,7 +74,7 @@ class View {
 	    $rows = array();
 	    $module = $this->module;
 	    global $globalModuleList;
-	    $moduleTableId = $globalModuleList[$module]['id'];
+	    $moduleTableId = isset($globalModuleList[$module]['id']) ? $globalModuleList[$module]['id'] : false;
 	    $this->activeMenuId = false;
 	    
 	    while($row = $db->fetch($qry)) {

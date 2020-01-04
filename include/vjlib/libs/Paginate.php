@@ -133,12 +133,12 @@ class Paginate {
 	}
 	
 	function getPagingHtml($pageinfo,$ajaxMode=false) {
-	       global $smarty;
+	       global $smarty,$vjconfig;
 	       $smarty->assign('pageinfo',$pageinfo);
 	       $smarty->assign('ajaxMode',$ajaxMode);
 	       
 	       
-	       return $smarty->fetch("include/vjlib/libs/tpls/paginghtml.tpl");
+	       return $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/paginghtml.tpl");
 	}
 }
 ?>

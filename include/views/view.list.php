@@ -3,16 +3,20 @@ class ViewList  extends View {
 	public $datatypeFields = array();
 	public $metadata =array();
 	function __construct() {
-		$datatypes = array();
+	   $datatypes = array();
 		
 		$this->datatypeFields = $datatypes;
+		
+		    global $vjconfig;
+		    $this->listview['tpls']['filter']['varchar'] = $vjconfig['fwbasepath'].'include/tpls/filters/varchar.tpl';
+		
 	}
 	function display() {
  		global $vjlib,$mod_string,$globalModuleList;
  		$bs = $vjlib->BootStrap;
  		$rows = $this->listview['pageinfo']['data'];
  		$rows = array_slice($rows, 0,$this->listview['pageinfo']['resultperpage'],true);
- 		$tpl = $this->listview['tpl'];
+ 		$tpl = isset($this->listview['tpl']) ? $this->listview['tpl'] : false;
 	   
  		
  		$pagingHtml = $vjlib->Paginate->getPagingHtml($this->listview['pageinfo']);
@@ -56,6 +60,9 @@ class ViewList  extends View {
 		$params = $this->params;
 		$this->tpl = $tpl;
 		$this->params = array('table'=>$table,'module'=>$module,'addnew'=>$addnew,'filters'=>$filters,'mod_string'=>$mod_string,'params'=>$params,"pagingHtml"=>$pagingHtml);
+		if(isset($this->listview['tpls'])) {
+		    $this->params['tpls'] = $this->listview['tpls'];
+		}
  		parent::display();
  	
  }

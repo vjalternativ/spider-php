@@ -16,6 +16,8 @@ class VJController  {
 		public $ignoreRecords = array();
 		
 		
+		
+		
 		function defaultPaginate($sql) {
 			global $vjlib,$db,$vjconfig;
 			
@@ -39,7 +41,9 @@ class VJController  {
 		 
 		function action_index() {
 			$this->results();
-			$this->tpls[] = $this->listview['tpl'];
+			if(isset($this->listview['tpl'])) {
+			 $this->tpls[] = $this->listview['tpl'];
+			}
 			$this->view = "list";
 			
 		}
@@ -312,7 +316,7 @@ class VJController  {
 				$sql .= " order by ".$table.".date_entered DESC";	
 			 
 			}
-            $this->defaultPaginate($sql);
+			$this->defaultPaginate($sql);
 			if(isset($_REQUEST['pageindex'])) {
 			    $paginate->index = $_REQUEST['pageindex'];
 			}

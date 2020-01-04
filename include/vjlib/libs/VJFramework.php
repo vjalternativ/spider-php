@@ -250,9 +250,10 @@ class VJFramework {
 				
 				
 				$view = new $class;
-				if(isset($controller->listview))
-				$view->listview = $controller->listview;
 				
+				if(isset($controller->listview)) {
+				    $view->listview += $controller->listview;
+				}
 				$view->module = $this->module;
 				if($this->record) {
 					$view->record = $this->record;
@@ -263,9 +264,10 @@ class VJFramework {
 					    $view->data = $controller->params['data'];
 					}
 				}
-				
 				$view->loadHeader();
 				$view->preDisplay();
+				
+				
 				$view->display();
 				$view->afterDisplay();
 				$view->loadFooter();

@@ -18,7 +18,7 @@
 
 <div class="col-md-3">
 {if $filter.type=='varchar'}
-{include file='include/tpls/filters/varchar.tpl'}
+{include file=$tpls.filter.varchar}
 {/if}
 
 </div>
