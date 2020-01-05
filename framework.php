@@ -51,6 +51,8 @@ class SpiderPhpFramework {
         $dir = __DIR__;
         $dir .= "/";
         require_once $this->configpath.'/config.php';
+        set_include_path($this->configpath);
+        
         $vjconfig['fw_mode'] = $this->frameworkMode;
         
         if(isset($vjconfig['display_errors'])) {

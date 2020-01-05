@@ -14,7 +14,7 @@ class VJController  {
 		public $seourl = false;
 		public $seoparams = array();
 		public $ignoreRecords = array();
-		
+		public $additionalJoin = false;
 		
 		
 		
@@ -261,7 +261,9 @@ class VJController  {
 			if(!$sql) {
 				
 				$sql = "SELECT ".$table.".id, ".implode(',',$fields)." FROM ".$table." ";
-				
+				if($this->additionalJoin) {
+				    $sql .= $this->additionalJoin;
+				}
 				$tableList = array();
 				
 				foreach($listviewdef as $field=>$def) {
