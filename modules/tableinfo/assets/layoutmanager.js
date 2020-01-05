@@ -59,7 +59,7 @@ $("#opt-list-body").append(response);
 }
 
 
-$('#listviewlayouttable-body').sortable();
+//$('#listviewlayouttable-body').sortable();
 
 // for table info detail view list layout tab
 

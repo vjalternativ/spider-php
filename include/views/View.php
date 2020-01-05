@@ -50,6 +50,34 @@ class View {
 	}
 
 	
+	
+	function processMenu($menuData,$menus,$mid,$smid,$mdid,$moduleTableId,$modules,$module) {
+	    
+	    
+	    
+	    if(!isset($menuData[$mid])) {
+	        $menuData[$mid]['first_module_name'] = $module['name'];
+	        
+	    }
+	    if(!isset($menuData[$mid]['items'][$smid]['items'][$mdid])) {
+	        $menuData[$mid]['items'][$smid]['first_module_name'] = $module['name'];
+	    }
+	    
+	    if($mdid == $moduleTableId) {
+	        $menuData[$mid]['isactive_menu']  = true;
+	        $menuData[$mid]['items'][$smid]['isactive_submenu']  = true;
+	        $this->activeMenuId = $mid;
+	        $this->activeSubmenuId = $smid;
+	        $this->activeModuleId = $mdid;
+	        
+	    }
+	    $menuData[$mid]['menu_name'] = $menus['menu_name'];
+	    $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
+	    $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
+	    
+	    return $menuData;
+	}
+	
 	function getAllMenu() {
 	    global $db,$current_user;
 	    
@@ -103,10 +131,10 @@ class View {
 	        foreach($menus['items'] as $smid=>$modules) {
 	            
 	            foreach($modules['items'] as $mdid => $module) {
-	                if($current_user->isDeveloper) {
+	                if($current_user->isDeveloper || isset($roleModules[$mdid])) {
 	                    
-	                    
-	                    if(!isset($menuData[$mid])) {
+	                    //$menuData = $this->processMenu($menuData, $menus, $mid, $smid, $mdid, $moduleTableId, $modules, $module);
+	                     if(!isset($menuData[$mid])) {
 	                        $menuData[$mid]['first_module_name'] = $module['name'];
 	                        
 	                    }
@@ -125,27 +153,8 @@ class View {
 	                    $menuData[$mid]['menu_name'] = $menus['menu_name'];
 	                    $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
 	                    $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
-	                    
-	                } else {
-	                    if(isset($roleModules[$mdid])) {
-	                        
-	                        if(!isset($menuData[$mid]['items'][$smid]['items'][$mdid])) {
-	                            $menuData[$mid]['first_module_name'] = $module['name'];
-	                        }
-	                        if($mdid == $moduleTableId) {
-	                            $menuData[$mid]['isactive_menu']  = true;
-	                            $menuData[$mid]['items'][$smid]['isactive_submenu']  = true;
-	                            $this->activeMenuId = $mid;
-	                            $this->activeSubmenuId = $smid;
-	                            $this->activeModuleId = $mdid;
-	                        }
-	                        
-	                        $menuData[$mid]['menu_name'] = $menus['menu_name'];
-	                        $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
-	                        $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
-	                        
-	                    }
-	                }
+	                     
+	                } 
 	            }
 	            
 	        }
@@ -158,7 +167,7 @@ class View {
 	    
 	    foreach($menumodules as $mid=>$menu) {
 	        foreach($menu['items'] as $mdid=>$module) {
-	                if($current_user->isDeveloper) {
+	            if($current_user->isDeveloper || isset($roleModules[$mdid])) {
 	                    
 	                    if(!isset($menuData[$mid]['first_module_name']) && !isset($menuData[$mid]['module_items'][$mdid])) {
 	                        $menuData[$mid]['first_module_name'] = $module['name'];
@@ -170,27 +179,12 @@ class View {
 	                    }
 	                    $menuData[$mid]['menu_name'] = $menu['menu_name'];
 	                    $menuData[$mid]['module_items'][$mdid] = $module;
-	                } else {
-	                    if(isset($roleModules[$mdid])) {
-	                        if(!isset($menuData[$mid]['module_items'][$mdid][$mdid])) {
-	                            $menuData[$mid]['first_module_name'] = $module['name'];
-	                        }
-	                        if($mdid == $moduleTableId) {
-	                            $menuData[$mid]['isactive_menu']  = true;
-	                            $this->activeMenuId = $mid;
-	                            $this->activeModuleId = $mdid;
-	                            
-	                        }
-	                        $menuData[$mid]['menu_name'] = $menu['menu_name'];
-	                        $menuData[$mid]['module_items'][$mdid] = $module;
-	                    }
-	                }
-	                
+	                } 
 	            }
-	        
 	    }
+	       
+	    //echo "<pre>";print_r($menuData);die;
 	    return $menuData;
-	    echo "<pre>";print_r($menuData);die;
 	    
 	    $sql = "select m.name as menu,t.label as module,m.id as menu_id,t.id as tableinfo_id,t.* from menu_tableinfo_1_m mt 
                 INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0

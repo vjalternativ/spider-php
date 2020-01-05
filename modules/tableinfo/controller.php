@@ -391,7 +391,7 @@ class tableinfoController extends VJController {
 	}
 	
 	function action_deleteRelationship() {
-	    global $entity,$db;
+	    global $db;
 	    
 	    $id = $_REQUEST['module_id'];
 	    $relationshipIds = isset($_REQUEST['relationship_ids']) ? $_REQUEST['relationship_ids'] : array();
@@ -406,7 +406,7 @@ class tableinfoController extends VJController {
 	            continue;
 	        }
 	        $sql = "drop table ".$row['name'];
-	        $db->query($sql);
+	        $db->query($sql,true);
 	        
 	        $sql = "delete from relationships where id='".$row['id']."'";
 	        //echo $sql;

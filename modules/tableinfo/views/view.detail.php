@@ -5,7 +5,7 @@ class tableinfoViewDetail  extends ViewDetail {
 function getalltables() {
 
 global $db;
-$sql ="select * from tableinfo where deleted=0 and tabletype='basic'";
+$sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user'";
 return $db->getrows($sql,'id');
 }
 
@@ -269,7 +269,7 @@ return $db->getrows($sql,'id');
 		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."modules/tableinfo/tpls/relationshipmodel.tpl");
 		$path = $vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
-		$script = getelement('script','',array("src"=>$vjconfig['fwbasepath'].'modules/tableinfo/assets/layoutmanager.js'));
+		$script = getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;
 		
 	

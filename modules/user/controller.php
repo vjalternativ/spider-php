@@ -6,6 +6,9 @@ class userController extends VJController  {
 	function __construct() {
 		$this->nonauth['login'] = array("redirect"=>array("module"=>"user","action"=>"home"));
 		$this->nonauth['authenticate'] = array();
+		$this->nonauth['logout'] = array(); 
+		$this->nonauth['home'] = array();
+		
 	}
 	
 	function action_login() {
