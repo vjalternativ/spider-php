@@ -24,7 +24,7 @@ class rolesViewDetail  extends ViewDetail {
     
     function afterDisplay() {
         parent::afterDisplay();
-        global $db,$smarty;
+        global $db,$smarty,$vjconfig;
         $sql = "select t.label,ri.module_access,ri.list_access,ri.edit_access,ri.delete_access,t.id as module_id from tableinfo t
                 left join roles_item ri  on t.id=ri.module_id and ri.role_id = '".$this->record."' and ri.deleted=0 and t.deleted=0
                 where  t.deleted=0 and t.tabletype!='relationship'";
@@ -44,7 +44,7 @@ class rolesViewDetail  extends ViewDetail {
         $smarty->assign("extraPostFields",$extraPostFields);
         
         
-        $panelbody = $smarty->fetch('include/vjlib/libs/tpls/table.tpl');
+        $panelbody = $smarty->fetch($vjconfig['fwbasepath'].'include/vjlib/libs/tpls/table.tpl');
         $panelbody .= '<input type="hidden" name="record" value="'.$this->record.'" />';
         $panel = array();
         $panel['type'] = "info";
@@ -55,7 +55,7 @@ class rolesViewDetail  extends ViewDetail {
         $panel['footer'] = true;
         
         $smarty->assign("panel",$panel); 
-        echo $smarty->fetch("include/vjlib/libs/tpls/panel.tpl");
+        echo $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/panel.tpl");
     }
     
     
