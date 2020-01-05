@@ -51,36 +51,8 @@ class View {
 
 	
 	
-	function processMenu($menuData,$menus,$mid,$smid,$mdid,$moduleTableId,$modules,$module) {
-	    
-	    
-	    
-	    if(!isset($menuData[$mid])) {
-	        $menuData[$mid]['first_module_name'] = $module['name'];
-	        
-	    }
-	    if(!isset($menuData[$mid]['items'][$smid]['items'][$mdid])) {
-	        $menuData[$mid]['items'][$smid]['first_module_name'] = $module['name'];
-	    }
-	    
-	    if($mdid == $moduleTableId) {
-	        $menuData[$mid]['isactive_menu']  = true;
-	        $menuData[$mid]['items'][$smid]['isactive_submenu']  = true;
-	        $this->activeMenuId = $mid;
-	        $this->activeSubmenuId = $smid;
-	        $this->activeModuleId = $mdid;
-	        
-	    }
-	    $menuData[$mid]['menu_name'] = $menus['menu_name'];
-	    $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
-	    $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
-	    
-	    return $menuData;
-	}
-	
 	function getAllMenu() {
 	    global $db,$current_user;
-	    
 	    if(!$current_user) {
 	        return array();
 	    }
@@ -89,26 +61,17 @@ class View {
 	            return array();
 	        }
 	    }
-	    
-	    
-	   
 	    $roleModules = array();
-	    
 	    if(!$current_user->isDeveloper) {
-	       
 	        $sql = "SELECT * from roles_item 
                 WHERE deleted=0 and role_id = '".$current_user->role_id."'
-
                 ";
 	        $roleModules  = $db->fetchRows($sql,array("module_id"));
-	        
 	    }
 	    $sql = "select m.id as menu_id,m.name as menu_name,t.* from menu_tableinfo_1_m mt
                 INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
                 INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
-	    
 	    $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"id"));
-	   
 	    $sql = "select m.id as menu_id,sm.id as submenu_id,m.name as menu_name,sm.name as submenu_name,t.* from 
                 menu_submenu_1_m ms  
                 INNER JOIN menu m on ms.menu_id=m.id and m.deleted=0 and ms.deleted=0
@@ -120,55 +83,37 @@ class View {
 	    
 	    
 	    $module = $this->module;
+	    
 	    global $globalModuleList;
 	    $moduleTableId = isset($globalModuleList[$module]['id']) ? $globalModuleList[$module]['id'] : false;
-	    
 	    $menuData = array();
-	    
 	    foreach($submenumodules as $mid=>$menus) {
-	        
-	        
 	        foreach($menus['items'] as $smid=>$modules) {
-	            
 	            foreach($modules['items'] as $mdid => $module) {
 	                if($current_user->isDeveloper || isset($roleModules[$mdid])) {
-	                    
-	                    //$menuData = $this->processMenu($menuData, $menus, $mid, $smid, $mdid, $moduleTableId, $modules, $module);
 	                     if(!isset($menuData[$mid])) {
 	                        $menuData[$mid]['first_module_name'] = $module['name'];
-	                        
 	                    }
 	                    if(!isset($menuData[$mid]['items'][$smid]['items'][$mdid])) {
 	                        $menuData[$mid]['items'][$smid]['first_module_name'] = $module['name'];
 	                    }
-	                    
 	                    if($mdid == $moduleTableId) {
 	                        $menuData[$mid]['isactive_menu']  = true;
 	                        $menuData[$mid]['items'][$smid]['isactive_submenu']  = true;
 	                        $this->activeMenuId = $mid;
 	                        $this->activeSubmenuId = $smid;
 	                        $this->activeModuleId = $mdid;
-	                        
 	                    }
 	                    $menuData[$mid]['menu_name'] = $menus['menu_name'];
 	                    $menuData[$mid]['items'][$smid]['submenu_name']  = $modules['submenu_name'];
 	                    $menuData[$mid]['items'][$smid]['items'][$mdid] = $module;
-	                     
 	                } 
 	            }
-	            
 	        }
-	        
-	        
-	        
 	    }
-	    
-	    
-	    
 	    foreach($menumodules as $mid=>$menu) {
 	        foreach($menu['items'] as $mdid=>$module) {
 	            if($current_user->isDeveloper || isset($roleModules[$mdid])) {
-	                    
 	                    if(!isset($menuData[$mid]['first_module_name']) && !isset($menuData[$mid]['module_items'][$mdid])) {
 	                        $menuData[$mid]['first_module_name'] = $module['name'];
 	                    }
@@ -186,38 +131,7 @@ class View {
 	    //echo "<pre>";print_r($menuData);die;
 	    return $menuData;
 	    
-	    $sql = "select m.name as menu,t.label as module,m.id as menu_id,t.id as tableinfo_id,t.* from menu_tableinfo_1_m mt 
-                INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
-                INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
-        
-	    if(!$current_user->isDeveloper) {
-	        $sql .= "INNER JOIN roles_item ri on t.id = ri.module_id and ri.role_id ='".$current_user->role_id."'";   
-	    }
 	    
-        $sql .=" WHERE mt.deleted=0";
-	    
-	    
-	    
-	    $qry =  $db->query($sql);
-	    $rows = array();
-	    
-	    while($row = $db->fetch($qry)) {
-	        
-	        
-	        if(!isset($rows[$row['menu_id']]['items'][$row['tableinfo_id']])) {
-	            $rows[$row['menu_id']]['first_module_name'] = $row['name'];
-	        }
-	        if($row['tableinfo_id'] == $moduleTableId) {
-	            $rows[$row['menu_id']]['isactive_menu']  = true;
-	            $row['isactive_submenu'] = true;
-	            $this->activeMenuId = $row['menu_id'];
-	            
-	        }
-	        
-	        $rows[$row['menu_id']]['menu'] = $row['menu'];
-	        $rows[$row['menu_id']]['items'][$row['tableinfo_id']] = $row;
-	    }
-	    return $rows;
 	}
 	
 	function loadHeader() {
