@@ -43,6 +43,24 @@ class SystemLogicHook
                 $entity->addRelationship("roles_user_1_m", $keyvalue['ownership_id']);
             }
         }
+        
+        foreach($keyvalue as $key=>$val) {
+            global $globalRelationshipList,$globalEntityList,$entity;
+            if(isset($globalRelationshipList[$key])) {
+                if($globalRelationshipList[$key]['rtype']=="1_M") {
+                    $secondaryTable = $globalEntityList[$globalRelationshipList[$key]['secondarytable']]['name'];
+                    $primaryRecord = $keyvalue['id'];
+                    $secondaryRecord = $val;
+                    if($keyvalue['hook_table'] == $secondaryTable) {
+                        $primaryRecord = $secondaryRecord;
+                        $secondaryRecord = $keyvalue['id'];
+                    }
+                    $entity->saveRelationship($key, $primaryRecord,$secondaryRecord);
+                }
+            }
+        }
+        
+        
     }
 
     function workflowAfterSave(&$keyvalue)

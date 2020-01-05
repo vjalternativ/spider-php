@@ -449,8 +449,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
-		
-		
+		//echo $table;
+		//echo "<pre>";print_r($logicHook[$table]);echo "<pre>";
 		foreach($logicHook[$table]['before_save'] as $hook) {
 		    
 		    $isHook = $vjlib->loadf($vjconfig['basepath'].$hook[1],false);
@@ -830,29 +830,32 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	}
 	
 	
+	function saveRelationship($relationship,$primaryRecord,$relationshipId) {
+	    
+	    global $globalRelationshipList,$globalEntityList,$db;
+	    
+	    if(isset($globalRelationshipList[$relationship])) {
+	        
+	        if($globalRelationshipList[$relationship]['rtype']=="1_M") {
+	            $sql  ="delete from ".$relationship. " where ".$globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name']."_id = '".$relationshipId."'";
+	            $db->query($sql);
+	        }
+	        $keyvalue = array();
+	        
+	        
+	        $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['primarytable']]['name'].'_id'] = $primaryRecord;
+	        $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name'].'_id'] = $relationshipId;
+	        $this->save($relationship, $keyvalue);
+	        return true;
+	    }
+	    
+	    return false;
+	    
+	}
+	
 	
 	function addRelationship($relationship,$relationshipId) {
-	       global $globalRelationshipList,$globalEntityList,$db;
-	       
-	       if(isset($globalRelationshipList[$relationship])) {
-	           
-	           if($globalRelationshipList[$relationship]['rtype']=="1_M") {
-	               $sql  ="delete from ".$relationship. " where ".$globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name']."_id = '".$relationshipId."'";
-	               $db->query($sql);
-	           }
-	           $keyvalue = array();
-	           
-	           
-    	       $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['primarytable']]['name'].'_id'] = $this->record;
-    	       $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name'].'_id'] = $relationshipId;
-    	       $this->save($relationship, $keyvalue);
-    	       return true;
-	       }
-	       
-	       return false;
-	       
-	       
-	       
+	       return $this->saveRelationship($relationship, $this->record, $relationshipId);
 	}
 	
 	
