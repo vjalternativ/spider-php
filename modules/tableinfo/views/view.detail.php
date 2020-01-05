@@ -12,7 +12,7 @@ return $db->getrows($sql,'id');
 	function display() {
 		parent::display();
 		
-		global $db,$entity,$vjlib,$app_list_strings,$globalEntityList,$globalRelationshipList;
+		global $db,$entity,$vjlib,$app_list_strings,$globalEntityList,$globalRelationshipList,$vjconfig;
 		$bs = $vjlib->BootStrap;
 		
 		
@@ -171,7 +171,7 @@ return $db->getrows($sql,'id');
 		$smarty->assign("view",'listview');
 		$smarty->assign("record",$this->record);
 				
-		$listviewhtml = $smarty->fetch('modules/tableinfo/tpls/listview.tpl');
+		$listviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/listview.tpl');
 		$listviewtabcontent = $bs->getelement('div',$listviewhtml,array("id"=>'listviewlayout-tab',"class"=>"tab-pane fade"));
 		
 		
