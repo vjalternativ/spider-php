@@ -134,53 +134,35 @@ class VJFramework {
 	function loadController() {
 		
 	    global $vjlib,$vjconfig,$current_user,$entity,$smarty,$globalModuleList;
-		
-		
 		$smarty->assign("baseurl",$vjconfig['fwbaseurl']);
-		
 		$vjlib->loadlib('VJController');
-		
 		$vjlib->loadf($vjconfig['fwbasepath'].'include/views/View.php');
-		
 		$class = "VJController";
-		
-		
 		$filepath = $vjconfig['fwbasepath'].'modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
 		$vjlib->loadf ($filepath,false);
-		
-		$filepath = 'custom/modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
+		$filepath = $vjconfig['basepath'].'custom/modules/' . $this->module . '/language/'.$vjconfig['defaultlang'].'.string.php';
 		$vjlib->loadf ($filepath,false);
-		
-		
-		
-		$filepath = 'custom/modules/' . $this->module . '/controller.php';
+		$filepath = $vjconfig['basepath'].'custom/modules/' . $this->module . '/'.$this->module .'Controller.php';
 		$iscustom = $vjlib->loadf ($filepath,false);
-		
-		$prefix = "";
+		if(!$iscustom) {
+		    $filepath = $vjconfig['basepath'].'custom/modules/' . $this->module . '/controller.php';
+		    $iscustom = $vjlib->loadf ($filepath,false);
+		} 
 		if($iscustom) {
-		    $prefix = $vjconfig['fwbasepath']."custom/";
 		    $class = $this->module.'Controller';
 		}
-		
 		$filepath = $vjconfig['basepath'].'custom/modules/' . $this->module . '/controller.php';
 		$iscustom = $vjlib->loadf ($filepath,false);
 		if($iscustom) {
-		    $prefix = $vjconfig['basepath']."custom/";
 		    $class = $this->module.'Controller';
-		    
 		} else {
 		    $filepath = $vjconfig['fwbasepath'].'/modules/' . $this->module . '/controller.php';
 		    $iscustom = $vjlib->loadf ($filepath,false);
 		    if($iscustom) {
-		        $prefix = $vjconfig['basepath']."/";
 		        $class = $this->module.'Controller';
-		        
 		    }
 		}
-		
-		
 		$methods = get_class_methods ( $class );
-		
 		$controller = new $class;
 		$controller->seourl = $this->seourl;
 		$controller->seoparams = $this->seoparams;
