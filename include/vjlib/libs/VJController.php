@@ -329,7 +329,7 @@ class VJController  {
 		
 		
 		function action_getAjaxSubPanelData() {
-		    global $entity,$vjlib,$smarty;
+		    global $entity,$vjlib,$smarty,$vjconfig;
 		    $ptable = $_REQUEST['ptable'];
 		    $relname = $_REQUEST['relname'];
 		    
@@ -353,7 +353,7 @@ class VJController  {
 		    $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$relname.'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
 		    $extraPostFields['id']['header']['html'] = '';
 		    $smarty->assign("extraPostFields",$extraPostFields);
-		    $table =  $smarty->fetch("include/vjlib/libs/tpls/table.tpl");
+		    $table =  $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/table.tpl");
 		    
 		    $pageinfo['url'] = "./index.php?module=".$ptable."&action=getAjaxSubPanelData";
 		    
