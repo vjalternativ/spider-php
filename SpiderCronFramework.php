@@ -2,9 +2,9 @@
 require_once __DIR__.'/framework.php';
 class SpiderCronFramework extends SpiderPhpFramework {
     
-    function __construct() {
+    function __construct($sessionName=false) {
             $_REQUEST['spiderphp_mode'] = 'CRON';
-            parent::__construct();
+            parent::__construct($sessionName);
     }
     
     function execute() {

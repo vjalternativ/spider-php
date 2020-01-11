@@ -80,7 +80,6 @@ class VJFramework {
 		
 		
 		if($vjconfig['fw_mode']=="REST") {
-		    
 		        require_once $vjconfig['fwbasepath'].'service/rest/restController.php';
 		        $ob  = new restController();
 		        $ob->execute();

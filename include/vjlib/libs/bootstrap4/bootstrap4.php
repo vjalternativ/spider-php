@@ -9,6 +9,7 @@ class Bootstrap4  {
         $link ='<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/assets/css/'.$bootstrap.'/bootstrap.min.css" />';
         $link .='<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/assets/css/util.css" />';
         $link .='<script src="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/assets/js/jquery/'.$jquery.'/jquery.min.js"></script>';
+        $link .='<script src="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/assets/js/popper.min.js" ></script>';
         $link .='<script src="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/assets/js/'.$bootstrap.'/bootstrap.min.js" ></script>';
         $link .='<script src="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/assets/js/util.js" ></script>';
         return $link;

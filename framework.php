@@ -31,12 +31,16 @@ class SpiderPhpFramework {
         
     }
     
-    function __construct() {
+    function __construct($sessionName=false) {
         
         if(isset($_REQUEST['spiderphp_mode'])) {
             $this->frameworkMode = $_REQUEST['spiderphp_mode'];
         }
-        $this->sessionName .= '_'.$this->frameworkMode;
+        if($sessionName) {
+            $this->sessionName = $sessionName;
+        } else {
+            $this->sessionName .= '_'.$this->frameworkMode;
+        }
         $this->initSession();
         $this->calculateconfigPath();
     }

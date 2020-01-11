@@ -17,7 +17,7 @@ class VJSiteEntryPoint {
             $this->page = $_REQUEST['page'];
             
         }   
-        if(isset($seoParams[0]) && file_exists($this->sitebasePath.'/pages/'.$seoParams[0].'/controller.php')) {
+        if(isset($seoParams[0]) && (file_exists($this->sitebasePath.'/pages/'.$seoParams[0].'/'.$seoParams[0].'Controller.php') || file_exists($this->sitebasePath.'/pages/'.$seoParams[0].'/controller.php'))) {
                 $this->page = $seoParams[0];
         }
         
@@ -26,7 +26,7 @@ class VJSiteEntryPoint {
             $this->method = 'action_'.$_REQUEST['method'];       
         }
         
-        if(file_exists($this->sitebasePath.'/pages/'.$this->page.'/controller.php')) {
+        if(file_exists($this->sitebasePath.'/pages/'.$this->page.'/'.$seoParams[0].'Controller.php') || file_exists($this->sitebasePath.'/pages/'.$this->page.'/controller.php')) {
          
             if($this->page=="page") {
                 if(isset($seoParams[0]) && $seoParams[0]) {
@@ -74,8 +74,12 @@ class VJSiteEntryPoint {
             global $db;
             
             
-            require_once $this->sitebasePath.'/'.'pages/'.$this->page.'/controller.php';
-          
+            
+            if(file_exists($this->sitebasePath.'/'.'pages/'.$this->page.'/'.$this->page.'Controller.php')) {
+                require_once $this->sitebasePath.'/'.'pages/'.$this->page.'/'.$this->page.'Controller.php';
+            } else {
+                require_once $this->sitebasePath.'/'.'pages/'.$this->page.'/controller.php';
+            }
             $class = $this->page.'Controller';
             $pageController = new $class();
             $pageController->bootparams += $this->bootparams;

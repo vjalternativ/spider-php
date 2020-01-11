@@ -3,7 +3,7 @@ class tabWidget extends AWidget {
     
     var $checkFirst = true;
     var $id = false;
-    
+    var $hasActive = false;
     
     function __construct($id = false) {
         if($id) {
@@ -14,11 +14,12 @@ class tabWidget extends AWidget {
     
     function addTab($params=array()) {
         
-        
-        if($this->checkFirst) {
+            
+        if($this->checkFirst && !$this->hasActive) {
             $params['isfirstrow'] = true;
             $this->checkFirst = false;
         } 
+        
         $this->params['tabs'][]= $params;
         
         
@@ -32,6 +33,11 @@ class tabWidget extends AWidget {
     
     public function processWidgetParams($params)
     {
+        
+        if(isset($params['config']['hasActive']) && $params['config']['hasActive']) {
+            $this->hasActive = true;
+        }
+        
         
         if(isset($params['attrs']['sql'])) {
             global $db;
@@ -48,10 +54,19 @@ class tabWidget extends AWidget {
                 }
                 $val['name']  = $val[$params['attrs']["tabheader_name_field"]];
                 $params['tabs'][$key] = $val;
+            
             }
             
             
-        } 
+        } else if(isset($params['tabs'])) {
+            
+            foreach($params['tabs'] as $key=>$tab) {
+                $this->addTab($tab,$key);
+            }
+            
+            
+            return $this->params;
+        }
         
         return $params;
         

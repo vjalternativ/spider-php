@@ -3,7 +3,19 @@
   
   {foreach from=$params.tabs key=key item=tab}
   <li class="nav-item">
-    <a class="nav-link {if $tab.isfirstrow}active{/if}" data-toggle="tab" href="#tab-{$params.id}-{$key}">{$tab.name}</a>
+    <a class="nav-link {if $tab.isfirstrow || $tab.isActive}active{/if}" 
+    
+    
+    {if $tab.attr} 
+    	  	{foreach from=$tab.attr key=attrkey item=attrval}
+        		{$attrkey}="{$attrval}"
+        	{/foreach} 
+      
+    {else}
+    data-toggle="tab" 
+    href="#tab-{$params.id}-{$key}"
+    {/if}
+    >{$tab.name}</a>
   </li>
   {/foreach}
 </ul> 

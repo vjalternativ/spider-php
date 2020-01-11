@@ -34,7 +34,9 @@ abstract class AWidget {
         }
     }
     
-    abstract  function processWidgetParams($params);
+    function processWidgetParams($params) {
+        return $params;
+    }
     
     static function processParams($widget,$params) {
         global $vjconfig;

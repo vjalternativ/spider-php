@@ -1,4 +1,6 @@
 <?php
+global $vjconfig;
+require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/AWidget.php';
 
 class EntryPointController {
     

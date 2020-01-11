@@ -13,6 +13,7 @@ class IBootstrapWidgetConstant {
      static $ACCORDION = "accordion";
      static $MODAL = "modal";
      static $TAB = "tab";
+     static $DROPDOWNMENU = "dropdownmenu";
      
 }
 
