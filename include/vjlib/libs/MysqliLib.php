@@ -16,6 +16,12 @@ class MysqliLib {
 	    $this->debug= $b;
 	}
 	
+	function setProcessHook($instance,$method) {
+	    
+	    $this->processHook['instance'] = $instance;
+	    $this->processHook['method'] = $method;
+	}
+	
 	function connect($host="locahost",$user="root",$password="",$database="framework") {
 		
 				$this->con = mysqli_connect($host,$user,$password,$database) or die("database connection failed");

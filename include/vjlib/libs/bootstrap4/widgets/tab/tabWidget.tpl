@@ -23,7 +23,7 @@
 <!-- Tab panes -->
 <div class="tab-content">
   {foreach from=$params.tabs item=tab key=key}
-  <div class="tab-pane container border border-top-0 pt-2 pb-2 bg-white {if $tab.isfirstrow}active{else}fade{/if}" id="tab-{$params.id}-{$key}">
+  <div class="tab-pane container border border-top-0 pt-2 pb-2 bg-white {if $tab.isfirstrow || $tab.isActive}active{else}fade{/if}" id="tab-{$params.id}-{$key}">
   	
   	{if $tab.content}
   		{$tab.content}

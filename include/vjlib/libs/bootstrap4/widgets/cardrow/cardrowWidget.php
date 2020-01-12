@@ -45,7 +45,7 @@ class cardrowWidget extends AWidget {
        
         return $params;
     }
-    function __construct($title="",$maxrow=1,$maxcards=0) {
+    function __construct($title="",$maxrow=10,$maxcards=3) {
         $this->title=$title; 
         $this->maxrows = $maxrow;
         $this->maxcards = $maxcards;
