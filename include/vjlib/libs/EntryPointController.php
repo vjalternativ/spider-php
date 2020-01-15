@@ -76,11 +76,21 @@ class EntryPointController {
         if($this->routes) {
             foreach($this->routes as $key=>$val) {
                 if(isset($seoParams[$key])) {
+                    
                     $method = 'action_'.$val;
                     $this->{$method}();
                 }
             }
+        } else {
+            end($seoParams);
+            $method = prev($seoParams);
+            if(method_exists($this,"action_".$method )) {
+                $this->{"action_".$method}();
+            }
+            
         }
+        
+        
         
     }
 }
