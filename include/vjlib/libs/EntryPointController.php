@@ -7,8 +7,13 @@ class EntryPointController {
     public $params = array();
     public $view=  "";
     public $bootparams = array();
+    public $headerparams = array();
+    public $footerparams = array();
     public $redirectView = false;
     public $routes = array();
+    public $page = "";
+    public $method = "";
+    
     function __construct() {
         global $vjconfig;
         $class = get_called_class();

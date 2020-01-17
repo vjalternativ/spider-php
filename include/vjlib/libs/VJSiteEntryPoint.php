@@ -7,10 +7,13 @@ class VJSiteEntryPoint {
     public $sitebasePath = "";
     public $view;
     public $bootparams = array();
+    private $footerparams  = array();
+    private $headerparams = array();
+    
     function __construct() {
        global $vjconfig,$seoParams,$db;
        
-       $this->sitebasePath = 'include/entrypoints/'.$_REQUEST['entryPoint'];
+       $this->sitebasePath = $vjconfig['basepath'].'include/entrypoints/'.$_REQUEST['entryPoint'];
        
        
         if(isset($_REQUEST['page'])) {
@@ -116,10 +119,13 @@ class VJSiteEntryPoint {
                
                 require_once $vjconfig['fwbasepath'].'include/views/EntryPointView.php';
                 
-                $filepath =$this->sitebasePath.'/pages/' . $this->page .'/views/view.'.$pageController->view.'.php';
                 
+                $filepath = $this->sitebasePath.'/pages/' . $this->page .'/views/'.$vjconfig['sitetpl'].'/view.'.$pageController->view.'.php';
+                
+                if(!file_exists($filepath)) {
+                    $filepath =$this->sitebasePath.'/pages/' . $this->page .'/views/view.'.$pageController->view.'.php';
+                }
                 require_once $filepath;
-                
                 
                 $class = $this->page.'View'.ucfirst($pageController->view);
                 $view = new $class;
@@ -130,6 +136,12 @@ class VJSiteEntryPoint {
                     $view->params = $pageController->params;
                 }
                 $this->view = $view;
+                
+                
+                $this->loadHeaderController();
+                
+                $this->headerparams = array_merge($this->headerparams,$view->headerparams);
+                
                 $this->loadHeader();
                 
                 $view->display();
@@ -155,25 +167,29 @@ class VJSiteEntryPoint {
         
     }
     
-    function loadHeader(){
-        
-        global $smarty,$vjconfig,$vjlib;
-        
-        
-        $smarty->assign("basepath",$vjconfig['basepath']);
-        $smarty->assign("baseurl",$vjconfig['baseurl']);
-        $smarty->assign("params",$this->view->params);
-        $smarty->assign("bootparams",$this->bootparams);
-        
+    function loadHeaderController() {
+        global $vjlib,$vjconfig;
         $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'HeaderController.php',false);
-        
         if($isfile) {
             $class = $vjconfig['sitetpl'].'HeaderController';
-            
             $headerController = new $class;
-            $headerController->bootparams = $this->bootparams;
-            $headerController->loadHeader();
+            $this->headerparams += $headerController->params;
+            
+            
         }
+    }
+    
+    function loadHeader(){
+        global $smarty,$vjconfig;
+        
+        
+        $smarty->assign("bootparams",$this->bootparams);
+        $smarty->assign("params",$this->view->params);
+        $smarty->assign("basepath",$vjconfig['basepath']);
+        $smarty->assign("baseurl",$vjconfig['baseurl']);
+        
+        $smarty->assign("headerparams" , $this->headerparams);
+        
         echo $smarty->fetch($this->sitebasePath.'/tpls/'.$vjconfig['sitetpl'].'/header.tpl');
         echo "<script>var baseurl = '".$vjconfig['baseurl']."';</script>";
         echo "<script>var fwbaseurl = '".$vjconfig['fwbaseurl']."';</script>";
@@ -183,16 +199,16 @@ class VJSiteEntryPoint {
     
     function loadFooter(){
         global $smarty,$vjconfig,$vjlib;
-        $smarty->assign("basepath",$vjconfig['basepath']);
-        $smarty->assign("baseurl",$vjconfig['baseurl']);
-        $smarty->assign("params",$this->view->params);
-        
         $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'FooterController.php',false);
         if($isfile) {
             $class = $vjconfig['sitetpl'].'footerController';
-            $headerController = new $class;
-            $headerController->loadFooter();
+            $footerController = new $class;
+            $this->footerparams = $footerController->params;
         }
+        $smarty->assign("basepath",$vjconfig['basepath']);
+        $smarty->assign("baseurl",$vjconfig['baseurl']);
+        $smarty->assign("params",$this->view->params);
+        $smarty->assign("footerparams",$this->footerparams);
         echo $smarty->fetch($this->sitebasePath.'/tpls/'.$vjconfig['sitetpl'].'/footer.tpl');
     }
    

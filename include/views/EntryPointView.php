@@ -6,6 +6,8 @@ abstract class EntryPointView
     public $bootparams = array(); 
     public $sitetpl;
     public $pagetplpath;
+    public $headerparams = array();
+    
     function displayTpl($tpl,$params=array()) {
         global $smarty;
         $smarty->assign('bootparams',$this->bootparams);
