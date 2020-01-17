@@ -139,13 +139,13 @@ class VJSiteEntryPoint {
                 
                 
                 $this->loadHeaderController();
+                $this->loadFooterController();
                 
                 $this->headerparams = array_merge($this->headerparams,$view->headerparams);
+                $this->footerparams = array_merge($this->footerparams,$view->footerparams);
                 
                 $this->loadHeader();
-                
                 $view->display();
-                
                 $this->loadFooter();
             
             }
@@ -179,6 +179,17 @@ class VJSiteEntryPoint {
         }
     }
     
+    
+    function loadFooterController() {
+        global $vjlib,$vjconfig;
+        $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'FooterController.php',false);
+        if($isfile) {
+            $class = $vjconfig['sitetpl'].'footerController';
+            $footerController = new $class;
+            $this->footerparams = $footerController->params;
+        }
+    }
+    
     function loadHeader(){
         global $smarty,$vjconfig;
         
@@ -198,13 +209,7 @@ class VJSiteEntryPoint {
     }
     
     function loadFooter(){
-        global $smarty,$vjconfig,$vjlib;
-        $isfile = $vjlib->loadf($this->sitebasePath.'/layout/'.$vjconfig['sitetpl'].'/'.$vjconfig['sitetpl'].'FooterController.php',false);
-        if($isfile) {
-            $class = $vjconfig['sitetpl'].'footerController';
-            $footerController = new $class;
-            $this->footerparams = $footerController->params;
-        }
+        global $smarty,$vjconfig;
         $smarty->assign("basepath",$vjconfig['basepath']);
         $smarty->assign("baseurl",$vjconfig['baseurl']);
         $smarty->assign("params",$this->view->params);
