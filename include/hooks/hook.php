@@ -10,6 +10,11 @@ class SystemLogicHook
             $keyval = array();
 
             if ($keyvalue['hook_isnew']) {
+                
+                $isExist = $entity->getwhere("user","user_name='".$keyvalue['username']."'");
+                if($isExist) {
+                    die("this account is already registerd.");
+                }
                 $keyval['user_name'] = $keyvalue['username'];
                 $keyval['name'] = $keyvalue['name'];
                 $keyval['user_hash'] = md5($keyvalue['password']);

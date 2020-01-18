@@ -1,6 +1,11 @@
 <?php 
 global $seoparams,$db,$current_user,$current_url,$app_list_strings,$vjconfig,$mod_string,$log,$smarty,$globalRelationshipList,$globalEntityList,$globalModuleList; 
 require_once $vjconfig['fwbasepath'].'include/language/lang.php';
+$langpath = $vjconfig['basepath'].'include/language/lang.php';
+if(file_exists($langpath)) {
+require_once $langpath;    
+}
+
 require_once $vjconfig['fwbasepath'].'include/language/'.$vjconfig['defaultlang'].'.string.php';
 
 $seoparams = array ();
