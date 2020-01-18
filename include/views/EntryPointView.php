@@ -7,6 +7,7 @@ abstract class EntryPointView
     public $sitetpl;
     public $pagetplpath;
     public $headerparams = array();
+    public $footerparams = array();
     
     function displayTpl($tpl,$params=array()) {
         global $smarty;
