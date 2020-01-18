@@ -22,12 +22,13 @@ class SystemLogicHook
                 $userId = $entity->save("user", $keyval);
                 $keyvalue['ownership_id'] = $userId;
             } else {
-
-                $keyval['id'] = $keyvalue['ownership_id'];
-                $keyval['name'] = $keyvalue['name'];
-                $keyval['user_name'] = $keyvalue['username'];
-                $keyval['user_hash'] = md5($keyvalue['password']);
-                $entity->save("user", $keyval);
+                if(isset($keyvalue['ownership_id'])) {
+                    $keyval['id'] = $keyvalue['ownership_id'];
+                    $keyval['name'] = $keyvalue['name'];
+                    $keyval['user_name'] = $keyvalue['username'];
+                    $keyval['user_hash'] = md5($keyvalue['password']);
+                    $entity->save("user", $keyval);
+                }
             }
         }
     }

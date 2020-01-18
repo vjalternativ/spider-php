@@ -245,7 +245,12 @@ class ViewDetail  extends View {
 				}
 				$row = $bs->getelement("div",$col,array('class'=>array('value'=>'row')));
 				$formgroup .= $bs->getelement("div",$row,array('class'=>array('value'=>'form-group')));
-}
+			} else  {
+			    if($item['type']=="hr") {
+			         $formgroup .= $bs->getelement("span",$item['label'],array("class"=>"h4 heading text-primary"));
+			         $formgroup .= $bs->getelement("hr","",array("class"=>"hr text-primary"),false);
+			    }
+			}
 
 
 

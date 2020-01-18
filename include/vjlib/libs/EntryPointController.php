@@ -77,7 +77,6 @@ class EntryPointController {
         
         $this->bootparams['breadcrumb']['home']['title'] = "Home";
         $this->bootparams['breadcrumb']['home']['alias'] = '';
-        
         if($this->routes) {
             foreach($this->routes as $key=>$val) {
                 if(isset($seoParams[$key])) {
