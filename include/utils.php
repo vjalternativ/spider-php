@@ -256,4 +256,14 @@ function getvardef($table) {
 		    global $mod_string;
 		    return isset($mod_string[$lbl]) ? $mod_string[$lbl] : $lbl;
 		}
+		
+		
+		function getEntityField($table,$field) {
+		    global $globalModuleList;
+		    if(isset($globalModuleList[$table]) && isset($globalModuleList[$table]['tableinfo']['fields'][$field])) {
+		        return $globalModuleList[$table]['tableinfo']['fields'][$field];
+		    }
+		    
+		    return false;
+		}
 ?>

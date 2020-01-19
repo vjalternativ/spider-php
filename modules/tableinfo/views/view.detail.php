@@ -35,7 +35,43 @@ return $db->getrows($sql,'id');
 		 where r.primarytable ='".$tableid."' and r.deleted=0";
 		$relationships = $db->getrows($sql);
 		$tableinfo =json_decode(base64_decode($this->data['description']),1);
+		
+		foreach($tableinfo['metadata'] as $key=>$meta) {
+		    if($key=="detailview" || $key=="editview") {
+		        
+		        if($key=="detailview" ) {
+		            foreach($meta as $metakey=>$metainfo) {
+    		            
+		                
+		                
+		                if(isset($metainfo['fields'])) {
+		                    foreach($metainfo['fields'] as  $fkey=>$field) {
+		                        if(!is_array($field['field'])) {
+		                            
+		                            
+		                            if(isset($tableinfo['fields'][$field['field']])) {
+		                              $metainfo['fields'][$fkey]['field'] =$tableinfo['fields'][$field['field']];
+		                            } else {
+		                                unset($metainfo['fields'][$fkey]);
+		                            }
+		                          }
+		                    }
+		                    
+		                    $meta[$metakey] = $metainfo;
+		                }
+		                
+		          }
+		          
+		          
+		          $tableinfo['metadata'][$key]  = $meta;
+		        }
+		    }
+		}
+		
 		$fields = $tableinfo;
+		
+		
+		
 		unset($fields['metadata']);
 		$tbheader = array('name','type','len','notnull','action');
 		$params = array();
@@ -213,11 +249,16 @@ return $db->getrows($sql,'id');
 		$editviewtabcontent = $bs->getelement('div',$editviewhtml,array("id"=>'editviewlayout-tab',"class"=>"tab-pane fade"));
 		
 		$smarty->assign('viewtype','detailview');
+		
+		//echo "<pre>";print_r($tableinfo['metadata']['detailview']);die;
 		$smarty->assign("metadata",isset($tableinfo['metadata']['detailview']) ? $tableinfo['metadata']['detailview'] : array());
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
-		$detailviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/editview.tpl');
-		$detailviewtabcontent = $bs->getelement('div',$detailviewhtml,array("id"=>'detailviewlayout-tab',"class"=>"tab-pane fade"));
 		
+		$smarty->assign("version",rand(1000,9999));
+		
+		$detailviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/editview.tpl');
+		
+		$detailviewtabcontent = $bs->getelement('div',$detailviewhtml,array("id"=>'detailviewlayout-tab',"class"=>"tab-pane fade"));
 			
 		$tabcontent =  array();
 		$tabcontent['div']['attr'] = array("class"=>'tab-content');

@@ -1,4 +1,4 @@
-
+<div id="version" data-id="{$version}"></div>
 <div class="form-group margin-top-10">
 
 <div class="row">
@@ -62,7 +62,7 @@ Add
 <div class="input-group-addon" onclick="addFieldLayout('{$viewtype}layout-form-layout-row-{$counter}','{$counter}')"><i class="fa fa-plus text-primary" aria="hidden"></i></div></div>
 </div>
 
-<div class="col-md-9 border-left">
+<div class="col-md-8 border-left">
 
 <div class="row" id="{$viewtype}layout-form-layout-row-{$counter}">
 {assign var="colcounter" value=0}
@@ -81,7 +81,7 @@ Add
 {elseif $meta.type=='hr'}
 
 <div class="col-md-3"><input type="hidden" name="param-type[]" value="hr" /></div>
-<div class="col-md-9 border-left">
+<div class="col-md-8 border-left">
 <div class="input-group">
 <input type="hidden" name="layout-field-{$counter}[]" value="hr" /> <input type="hidden" name="layout-gridsize-{$counter}[]" value="12" />
 <input type="text"  class="form-control" name="param-label[]" value="{$meta.label}" />
@@ -92,6 +92,8 @@ Add
 </div>
 
 {/if}
+
+<div class="col-md-1"><a href="javascript:void(0);" onclick="orderup('container-{$viewtype}layout-form-layout-row-{$counter}')">UP</a> <a href="javascript:void(0);" onclick="orderdown('container-{$viewtype}layout-form-layout-row-{$counter}')">DW</a></div>
 
 
 </div>

@@ -166,3 +166,14 @@ function saveLayout(id,record,type) {
 		console.log(response);						 
 	});
 }
+
+function orderup(id) {
+	var ele = $("#"+id);
+	var prev = ele.prev();
+	prev.before(ele);
+}
+function orderdown(id) {
+	var ele = $("#"+id);
+	var next = ele.next();
+	next.after(ele);
+}

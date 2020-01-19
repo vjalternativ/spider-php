@@ -136,7 +136,7 @@ class ViewDetail  extends View {
 		}
 		
 	    $metadata = $vardef['metadata'];
-		$html = $this->parseDetailViewDef($metadata['detailview']);
+		$html = $this->parseDetailViewDef('detailview',$vardef);
 		$editButton= getelement("a","EDIT",array("href"=>"index.php?module=".$this->module."&action=editview&record=".$this->record,"class"=>"btn btn-primary pull-right"));
 		$editButton .= $this->additionalContent;
 		$editButton .= getelement("div","",array("class"=>"clearfix"));
@@ -188,8 +188,12 @@ class ViewDetail  extends View {
 
 	}
 
-	function parseDetailViewDef($def) {
+	function parseDetailViewDef($defkey,$vardef) {
+	    
+	    
 		global $vjlib,$mod_string;
+		$def  = $vardef['metadata'][$defkey];
+		
 		$bs = $vjlib->BootStrap;
 		$formgroup = '';
 		foreach($def as $item) {
@@ -198,7 +202,14 @@ class ViewDetail  extends View {
 					$col = "";
 					foreach($item['fields'] as $fieldinfo) {
 						$field = $fieldinfo['field'];
-						$attr = $this->getattr($field['type'], $field['name']);
+						if(!is_array($field) ) {
+						    if(isset($vardef['fields'][$field])) {
+						        $field = $vardef['fields'][$field];
+						    } else  {
+						        continue;
+						    }
+						}
+					    $attr = $this->getattr($field['type'], $field['name']);
 						$isdualtag = true;
 						if(isset($attr[2])) {
 							$isdualtag = false;

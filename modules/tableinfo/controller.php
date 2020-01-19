@@ -296,10 +296,11 @@ class tableinfoController extends VJController {
 						$metainfo[$key]['type'] = $type; 
 						if($type=='hr') {
 							$metainfo[$key]['label'] = $_REQUEST['param-label'][$key];
-						} else if($type=='row') { 
-							$fields = $_REQUEST['layout-field-'.$key];
+						} else if($type=='row' && isset( $_REQUEST['layout-field-'.$key])) { 
+							
+						    $fields = $_REQUEST['layout-field-'.$key];
 							foreach($fields as $gkey=>$field) {
-								$metainfo[$key]['fields'][] = array( 'field'=> $layout['fields'][$field],'gridsize'=>$_REQUEST['layout-gridsize-'.$key][$gkey]);
+							    	$metainfo[$key]['fields'][] = array( 'field'=> $field,'gridsize'=>$_REQUEST['layout-gridsize-'.$key][$gkey]);
 						  }
 						
 						}
