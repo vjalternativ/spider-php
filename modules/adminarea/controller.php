@@ -79,7 +79,7 @@ class adminareaController extends VJController
                             $fieldType = "int";
                         } else if($temp['type']== "enum" ) {
                             $fieldType = "varchar";
-                            $field['len']  = "255";
+                            $field['len']  = "200";
                             $temp['options'] = $field['options'];
                             
                         }
