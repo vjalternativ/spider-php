@@ -91,7 +91,23 @@ class VJSiteEntryPoint {
                 $this->method="action_index";
             } 
             
-            $pageController->{$this->method}();
+            
+            if($pageController->routes) {
+                foreach($this->routes as $key=>$val) {
+                    if(isset($seoParams[$key])) {
+                        $method = 'action_'.$val;
+                        $pageController->{$method}();
+                    }
+                }
+            } else {
+                end($seoParams);
+                $method = prev($seoParams);
+                if(method_exists($pageController,"action_".$method )) {
+                    $pageController->{"action_".$method}();
+                } else {
+                    $pageController->{$this->method}();
+                }
+            }
             
             $this->bootparams = $pageController->bootparams;
             
@@ -103,16 +119,12 @@ class VJSiteEntryPoint {
                 $class = $this->page.'Controller';
                 
                 $pageController = new $class();
-                
                 $pageController->bootparams = $this->bootparams;
                 if(!method_exists($pageController,$this->method)) {
                     $this->method="action_index";
                 }
                 $pageController->{$this->method}();
-                
                 $this->bootparams = $pageController->bootparams;
-                
-                
             }
             
             if(!empty($pageController->view)) {

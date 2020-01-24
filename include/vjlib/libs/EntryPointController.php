@@ -72,30 +72,8 @@ class EntryPointController {
     }
     
     function action_index() {
-        
-        global $seoParams;
-        
         $this->bootparams['breadcrumb']['home']['title'] = "Home";
         $this->bootparams['breadcrumb']['home']['alias'] = '';
-        if($this->routes) {
-            foreach($this->routes as $key=>$val) {
-                if(isset($seoParams[$key])) {
-                    
-                    $method = 'action_'.$val;
-                    $this->{$method}();
-                }
-            }
-        } else {
-            end($seoParams);
-            $method = prev($seoParams);
-            if(method_exists($this,"action_".$method )) {
-                $this->{"action_".$method}();
-            }
-            
-        }
-        
-        
-        
     }
 }
 
