@@ -14,21 +14,18 @@ class VJSiteEntryPoint {
        global $vjconfig,$seoParams,$db;
        
        $this->sitebasePath = $vjconfig['basepath'].'include/entrypoints/'.$_REQUEST['entryPoint'];
-       
-       
         if(isset($_REQUEST['page'])) {
             $this->page = $_REQUEST['page'];
-            
-        }   
+        }
+        if(isset($seoParams[0]) && empty($seoParams[0])) {
+                $seoParams[0] = $this->page;
+        }
         if(isset($seoParams[0]) && (file_exists($this->sitebasePath.'/pages/'.$seoParams[0].'/'.$seoParams[0].'Controller.php') || file_exists($this->sitebasePath.'/pages/'.$seoParams[0].'/controller.php'))) {
                 $this->page = $seoParams[0];
         }
-        
-        
         if(isset($_REQUEST['method'])) {
             $this->method = 'action_'.$_REQUEST['method'];       
         }
-        
         if(file_exists($this->sitebasePath.'/pages/'.$this->page.'/'.$seoParams[0].'Controller.php') || file_exists($this->sitebasePath.'/pages/'.$this->page.'/controller.php')) {
          
             if($this->page=="page") {
@@ -36,25 +33,14 @@ class VJSiteEntryPoint {
                     $sql ="select * from page where alias='".$seoParams[0]."' and deleted=0";
                     $row = $db->getrow($sql);
                     if($row) {
-                        
                         $seoParams['pagedata'] = $row;
                         $this->page= "page";
                     }
-                    
-                    
-                    
                 }
-                
-                
             }  else {
                 $sql="select * from page where alias='".$this->page."' and deleted=0 ";
                 $GLOBALS['seoParams']['pagedata'] = $db->getrow($sql);
-                
             }
-            
-             
-            
-            
                 
             
         } else {
