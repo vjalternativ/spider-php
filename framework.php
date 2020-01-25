@@ -22,11 +22,20 @@ class SpiderPhpFramework {
     }
     
     function calculateconfigPath() {
+        
+        
+        
+        
         $newdir = $_SERVER['SCRIPT_FILENAME'];
         $this->configpath = substr($newdir, 0,strrpos($newdir,"/"));;
         $dir  = substr($this->configpath,0,strrpos($this->configpath,"/"));
         if(file_exists($dir.'/'.'config.php')) {
             $this->configpath = $dir;
+        } else {
+            if(isset($_SERVER['argv'][0])) {
+                $files = get_included_files();
+                $this->configpath = dirname($files[0]);
+            }
         }
         
     }

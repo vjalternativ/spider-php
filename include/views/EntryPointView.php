@@ -10,10 +10,11 @@ abstract class EntryPointView
     public $footerparams = array();
     
     function displayTpl($tpl,$params=array()) {
-        global $smarty;
+        global $smarty,$app_list_strings;
         $smarty->assign('bootparams',$this->bootparams);
         $this->params += $params;
-        $smarty->assign('params',$this->params);       
+        $smarty->assign('params',$this->params);
+        $smarty->assign('app_list_strings',$app_list_strings);
         echo $smarty->fetch($this->pagetplpath.$tpl); 
     }
     
