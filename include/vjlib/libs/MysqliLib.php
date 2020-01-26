@@ -6,7 +6,13 @@ class MysqliLib {
 	public $dimindexer  =array();
 	private $processSeq = false;
 	private $debug = false;
-	
+	private static $instance = null;
+	static function getInstance() {
+	    if(self::$instance==null) {
+	        self::$instance = new MysqliLib();
+	    }
+	    return self::$instance;
+	}
 	
 	function setProcessSequence($b) {
 	    $this->processSeq = $b;

@@ -6,6 +6,7 @@ public $vars = array();
 public $colors = array("success","info","warning","danger");
 private $data;
 public $html = '';
+private static  $instance =null;
 function __construct() {
 $this->vars['classes'] = array('primary','info','warning','success','default','danger');
 $this->vars['panel'] = $this->getpanel();
@@ -25,6 +26,14 @@ foreach($this->vars['classes'] as $class) {
 }
 
 
+}
+
+
+static function getInstance() {
+    if(self::$instance==null) {
+        self::$instance = new BootStrap();
+    }
+    return self::$instance;
 }
 
 

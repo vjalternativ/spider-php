@@ -20,7 +20,13 @@ class VJFramework {
 	public $seoparams = array();
 	public $record = false;
 	//TO DO : to explore global variable vs class data attribute which is best way
-	
+	private static $instance;
+	static function getInstance() {
+	    if(self::$instance==null) {
+	        self::$instance = new VJFramework();
+	    }
+	    return self::$instance;
+	}
 	function initModules() {
 	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
 	    if(file_exists($vjconfig['fwbasepath'].'cache/relationship_list.php')) {

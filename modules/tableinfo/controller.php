@@ -167,12 +167,15 @@ class tableinfoController extends VJController {
 	}
 	
 	function action_addfield() {
-		global $db,$entity;
+		
+		
+		$db = MysqliLib::getInstance();
+		$entity  = Entity::getInstance();
 		
 		$fieldType = $_REQUEST['field-type'];
 		
 		
-		$temp = array("name" => $_REQUEST['field-name'],'type'=>$_REQUEST['field-type']);
+		$temp = array("name" => $_REQUEST['field-name'],'type'=>$_REQUEST['field-type'],"table"=>"primary");
 		if($temp['type']=="relate" || $temp['type']=="file") {
 		     $fieldType = "char"; 
 		     $_REQUEST['field-len'] = '36';
@@ -198,20 +201,20 @@ class tableinfoController extends VJController {
 		  
 	
 		
-		$sql = "ALTER TABLE ".$_REQUEST['tableinfo-name']." ADD COLUMN ".$_REQUEST['field-name']." ".$fieldType." ";
 		
+		$postSql = "";
 		if($_REQUEST['field-len']!="") {
 			$temp['len']= $_REQUEST['field-len'];
-			$sql .= " (".$_REQUEST['field-len'].") ";
+			$postSql .= " (".$_REQUEST['field-len'].") ";
 		}
 		
 		if($_REQUEST['field-notnull']=='true') {
-			$sql .= " NOT NULL ";
+		    $postSql .= " NOT NULL ";
 			$temp['notnull'] = 1;
 		}		
 		
 		if($_REQUEST['field-default']!='') {
-			$sql .= $_REQUEST['field-default'];
+		    $postSql .= $_REQUEST['field-default'];
 			$temp['default'] = $_REQUEST['field-default'];
 	
 		}
@@ -219,7 +222,22 @@ class tableinfoController extends VJController {
 		if(!empty($_REQUEST['field_index'])) {
 		    $temp['field_index'] =$_REQUEST['field_index'];
 		}
+		
+		
+		$table = $_REQUEST['tableinfo-name'];
+		if(isset($_REQUEST['field-table']) && !empty($_REQUEST['field-table'])) {
+		    $temp['table'] = $_REQUEST['field-table'];
+		    $table .= "_".$temp['table'];
+		}
+		
+		global $globalModuleList;
+		if(!isset($globalModuleList[$table])) {
+		   $entity->createEntity($table,array("type"=>"cstm"));
+		}
+		$sql = "ALTER TABLE ".$table." ADD COLUMN ".$_REQUEST['field-name']." ".$fieldType." ";
+		$sql .= " ".$postSql;
 		$db->query($sql);
+		
 		$tbinfo = $entity->get('tableinfo',$_REQUEST['tableinfo-id']);
 		$desc  = json_decode(base64_decode($tbinfo['description']),1);
 		$desc['fields'][$_REQUEST['field-name']] = $temp;

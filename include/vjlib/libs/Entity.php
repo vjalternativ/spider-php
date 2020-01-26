@@ -13,6 +13,8 @@ class Entity {
 	public $basicExcludeFields = array();
 	public $basic_wodExcludeFields = array('assigned_user_id','description');
 	public $relationshipExcludeFields = array('name','assigned_user_id','description','date_entered','modified_user_id','created_by');
+	public $cstmExcludeFields = array();
+	
 	
 	public $data;
 	public $beandata;
@@ -30,6 +32,9 @@ class Entity {
 	
 	public $user_additonalFields = array("username","password","ownership_id");
 	public $userExcludeFields = array("description");
+	
+	private static $instance = null;
+	
 	function __construct() {
 		$this->defaultFields = array('id','name','description','date_entered','date_modified','deleted','modified_user_id','created_by','assigned_user_id');
 		$fields = array();
@@ -39,7 +44,12 @@ class Entity {
 		$this->fields = $fields;
 	}
 	
-	
+	static function getInstance() {
+	    if(self::$instance==null) {
+	        self::$instance = new Entity();
+	    }
+	    return self::$instance;
+	}
 	
 	function getDefaultFields($type='framework') {
 		$fields = $this->fields;
@@ -52,6 +62,10 @@ class Entity {
 			    foreach ($this->user_additonalFields as $field) {
 			        $fields[$field] = $this->{$field};
 			    }
+			} else if($type=="cstm") {
+			    $id = $fields['id'];
+			    $fields = array();
+			    $fields['id'] = $id;
 			}
 		}
 		return $fields;

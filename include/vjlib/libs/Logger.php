@@ -2,6 +2,14 @@
 class Logger {
     public $type = "INFO";
     
+    
+    private static $instance;
+    static function getInstance() {
+        if(self::$instance==null) {
+            self::$instance = new Logger();
+        }
+        return self::$instance;
+    }
     function fatal($log) {
         $type = "FATAL";
         $this->log($log);

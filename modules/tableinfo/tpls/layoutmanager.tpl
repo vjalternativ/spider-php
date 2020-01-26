@@ -89,7 +89,10 @@
 			 
 	 </div>
 	 <div class="col-md-6">
-	 <a href="{$dropdownurl}" target="_blank"><button class="btn btn-info" type="button">Dropdown Editor</button></a>
+	 	<select name="field-table" class="form-control">
+	 		<option value="">-Custom NA-</option>
+	 		<option value="cstm">Custom</option>
+	 	</select>
 	 </div>
 	 
 	  </div> 

@@ -14,6 +14,13 @@ class Paginate {
 	public $action=false;
 	public $process = array();
 	public $extrafields = array();
+	private static $instance;
+	static function getInstance() {
+	    if(self::$instance==null) {
+	        self::$instance = new Paginate();
+	    }
+	    return self::$instance;
+	}
 	function process() {
 		$url=$this->url;
 		$index=$this->index;

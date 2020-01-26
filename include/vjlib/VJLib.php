@@ -41,7 +41,8 @@ class VJLib {
 		
 		$this->loadf($filepath);
 		
-		$obj = new $lib;
+		
+		$obj = $lib::getInstance();
 		
 		return $obj;
 	}
