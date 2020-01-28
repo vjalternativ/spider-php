@@ -714,4 +714,20 @@ class tableinfoController extends VJController {
 	    
 	    
 	}
+	
+	
+	function action_migratetable() {
+	    
+	     global $db,$entity;
+	     $sql = "select ss.name,c.id as country_id from states ss 
+                INNER JOIN countries cs on ss.country_id=cs.id 
+                INNER JOIN country c on cs.sortname = c.iso_code
+             ";
+	     $rows = $db->fetchRows($sql);
+	     foreach($rows as $row) {
+	     //    $entity->save("state",$row);
+	     }
+	     
+	     
+	}
 }

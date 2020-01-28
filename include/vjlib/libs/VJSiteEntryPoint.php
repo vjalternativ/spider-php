@@ -174,6 +174,7 @@ class VJSiteEntryPoint
 
         echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
         echo "<script>var baseurl = '" . $vjconfig['baseurl'] . "';</script>";
+        echo "<script>var urlbasepath = '" . $vjconfig['urlbasepath'] . "';</script>";
         echo "<script>var fwbaseurl = '" . $vjconfig['fwbaseurl'] . "';</script>";
     }
 
