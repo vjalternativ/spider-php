@@ -162,7 +162,7 @@ return $db->getrows($sql,'id');
 		$addnewrelationship = $bs->getelement("button","New Relationship",array("class"=>'btn btn-primary margin-top-10',"data-toggle"=>"modal", "data-target"=>"#newrelationshipmodal"));
 		$relationshiptabcontent = $bs->getelement('div',$addnewrelationship.$relationshiptable,array("id"=>'relationships-tab',"class"=>"tab-pane fade"));
 		
-		$smarty = new Smarty();
+		global $smarty;
 		
 		$listviewfieldarray = array();
 		if(isset($tableinfo['metadata']['listview'])) {
@@ -242,6 +242,8 @@ return $db->getrows($sql,'id');
 		$listviewfiltertabcontent = $bs->getelement('div',$listviewfilterhtml,array("id"=>'listviewfilterlayout-tab',"class"=>"tab-pane fade"));
 		
    
+		
+		$smarty->assign("rmodule",$this->data['name']);
 		$smarty->assign('viewtype','editview');
 		$smarty->assign("metadata",isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array());
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);

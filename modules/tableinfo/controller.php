@@ -730,4 +730,24 @@ class tableinfoController extends VJController {
 	     
 	     
 	}
+	
+	
+	function action_ajaxAddlayoutrow() {
+	    global $smarty,$vjconfig,$globalModuleList;
+	    
+	    
+	    $rmodule = $_POST['rmodule'];
+	    $viewtype = $_POST['viewtype'];
+	    
+	    $meta  = $globalModuleList[$rmodule]['tableinfo']['metadata'][$viewtype];
+	    
+	    $meta['type'] = $_POST['rowtype'];
+	    
+	    
+	    $smarty->assign("meta",$meta);
+	    $smarty->assign("viewtype",$viewtype);
+	    
+	    
+	    echo $smarty->fetch($vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutrow.tpl");
+	}
 }

@@ -111,49 +111,41 @@ function addextraitemeditview() {
 	
 }
 
+
+function deletecell(elem) {
+	var e = $(elem).parent().parent();
+	$(e).remove();
+}
+
 function delelement(id) {
 $("#"+id).remove();	
 }
 
-function addFieldLayout(id,counter) {
+function addFieldLayout(elem) {
 	
- var field = $("#field-"+id).val();
- var grid = $("#grid-"+id).val();
- var count = $('.gridfield-'+id).length;
+	var field = $(elem).parent().find(".select-field").val();
+	var grid = $(elem).parent().parent().find(".select-grid").val();
 		
- var html = '<div class="col-md-'+grid+' gridfield-'+id+'" id="gridfield-'+id+'-'+count+'"><div class="input-group"><div class="form-control">'+field+' <input type="hidden" name="layout-field-'+counter+'[]" value="'+field+'" /> <input type="hidden" name="layout-gridsize-'+counter+'[]" value="'+grid+'" /></div><div class="input-group-addon" onclick="delelement(\'gridfield-'+id+'-'+count+'\')"><i class="fa fa-window-close text-danger" aria="hidden"></i></div></div></div>';
- $("#"+id).append(html);
+	var html = '<div class="col-md-'+grid+' gridfield" ><div class="input-group"><div class="form-control">'+field+' <input type="hidden" name="layout-field[]" value="'+field+'" /> <input type="hidden" name="layout-gridsize[]" value="'+grid+'" /></div><div class="input-group-addon" onclick="deletecell(this)"><i class="fa fa-window-close text-danger" aria="hidden"></i></div></div></div>';
+	$(elem).parent().parent().next().find(".layoutrow").append(html);
 }
 
-function setParams(id) {
+function setParams(elem) {
 	
-	var value = $("#"+id+'-params').val();
-	var count = $('.'+id+'layoutrow').length;
-		var html = '<div class="form-group '+id+'layoutrow"  id="container-'+id+'-layout-row-'+count+'"><div class="row">';
-		
-	if(value=='row') {
-	var selecfieldshtml = $("#select_fields_field").html();	
-	html += '<div class="col-md-3"><input type="hidden" name="param-type[]" value="row" /><input type="hidden"  name="param-label[]" value="" />';
-	html += '<div class="input-group"><div class="input-group-addon" onclick="delelement(\'container-'+id+'-layout-row-'+count+'\')"><i class="fa fa-window-close text-danger" aria="hidden"></i></div><div class="input-group-addon"><select class="fields select-field" id="field-'+id+'-layout-row-'+count+'"  >'+selecfieldshtml+'<select></div><input class="form-control" id="grid-'+id+'-layout-row-'+count+'"  type="number" min="1" max="12" value="6"  /><div class="input-group-addon" onclick="addFieldLayout(\''+id+'-layout-row-'+count+'\',\''+count+'\')"><i class="fa fa-plus text-primary" aria="hidden"></i></div></div>';
-		
-		html += '</div>';
-		html += '<div class="col-md-9 border-left" ><div class="row" id="'+id+'-layout-row-'+count+'"></div></div>';
+	var value = $(elem).parent().find(".layout-form-params").val();
+	var viewtype = $(elem).parent().find(".layout-view-type").val();
+	var rmodule = $(elem).parent().find(".layout-view-rmoudle").val();
 	
-	} else if(value=='hr') {
+	var dropdown = $(elem).parent().find(".select_fields_field").html();
+	
+	$.post(fwbaseurl+"index.php?module=tableinfo&action=ajaxAddlayoutrow",{rmodule:rmodule,rowtype:value,viewtype:viewtype},function(html){
+		$("#"+viewtype+"-layout-form").append(html);
+		$(".fields").html(dropdown);
+			
+	});
+	
+	
 		
-		html += '<div class="col-md-3"><input type="hidden" name="param-type[]" value="hr" /></div><div class="col-md-9 border-left"><div class="input-group">';
-html += '<input type="hidden" name="layout-field[]" value="hr" /> <input type="hidden" name="layout-gridsize[]" value="12" />';		
-html += '<input type="text"  class="form-control" name="param-label[]" Placeholder="Label" /><div class="input-group-addon">Horizontal Rule</div>';
-html += '<div class="input-group-addon" onclick="delelement(\'container-'+id+'-layout-row-'+count+'\')"><i class="fa fa-window-close text-danger" aria="hidden"></i></div>';
-html += '</div></div>';
-		
-	} else {
-		return false;	
-	}
-	html += '</div></div>';
-		
-	$("#"+id).append(html);
-	$(".fields").html($("#listviewfield").html());
 	
 }
 
