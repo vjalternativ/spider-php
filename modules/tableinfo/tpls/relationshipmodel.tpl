@@ -49,7 +49,8 @@
 	 	<option value="1_M">One to Many</option>
 		<option value="M_1">Many to One</option>
 		<option value="M_M">Many to Many</option>
-	  </select>
+	 	<option value="cstm">Custom</option>
+	 </select>
 	  </div>
 	 <div class="col-md-5">
 	  <select name="secondarytable" class="form-control">

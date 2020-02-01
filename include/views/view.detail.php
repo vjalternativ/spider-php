@@ -135,7 +135,61 @@ class ViewDetail  extends View {
 		    }
 		}
 		
+		if(isset($tableinfo['detailviewdef'])) {
+		    
+		    $ddef = json_decode($tableinfo['detailviewdef'],1);
+		    if(is_array($ddef)) {
+		      $vardef['metadata']['detailview'] =$ddef;
+		    }
+		}
+		
+		
+		
+		global $globalEntityList;
+		
+		foreach($globalModuleList[$tableinfo['name']]['relationships'] as $rel) {
+		    if($rel['rtype'] == "CSTM") {
+		        
+		        $relTable = $globalEntityList[$rel['secondarytable']];
+		        
+		        $this->data += $entity->get($relTable['name'],$this->data['id']);
+		        $refFields = $globalModuleList[$relTable['name']]['tableinfo']['fields'];
+		        
+		        $vardef['fields'] += $refFields;
+		        
+		        
+		        $f = array();
+		        $f['type'] = 'hr';
+		        $f['label'] = $rel['secondarytable_name'];
+		        $vardef['metadata']['detailview'][] = $f;
+		        
+		        
+		        $counter =0 ;
+		        $fields = array("type"=>"row","fields"=>array());
+		        foreach($refFields as $key => $field) {
+		            if($key== "id") {
+		                continue;
+		            }
+		            $counter++;
+		            $f = array();
+		            $f['field'] = $key;
+		            $f['gridsize'] = "6";
+		            
+		             $fields['fields'][] = $f;
+		             
+		             if($counter==2) {
+		                 
+		                 $vardef['metadata']['detailview'][] = $fields;
+		                 $counter =0;
+		                 $fields['fields'] = array();    
+		             }
+		            
+		        }
+		    }
+		}
+		
 	    $metadata = $vardef['metadata'];
+	    
 		$html = $this->parseDetailViewDef('detailview',$vardef);
 		$editButton= getelement("a","EDIT",array("href"=>"index.php?module=".$this->module."&action=editview&record=".$this->record,"class"=>"btn btn-primary pull-right"));
 		$editButton .= $this->additionalContent;

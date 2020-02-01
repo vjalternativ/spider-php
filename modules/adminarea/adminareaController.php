@@ -82,7 +82,11 @@ class adminareaController extends VJController
                             $field['len']  = "200";
                             $temp['options'] = $field['options'];
                             
+                        }else if($temp['type']== "multienum" ) {
+                            $fieldType = "text";
                         }
+                        
+                        
                         
                         
                         

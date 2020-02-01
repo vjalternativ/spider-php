@@ -197,7 +197,10 @@ class tableinfoController extends VJController {
 		    $_REQUEST['field-len']  = "255";
 		    $temp['options'] = $_REQUEST['field-options'];
 		    
-		  }
+		} else if($temp['type']== "multienum" ) {
+		    $fieldType = "text";
+		    $temp['options'] = $_REQUEST['field-options'];
+		}
 		  
 	
 		
@@ -225,7 +228,7 @@ class tableinfoController extends VJController {
 		
 		
 		$table = $_REQUEST['tableinfo-name'];
-		if(isset($_REQUEST['field-table']) && !empty($_REQUEST['field-table'])) {
+		/* if(isset($_REQUEST['field-table']) && !empty($_REQUEST['field-table'])) {
 		    $temp['table'] = $_REQUEST['field-table'];
 		    $table .= "_".$temp['table'];
 		}
@@ -233,7 +236,7 @@ class tableinfoController extends VJController {
 		global $globalModuleList;
 		if(!isset($globalModuleList[$table])) {
 		   $entity->createEntity($table,array("type"=>"cstm"));
-		}
+		} */
 		$sql = "ALTER TABLE ".$table." ADD COLUMN ".$_REQUEST['field-name']." ".$fieldType." ";
 		$sql .= " ".$postSql;
 		$db->query($sql);
@@ -308,27 +311,45 @@ class tableinfoController extends VJController {
 			    $layout['fields'][$r['name']]['label'] =  $r['primarytable_name'];
 			}
             
+			
 			$metainfo  = array();
-			if(isset($_REQUEST['param-type'])) {
-					foreach($_REQUEST['param-type'] as $key=>$type) {
-						$metainfo[$key]['type'] = $type; 
-						if($type=='hr') {
-							$metainfo[$key]['label'] = $_REQUEST['param-label'][$key];
-						} else if($type=='row' && isset( $_REQUEST['layout-field-'.$key])) { 
-							
-						    $fields = $_REQUEST['layout-field-'.$key];
-							foreach($fields as $gkey=>$field) {
-							    	$metainfo[$key]['fields'][] = array( 'field'=> $field,'gridsize'=>$_REQUEST['layout-gridsize-'.$key][$gkey]);
-						  }
+			$rowindex =0 ;
+			$totalgrid = 0;
+			if(isset($_REQUEST['layout-field-type'])) {
+			    foreach($_REQUEST['layout-field-type'] as $key=>$type) {
+						$grid  = $_REQUEST['layout-gridsize'][$key];
 						
+						
+						if($totalgrid >0 && $grid =="12") {
+						    $rowindex++;
+						    $totalgrid =0;
 						}
+						
+						$metainfo[$rowindex]['type'] = $type;
+						
+						if($type=='hr') {
+						    $metainfo[$rowindex]['label'] = $_REQUEST['layout-field-label'][$key];
+						}  else if($type=='row' && isset( $_REQUEST['layout-field'][$key])) { 
+						    $field = $_REQUEST['layout-field'][$key];
+						 	$metainfo[$rowindex]['fields'][] = array( 'field'=> $field,'gridsize'=>$grid);
+						}
+						
+						
+						
+                        $totalgrid += $grid;
+                        if($totalgrid=="12") {
+                            $totalgrid=0;
+                            $rowindex++;
+                            
+                        }
+						
 						
 					}
 			}
 			
-			
 			$layout['metadata'][$viewtype] = $metainfo;
-			$info['description'] = base64_encode(json_encode($layout));
+			//$info['description'] = base64_encode(json_encode($layout));
+			$info[$viewtype.'def'] = json_encode($metainfo);
 			$entity->save("tableinfo",$info);
 			die;
 	}

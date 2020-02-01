@@ -57,7 +57,9 @@ class Installer {
 		$fields['tabletype']['notnull'] =  true;
 		$fields['tabletype']['label'] =  "Table Type";
 		$fields['tabletype']['options'] =  "tabletype_list";
-		 
+		
+		
+		
 		$metafields = array();
 		$metafields['listview']['tabletype'] =  $fields['tabletype'];
 		$metafields['listview']['label'] =  $fields['label'];
@@ -66,6 +68,25 @@ class Installer {
 		$metafields['editview']['tabletype'] =  array("fields" => array(array('field'=>$fields['tabletype'],'gridsize'=>6)),'type'=>'row');
 		$entity->createEntity('tableinfo',array('type'=>'basic',"label"=>"Modules",'fields'=>$fields,'metadata'=>$metafields,'skiptableinfoentry'=>true));
 		
+		
+		$fields = array();
+		$fields['detailviewdef']['name'] =  'detailviewdef';
+		$fields['detailviewdef']['type'] =  'text';
+		$fields['detailviewdef']['notnull'] =  false;
+		$fields['detailviewdef']['label'] =  "detailviewdef";
+		
+		$fields['editviewdef']['name'] =  'editviewdef';
+		$fields['editviewdef']['type'] =  'text';
+		$fields['editviewdef']['notnull'] =  false;
+		$fields['editviewdef']['label'] =  "editviewdef";
+		
+		$fields['listviewdef']['name'] =  'listviewdef';
+		$fields['listviewdef']['type'] =  'text';
+		$fields['listviewdef']['notnull'] =  false;
+		$fields['listviewdef']['label'] =  "listviewdef";
+		
+		
+		$this->addFields("tableinfo",$fields);
 	}
 	
 	function createrelationshiptable() {
@@ -322,18 +343,112 @@ class Installer {
 		$entity->createRelationship('menu','submenu','1_M',"Menu","Submenus");
 		$entity->createRelationship('submenu','tableinfo','1_M',"Submenu","Modules");
 		
-		global $vjconfig;
-		$dir = $vjconfig['fwbasepath']."include/entrypoints/install";
-		$files = scandir($dir);
-		if($files) {
-		    foreach($files as $file) {
-		        if(strlen($file)>2) {
-		            require_once $dir."/".$file;
-		        }
-		    }
-		}
 		
 		
+		
+	}
+	
+	
+	function addFields($table,$fields) {
+	    
+	    foreach($fields as $field) {
+	        $this->addField($table, $field);
+	    }
+	    
+	}
+	
+	function addField($table,$params) {
+	    
+	    
+	    
+	    $db = MysqliLib::getInstance();
+	    $entity  = Entity::getInstance();
+	    
+	    $fieldType = $params['type'];
+	    $temp = array("name" => $params['name'],'type'=>$params['type'],"table"=>"primary");
+	    if($temp['type']=="relate" || $temp['type']=="file") {
+	        $fieldType = "char";
+	        $params['len'] = '36';
+	        $temp['rmodule']  = $params['rmodule'];
+	        
+	    } else if($temp['type']=='dependent_relate') {
+	        $fieldType = "char";
+	        $params['len'] = '36';
+	        
+	        $temp['rmodule']  = $params['rmodule'];
+	        $temp['dependent_relate_field'] = $params['dependent_relate_field'];
+	        $temp['dependent_relate_field'] = $params['dependent_relate_field'];
+	        $temp['relate_relationship'] = $params['relate_relationship'];
+	        
+	    } else if($temp['type']=="checkbox") {
+	        $fieldType = "int";
+	    } else if($temp['type']== "enum" ) {
+	        $fieldType = "varchar";
+	        $params['len']  = "200";
+	        $temp['options'] = $params['options'];
+	        
+	    }
+	    
+	    
+	    
+	    
+	    $postSql = "";
+	    if(isset($params['len']) && $params['len']!="") {
+	        $temp['len']= $params['len'];
+	        $postSql .= " (".$params['len'].") ";
+	    }
+	    
+	    if(isset($params['notnull']) && $params['notnull']=='true') {
+	        $postSql .= " NOT NULL ";
+	        $temp['notnull'] = 1;
+	    }
+	    
+	    if(isset($params['default']) && $params['default']!='') {
+	        $postSql .= $params['default'];
+	        $temp['default'] = $params['default'];
+	        
+	    }
+	    
+	    if(isset($params['index']) && !empty($params['index'])) {
+	        $temp['index'] =$params['index'];
+	    }
+	    
+	    
+	    
+	    global $globalModuleList;
+	    if(isset($globalModuleList[$table])) {
+	        $tableInfo = $globalModuleList[$table]['tableinfo'];
+	        $tbId = $globalModuleList[$table]['id'];
+	        
+	        if(isset($tableInfo['fields'][$params['name']])) {
+	            echo "field ".$params['name'].' already exists in table '.$table."<br />";
+	        } else {
+	            
+    	        $sql = "ALTER TABLE ".$table." ADD COLUMN ".$params['name']." ".$fieldType." ";
+        	    $sql .= " ".$postSql;
+        	    $db->query($sql);
+        	    $tbinfo = $entity->get('tableinfo',$tbId);
+        	    $desc  = json_decode(base64_decode($tbinfo['description']),1);
+        	    $desc['fields'][$params['name']] = $temp;
+        	    $descstring = base64_encode(json_encode($desc));
+        	    $tbinfo['description'] = $descstring;
+        	    $entity->save('tableinfo',$tbinfo);
+	        }
+	    }
+	}
+	
+	
+	function postInstallation() {
+	    global $vjconfig;
+	    $dir = $vjconfig['fwbasepath']."include/entrypoints/install";
+	    $files = scandir($dir);
+	    if($files) {
+	        foreach($files as $file) {
+	            if(strlen($file)>2) {
+	                require_once $dir."/".$file;
+	            }
+	        }
+	    }
 	}
 	
 	
@@ -344,4 +459,5 @@ class Installer {
 }
 $framework = new Installer();
 $framework->install();
+$framework->postInstallation();
 ?>

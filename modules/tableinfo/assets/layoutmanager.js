@@ -137,16 +137,38 @@ function setParams(elem) {
 	var rmodule = $(elem).parent().find(".layout-view-rmoudle").val();
 	
 	var dropdown = $(elem).parent().find(".select_fields_field").html();
-	
-	$.post(fwbaseurl+"index.php?module=tableinfo&action=ajaxAddlayoutrow",{rmodule:rmodule,rowtype:value,viewtype:viewtype},function(html){
-		$("#"+viewtype+"-layout-form").append(html);
-		$(".fields").html(dropdown);
-			
-	});
+	if(value !="") {
+		$.post(fwbaseurl+"index.php?module=tableinfo&action=ajaxAddlayoutrow",{rmodule:rmodule,rowtype:value,viewtype:viewtype},function(html){
+			$("#"+viewtype+"-layout-form").append(html);
+			$(".fields").html(dropdown);
+				
+		});
+	}
 	
 	
 		
 	
+}
+
+
+function addrowbelow(elem) {
+	var viewtype = $(elem).data("viewtype");
+	var value = $("#"+viewtype+"layout-form-params").val();
+	var rmodule = $("#"+viewtype+"-layout-view-rmoudle").val();
+	var dropdown = $("#"+viewtype+"-select-fields-field").html();
+	if(value !="") {
+		$.post(fwbaseurl+"index.php?module=tableinfo&action=ajaxAddlayoutrow",{rmodule:rmodule,rowtype:value,viewtype:viewtype},function(html){
+			$(elem).parent().parent().parent().parent().after(html);
+			$(".fields").html(dropdown);
+				
+		});		
+	}
+	
+}
+
+
+function delrow(elem) {
+	$(elem).parent().parent().parent().parent().remove();
 }
 
 
@@ -159,13 +181,13 @@ function saveLayout(id,record,type) {
 	});
 }
 
-function orderup(id) {
-	var ele = $("#"+id);
+function orderup(elem) {
+	var ele = $(elem).parent().parent().parent();
 	var prev = ele.prev();
 	prev.before(ele);
 }
-function orderdown(id) {
-	var ele = $("#"+id);
+function orderdown(elem) {
+	var ele = $(elem).parent().parent().parent();
 	var next = ele.next();
 	next.after(ele);
 }

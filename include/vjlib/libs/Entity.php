@@ -79,8 +79,11 @@ class Entity {
 	    $this->generateCache();
 	    
 	    if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
-		
-			$result = $this->createSQLModule($entityName,$params,$repair);
+		    
+	        
+	        if(!isset($params['rtype']) || $params['rtype'] != "cstm") {
+		        $this->createSQLModule($entityName,$params,$repair);
+			}
 			
 			if(isset($params['type']) && $params['type']=="relationship") {
 					$values = $params['values'];
@@ -444,6 +447,12 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		if(isset($keyvalue['new_with_id']) && isset($keyvalue['id'])) {
 		    $isnew = true;
 		    $sql = "INSERT INTO ";
+		} else {
+		    if(isset($keyvalue['id'])) {
+		        if($globalModuleList[$table]['tabletype']=="cstm") {
+		            
+		        }
+		    }
 		}
 		$keyvalue['hook_isnew'] = $isnew;
 		$keyvalue['hook_table'] = $table;
@@ -567,13 +576,23 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	
 	
 	function get($table,$id) {
-	    global $db,$globalEntityList,$globalModuleList;
-		$this->module = $table;
+	    global $globalEntityList,$globalModuleList;
+		
+	    $db= MysqliLib::getInstance();
+	    $this->module = $table;
 		
 		$tableinfo = $globalModuleList[$table];
-	    $this->tableinfo = $tableinfo;
+		if($tableinfo['tabletype']=="cstm") {
+		    $sql  = "select * from ".$table." where id='".$id."'";
+		    return $db->getrow($sql);
+		    
+		}
+		
+		
+		$this->tableinfo = $tableinfo;
 	   $vardef = json_decode(base64_decode($tableinfo['description']),1);
 	   $fields = $vardef["fields"]; 
+	   
 	   //need to check why two times
 	   
 	   $sql = "select * from relationships where secondarytable = '".$tableinfo['id']."' and deleted=0 and rtype='1_M'";

@@ -14,7 +14,7 @@
 {/foreach}
 </select>
 
-<select class="hide select_fields_field">
+<select class="hide select_fields_field" id="{$viewtype}-select-fields-field">
 <option value="">Choose Field</option>
 {foreach from=$fields key=fkey item=item}
 <option value="{$fkey}">{$fkey}</option>
@@ -22,7 +22,7 @@
 </select>
 
 
-<input type="hidden" class="layout-view-rmoudle" value="{$rmodule}" />
+<input type="hidden" id="{$viewtype}-layout-view-rmoudle" class="layout-view-rmoudle" value="{$rmodule}" />
 <input type="hidden" class="layout-view-type" value="{$viewtype}" />
 <div class="input-group-addon"  onclick="setParams(this)">
 Add

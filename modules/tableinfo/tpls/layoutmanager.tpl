@@ -37,7 +37,7 @@
 	  <option value="dependent_relate">Dependent Relate</option>
 	  <option value="file">File</option>
 	  <option value="checkbox">Checkbox</option>
-	  
+	  <option value="multienum">Multiselect</option>
 	  </select>
 	  </div>
 	 

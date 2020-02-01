@@ -5,7 +5,7 @@ class tableinfoViewDetail  extends ViewDetail {
 function getalltables() {
 
 global $db;
-$sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user'";
+$sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user' or tabletype='cstm'";
 return $db->getrows($sql,'id');
 }
 
@@ -36,14 +36,37 @@ return $db->getrows($sql,'id');
 		$relationships = $db->getrows($sql);
 		$tableinfo =json_decode(base64_decode($this->data['description']),1);
 		
+		
+		
+		if(isset($this->data['detailviewdef'])) {
+		    $tableinfo['metadata']['detailview'] =json_decode($this->data['detailviewdef'],1);
+		}
+		
+		/* $ddef= json_decode($this->data['detailviewdef'],1);
+		
+		
+		foreach($tableinfo['metadata']['detailview'] as $key=>$row) {
+		    if(isset($ddef[$key])) {
+		        if($ddef[$key]===$row) {
+		            
+		        } else {
+		            echo "<pre>";print_r($ddef[$key]);echo "</pre>";
+		            echo "<pre>";print_r($row);die;
+		        }
+		    } else {
+		        die("key not found for ".print_r($row,1));
+		    }
+		    
+		    
+		}
+		die; */
+		
 		foreach($tableinfo['metadata'] as $key=>$meta) {
 		    if($key=="detailview" || $key=="editview") {
 		        
-		        if($key=="detailview" ) {
+		        if($key=="detailview"  && $meta) {
+		            
 		            foreach($meta as $metakey=>$metainfo) {
-    		            
-		                
-		                
 		                if(isset($metainfo['fields'])) {
 		                    foreach($metainfo['fields'] as  $fkey=>$field) {
 		                        if(!is_array($field['field'])) {
@@ -252,7 +275,7 @@ return $db->getrows($sql,'id');
 		
 		$smarty->assign('viewtype','detailview');
 		
-		//echo "<pre>";print_r($tableinfo['metadata']['detailview']);die;
+		
 		$smarty->assign("metadata",isset($tableinfo['metadata']['detailview']) ? $tableinfo['metadata']['detailview'] : array());
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
 		

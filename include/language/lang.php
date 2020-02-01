@@ -8,7 +8,8 @@
   array (
     'basic' => 'Basic',
     'relationship' => 'Relationship',
-    'user' => 'User'
+    'user' => 'User',
+    'cstm' => 'Custom'
       
   ),
   'user_type_list' => 
