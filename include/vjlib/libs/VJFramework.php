@@ -169,7 +169,7 @@ class VJFramework {
 		    $class = $this->module.'Controller';
 		} else {
 		    
-		    $filepath = $vjconfig['fwbasepath'].'/modules/' . $this->module . '/'. $this->module .'controller.php';
+		    $filepath = $vjconfig['fwbasepath'].'/modules/' . $this->module . '/'. $this->module .'Controller.php';
 		    $iscustom = $vjlib->loadf ($filepath,false);
 		    if(!$iscustom) {
 		      $filepath = $vjconfig['fwbasepath'].'/modules/' . $this->module . '/controller.php';
