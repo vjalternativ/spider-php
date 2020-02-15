@@ -331,7 +331,7 @@ class tableinfoController extends VJController {
 						    $metainfo[$rowindex]['label'] = $_REQUEST['layout-field-label'][$key];
 						}  else if($type=='row' && isset( $_REQUEST['layout-field'][$key])) { 
 						    $field = $_REQUEST['layout-field'][$key];
-						 	$metainfo[$rowindex]['fields'][] = array( 'field'=> $field,'gridsize'=>$grid);
+						 	$metainfo[$rowindex]['fields'][] = array( 'field'=> array("name"=>$field),'gridsize'=>$grid);
 						}
 						
 						
@@ -347,6 +347,7 @@ class tableinfoController extends VJController {
 					}
 			}
 			
+			//echo "<pre>";print_r($metainfo);die;
 			$layout['metadata'][$viewtype] = $metainfo;
 			//$info['description'] = base64_encode(json_encode($layout));
 			$info[$viewtype.'def'] = json_encode($metainfo);

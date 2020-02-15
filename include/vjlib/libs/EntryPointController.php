@@ -6,7 +6,7 @@ class EntryPointController {
     
     public $params = array();
     public $view=  "";
-    public $bootparams = array();
+    public $bootparams = array("breadcrumb"=>array());
     public $headerparams = array();
     public $footerparams = array();
     public $redirectView = false;

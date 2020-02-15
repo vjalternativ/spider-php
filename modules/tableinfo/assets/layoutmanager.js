@@ -125,8 +125,12 @@ function addFieldLayout(elem) {
 	
 	var field = $(elem).parent().find(".select-field").val();
 	var grid = $(elem).parent().parent().find(".select-grid").val();
+	
+	var viewtype = $(elem).data("viewtype");
+	var vtype = $("#"+viewtype+"layout-form-params").val();
+	
 		
-	var html = '<div class="col-md-'+grid+' gridfield" ><div class="input-group"><div class="form-control">'+field+' <input type="hidden" name="layout-field[]" value="'+field+'" /> <input type="hidden" name="layout-gridsize[]" value="'+grid+'" /></div><div class="input-group-addon" onclick="deletecell(this)"><i class="fa fa-window-close text-danger" aria="hidden"></i></div></div></div>';
+	var html = '<div class="col-md-'+grid+' gridfield" ><div class="input-group"><div class="form-control">'+field+' <input type="hidden" name="layout-field[]" value="'+field+'" /> <input type="hidden" name="layout-field-type[]" value="'+vtype+'" /> <input type="hidden" name="layout-gridsize[]" value="'+grid+'" /></div><div class="input-group-addon" onclick="deletecell(this)"><i class="fa fa-window-close text-danger" aria="hidden"></i></div></div></div>';
 	$(elem).parent().parent().next().find(".layoutrow").append(html);
 }
 

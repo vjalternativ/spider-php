@@ -41,6 +41,10 @@ return $db->getrows($sql,'id');
 		if(isset($this->data['detailviewdef'])) {
 		    $tableinfo['metadata']['detailview'] =json_decode($this->data['detailviewdef'],1);
 		}
+		if(isset($this->data['editviewdef'])) {
+		    $tableinfo['metadata']['editview'] =json_decode($this->data['editviewdef'],1);
+		}
+		
 		
 		/* $ddef= json_decode($this->data['detailviewdef'],1);
 		
@@ -223,7 +227,6 @@ return $db->getrows($sql,'id');
 		
 		$smarty->assign("fields",$tableinfo['fields']);
 	
-		
 		
 		$smarty->assign("table",$listviewLayoutTable);
 		$smarty->assign("tbid",$params['tbid']);

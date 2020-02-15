@@ -49,6 +49,14 @@ class ViewEdit  extends View {
 	            }
 	        }
 	    }
+	    
+	    if(isset($tableinfo['editviewdef'])) {
+	        
+	        $ddef = json_decode($tableinfo['editviewdef'],1);
+	        if(is_array($ddef)) {
+	            $vardef['metadata']['editview'] =$ddef;
+	        }
+	    }
 	    $this->def = $vardef;
 	    if(!$this->data) {
 	        $this->data['id'] = "";
@@ -83,6 +91,8 @@ class ViewEdit  extends View {
 		
 		$vardef =$this->def;
 		
+		
+		
 		$metadata = $vardef['metadata'];
 		
 		$html = $this->parseEditViewDef($metadata['editview']);
@@ -95,10 +105,10 @@ class ViewEdit  extends View {
 		$panelfooter = $bs->getelement('div',$save,array('class'=>array('value'=>'panel-footer')));
 		$panel = $bs->getelement('div',$panelheading.$panelbody.$panelfooter,array('class'=>array('value'=>'panel panel-info')));
 		if(isset($_REQUEST['parent_module'])) {
-		    $panel .= '<input type="hidden" name="parent_module" value="'.$_REQUEST['parent_module'].'" />';
+		    $panel .= '<input type="hidden" name="parent_module" id="parent_module" value="'.$_REQUEST['parent_module'].'" />';
 		}
 		if(isset($_REQUEST['parent_record'])) {
-		    $panel .= '<input type="hidden" name="parent_record" value="'.$_REQUEST['parent_record'].'" />';
+		    $panel .= '<input type="hidden" name="parent_record" id="parent_record" value="'.$_REQUEST['parent_record'].'" />';
 		}
 		if(isset($_REQUEST['rel'])) {
 		    $panel .= '<input type="hidden" name="rel" value="'.$_REQUEST['rel'].'" />';
