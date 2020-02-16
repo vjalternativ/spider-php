@@ -61,7 +61,6 @@ class VJFramework {
 		$smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
 		$smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
 		$smarty->assign("fwurlbasepath",$vjconfig['fwurlbasepath']);
-		echo "<pre>";print_r($vjconfig);die;
 		
 		$smarty->assign("app_list_strings",$app_list_strings);
 		$db->connect($vjconfig['mysql']['host'],$vjconfig['mysql']['user'],$vjconfig['mysql']['password'],$vjconfig['mysql']['database']);
