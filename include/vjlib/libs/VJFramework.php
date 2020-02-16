@@ -60,6 +60,8 @@ class VJFramework {
 		$smarty->assign("urlbasepath",$vjconfig['urlbasepath']);
 		$smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
 		$smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
+		$smarty->assign("fwurlbasepath",$vjconfig['fwurlbasepath']);
+		
 		$smarty->assign("app_list_strings",$app_list_strings);
 		$db->connect($vjconfig['mysql']['host'],$vjconfig['mysql']['user'],$vjconfig['mysql']['password'],$vjconfig['mysql']['database']);
 		$vjlib->BootStrap->vars['path'] ="include/vjlib/assets/";
