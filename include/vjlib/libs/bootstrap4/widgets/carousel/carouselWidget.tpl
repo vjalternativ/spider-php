@@ -8,6 +8,7 @@
   
   <!-- The slideshow -->
   <div class="carousel-inner">
+  {$vjconfig|@debug_print_var}
     {foreach from=$params item=slide}
     <div class="carousel-item {if $slide.isfirst}active{/if}">
       <img src="{$vjconfig.fwurlbassepath}index.php?module=media_files&action=download&id={$slide.attrs.image}" alt="">
