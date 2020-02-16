@@ -68,9 +68,8 @@ class VJSiteEntryPoint
         if (! method_exists($pageController, $this->method)) {
             $this->method = "action_index";
         }
-
         if ($pageController->routes) {
-            foreach ($this->routes as $key => $val) {
+            foreach ($pageController->routes as $key => $val) {
                 if (isset($seoParams[$key])) {
                     $method = 'action_' . $val;
                     $pageController->{$method}();
