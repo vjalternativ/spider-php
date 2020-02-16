@@ -84,7 +84,6 @@ class Bootstrap4  {
         
         $dir = __DIR__;
         
-        $smarty->assign("vjconfig",$vjconfig);
         $smarty->assign("params",$params);
         
         if(file_exists($dir."/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
