@@ -69,24 +69,7 @@ class Installer {
 		$entity->createEntity('tableinfo',array('type'=>'basic',"label"=>"Modules",'fields'=>$fields,'metadata'=>$metafields,'skiptableinfoentry'=>true));
 		
 		
-		$fields = array();
-		$fields['detailviewdef']['name'] =  'detailviewdef';
-		$fields['detailviewdef']['type'] =  'text';
-		$fields['detailviewdef']['notnull'] =  false;
-		$fields['detailviewdef']['label'] =  "detailviewdef";
 		
-		$fields['editviewdef']['name'] =  'editviewdef';
-		$fields['editviewdef']['type'] =  'text';
-		$fields['editviewdef']['notnull'] =  false;
-		$fields['editviewdef']['label'] =  "editviewdef";
-		
-		$fields['listviewdef']['name'] =  'listviewdef';
-		$fields['listviewdef']['type'] =  'text';
-		$fields['listviewdef']['notnull'] =  false;
-		$fields['listviewdef']['label'] =  "listviewdef";
-		
-		
-		$this->addFields("tableinfo",$fields);
 	}
 	
 	function createrelationshiptable() {
@@ -205,11 +188,33 @@ class Installer {
 		
 	}
 	
+	
+	function updateTableinfo() {
+	    $fields = array();
+	    $fields['detailviewdef']['name'] =  'detailviewdef';
+	    $fields['detailviewdef']['type'] =  'text';
+	    $fields['detailviewdef']['notnull'] =  false;
+	    $fields['detailviewdef']['label'] =  "detailviewdef";
+	    
+	    $fields['editviewdef']['name'] =  'editviewdef';
+	    $fields['editviewdef']['type'] =  'text';
+	    $fields['editviewdef']['notnull'] =  false;
+	    $fields['editviewdef']['label'] =  "editviewdef";
+	    
+	    $fields['listviewdef']['name'] =  'listviewdef';
+	    $fields['listviewdef']['type'] =  'text';
+	    $fields['listviewdef']['notnull'] =  false;
+	    $fields['listviewdef']['label'] =  "listviewdef";
+	    
+	    
+	    $this->addFields("tableinfo",$fields);
+	}
 	function install() {
 	
 		global $entity;
 		$this->createtableinfo();
 		$this->createrelationshiptable();
+		$this->updateTableinfo();
 		$this->createusertable();
 		$this->createrolestable();
 		$this->createAdmin();
