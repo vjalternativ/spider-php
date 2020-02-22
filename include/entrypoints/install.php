@@ -214,10 +214,10 @@ class Installer {
 		global $entity;
 		$this->createtableinfo();
 		$this->createrelationshiptable();
-		$this->updateTableinfo();
 		$this->createusertable();
 		$this->createrolestable();
 		$this->createAdmin();
+		$this->updateTableinfo();
 		
 		
 		
