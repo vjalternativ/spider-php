@@ -168,7 +168,8 @@ class VJSiteEntryPoint
         $smarty->assign("params", $this->view->params);
         $smarty->assign("basepath", $vjconfig['basepath']);
         $smarty->assign("baseurl", $vjconfig['baseurl']);
-
+        $smarty->assign("fwurlbasepath", $vjconfig['fwurlbasepath']);
+        
         $smarty->assign("headerparams", $this->headerparams);
 
         echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
