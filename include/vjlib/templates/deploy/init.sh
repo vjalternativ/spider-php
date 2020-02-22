@@ -16,6 +16,9 @@ mkdir cache
 cd ../
 
 cp controlarea/include/vjlib/templates/frontend/index.php .
+cp controlarea/include/vjlib/templates/frontend/.htaccess .
+cp controlarea/include/vjlib/templates/frontend/.gitignore .
+
 cp controlarea/config.php .
 cp controlarea/cronconfig.php .
 cp controlarea/cronthread.php .
