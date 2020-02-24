@@ -256,6 +256,9 @@ class ViewDetail  extends View {
 					$col = "";
 					foreach($item['fields'] as $fieldinfo) {
 						$field = $fieldinfo['field'];
+						if(isset($field['name']) && !isset($field['type'])) {
+						    $field  = $field['name'];
+						}
 						if(!is_array($field) ) {
 						    if(isset($vardef['fields'][$field])) {
 						        $field = $vardef['fields'][$field];
