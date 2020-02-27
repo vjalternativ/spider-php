@@ -149,27 +149,41 @@ class LiveChat {
 	  
 	  var url = baseurl+"index.php?module=chat&action=ajaxReadPackets";
 	  var chatob = this;
-	  $.post(url,{},function(result){
-		  
-		  var data = JSON.parse(result); 
-		  
-		  var list = data.packets;
-		  
-		  var listLength = list.length;
-		  
-		  if(listLength && !getIsChannelOpen()) {
-			  setIsChannelOpen(true);
-			  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
-		  }
-		  for(var i=0;i<listLength;i++) {
-			  var data = list[i];
-				
-			  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : data}  }));
-		  }
-		  
-		  chatob.readMessages();
-		  
-	  });
+	  
+	  
+	  var request = $.ajax({
+		  url: url,
+		  method: "POST",
+		  data: {}
+		});
+		 
+		request.done(function( resp ) {
+			 var data = JSON.parse(result); 
+			  
+			  var list = data.packets;
+			  
+			  var listLength = list.length;
+			  
+			  if(listLength && !getIsChannelOpen()) {
+				  setIsChannelOpen(true);
+				  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
+			  }
+			  for(var i=0;i<listLength;i++) {
+				  var data = list[i];
+					
+				  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : data}  }));
+			  }
+			  
+			  chatob.readMessages();
+			
+		
+		});
+		 
+		request.fail(function( jqXHR, textStatus ) {
+			 chatob.readMessages();
+		});
+	  
+	 
 	  
   }
   
