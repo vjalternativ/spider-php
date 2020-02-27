@@ -27,7 +27,7 @@ function createIframe() {
 	iframe.setAttribute("seamless","seamless");
 	iframe.setAttribute("scrolling","no");
 	iframe.setAttribute("allowtransparency","true");
-	iframe.setAttribute("src",baseurl+"index.php?module=chat");
+	iframe.setAttribute("src",fwbaseurl+"index.php?module=chat");
 	document.body.appendChild(iframe);
 	
 }
