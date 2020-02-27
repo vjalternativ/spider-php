@@ -131,7 +131,7 @@
 
 
 	</div>
-	<script src="{$fwbaseurl}modules/chat/assets/js/xhrchat.js?v=52"></script>
+	<script src="{$fwbaseurl}modules/chat/assets/js/xhrchat.js?v=53"></script>
 
 </body>
 </html>

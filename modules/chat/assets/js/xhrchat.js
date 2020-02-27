@@ -157,7 +157,7 @@ class LiveChat {
 		  data: {}
 		});
 		 
-		request.done(function( resp ) {
+		request.done(function( result ) {
 			 var data = JSON.parse(result); 
 			  
 			  var list = data.packets;
