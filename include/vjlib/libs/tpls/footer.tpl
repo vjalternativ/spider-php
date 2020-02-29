@@ -15,7 +15,7 @@
 
 <script src="{$fwbaseurl}include/vjlib/assets/editor/editor.js?v=1"></script>
 {if $showchatContainer}
-<script type="text/javascript" src="{$fwbaseurl}modules/chat/assets/js/alternativlabslivechat.js"></script>
+<script type="text/javascript" src="{$fwbaseurl}modules/chat/assets/js/alternativlabslivechat.js?v=1"></script>
 {/if}
 </body>
 </html>

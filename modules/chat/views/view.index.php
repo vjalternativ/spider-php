@@ -22,7 +22,9 @@ class chatViewIndex extends ViewBasic {
         global $vjconfig;
         echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
         echo "<script> var fwbaseurl ='".$vjconfig['fwbaseurl']."' </script>";
-        
+        if(isset($_REQUEST['fw_sess_mode'])) {
+            echo "<script> var fw_sess_mode ='".$_REQUEST['fw_sess_mode']."' </script>";
+        }
     }
     
     function loadFooter() {

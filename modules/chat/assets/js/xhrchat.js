@@ -87,7 +87,7 @@ function chatDisconnect(callback) {
 	    
 	  var chatob = chat;
 
-	  $.post(fwbaseurl+"index.php?module=chat&action=ajaxDisconnectChat",{},function(response) {
+	  $.post(fwbaseurl+"index.php?module=chat&action=ajaxDisconnectChat&fw_sess_mode="+fw_sess_mode,{},function(response) {
 		  	
 			$("#stchathistory").html("");
 		  	window.parent.minimizechat();
@@ -147,7 +147,7 @@ class LiveChat {
   readMessages() {
 	  
 	  
-	  var url = baseurl+"index.php?module=chat&action=ajaxReadPackets";
+	  var url = fwbaseurl+"index.php?module=chat&action=ajaxReadPackets&fw_sess_mode="+fw_sess_mode;
 	  var chatob = this;
 	  
 	  
@@ -261,7 +261,7 @@ class LiveChat {
   sendMessage(json) {
 	  var chatob  = this;
 	  var param = JSON.stringify(json);
-	  var url = baseurl+ "index.php?module=chat&action=ajaxPostMessage";
+	  var url = fwbaseurl+ "index.php?module=chat&action=ajaxPostMessage&fw_sess_mode="+fw_sess_mode;
 
   			$.post(url,{data:param},function(resp) {}).fail(function(error) {
 				chatob.sendMessge(json);
@@ -429,6 +429,7 @@ function frameMessage(evt) {
 			 info.name = "message";
 			 info.description = evt.data.message;
 			 document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
+			 chat.readMessages();
 		}
 }
 

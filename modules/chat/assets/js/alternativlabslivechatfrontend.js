@@ -4,6 +4,10 @@ window.onload = function() {
 	chatutil.src=fwbaseurl+"modules/chat/assets/js/alternativlabslivechatutil.js";
 	document.head.appendChild(chatutil);
 	chatutil.onload = function(event){
-		createIframe("BACKEND");
+		createIframe("FRONTEND");	
 	};
 }
+
+
+
+
