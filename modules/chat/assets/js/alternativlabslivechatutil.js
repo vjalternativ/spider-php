@@ -1,6 +1,6 @@
 
 
-function createIframe(sessmode) {
+function createIframe(sessmode,autoconnect) {
 	var resizerScript = document.createElement("script");
 	resizerScript.type="text/javascript";
 	resizerScript.src=fwbaseurl+"modules/chat/assets/js/iframeResizer.min.js";
@@ -27,13 +27,18 @@ function createIframe(sessmode) {
 	iframe.setAttribute("seamless","seamless");
 	iframe.setAttribute("scrolling","no");
 	iframe.setAttribute("allowtransparency","true");
-	iframe.setAttribute("src",fwbaseurl+"index.php?module=chat&fw_sess_mode="+sessmode);
+	var chaturl = fwbaseurl+"index.php?module=chat&fw_sess_mode="+sessmode;
+	
+	if(autoconnect) {
+		chaturl += "&autoconnect=1";
+	}
+	iframe.setAttribute("src",chaturl);
 	document.body.appendChild(iframe);
 	
 }
 
 
-
+var CHAT_RESET_CALLBACK = [];
 
 function openchat() {
 	var iframe = document.getElementById("alternativlabschatbox");
@@ -54,6 +59,12 @@ function resetchat() {
 	var iframe = document.getElementById("alternativlabschatbox");
 	iframe.width="250px";
 	iframe.height="40px";
+    
+	var i=0;
+	for(i=0;i<CHAT_RESET_CALLBACK;i++) {
+		var callback = CHAT_RESET_CALLBACK[i];
+		callback();
+	}
 	
 }
 

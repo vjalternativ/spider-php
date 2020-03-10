@@ -424,6 +424,15 @@ function frameMessage(evt) {
 		chat_message_window();
 		if(evt.data.event=="startChatWithUser") {
 			
+			/* var info = {};
+			 info.name = "message";
+			 info.description = "Please input the fist message";
+			 document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
+			 chat.readMessages();
+			*/
+			
+			
+			
 		} else if(evt.data.event=="connectIncomingChat") {
 			 var info = {};
 			 info.name = "message";

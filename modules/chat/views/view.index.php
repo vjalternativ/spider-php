@@ -25,6 +25,12 @@ class chatViewIndex extends ViewBasic {
         if(isset($_REQUEST['fw_sess_mode'])) {
             echo "<script> var fw_sess_mode ='".$_REQUEST['fw_sess_mode']."' </script>";
         }
+        if(isset($_REQUEST['autoconnect'])) {
+            echo "<script> var autoconnect = true; </script>";
+        } else {
+            echo "<script> var autoconnect = false; </script>";
+            
+        }
     }
     
     function loadFooter() {
