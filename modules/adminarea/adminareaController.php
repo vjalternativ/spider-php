@@ -133,64 +133,12 @@ class adminareaController extends VJController
         }
         
         $this->replaceschema($data);
-        $this->generateCache();
+        $entity->generateCache();
     }
     
     function action_generateCache() {
-        $this->generateCache();
-    }
-    private function generateCache() {
-            global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig;
-            $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"));
-            
-            
-            
-            $globalEntityList = $db->fetchRows("select * from tableinfo where deleted=0",array("id"));
-            foreach($globalEntityList as $module) {
-                $globalModuleList[$module['name']]  = $module;
-                $globalModuleList[$module['name']]['tableinfo'] = json_decode(base64_decode($module['description']),1);
-                
-                
-                
-                
-                if(isset($globalModuleList[$module['name']]['tableinfo']['metadata']['editview'])) {
-                    foreach($globalModuleList[$module['name']]['tableinfo']['metadata']['editview'] as $row) {
-                        if(isset($row['fields'])) {
-                            foreach($row['fields'] as $fieldarray) {
-                                $globalModuleList[$module['name']]['metadata_info']['editview']['fields'][$fieldarray['field']['name']] = 1;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            
-            
-            foreach($globalRelationshipList as $relationship) {
-                if(isset($globalEntityList[$relationship['primarytable']])) {
-                    if(isset($globalModuleList[$globalEntityList[$relationship['primarytable']]['name']])) {
-                        $globalModuleList[$globalEntityList[$relationship['primarytable']]['name']]['relationships'][$relationship['name']]  = $relationship;
-                    }
-                    else if(isset($globalModuleList[$globalEntityList[$relationship['secondarytable']]['name']])) {
-                        $globalModuleList[$globalEntityList[$relationship['secondarytable']]['name']]['relationships'][$relationship['name']]  = $relationship;
-                    }
-                    
-                    
-                }
-            }
-        
-            $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/relationship_list.php');
-            $content = str_replace("__RELACE_PART__", var_export($globalRelationshipList,1), $content);
-            file_put_contents($vjconfig['fwbasepath'].'cache/relationship_list.php', $content);   
-           
-            $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/entity_list.php');
-            $content = str_replace("__RELACE_PART__", var_export($globalEntityList,1), $content);
-            file_put_contents($vjconfig['fwbasepath'].'cache/entity_list.php', $content);
-            
-            $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/module_list.php');
-            $content = str_replace("__RELACE_PART__", var_export($globalModuleList,1), $content);
-            file_put_contents($vjconfig['fwbasepath'].'cache/module_list.php', $content);
-            
+        global $entity;
+        $entity->generateCache();
     }
     
     
