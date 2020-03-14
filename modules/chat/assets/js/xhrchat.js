@@ -105,6 +105,34 @@ function chatDisconnect(callback) {
 
  		);
 }
+
+
+function looprequest(url,data,interval,callback)   {
+	
+	var request = $.ajax({
+		  url: url,
+		  method: "POST",
+		  data: data
+		});
+		request.done(function( result ) {
+			callback(result);
+			setTimeout(function(){
+				looprequest(url,data,interval,callback);
+			},interval);
+		});
+		 
+		request.fail(function( jqXHR, textStatus ) {
+			setTimeout(function(){
+				looprequest(url,data,interval,callback);
+			},interval);
+		});
+	
+}
+
+
+
+
+
 class LiveChat {
   
 	constructor()  {
@@ -145,46 +173,21 @@ class LiveChat {
 
   
   readMessages() {
-	  
-	  
 	  var url = fwbaseurl+"index.php?module=chat&action=ajaxReadPackets&fw_sess_mode="+fw_sess_mode;
 	  var chatob = this;
-	  
-	  
-	  var request = $.ajax({
-		  url: url,
-		  method: "POST",
-		  data: {}
-		});
-		 
-		request.done(function( result ) {
-			 var data = JSON.parse(result); 
-			  
+	  looprequest(url,{},2000,function(result){
+			  var data = JSON.parse(result); 
 			  var list = data.packets;
-			  
 			  var listLength = list.length;
-			  
 			  if(listLength && !getIsChannelOpen()) {
 				  setIsChannelOpen(true);
 				  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
 			  }
 			  for(var i=0;i<listLength;i++) {
 				  var data = list[i];
-					
 				  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : data}  }));
 			  }
-			  
-			  chatob.readMessages();
-			
-		
-		});
-		 
-		request.fail(function( jqXHR, textStatus ) {
-			 chatob.readMessages();
-		});
-	  
-	 
-	  
+	  });
   }
   
   processConnectResponse() {
@@ -423,7 +426,6 @@ function chat_message_window() {
 function frameMessage(evt) {
 		chat_message_window();
 		if(evt.data.event=="startChatWithUser") {
-			
 			/* var info = {};
 			 info.name = "message";
 			 info.description = "Please input the fist message";
@@ -437,7 +439,7 @@ function frameMessage(evt) {
 			 var info = {};
 			 info.name = "message";
 			 info.description = evt.data.message;
-			 document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
+			 //document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
 			 chat.readMessages();
 		}
 }

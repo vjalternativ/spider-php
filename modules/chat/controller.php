@@ -536,6 +536,8 @@ class chatController extends VJController {
         if($data) {
             $data['status'] = "disconnected";
             $entity->save("strangerchat",$data);
+            
+            
             //$this->deleteSignaling($data['name']);
         }
         

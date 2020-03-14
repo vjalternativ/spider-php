@@ -147,3 +147,26 @@ function ajaxGetPagination(url,id,record,page) {
 	});
 	
 }
+
+
+function looprequest(url,data,interval,callback)   {
+	
+	var request = $.ajax({
+		  url: url,
+		  method: "POST",
+		  data: data
+		});
+		request.done(function( result ) {
+			callback(result);
+			setTimeout(function(){
+				looprequest(url,data,interval,callback);
+			},interval);
+		});
+		 
+		request.fail(function( jqXHR, textStatus ) {
+			setTimeout(function(){
+				looprequest(url,data,interval,callback);
+			},interval);
+		});
+	
+}

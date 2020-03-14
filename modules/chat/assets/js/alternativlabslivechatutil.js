@@ -38,7 +38,6 @@ function createIframe(sessmode,autoconnect) {
 }
 
 
-var CHAT_RESET_CALLBACK = [];
 
 function openchat() {
 	var iframe = document.getElementById("alternativlabschatbox");
@@ -60,11 +59,11 @@ function resetchat() {
 	iframe.width="250px";
 	iframe.height="40px";
     
-	var i=0;
-	for(i=0;i<CHAT_RESET_CALLBACK;i++) {
-		var callback = CHAT_RESET_CALLBACK[i];
-		callback();
-	}
+	
+	var message = {};
+	message.event = "resetchat";
+	
+	window.parent.postMessage(message);
 	
 }
 
