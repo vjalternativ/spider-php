@@ -13,6 +13,7 @@ class Paginate {
 	public $module;
 	public $action=false;
 	public $process = array();
+	public $processHook = array("instance"=>"","method"=>"","enumList"=>array());
 	public $extrafields = array();
 	private static $instance;
 	static function getInstance() {
@@ -21,6 +22,18 @@ class Paginate {
 	    }
 	    return self::$instance;
 	}
+	
+	function setProcessHook($instance,$method) {
+	    
+	    
+	    $db = MysqliLib::getInstance();
+	    $this->processHook['instance'] = $instance;
+	    $this->processHook['method'] = $method;
+	    
+	    
+	    $db->setProcessHook($instance,$method);
+	}
+	
 	function process() {
 		$url=$this->url;
 		$index=$this->index;
@@ -109,6 +122,7 @@ class Paginate {
 		$sql = $this->sql." LIMIT $start,$maxlimit";
 		$processList = $this->process;
 		
+		
 		//$processList['name'] = array('a',"attr"=>array('href' => array('value'=>'index.php?module='))); 
 		$data = $db->getrows($sql,'id',false,false,$processList);	
 		
@@ -116,6 +130,9 @@ class Paginate {
 		} else  {
 		    $rows = array_slice($array, $start,$maxlimit);
 			foreach($rows as $row) {
+			    
+			    
+			    
 				$counter++;
 				if($arrayindex && !isset($row[$arrayindex])) {
 					die("index not found in array");

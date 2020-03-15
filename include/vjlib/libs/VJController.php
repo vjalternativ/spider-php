@@ -17,11 +17,35 @@ class VJController  {
 		public $additionalJoin = false;
 		
 		
+		function utcToTimezone($datetime) {
+		    global $vjconfig;
+		    $given = new DateTime($datetime, new DateTimeZone("UTC"));
+		    $given->setTimezone(new DateTimeZone($vjconfig['timezone']));
+		    return $given->format("Y-m-d H:i:s");
+		    
+		}
+		
+		function processListRow($row) {
+		    
+		    
+		    
+		    if(isset($row['date_entered'])) {
+		        $row['date_entered']=  $this->utcToTimezone($row['date_entered']);
+		    }
+		    if(isset($row['date_modified'])) {
+		        $row['date_modified']=  $this->utcToTimezone($row['date_modified']);
+		    }
+		    return $row;
+		    
+		    
+		    
+		}
+		
 		
 		function defaultPaginate($sql) {
 			global $vjlib,$db,$vjconfig;
 			
-			$paginate = $vjlib->Paginate;
+			$paginate = Paginate::getInstance();
 			$paginate->url = 'index.php?module='.$this->entity.'&pageindex=';
 			$paginate->index =1;
 			$paginate->noresult = 10;
@@ -32,6 +56,8 @@ class VJController  {
 			$url = $vjconfig['fwurlbasepath']."index.php?module=".$this->entity."&action=detailview&record=key_id";
 			$url = processUrl($url);
 			$paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
+			$paginate->setProcessHook($this, "processListRow");
+			
 		}
 		
 		

@@ -117,6 +117,15 @@ class MysqliLib {
 		$rows = array();
 		$qry = $this->query($sql);
 		while($row = $this->fetch($qry)) {
+		    
+		    if(isset($this->processHook['method']) && $this->processHook['method']) {
+		        if(isset($this->processHook['instance']) && $this->processHook['instance']) {
+		            $row  =	call_user_func(array($this->processHook['instance'],$this->processHook['method']),$row);
+		        } else {
+		            $row  =	call_user_func($this->processHook['method'],$row);
+		        }
+		    }
+		    
 			if($id) {
 				$listIndex = $row[$id];
 			}
@@ -190,6 +199,8 @@ class MysqliLib {
 				$rows[] = $row;
 			}
 		}
+		
+		$this->resetHook();
 		return $rows;
 	}
 	
