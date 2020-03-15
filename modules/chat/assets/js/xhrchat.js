@@ -80,6 +80,16 @@ function show(id,b) {
 } 
 
 
+function parseJson(res)  {
+	var result = false;
+	try {
+		result =  JSON.parse(res);
+	} catch(e) {
+		result = false;
+	}
+	return result;
+}
+
 function chatDisconnect(callback) {
 	 
 	$('#chat_connnect_form').trigger("reset");
@@ -176,16 +186,18 @@ class LiveChat {
 	  var url = fwbaseurl+"index.php?module=chat&action=ajaxReadPackets&fw_sess_mode="+fw_sess_mode;
 	  var chatob = this;
 	  looprequest(url,{},2000,function(result){
-			  var data = JSON.parse(result); 
-			  var list = data.packets;
-			  var listLength = list.length;
-			  if(listLength && !getIsChannelOpen()) {
-				  setIsChannelOpen(true);
-				  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
-			  }
-			  for(var i=0;i<listLength;i++) {
-				  var data = list[i];
-				  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : data}  }));
+			  var data = parseJson(result);
+			  if(data) {
+				  var list = data.packets;
+				  var listLength = list.length;
+				  if(listLength && !getIsChannelOpen()) {
+					  setIsChannelOpen(true);
+					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
+				  }
+				  for(var i=0;i<listLength;i++) {
+					  var data = list[i];
+					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : data}  }));
+				  }
 			  }
 	  });
   }
@@ -445,7 +457,10 @@ function frameMessage(evt) {
 }
 
 
+
 $(document).ready(function(){
+	
+	
 	if(isAgentLiveChat) {
 		onConnect();
 	} 

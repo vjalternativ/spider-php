@@ -27,6 +27,7 @@ function createIframe(sessmode,autoconnect) {
 	iframe.setAttribute("seamless","seamless");
 	iframe.setAttribute("scrolling","no");
 	iframe.setAttribute("allowtransparency","true");
+	iframe.setAttribute("allow","*");
 	var chaturl = fwbaseurl+"index.php?module=chat&fw_sess_mode="+sessmode;
 	
 	if(autoconnect) {
@@ -69,7 +70,7 @@ function resetchat() {
 
 function connectChatWindow() {
 	var iframe = document.getElementById("alternativlabschatbox");
-	iframe.width="370px";
+	iframe.width="380px";
 	iframe.height="430px";
 	
 }

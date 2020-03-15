@@ -28,6 +28,7 @@
 
 <body>
 
+
 	<div class="panel panel-danger {if $is_agent_livechat} hide {/if}"
 		id="alternativlabs-chatpanel">
 		<div class="panel-heading" {if $is_agent_livechat} {else}onclick="openchat()"{/if}>
@@ -131,8 +132,8 @@
 
 
 	</div>
-	<script src="{$fwbaseurl}modules/chat/assets/js/xhrchat.js?v=57"></script>
-
+	<script src="{$fwbaseurl}modules/chat/assets/js/xhrchat.js?v=61"></script>
+ 
 </body>
 </html>
 
