@@ -29,10 +29,10 @@ class VJFramework {
 	}
 	function initModules() {
 	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
-	    if(file_exists($vjconfig['fwbasepath'].'cache/relationship_list.php')) {
-    	    require_once $vjconfig['fwbasepath'].'cache/relationship_list.php';
-    	    require_once $vjconfig['fwbasepath'].'cache/entity_list.php';
-    	    require_once $vjconfig['fwbasepath'].'cache/module_list.php';
+	    if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
+    	    require_once $vjconfig['basepath'].'cache/relationship_list.php';
+    	    require_once $vjconfig['basepath'].'cache/entity_list.php';
+    	    require_once $vjconfig['basepath'].'cache/module_list.php';
     	    
     	    if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
     	       return false;
