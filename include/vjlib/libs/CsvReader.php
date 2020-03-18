@@ -1,5 +1,6 @@
 <?php
-require_once 'include/vjlib/libs/CsvCallbackHandler.php';
+global $vjconfig;
+require_once $vjconfig['fwbasepath'].'include/vjlib/libs/CsvCallbackHandler.php';
 
 class CSVReader
 {
