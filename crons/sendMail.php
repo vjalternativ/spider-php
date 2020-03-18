@@ -101,7 +101,7 @@ class SendMail implements CronJob
     {
         global $db;
         $emails = array();
-        $sqlGetEmailContextMatrix = "SELECT * FROM email_buffer WHERE (is_sent_successfully=0 or is_sent_successfully is null) AND (last_attempt < '$last_used' or last_attempt is null) AND (send_attempts < 3 or send_attempts is null) ORDER BY date_entered desc";
+        $sqlGetEmailContextMatrix = "SELECT * FROM email_buffer WHERE (is_sent_successfully=0 or is_sent_successfully is null) AND (last_attempt < DATE_SUB(NOW(), INTERVAL ".$last_used." HOUR) or last_attempt is null) AND (send_attempts < 3 or send_attempts is null) ORDER BY date_entered desc";
         $resultGetEmailContextMatrix = $db->query($sqlGetEmailContextMatrix);
         
         while ($emailTuple = $db->fetch($resultGetEmailContextMatrix)) {
@@ -163,10 +163,9 @@ class SendMail implements CronJob
         $mail_delete_after = 10; // days, after which successfully sent mails will be deleted from email_buffer table
 
         // GETTING EMAIL FROM TABLE
-        $last_used = date('Y-m-d H:i:s', (time() - 2 * 60 * 60));
         $sentEmailAccountNotificationList = array();
         $contexts = $this->getAllContexts();
-        $emails = $this->getAllNotSentEmails($contexts, $last_used);
+        $emails = $this->getAllNotSentEmails($contexts, 2);
         
         $pendingMailsContextCounts = array();
         //$restrictMailIds = $this->getQueueAliases();
