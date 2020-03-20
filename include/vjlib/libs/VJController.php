@@ -19,7 +19,11 @@ class VJController  {
 		
 		function utcToTimezone($datetime) {
 		    global $vjconfig;
-		    $given = new DateTime($datetime, new DateTimeZone("UTC"));
+		    $serverTimeZone = "UTC";
+		    if(isset($vjconfig['server_timezone'])) {
+		        $serverTimeZone = $vjconfig['server_timezone']; 
+		    }
+		    $given = new DateTime($datetime, new DateTimeZone($serverTimeZone));
 		    $given->setTimezone(new DateTimeZone($vjconfig['timezone']));
 		    return $given->format("Y-m-d H:i:s");
 		    
