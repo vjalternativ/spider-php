@@ -21,9 +21,7 @@ class userController extends VJController  {
 	}
 	
 	function action_home() {
-	    $this->printLog("action home");
-	    die;
-		$this->view = 'home';
+	    $this->view = 'home';
 	}
 	
 	
