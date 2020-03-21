@@ -75,12 +75,9 @@ abstract class AWidget {
             }
             
         } else {
-            if(file_exists($vjconfig['basepath']."include/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
+            if(file_exists($vjconfig['basepath']."include/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl")) {
                 $smarty->assign("params",$params);
-                
-                $html = $smarty->fetch($vjconfig['basepath']."include/widgets/".$widgetName."/".$widgetName."Widget.tpl");
-                
-                
+                $html = $smarty->fetch($vjconfig['basepath']."include/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl");
             } else {
                 die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
             }
