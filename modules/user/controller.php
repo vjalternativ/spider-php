@@ -43,10 +43,9 @@ class userController extends VJController  {
 			
 			
 			$isLogin = $authenticate->login($username,$password);
-			
 			if($isLogin) {
 				redirect('user','home');
-				return;
+				exit();
 			}
 		} 
 		
