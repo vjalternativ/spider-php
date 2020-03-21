@@ -47,8 +47,8 @@ abstract class AWidget {
             $ob = new $class;
             return $ob->processWidgetParams($params);
         } else {
-            if(file_exists($vjconfig['basepath']."include/widgets/".$widget."/".$widget."Widget.php")) {
-                require_once $vjconfig['basepath']."include/widgets/".$widget."/".$widget."Widget.php";
+            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$widget."/".$widget."Widget.php")) {
+                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$widget."/".$widget."Widget.php";
                 $class = $widget.'Widget';
                 $ob = new $class;
                 return $ob->processWidgetParams($params);
@@ -75,9 +75,9 @@ abstract class AWidget {
             }
             
         } else {
-            if(file_exists($vjconfig['basepath']."include/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl")) {
+            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl")) {
                 $smarty->assign("params",$params);
-                $html = $smarty->fetch($vjconfig['basepath']."include/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl");
+                $html = $smarty->fetch($vjconfig['basepath']."include/entrypoints/site/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl");
             } else {
                 die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
             }
