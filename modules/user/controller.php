@@ -21,6 +21,8 @@ class userController extends VJController  {
 	}
 	
 	function action_home() {
+	    $this->printLog("action home");
+	    die;
 		$this->view = 'home';
 	}
 	
@@ -29,27 +31,26 @@ class userController extends VJController  {
 	   $this->setIgnoreRecords( array("user_type"=>array("developer")));   
 	    parent::action_index();
 	}
+	
+	
 	function action_authenticate() {
 		$this->params['error']['type'] = "danger";
 		$this->params['error']['msg'] = "Username or password is Incorrect correct";
 		if(!empty($_POST['username']) && !empty($_POST['password'])) {
-			
 			$authenticate = new Authenticate();
-			
 			$username = $_POST['username'];
-			
 			$password = $_POST['password'];
-			
-			
-			
 			$isLogin = $authenticate->login($username,$password);
 			if($isLogin) {
-				redirect('user','home');
-				exit();
+			   $this->view = 'home';
+		    } else {
+			    $this->view = 'login';
 			}
-		} 
+		} else {
+		    $this->view = 'login';
+		}
 		
-		$this->view = 'login';
+		
 	}
 	
 	
