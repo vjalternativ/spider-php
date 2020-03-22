@@ -17,6 +17,16 @@ class widgetViewEdit extends ViewEdit {
         $folders=  array_combine($folders,$folders);
         
         
+        global $vjconfig;
+        $sitefolder = scandir($vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl'].'/');
+        
+        unset($sitefolder[0]);
+        unset($sitefolder[1]);
+        
+        $sitefolder=  array_combine($sitefolder,$sitefolder);
+        
+        $folders=  array_merge($sitefolder,$folders);
+        
         $folders[''] = "select";
         
         $GLOBALS['app_list_strings']['widget_type_list'] = $folders;

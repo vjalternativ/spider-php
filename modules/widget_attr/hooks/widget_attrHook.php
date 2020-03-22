@@ -4,7 +4,6 @@ class widget_attrLogicHook {
     
     function beforeSave(&$data) {
         global $vjconfig;
-        
         $wid = false;
         if(isset($data['parent_record']) && $data['parent_record']) {
         
@@ -14,7 +13,7 @@ class widget_attrLogicHook {
             $wid = $data['widget_widget_attr_1_m'];
         
         }
-        
+    
         if($wid) {
             global $entity;
             $widget = $entity->get("widget",$wid);

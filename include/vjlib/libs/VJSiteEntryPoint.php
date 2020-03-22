@@ -32,6 +32,9 @@ class VJSiteEntryPoint
             if ($this->page == "page") {
                 if (isset($seoParams[0]) && $seoParams[0]) {
                     $sql = "select * from page where alias='" . $seoParams[0] . "' and deleted=0";
+                    if(isset($seoParams[1]) && $seoParams[0]=="page") {
+                        $sql = "select * from page where alias='" . $seoParams[1] . "' and deleted=0";
+                    }
                     $row = $db->getrow($sql);
                     if ($row) {
                         $seoParams['pagedata'] = $row;
@@ -47,8 +50,17 @@ class VJSiteEntryPoint
             die("404 page not found");
         }
 
+        
+        
         require_once $vjconfig['fwbasepath'] . 'include/vjlib/libs/EntryPointController.php';
-
+        
+        global $smarty;
+        $smarty->assign("bootparams", $this->bootparams);
+        $smarty->assign("basepath", $vjconfig['basepath']);
+        $smarty->assign("baseurl", $vjconfig['baseurl']);
+        $smarty->assign("fwurlbasepath", $vjconfig['fwurlbasepath']);
+        
+        
         if (file_exists($this->sitebasePath . '/bootstrap.php')) {
             require_once $this->sitebasePath . '/bootstrap.php';
             $mainController = new bootstrapController();
@@ -164,12 +176,7 @@ class VJSiteEntryPoint
     {
         global $smarty, $vjconfig;
 
-        $smarty->assign("bootparams", $this->bootparams);
         $smarty->assign("params", $this->view->params);
-        $smarty->assign("basepath", $vjconfig['basepath']);
-        $smarty->assign("baseurl", $vjconfig['baseurl']);
-        $smarty->assign("fwurlbasepath", $vjconfig['fwurlbasepath']);
-        
         $smarty->assign("headerparams", $this->headerparams);
 
         echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
@@ -181,8 +188,6 @@ class VJSiteEntryPoint
     function loadFooter()
     {
         global $smarty, $vjconfig;
-        $smarty->assign("basepath", $vjconfig['basepath']);
-        $smarty->assign("baseurl", $vjconfig['baseurl']);
         $smarty->assign("params", $this->view->params);
         $smarty->assign("footerparams", $this->footerparams);
         echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');

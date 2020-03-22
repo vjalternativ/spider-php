@@ -26,9 +26,22 @@ class widget_attrViewEdit extends ViewEdit {
                 
                 $wtype = $wdata['widget_type'];
                 
+                global $vjconfig;
                 
-                if(file_exists("include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php")) {
-                    require_once "include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php";
+                $file = "include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php";
+                
+                $isFound = false;
+                if(file_exists($file)) {
+                    $isFound = true;
+                } else {
+                    $file = $vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$wtype."/".$wtype."Widget.php";
+                    if(file_exists($file)) {
+                        $isFound = true;
+                    }
+                }
+                
+                if($isFound) {
+                    require_once $file;
                     $class = $wtype."Widget";
                     
                     $this->def['fields']  =array();

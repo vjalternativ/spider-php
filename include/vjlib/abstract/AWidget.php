@@ -24,8 +24,24 @@ abstract class AWidget {
     }
     
     static function getWidgetFields($widget){
-        if(file_exists("include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
-            require_once "include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+        
+        global $vjconfig;
+        $file = "include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+        
+        $isFound = false;
+        if(file_exists($file)) {
+            $isFound = true;
+        } else {
+            $file = $vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
+            if(file_exists($file)) {
+                $isFound = true;
+            }
+        }
+        
+        if($isFound) {
+            require_once $file;
+            
+            
             $class = $widget.'Widget';
             $ob = new $class;
             return $ob->fields;
@@ -47,8 +63,8 @@ abstract class AWidget {
             $ob = new $class;
             return $ob->processWidgetParams($params);
         } else {
-            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$widget."/".$widget."Widget.php")) {
-                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$widget."/".$widget."Widget.php";
+            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php")) {
+                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
                 $class = $widget.'Widget';
                 $ob = new $class;
                 return $ob->processWidgetParams($params);
@@ -60,6 +76,34 @@ abstract class AWidget {
             return $params;
         }
     }
+    
+    function processWidgetAttrs($params) {
+        return $params;
+    }
+    
+    static function processAttrs($widget,$params) {
+        global $vjconfig;
+        
+        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
+            require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+            $class = $widget.'Widget';
+            $ob = new $class;
+            return $ob->processWidgetAttrs($params);
+        } else {
+            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php")) {
+                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
+                $class = $widget.'Widget';
+                $ob = new $class;
+                return $ob->processWidgetAttrs($params);
+            }else {
+                echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+                die("widget not found ".$widget);
+                
+            }
+            return $params;
+        }
+    }
+    
     
     
     
@@ -75,11 +119,11 @@ abstract class AWidget {
             }
             
         } else {
-            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl")) {
+            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetName."/".$widgetName."Widget.tpl")) {
                 $smarty->assign("params",$params);
-                $html = $smarty->fetch($vjconfig['basepath']."include/entrypoints/site/widgets/".$widgetName."/".$vjconfig['sitetpl']."/".$widgetName."Widget.tpl");
+                $html = $smarty->fetch($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetName."/".$widgetName."Widget.tpl");
             } else {
-                die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
+                die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl not f" );
             }
         }
         return $html;
@@ -111,7 +155,25 @@ abstract class AWidget {
             $widgets = $db->fetchRows($sql);
             $html = "";
             foreach($widgets as $widget) {
-                $html .= self::rendorWidget($widget);
+                $html .= self::rendorForPage($widget);
+            }
+            return $html;
+        }
+    }
+    
+    static function loadWidgetByPage($widget) {
+        global $seoParams,$db;
+        
+        
+        $pageData = $seoParams['pagedata'];
+        if($pageData) {
+            $id = $pageData['id'];
+            
+            $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.widget_type='".$widget."' and pw.page_id='".$id."' and w.status='Active' ";
+            $widgets = $db->fetchRows($sql);
+            $html = "";
+            foreach($widgets as $widget) {
+                $html .= self::rendorForPage($widget);
             }
             return $html;
         }
@@ -124,9 +186,38 @@ abstract class AWidget {
         $rows = $db->fetchRows($sql);
         $html = '';
         foreach($rows as $row) {
-            $html .= self::rendorWidget($row);
+            $html .= self::rendorForPage($row);
         }
         return $html;
+        
+    }
+    
+    
+    private static function rendorForPage($row) {
+        global $db;
+        $sql = "select wa.* from widget_widget_attr_1_m wwa inner join widget_attr wa on wwa.widget_attr_id=wa.id and wa.deleted=0 and wwa.deleted=0 and wwa.widget_id='".$row['id']."' ";
+        $rows = $db->fetchRows($sql,array("id"));
+        
+        $params = array();
+        
+        $checkFirst = true;
+        foreach($rows as $id => $data) {
+            
+            $params['data'][$id]["isfirst"] = false;
+            
+            if($checkFirst) {
+                $params['data'][$id]["isfirst"] = true;
+                $checkFirst =false;
+            }
+            $params['data'][$id]["name"]  = $data['name'];
+            $params['data'][$id]['attrs'] = json_decode($data['description'],1);
+            $params['data'][$id] = self::processParams($row['widget_type'],$params['data'][$id]);
+            
+        }
+        $params = self::processAttrs($row['widget_type'], $params);
+        //review karna hai
+        return self::loadWidget($row['widget_type'],$params);
+        
         
     }
     
