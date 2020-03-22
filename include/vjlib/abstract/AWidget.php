@@ -99,6 +99,37 @@ abstract class AWidget {
     
     }
     
+    static function loadWidgetAtPositionByPage($pos) {
+        global $seoParams,$db;
+        
+        
+        $pageData = $seoParams['pagedata'];
+        if($pageData) {
+            $id = $pageData['id'];
+            
+            $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.position='".$pos."' and pw.page_id='".$id."' and w.status='Active' ";
+            $widgets = $db->fetchRows($sql);
+            $html = "";
+            foreach($widgets as $widget) {
+                $html .= self::rendorWidget($widget);
+            }
+            return $html;
+        }
+    }
+    
+    static function loadWidgetAtPosition($pos) {
+        
+        global $db;
+        $sql = "select * from widget where deleted=0 and status='Active' and position = '".$pos."' ";
+        $rows = $db->fetchRows($sql);
+        $html = '';
+        foreach($rows as $row) {
+            $html .= self::rendorWidget($row);
+        }
+        return $html;
+        
+    }
+    
     
 }
 ?>
