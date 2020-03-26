@@ -81,9 +81,10 @@ abstract class AWidget {
         return $params;
     }
     
-    static function processAttrs($widget,$params) {
+    static function processAttrs($widgetData,$params) {
         global $vjconfig;
-        
+        $widget = $widgetData['widget_type'];
+        $params['widget'] = $widgetData;
         if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
             require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
             $class = $widget.'Widget';
@@ -214,7 +215,7 @@ abstract class AWidget {
             $params['data'][$id] = self::processParams($row['widget_type'],$params['data'][$id]);
             
         }
-        $params = self::processAttrs($row['widget_type'], $params);
+        $params = self::processAttrs($row, $params);
         //review karna hai
         return self::loadWidget($row['widget_type'],$params);
         
