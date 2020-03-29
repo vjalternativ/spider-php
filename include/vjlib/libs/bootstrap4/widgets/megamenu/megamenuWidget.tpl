@@ -18,7 +18,7 @@
  
   
   
-  <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none"><img src="{$baseurl}{$params.logo.src}"  width="70" height="40" /></a>
+  <a href="#" class="navbar-brand font-weight-bold d-block d-lg-none"><img src="{$params.logo.src}"  width="70" height="40" /></a>
  
  
   <button type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
@@ -34,7 +34,7 @@
   <li class="nav-item">
   
   	<a href="{$baseurl}" class="nav-link border">
-  	<img src="{$baseurl}{$params.logo.src}"  width="50" height="20" >
+  	<img src="{$params.logo.src}"  width="50" height="20" >
   	</a>
   
   </li>
