@@ -6,7 +6,7 @@ require_once 'controlarea/include/vjlib/libs/bootstrap4/bootstrap4.php';
 require_once 'controlarea/include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
 
 
-class enrHeaderController extends EntryPointController {
+class sitetplHeaderController extends EntryPointController {
     
     function getMenus() {
         

@@ -1,5 +1,5 @@
 <?php 
-class enrPositions extends APosition {
+class sitetplPositions extends APosition {
     
     static $TOP_HEADER = "topheader";
     static $SLIDER = "slider";
@@ -18,7 +18,7 @@ class enrPositions extends APosition {
     
 }
 
-$pos = new enrPositions();
+$pos = new sitetplPositions();
 $pos->registerPositions();
 ?>
 

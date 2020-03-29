@@ -5,7 +5,7 @@ require_once 'controlarea/include/vjlib/libs/bootstrap4/bootstrap4.php';
 require_once 'controlarea/include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
 
 
-class enrFooterController extends EntryPointController {
+class sitetplFooterController extends EntryPointController {
         
     function loadFooter() {
         global $smarty;
