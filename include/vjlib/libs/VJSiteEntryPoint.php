@@ -183,6 +183,8 @@ class VJSiteEntryPoint
         echo "<script>var baseurl = '" . $vjconfig['baseurl'] . "';</script>";
         echo "<script>var urlbasepath = '" . $vjconfig['urlbasepath'] . "';</script>";
         echo "<script>var fwbaseurl = '" . $vjconfig['fwbaseurl'] . "';</script>";
+        echo "<script>var fwurlbasepath = '" . $vjconfig['fwurlbasepath'] . "';</script>";
+        
     }
 
     function loadFooter()
