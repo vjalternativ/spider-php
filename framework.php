@@ -104,7 +104,7 @@ class SpiderPhpFramework {
         require_once $vjconfig['fwbasepath'].'include/Smarty/Smarty.class.php';
         
         $vjlib = new VJLib();
-        $vjlib->loadlibs(array("Entity","BootStrap","MysqliLib","Paginate","Logger"));
+        $vjlib->loadlibs(array("Entity","BootStrap","MysqliLib","Paginate","Logger","DataWrapper"));
         $vjlib->getobj("VJFramework");
     }
 }

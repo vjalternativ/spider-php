@@ -6,7 +6,7 @@ class EntryPointController {
     
     public $params = array();
     public $view=  "";
-    public $bootparams = array("breadcrumb"=>array());
+    public $bootparams = array();
     public $headerparams = array();
     public $footerparams = array();
     public $redirectView = false;
@@ -65,15 +65,20 @@ class EntryPointController {
     
     
     function registerBreadcrumb($id,$title,$alias,$params=array()) {
-        $this->bootparams['breadcrumb'][$id]['title'] = $title;
-        $this->bootparams['breadcrumb'][$id]['alias'] = $alias;
-        $this->bootparams['breadcrumb'][$id]['params'] = $params;
-        
+        $dataWrapper = DataWrapper::getInstance();
+        $breadcrumb = $dataWrapper->get("breadcrumb");
+        $breadcrumb[$id]['title'] = $title;
+        $breadcrumb[$id]['alias'] = $alias;
+        $breadcrumb[$id]['params'] = $params;
+        $dataWrapper->set("breadcrumb",$breadcrumb);
+    }
+    
+    function getBreadcrumb() {
+        return DataWrapper::getInstance()->get("breadcrumb");
     }
     
     function action_index() {
-        $this->bootparams['breadcrumb']['home']['title'] = "Home";
-        $this->bootparams['breadcrumb']['home']['alias'] = '';
+        $this->registerBreadcrumb("home", "Home", "");
     }
 }
 
