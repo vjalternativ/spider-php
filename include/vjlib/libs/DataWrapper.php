@@ -22,6 +22,10 @@ class DataWrapper {
         return isset($this->data[$key]) ? $this->data[$key] : false;
     }
     
+    public function getAll() {
+        return $this->data;
+    }
+    
     
     
 }

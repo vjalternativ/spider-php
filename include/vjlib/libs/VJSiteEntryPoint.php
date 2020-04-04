@@ -37,13 +37,15 @@ class VJSiteEntryPoint
                     }
                     $row = $db->getrow($sql);
                     if ($row) {
-                        $seoParams['pagedata'] = $row;
+                        DataWrapper::getInstance()->set("pagedata", $row);
                         $this->page = "page";
                     }
                 }
             } else {
                 $sql = "select * from page where alias='" . $this->page . "' and deleted=0 ";
-                $GLOBALS['seoParams']['pagedata'] = $db->getrow($sql);
+                $row = $db->getrow($sql);
+                DataWrapper::getInstance()->set("pagedata", $row);
+                
             }
         } else {
 
@@ -80,16 +82,27 @@ class VJSiteEntryPoint
         if (! method_exists($pageController, $this->method)) {
             $this->method = "action_index";
         }
+        
+        
         if ($pageController->routes) {
-            foreach ($pageController->routes as $key => $val) {
-                if (isset($seoParams[$key])) {
-                    $method = 'action_' . $val;
+            
+            echo "<pre>";print_r($seoParams);die;
+            foreach ($seoParams as $key => $val) {
+                if (isset($pageController->routes[$key])) {
+                    $method = 'action_' . $pageController->routes[$key];
                     $pageController->{$method}();
+                } else {
+                  
+                    $method = "action_".$val;
+                    echo $method."<br />";
+                    if ( method_exists($pageController, $method)) {
+                        $pageController->{$method}();
+                    }
                 }
             }
         } else {
-            end($seoParams);
-            $method = prev($seoParams);
+            $method = end($seoParams);
+            //$method = prev($seoParams);
             if (method_exists($pageController, "action_" . $method)) {
                 $pageController->{"action_" . $method}();
             } else {
