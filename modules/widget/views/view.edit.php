@@ -1,10 +1,13 @@
 <?php 
 
+require_once 'include/vjlib/abstract/AWidget.php';
 class widgetViewEdit extends ViewEdit {
     
     
     function preDisplay() {
         global $db;
+        
+        
         parent::preDisplay();
         
         $GLOBALS['app_list_strings']['widget_type_list'] = array();
@@ -77,6 +80,57 @@ class widgetViewEdit extends ViewEdit {
         
         $this->def['fields']['position']['options'] = 'position_list';
         
+        
+        $this->processDefForRegisteredFields();
+        
+        
+        
+    }
+    
+    
+    function processDefForRegisteredFields() {
+        
+        unset($this->def['fields']['description']);
+        unset($this->def['metadata']['editview'][1]);
+        
+        
+        $json = json_decode($this->data['description'],1);
+        foreach($json as $key=>$val) {
+            $this->data[$key] = $val;
+        }
+        $wtype = $this->data['widget_type'];
+        
+        global $vjconfig;
+        
+        $file = "include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php";
+        
+        $isFound = false;
+        if(file_exists($file)) {
+            $isFound = true;
+        } else {
+            $file = $vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$wtype."/".$wtype."Widget.php";
+            if(file_exists($file)) {
+                $isFound = true;
+            }
+        }
+        
+        if($isFound) {
+            require_once $file;
+            $class = $wtype."Widget";
+            
+            $x =  new  $class;
+            $fields = $x->getConfigFields();
+            foreach($fields as  $field) {
+                $this->def['fields'][$field['name']]['name'] = $field['name'];
+                $this->def['fields'][$field['name']]['type'] = $field['type'];
+                $this->def['metadata']['editview'][$field['name']]['type'] = 'row';
+                $this->def['metadata']['editview'][$field['name']]['fields'][0]['gridsize'] = 6;
+                $this->def['metadata']['editview'][$field['name']]['fields'][0]['field'] = $field;
+                
+                
+            }
+            
+        }
         
     }
     

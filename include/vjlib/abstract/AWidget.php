@@ -5,6 +5,7 @@ require_once __DIR__.'/../libs/bootstrap4/IBootstrapWidgetConstant.php';
 abstract class AWidget {
     
     protected $fields;
+    protected $configFields;
     private $widgetInstance = null;
     protected $params;
     private function getField($name,$type) {
@@ -222,6 +223,39 @@ abstract class AWidget {
         
     }
     
+    function registerConfigField($name,$type) {
+            $this->configFields[] = $this->getField($name, $type);
+    }
     
+    function getConfigFields() {
+        return $this->configFields;
+    }
+    
+    static function getWidgetConfigFields($widget){
+        
+        global $vjconfig;
+        $file = "include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+        
+        $isFound = false;
+        if(file_exists($file)) {
+            $isFound = true;
+        } else {
+            $file = $vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
+            if(file_exists($file)) {
+                $isFound = true;
+            }
+        }
+        
+        if($isFound) {
+            require_once $file;
+            
+            
+            $class = $widget.'Widget';
+            $ob = new $class;
+            return $ob->configFields;
+        } else {
+            return false;
+        }
+    }
 }
 ?>
