@@ -175,6 +175,11 @@ abstract class AWidget {
             $widgets = $db->fetchRows($sql);
             $html = "";
             foreach($widgets as $widget) {
+                if(isset($widget['description'])) {
+                    if($widget['description']) {
+                        $widget['config'] = json_decode($widget['description'],1);
+                    }
+                }
                 $html .= self::rendorForPage($widget);
             }
             return $html;
@@ -200,7 +205,7 @@ abstract class AWidget {
         $sql = "select wa.* from widget_widget_attr_1_m wwa inner join widget_attr wa on wwa.widget_attr_id=wa.id and wa.deleted=0 and wwa.deleted=0 and wwa.widget_id='".$row['id']."' ";
         $rows = $db->fetchRows($sql,array("id"));
         
-        $params = array();
+        $params = $row;
         
         $checkFirst = true;
         foreach($rows as $id => $data) {
