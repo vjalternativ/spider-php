@@ -4,8 +4,8 @@ require_once __DIR__.'/../libs/bootstrap4/IBootstrapWidgetConstant.php';
 
 abstract class AWidget {
     
-    protected $fields;
-    protected $configFields;
+    protected $fields = array();
+    protected $configFields = array();
     private $widgetInstance = null;
     protected $params;
     private function getField($name,$type) {
