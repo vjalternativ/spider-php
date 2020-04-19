@@ -93,7 +93,7 @@ class widgetViewEdit extends ViewEdit {
         unset($this->def['fields']['description']);
         unset($this->def['metadata']['editview'][1]);
         
-        
+        if(isset($this->data['description'])) {
         $json = json_decode($this->data['description'],1);
         foreach($json as $key=>$val) {
             $this->data[$key] = $val;
@@ -131,7 +131,7 @@ class widgetViewEdit extends ViewEdit {
             }
             
         }
-        
+        }
     }
     
     function display() {

@@ -167,7 +167,7 @@ abstract class AWidget {
         global $seoParams,$db;
         
         
-        $pageData = $seoParams['pagedata'];
+        $pageData = DataWrapper::getInstance()->get("pagedata");
         if($pageData) {
             $id = $pageData['id'];
             
