@@ -86,7 +86,6 @@ class VJSiteEntryPoint
         
         if ($pageController->routes) {
             
-            echo "<pre>";print_r($seoParams);die;
             foreach ($seoParams as $key => $val) {
                 if (isset($pageController->routes[$key])) {
                     $method = 'action_' . $pageController->routes[$key];
