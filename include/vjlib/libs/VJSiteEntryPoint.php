@@ -93,7 +93,6 @@ class VJSiteEntryPoint
                 } else {
                   
                     $method = "action_".$val;
-                    echo $method."<br />";
                     if ( method_exists($pageController, $method)) {
                         $pageController->{$method}();
                     }
