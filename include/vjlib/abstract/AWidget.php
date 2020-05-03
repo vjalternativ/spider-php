@@ -111,10 +111,37 @@ abstract class AWidget {
     
     static function rendorWidget($widgetName,$params=array()) {
         global $vjconfig,$smarty;
+        
+        $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetName;
+        $smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
+        $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
+        
+        
+        $html = "";
+        $datawrapper = DataWrapper::getInstance();
+        $widgetdatawrapper = $datawrapper->get($widgetName);
+        
+        if($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
+            foreach($widgetdatawrapper['resources'] as $relativefilepath=>$resource) {
+                if(isset($resource['counter']) && $resource['counter']==0)  {
+                    $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetName."/assets/".$resource['type']."/".$relativefilepath;
+                    if($resource['type']=="css") {
+                        $html .='<link rel="stylesheet" href="'.$vjconfig['urlbasepath'].$path.'" />';
+                    } else if($resource['type']=="js") {
+                        $html .='<script src="'.$vjconfig['urlbasepath'].$path.'" ></script>';
+                    }
+                }
+            }
+        }
+        
+        
+        
+        
+        
         if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl")) {
             $smarty->assign("params",$params);
             
-            $html = $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
+            $html .= $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl");
             if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.css")) {
                 $link ='<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/widgets/'.$widgetName.'/'.$widgetName.'Widget.css" />';
                 $html = $link.$html;
@@ -123,7 +150,7 @@ abstract class AWidget {
         } else {
             if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetName."/".$widgetName."Widget.tpl")) {
                 $smarty->assign("params",$params);
-                $html = $smarty->fetch($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetName."/".$widgetName."Widget.tpl");
+                $html .= $smarty->fetch($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetName."/".$widgetName."Widget.tpl");
             } else {
                 die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetName."/".$widgetName."Widget.tpl not f" );
             }
@@ -133,6 +160,7 @@ abstract class AWidget {
     
     
     static function loadWidget($widgetName,$params) {
+        global $vjconfig;
         $params = self::processParams($widgetName, $params);
         return  self::rendorWidget($widgetName,$params);
     }
@@ -260,6 +288,28 @@ abstract class AWidget {
             return $ob->configFields;
         } else {
             return false;
+        }
+    }
+    
+    
+    function loadresource($type,$relativefilepath) {
+        global $vjconfig;
+        $widget = get_called_class();
+        $widgetfolder = str_replace("Widget", "", $widget);
+        $datawrapper = DataWrapper::getInstance();
+        $widgetdatawrapper = $datawrapper->get($widgetfolder);
+        if(!$widgetdatawrapper) {
+            $widgetdatawrapper = array();
+        }
+        $counter =0;
+        if(isset($widgetdatawrapper['resources'][$relativefilepath]))  {
+            $counter = $widgetdatawrapper['resources'][$relativefilepath]+1;
+        } 
+        $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetfolder."/assets/".$type."/".$relativefilepath;
+        if(file_exists($vjconfig['basepath'].$path)) {
+            $widgetdatawrapper['resources'][$relativefilepath]['counter'] = $counter;
+            $widgetdatawrapper['resources'][$relativefilepath]['type'] = $type;
+            $datawrapper->set($widgetfolder, $widgetdatawrapper);
         }
     }
 }
