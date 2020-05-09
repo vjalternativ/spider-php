@@ -20,12 +20,13 @@ class sqlcardpicrowWidget extends AWidget {
         if(!$params['attrs']['sql']) {
             echo "<pre>";print_r($params);die;
         }
+        
         if(isset($params['attrs']['seoparam']) && isset($seoParams[$params['attrs']['seoparam']]) && isset($seoParams['widget']['alias'][$seoParams[$params['attrs']['seoparam']]])) {
                 $sql = str_replace("@seoparam_id", $seoParams['widget']['alias'][$seoParams[$params['attrs']['seoparam']]], $sql);
             }
         
         $rows = $db->fetchRows($sql);
-
+        
         require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/cardrow/cardrowWidget.php";
         
         $cardWidget = new cardrowWidget($params['name'],$params['attrs']['maxrows'],$params['attrs']['maxcardsperrow']);
@@ -47,6 +48,7 @@ class sqlcardpicrowWidget extends AWidget {
             $param['body'] = '<img class="img-thumbnail" alt="'.$row['name'].'" src="'.$vjconfig['fwurlbasepath'].'index.php?module=media_files&action=download&id='.$row[$params['attrs']['imagefield']].'" />';
             $param['footer'] ='<a href="'.$vjconfig['baseurl'].$params['attrs']['linkprefix'].$row[$params['attrs']['linkfield']].'"> '. $row[$params['attrs']['titlefield']].'</a>';
             $cardWidget->addcard($param);
+           
         }
         $params['widget'] = $cardWidget->getWidget();
         

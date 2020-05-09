@@ -97,6 +97,7 @@ class Bootstrap4  {
             die("widget not found at ".$dir."/widgets/".$widgetName."/".$widgetName."Widget.tpl");
             
         }
+        
         return $html;
     }
     
