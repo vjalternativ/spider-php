@@ -143,14 +143,16 @@ class adminareaController extends VJController
     
     
     private function replaceschema($data) {
-        global $db,$entity;
+        
+        $db = MysqliLib::getInstance();
+        $entity = Entity::getInstance();
+        
         
         foreach($this->repairTables as $table=>$val) {
-            
                 $sql = "delete from ".$table;
                 
-                echo $sql."<br />";
-                $db->query($sql,true);
+                //echo $sql."<br />";
+                //$db->query($sql,true);
                 
             
             
@@ -159,11 +161,15 @@ class adminareaController extends VJController
         
         foreach($data as $table => $rows) {
             
+            $sql = "select * from ".$table." where deleted=0";
+            $tableRows = $db->fetchRows($sql,array("id"));
             foreach($rows as $id=>$row) {
-                
-                echo "insert into table ".$table." for ID ".$id."<br />";
-                
-                $row['new_with_id'] = true;
+                if(isset($tableRows[$id])) {
+                   echo "updating table ".$table." for ID ".$id."<br />";
+                } else {
+                    $row['new_with_id'] = true;
+                    echo "inserting table ".$table." for ID ".$id."<br />";
+                }
                 $row['hook_skip'] = true;
                 $entity->save($table,$row);
             }
