@@ -100,6 +100,18 @@ class Installer {
 		$fields['secondarytable_name']['label'] =  "Secondary Relationship Name";
 		
 		
+		$fields['parent_relationship']['name'] =  'parent_relationship';
+		$fields['parent_relationship']['type'] =  'relate';
+		$fields['parent_relationship']['rmodule'] =  'relationships';
+		$fields['parent_relationship']['label'] =  "Parent Relationship";
+		
+		
+		$fields['target_relationship']['name'] =  'target_relationship';
+		$fields['target_relationship']['type'] =  'relate';
+		$fields['target_relationship']['rmodule'] =  'relationships';
+		$fields['target_relationship']['label'] =  "Target Relationship";
+		
+		
 		$fields['rtype']['name'] =  'rtype';
 		$fields['rtype']['type'] =  'enum';
 		$fields['rtype']['notnull'] =  true;
@@ -115,11 +127,14 @@ class Installer {
 		$metafields['editview']['hr'] =  array("label" => 'Other Fields','type'=>'hr');
 		$metafields['editview']['primarytable'] =  array("fields" => array(array('field'=>$fields['primarytable'],'gridsize'=>12)),'type'=>'row');
 		$metafields['editview']['secondarytable'] =  array("fields" => array(array('field'=>$fields['secondarytable'],'gridsize'=>12)),'type'=>'row');
+		$metafields['editview']['parent_relationship'] =  array("fields" => array(array('field'=>$fields['parent_relationship'],'gridsize'=>12)),'type'=>'row');
+		$metafields['editview']['target_relationship'] =  array("fields" => array(array('field'=>$fields['target_relationship'],'gridsize'=>12)),'type'=>'row');
 		$metafields['editview']['rtype'] =  array("fields" => array(array('field'=>$fields['rtype'],'gridsize'=>12)),'type'=>'row');
 	
 		$metafields['detailview']['hr']=  array("label" => 'Other Fields','type'=>'hr');
 		$metafields['detailview']['primarytable']=  array("fields" => array(array('field'=>$fields['primarytable'],'gridsize'=>12)),'type'=>'row');
 		$metafields['detailview']['secondarytable']=  array("fields" => array(array('field'=>$fields['secondarytable'],'gridsize'=>12)),'type'=>'row');
+		$metafields['detailview']['parent_relationship']=  array("fields" => array(array('field'=>$fields['parent_relationship'],'gridsize'=>12)),'type'=>'row');
 		$metafields['detailview']['rtype']=  array("fields" => array(array('field'=>$fields['rtype'],'gridsize'=>12)),'type'=>'row');
 		
 		$entity->createEntity('relationships',array('fields'=>$fields,'type'=>'basic_wod','metadata'=>$metafields));

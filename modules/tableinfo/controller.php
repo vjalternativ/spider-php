@@ -368,11 +368,53 @@ class tableinfoController extends VJController {
 	
 	
 	function action_ajaxFetchSubpanleList() {
-	    global $entity,$smarty,$vjconfig;
+	    global $entity,$smarty,$vjconfig,$globalRelationshipList,$globalRelationshipEntityList;
 	    try {
 	        $rtable = $_REQUEST['rtable'];
 	        $relname = $_REQUEST['relname'];
-	        $rows = $entity->results($rtable);
+	        $relationshipEntity = $globalRelationshipList[$relname];
+	        $sql = false;
+	        $proceed = true;
+	        if(isset($_REQUEST['parent_record'])) {
+	            $parentRecord = $_REQUEST['parent_record'];
+    	        if($relationshipEntity['parent_relationship'] && $relationshipEntity['target_relationship']) {
+    	           
+    	            $parentRelationship = $globalRelationshipEntityList[$relationshipEntity['parent_relationship']];
+    	            $targetRelationship = $globalRelationshipEntityList[$relationshipEntity['target_relationship']];
+    	           
+    	            
+    	            
+    	            global $globalEntityList;
+    	            $db=MysqliLib::getInstance();
+    	            $sql = "select * from ".$parentRelationship['name']." where deleted=0 and ".$globalEntityList[$parentRelationship['secondarytable']]['name']."_id='".$parentRecord."'";
+    	            $primaryField = $globalEntityList[$parentRelationship['primarytable']]['name']."_id";
+    	            
+    	            $rows  = $db->fetchRows($sql,array($primaryField),$primaryField);
+    	            
+    	            if($rows) {
+        	            $sql = "select * from ".$targetRelationship['name']." where deleted=0 and ".$primaryField." IN ('".implode("','",$rows)."') ";
+        	            
+        	            $primaryTable = $globalEntityList[$targetRelationship['secondarytable']]['name'];
+        	            $primaryField = $primaryTable."_id";
+        	            $rows  = $db->fetchRows($sql,array($primaryField),$primaryField);
+        	            if($rows) {
+        	                $sql = "select * from ".$primaryTable." where deleted=0 and id in ('".implode("','",$rows)."') ";
+        	            } else {
+        	                $proceed = false;
+        	            }
+    	            } else {
+    	                $proceed = false;
+    	            }
+    	           
+    	        }
+	        }
+	        
+	        
+	        if($proceed) {
+	            $rows = $entity->results($rtable,$sql);
+	        } else {
+	            $rows = arrray();
+	        }
 	        $smarty->assign("headers",$entity->listview['metadata']);
 	        $smarty->assign("rows",$rows['data']);
 	        $extraPreFields  = array();

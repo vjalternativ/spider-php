@@ -28,8 +28,9 @@ class VJFramework {
 	    return self::$instance;
 	}
 	function initModules() {
-	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
+	    global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
 	    if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
+    	    require_once $vjconfig['basepath'].'cache/relationship_entity_list.php';
     	    require_once $vjconfig['basepath'].'cache/relationship_list.php';
     	    require_once $vjconfig['basepath'].'cache/entity_list.php';
     	    require_once $vjconfig['basepath'].'cache/module_list.php';

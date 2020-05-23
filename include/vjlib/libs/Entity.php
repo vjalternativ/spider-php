@@ -779,7 +779,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	function get_relationships($rtable,$index=false) {
 		$table = $this->relationships[$rtable]['rtable'];
 		
-	
+	   $_REQUEST['get_relationship_name'] = $rtable;
 	$sql = "select ".$table.".* from $rtable  inner join ".$table." on ".$rtable.".".$table."_id = ".$table.".id where ".$rtable.".".$this->module."_id='".$this->record."' and ".$rtable.".deleted=0 order by ".$rtable.".date_modified desc";
 	$rows = $this->results($table,$sql,true,false,$index);
 		return $rows;
@@ -858,6 +858,10 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			$paginate->db = $db;
 			
 			$url = "./index.php?module=".$tentity."&action=detailview&record=key_id";
+			if(isset($_REQUEST['module']) && isset($_REQUEST['record']) && isset($_REQUEST['get_relationship_name'])) {
+			    $url .= "&parent_module=".$_REQUEST['module']."&parent_id=".$_REQUEST['record']."&parent_relationship=".$_REQUEST['get_relationship_name'];
+			}
+			
 			$url = processUrl($url);
 			$paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
 	}
@@ -937,7 +941,15 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    $globalEntityList  = array();
 	    
 	    
-	    $globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"),false,false);
+	    $globalRelationshipEntityList = $db->fetchRows("select * from relationships where deleted=0",array("id"),false,false);
+
+	    
+	    foreach($globalRelationshipEntityList as $list) {
+	        $globalRelationshipList[$list['name']] = $list;
+	    }
+	    
+	    
+	    //$globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"),false,false);
 	    
 	    
 	    
@@ -983,6 +995,12 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/relationship_list.php');
 	    $content = str_replace("__RELACE_PART__", var_export($globalRelationshipList,1), $content);
 	    file_put_contents($vjconfig['basepath'].'cache/relationship_list.php', $content);
+	    
+	    
+	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/relationship_entity_list.php');
+	    $content = str_replace("__RELACE_PART__", var_export($globalRelationshipEntityList,1), $content);
+	    file_put_contents($vjconfig['basepath'].'cache/relationship_entity_list.php', $content);
+	    
 	    
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/entity_list.php');
 	    $content = str_replace("__RELACE_PART__", var_export($globalEntityList,1), $content);

@@ -118,8 +118,11 @@ function selectSubpanelItems(id) {
 
 	var rtable = $("#subpanel_rtable-"+id).val();
 	var relname = $("#subpanel_relname-"+id).val();
+	var parentModule = $("#subpanel_"+id+"_parent_module").val();
+	var parentId = $("#subpanel_"+id+"_parent_id").val();
+	var parentRecord = $("#subpanel_"+id+"_parent_record").val();
 	
-	var url = "./index.php?module=tableinfo&action=ajaxFetchSubpanleList&rtable="+rtable+"&relname="+relname;
+	var url = "./index.php?module=tableinfo&action=ajaxFetchSubpanleList&rtable="+rtable+"&relname="+relname+"&parent_module="+parentModule+"&parent_id="+parentId+"&parent_record="+parentRecord;
 	$.post(url,{},function(result) {
 			$("#genericmodal_subpanel-body").html(result);
 			$("#genericmodal_subpanel").modal("show");

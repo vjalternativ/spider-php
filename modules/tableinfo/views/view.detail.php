@@ -5,7 +5,7 @@ class tableinfoViewDetail  extends ViewDetail {
 function getalltables() {
 
 global $db;
-$sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user' or tabletype='cstm'";
+$sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user' or tabletype='cstm' or tabletype='basic_wod'";
 return $db->getrows($sql,'id');
 }
 

@@ -263,6 +263,19 @@ class ViewDetail extends View
             $heading .= '<input type="hidden" id="subpanel_ptable-' . $subpanels['id'] . '"   value="' . $this->module . '" />';
             $heading .= '<input type="hidden" id="subpanel_rtable-' . $subpanels['id'] . '"   value="' . $subpanels['rtable'] . '" />';
             $heading .= '<input type="hidden" id="subpanel_relname-' . $subpanels['id'] . '"   value="' . $subpanels['name'] . '" />';
+
+            
+            $parentModule = "";
+            $parentId = "";
+            $parentRecord = $_REQUEST['record'];
+            if(isset($_REQUEST['parent_module']) && isset($_REQUEST["parent_id"])) {
+                $parentModule = $_REQUEST['parent_module'];
+                $parentId = $_REQUEST['parent_id'];
+            }
+            $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_module"   value="' . $parentModule . '" />';
+            $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_id"   value="' . $parentId . '" />';
+            $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_record"   value="' . $parentRecord . '" />';
+            
             $heading .= '<a href="index.php?module=' . $subpanels['rtable'] . '&action=editview&parent_module=' . $this->module . '&parent_record=' . $this->record . '&rel=' . $subpanels['name'] . '"><button class="btn btn-primary pull-right">Add New</button></a>';
             $heading .= '<button class="btn btn-success pull-right margin-right-10" onclick="selectSubpanelItems(\'' . $subpanels['id'] . '\')">Select</button>';
             $heading .= '<div class="clearfix"></div>';

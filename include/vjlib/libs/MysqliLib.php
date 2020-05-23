@@ -174,10 +174,10 @@ class MysqliLib {
 					
 					
 					foreach($proc['attr'] as $pkey=>$tempattr) {
-						$strs = explode("key_",$tempattr);
-						if(count($strs)>1) {
-						 $proc['attr'][$pkey] = str_replace("key_".$strs[1],$row[$strs[1]],$tempattr); 
-						}
+					    foreach($row as $col=>$val) {
+					        $tempattr = str_replace("key_".$col,$val,$tempattr);
+					    }
+					    $proc['attr'][$pkey] = $tempattr;
 					}
 					
 					$processList[$key]  = getelement($proc['tag'],$rowval,$proc['attr'],$isdualtag);
