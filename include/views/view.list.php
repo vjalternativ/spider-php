@@ -31,6 +31,9 @@ class ViewList  extends View {
  		    if(isset($header['rmodule'])) {
  		      $key = $key."_name";  
  		    }
+ 		    
+ 		    $header['label'] = isset($header['label']) ? $header['label'] :$key;
+ 		    
  		    $headers[] = array('name'  => $key,'label'=>$header['label']);
  		}
  		

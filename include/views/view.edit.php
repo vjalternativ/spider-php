@@ -161,7 +161,13 @@ class ViewEdit  extends View {
 				if(isset($item['fields'])) {
 					$col = "";
 					foreach($item['fields'] as $fieldinfo) {
-					    $fieldarray = $this->def['fields'][$fieldinfo['field']['name']];
+					    
+					    
+					    $fieldname = $fieldinfo['field'];
+					    if(is_array($fieldinfo['field'])) {
+					        $fieldname =  $fieldinfo['field']['name'];
+					    }
+					    $fieldarray = $this->def['fields'][$fieldname];
 					    
 					    
 					    

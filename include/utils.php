@@ -233,6 +233,8 @@ function getvardef($table) {
 			
 			if(isset($row['editviewdef']) && $row['editviewdef']) {
 			    $metadata['editview'] = json_decode($row['editviewdef'],1);
+			    
+			    
 			}
 			
 			if(isset($row['detailviewdef']) && $row['detailviewdef']) {
@@ -241,7 +243,13 @@ function getvardef($table) {
 			
 			if(isset($row['searchviewdef']) && $row['searchviewdef']) {
 			    $metadata['searchview'] = json_decode($row['searchviewdef'],1);
+			    foreach($metadata['searchview'] as $key=>$field) {
+			        if(!is_array($field)) {
+			            $metadata['searchview'][$key] = $moduleinfo["fields"][$field];
+			        }
+			    }
 			}
+			
 			
 			unset($moduleinfo['metadata']);
 			return array("fields"=>$moduleinfo,"metadata"=>$metadata);
