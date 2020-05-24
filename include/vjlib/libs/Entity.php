@@ -76,7 +76,7 @@ class Entity {
 	
 	function createEntity($entityName,$params=array(),$repair=false) {
 	    global $globalModuleList;
-	    $this->generateCache();
+	    //$this->generateCache();
 	    
 	    if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
 		    
@@ -321,11 +321,6 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		$qry = $db->query($sql);
 		
 		if(!$repair) {
-    		
-    		$metainfo = array();
-    		if(isset($params['metadata'])) {
-    			$metainfo = $params['metadata'];
-    		}
     		$tbinfo = array("fields"=>$totalFields);
     		$this->tableInfoEntry($name,$tbinfo,$params);
 		}

@@ -221,6 +221,10 @@ class Installer {
 	    $fields['listviewdef']['notnull'] =  false;
 	    $fields['listviewdef']['label'] =  "listviewdef";
 	    
+	    $fields['searchviewdef']['name'] =  'searchviewdef';
+	    $fields['searchviewdef']['type'] =  'text';
+	    $fields['searchviewdef']['notnull'] =  false;
+	    $fields['searchviewdef']['label'] =  "searchviewdef";
 	    
 	    $this->addFields("tableinfo",$fields);
 	}

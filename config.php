@@ -38,12 +38,12 @@ $vjconfig['sitetpl'] = "enr";
 
 if($_SERVER['HTTP_HOST']=="localhost") {
     
-    $vjconfig['baseurl'] = 'http://localhost/examnreview/';
-    $vjconfig['fwbaseurl'] = $vjconfig['baseurl'] .'controlarea/';
+    $vjconfig['baseurl'] = 'http://localhost/spider-php/';
+    $vjconfig['fwbaseurl'] = $vjconfig['baseurl'] ;
     
     $vjconfig['mysql']['user'] = "root";
     $vjconfig['mysql']['password'] = "root";
-    $vjconfig['mysql']['database'] = "examprod";
+    $vjconfig['mysql']['database'] = "spiderphp";
     $vjconfig['display_errors'] = true;
     
 }

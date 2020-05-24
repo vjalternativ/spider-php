@@ -31,13 +31,10 @@ class adminareaController extends VJController
         $this->view = 'home';
     }
 
-    function action_repair()
-    {
-        global $db,$entity,$vjconfig;
-        $data = json_decode(file_get_contents($vjconfig['basepath']."schemajson/schema.json"),1);
-        
-        $rows = $data['tableinfo'];
-        
+    
+    private function repairTableSchema($rows) {
+        $entity = Entity::getInstance();
+        $db = MysqliLib::getInstance();
         foreach ($rows as $row) {
             $desc = json_decode(base64_decode($row['description']),1);
             $sql = "select 1 from ".$row['name']." limit 1";
@@ -48,17 +45,11 @@ class adminareaController extends VJController
                         if($field['type']=="nondb") {
                             continue;
                         }
-                        
-                        
-                        
-                    $dbField = $db->getfields($row['name']);                 
-                    
-                    if(isset($dbField[$field['name']])) {
-                        continue;
-                    }
-                        
+                        $dbField = $db->getfields($row['name']);
+                        if(isset($dbField[$field['name']])) {
+                            continue;
+                        }
                         $fieldType = $field['type'];
-                        
                         
                         $temp = array("name" => $field['name'],'type'=>$field['type']);
                         if($temp['type']=="relate" || $temp['type']=="file") {
@@ -117,7 +108,7 @@ class adminareaController extends VJController
                         
                         
                     }
-                } 
+                }
                 
             } else {
                 
@@ -129,11 +120,28 @@ class adminareaController extends VJController
                 
             }
             
-    
+            
         }
-        
-        $this->replaceschema($data);
+    }
+    
+    
+    
+    
+    private function processSchemaAndDataPatch($data) {
+        $entity = Entity::getInstance();
+        $rows = $data['tableinfo'];
+        $this->repairTableSchema($rows);
+        $this->updateDataPatch($data);
         $entity->generateCache();
+    }
+    
+    function action_repair()
+    {
+        
+        repairFramework();
+        global $vjconfig;
+        $data = json_decode(file_get_contents($vjconfig['basepath']."schemajson/schema.json"),1);
+        $this->processSchemaAndDataPatch($data);
     }
     
     function action_generateCache() {
@@ -142,23 +150,10 @@ class adminareaController extends VJController
     }
     
     
-    private function replaceschema($data) {
+    private function updateDataPatch($data) {
         
         $db = MysqliLib::getInstance();
         $entity = Entity::getInstance();
-        
-        
-        foreach($this->repairTables as $table=>$val) {
-                $sql = "delete from ".$table;
-                
-                //echo $sql."<br />";
-                //$db->query($sql,true);
-                
-            
-            
-            
-        }
-        
         foreach($data as $table => $rows) {
             
             $sql = "select * from ".$table." where deleted=0";
@@ -179,21 +174,106 @@ class adminareaController extends VJController
     
     function action_updateschema() {
             global $db,$vjconfig;
-            
-            
-
-            
-            
-            
             $data = array();
-            
             foreach($this->repairTables as $table=>$val) {
                 $sql = "select * from ".$table." where deleted=0";
                 $data[$table] = $db->fetchRows($sql,array("id"));
                 
             }
             file_put_contents($vjconfig['basepath']."schemajson/schema.json",json_encode($data));
+    }
+    
+    
+    function changeFieldLayout($layout,$isSeq=false) {
+        $layout = array_values($layout);
+        $lt = array();
+        foreach($layout as $key=>$field) {
+            if($isSeq) {
+                $lt[] = $field['name'];
+            } else {
+                
+                if(isset($field['fields'])) {
+                    
+                    
+                    
+                    foreach($field['fields'] as $field) {
+                        $lt[$key]['fields'][] = array("field"=>$field['field']['name'],"gridsize" => $field['gridsize']);
+                    }
+                }
+                if(isset($field['label'])) {
+                    $lt[$key]['label'] = $field['label'];
+                }
+                
+            }
+        }
+          return $lt;  
+    }
+    
+    function action_showPatch() {
+        global $globalEntityList,$vjconfig;
+        
+        
+        foreach($globalEntityList as $key=>$entity) {
             
+            $name = $entity['name'];
+            $desc = json_decode(base64_decode($entity['description']),1);
             
+            $jsonData = array();
+            $jsonData['name'] = $name;
+            $jsonData['type'] = $entity['tabletype'];
+            $jsonData['label'] = $entity['label'];
+            $jsonData['fields'] = $desc['fields'];
+            
+            $jsonData['listviewdef'] = array();
+            $jsonData['editviewdef'] = array();
+            $jsonData['detailviewdef'] = array();
+            $jsonData['searchviewdef'] = array();
+            
+            if(isset($desc['metadata']['listview'])) {
+                $jsonData['listviewdef'] = $this->changeFieldLayout($desc['metadata']['listview'],true);
+            }
+            if(isset($desc['metadata']['editview'])) {
+                $jsonData['editviewdef'] = $this->changeFieldLayout($desc['metadata']['editview']);
+            }
+            if(isset($desc['metadata']['detailview'])) {
+                $jsonData['detailviewdef'] = $this->changeFieldLayout($desc['metadata']['detailview']);
+            }
+            if(isset($desc['metadata']['searchview'])) {
+                $jsonData['searchviewdef'] = $this->changeFieldLayout($desc['metadata']['searchview'],true);
+            }
+            
+            unset($desc['metadata']);
+            
+            $globalEntityList[$key]['description'] = base64_encode(json_encode($desc,1));
+            $globalEntityList[$key]['listviewdef'] = base64_encode(json_encode($jsonData['listviewdef']));
+            $globalEntityList[$key]['editviewdef'] = base64_encode(json_encode($jsonData['editviewdef']));
+            $globalEntityList[$key]['detailviewdef'] = base64_encode(json_encode($jsonData['detailviewdef']));
+            $globalEntityList[$key]['searchviewdef'] = base64_encode(json_encode($jsonData['searchviewdef']));
+            //file_put_contents("include/install/schemapatch/".$name.".json", json_encode($jsonData,JSON_PRETTY_PRINT));
+         
+        }
+        
+        file_put_contents("include/install/datapatch/tableinfo.json", json_encode($globalEntityList,JSON_PRETTY_PRINT));
+        
+        $repairTables = $this->repairTables;
+        unset($repairTables["tableinfo"]);
+        $db = MysqliLib::getInstance();
+        foreach($repairTables as $key=>$data) {
+            $sql ="select * from ".$key." where deleted=0";
+            $data = $db->fetchRows($sql,array("id"));
+            file_put_contents($vjconfig["fwbasepath"]."include/install/datapatch/".$key.".json", json_encode($data,JSON_PRETTY_PRINT));
+        }
+        
+    }
+    
+    
+    function repairFramework() {
+        global $vjconfig;
+        $data = array();
+        foreach($this->repairTables as $tablename=>$row) {
+            $row = json_decode(file_get_contents($vjconfig['fwbasepath']."include/install/datapatch/".$tablename.".json"),1);
+            $data[$tablename] = $row;
+        }
+        $this->processSchemaAndDataPatch($data);
     }
 }
