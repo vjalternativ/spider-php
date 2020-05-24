@@ -138,7 +138,7 @@ class adminareaController extends VJController
     function action_repair()
     {
         
-        repairFramework();
+        $this->repairFramework();
         global $vjconfig;
         $data = json_decode(file_get_contents($vjconfig['basepath']."schemajson/schema.json"),1);
         $this->processSchemaAndDataPatch($data);
@@ -189,13 +189,19 @@ class adminareaController extends VJController
         $lt = array();
         foreach($layout as $key=>$field) {
             if($isSeq) {
-                $lt[] = $field['name'];
+                $lt[$field['name']] = $field['name'];
             } else {
+                if(isset($field['type'])) {
+                    $lt[$key]['type'] = $field['type']; 
+                } else {
+                    if(isset($field['fields'])) {
+                        $lt[$key]['type'] = "row";
+                    } else if (isset($field['label'])) {
+                        $lt[$key]['type'] = "hr";
+                    }
+                }
                 
                 if(isset($field['fields'])) {
-                    
-                    
-                    
                     foreach($field['fields'] as $field) {
                         $lt[$key]['fields'][] = array("field"=>$field['field']['name'],"gridsize" => $field['gridsize']);
                     }
@@ -244,11 +250,11 @@ class adminareaController extends VJController
             
             unset($desc['metadata']);
             
-            $globalEntityList[$key]['description'] = base64_encode(json_encode($desc,1));
-            $globalEntityList[$key]['listviewdef'] = base64_encode(json_encode($jsonData['listviewdef']));
-            $globalEntityList[$key]['editviewdef'] = base64_encode(json_encode($jsonData['editviewdef']));
-            $globalEntityList[$key]['detailviewdef'] = base64_encode(json_encode($jsonData['detailviewdef']));
-            $globalEntityList[$key]['searchviewdef'] = base64_encode(json_encode($jsonData['searchviewdef']));
+            $globalEntityList[$key]['description'] = base64_encode(json_encode($desc));
+            $globalEntityList[$key]['listviewdef'] = json_encode($jsonData['listviewdef']);
+            $globalEntityList[$key]['editviewdef'] = json_encode($jsonData['editviewdef']);
+            $globalEntityList[$key]['detailviewdef'] = json_encode($jsonData['detailviewdef']);
+            $globalEntityList[$key]['searchviewdef'] = json_encode($jsonData['searchviewdef']);
             //file_put_contents("include/install/schemapatch/".$name.".json", json_encode($jsonData,JSON_PRETTY_PRINT));
          
         }

@@ -221,24 +221,28 @@ function getvardef($table) {
 			
 			$moduleinfo = json_decode(base64_decode($row['description']),1);
 			
-			$metadata = $moduleinfo['metadata'];
-			
-			foreach($metadata['listview'] as $key=>$field) {
-			    
-			    
-			    
-			    if(!isset($metadata['listview'][$key]['label'])) {
-			        $metadata['listview'][$key]['label'] = ucfirst($field['name']);
+			$metadata = isset($moduleinfo['metadata'])? $moduleinfo['metadata'] : array("metadata"=>array());
+			if(isset($row['listviewdef']) && $row['listviewdef']) {
+			    $metadata['listview'] = json_decode($row['listviewdef'],1);
+			    foreach($metadata['listview'] as $key=>$field) {
+			        if(!is_array($field)) {
+			            $metadata['listview'][$key] = $moduleinfo["fields"][$field];
+			        }
 			    }
-			    if(!isset($field['label'])) {
-			        
-			        $field['label'] = ucfirst($field['name']);
-			    }
-			    
-			  
-			    $metadata['listview'][$key]['label'] = isset($mod_string[$field['label']]) ? $mod_string[$field['label']] : $metadata['listview'][$key]['label'];
-			    
 			}
+			
+			if(isset($row['editviewdef']) && $row['editviewdef']) {
+			    $metadata['editview'] = json_decode($row['editviewdef'],1);
+			}
+			
+			if(isset($row['detailviewdef']) && $row['detailviewdef']) {
+			    $metadata['detailview'] = json_decode($row['detailviewdef'],1);
+			}
+			
+			if(isset($row['searchviewdef']) && $row['searchviewdef']) {
+			    $metadata['searchview'] = json_decode($row['searchviewdef'],1);
+			}
+			
 			unset($moduleinfo['metadata']);
 			return array("fields"=>$moduleinfo,"metadata"=>$metadata);
 			

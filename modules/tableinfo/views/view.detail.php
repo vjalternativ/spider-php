@@ -44,6 +44,12 @@ return $db->getrows($sql,'id');
 		if(isset($this->data['editviewdef'])) {
 		    $tableinfo['metadata']['editview'] =json_decode($this->data['editviewdef'],1);
 		}
+		if(isset($this->data['searchviewdef'])) {
+		    $tableinfo['metadata']['searchview'] =json_decode($this->data['searchviewdef'],1);
+		}
+		if(isset($this->data['listviewdef'])) {
+		    $tableinfo['metadata']['listview'] =json_decode($this->data['listviewdef'],1);
+		}
 		
 		
 		/* $ddef= json_decode($this->data['detailviewdef'],1);
@@ -68,16 +74,17 @@ return $db->getrows($sql,'id');
 		foreach($tableinfo['metadata'] as $key=>$meta) {
 		    if($key=="detailview" || $key=="editview") {
 		        
-		        if($key=="detailview"  && $meta) {
-		            
+		        if(($key=="detailview" || $key=="editview")  && $meta) {
 		            foreach($meta as $metakey=>$metainfo) {
 		                if(isset($metainfo['fields'])) {
+		                    
 		                    foreach($metainfo['fields'] as  $fkey=>$field) {
 		                        if(!is_array($field['field'])) {
 		                            
 		                            
 		                            if(isset($tableinfo['fields'][$field['field']])) {
-		                              $metainfo['fields'][$fkey]['field'] =$tableinfo['fields'][$field['field']];
+		                                
+		                                $metainfo['fields'][$fkey]['field'] =$tableinfo['fields'][$field['field']];
 		                            } else {
 		                                unset($metainfo['fields'][$fkey]);
 		                            }
@@ -94,6 +101,7 @@ return $db->getrows($sql,'id');
 		        }
 		    }
 		}
+		
 		
 		$fields = $tableinfo;
 		
