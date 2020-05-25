@@ -1,4 +1,6 @@
 <?php  
+global $vjconfig;
+require_once $vjconfig['fwbasepath'].'modules/adminarea/SchemaDataPatcher.php';
 class Installer {
 	
 	
@@ -477,11 +479,16 @@ class Installer {
 	
 	
 	
-	
+	function execute()  {
+	    global $globalModuleList ;
+	    $globalModuleList = array();
+	    $datapatch = new SchemaDataPatcher();
+	    $datapatch->addRepairTable("user");
+	    $datapatch->repairFramework();
+	}
 	
 	
 }
 $framework = new Installer();
-$framework->install();
-$framework->postInstallation();
+$framework->execute();
 ?>

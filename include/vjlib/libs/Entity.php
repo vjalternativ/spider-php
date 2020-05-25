@@ -86,7 +86,7 @@ class Entity {
 			}
 			
 			if(isset($params['type']) && $params['type']=="relationship") {
-					$values = $params['values'];
+			    $values =isset($params['values']) ? $params['values'] : array();
 					$label = ucfirst($entityName);
 					if(!empty($params['label'])) {
 					$label = $params['label'];
@@ -938,11 +938,11 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    
 	    $globalRelationshipEntityList = $db->fetchRows("select * from relationships where deleted=0",array("id"),false,false);
 
-	    
-	    foreach($globalRelationshipEntityList as $list) {
-	        $globalRelationshipList[$list['name']] = $list;
+	    if($globalRelationshipEntityList) {
+    	    foreach($globalRelationshipEntityList as $list) {
+    	        $globalRelationshipList[$list['name']] = $list;
+    	    }
 	    }
-	    
 	    
 	    //$globalRelationshipList = $db->fetchRows("select * from relationships where deleted=0",array("name"),false,false);
 	    

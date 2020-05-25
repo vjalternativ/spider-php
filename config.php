@@ -5,7 +5,7 @@ $vjconfig = array();
 $vjconfig['baseurl'] = 'https://boomerangtrip.com/';
 $vjconfig['fwbaseurl'] = $vjconfig['baseurl'] .'controlarea/';
 
-$vjconfig['sitename'] = "Exam-N-Review Control Panel";
+$vjconfig['sitename'] = "Spider-PHP Control Panel";
 $vjconfig['timezone'] = "Asia/Kolkata";
 
 $vjconfig['mysql']['host'] = "localhost";
@@ -39,7 +39,7 @@ $vjconfig['sitetpl'] = "enr";
 if($_SERVER['HTTP_HOST']=="localhost") {
     
     $vjconfig['baseurl'] = 'http://localhost/spider-php/';
-    $vjconfig['fwbaseurl'] = $vjconfig['baseurl'] ;
+    $vjconfig['fwbaseurl'] = $vjconfig['baseurl'] . 'controlarea' ;
     
     $vjconfig['mysql']['user'] = "root";
     $vjconfig['mysql']['password'] = "root";
