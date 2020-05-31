@@ -191,14 +191,11 @@ abstract class AWidget {
         }
     }
     
-    static function loadWidgetByPage($widget) {
-        global $seoParams,$db;
-        
-        
+    static function loadWidgetByPage($widget,$addtionalSqlForAttr=false,$additionalSqlForWidget=false) {
+        global $db;
         $pageData = DataWrapper::getInstance()->get("pagedata");
         if($pageData) {
             $id = $pageData['id'];
-            
             $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.widget_type='".$widget."' and pw.page_id='".$id."' and w.status='Active' ";
             $widgets = $db->fetchRows($sql);
             $html = "";
@@ -208,7 +205,7 @@ abstract class AWidget {
                         $widget['config'] = json_decode($widget['description'],1);
                     }
                 }
-                $html .= self::rendorForPage($widget);
+                $html .= self::rendorForPage($widget,$addtionalSqlForAttr);
             }
             return $html;
         }
@@ -228,9 +225,12 @@ abstract class AWidget {
     }
     
     
-    private static function rendorForPage($row) {
+    private static function rendorForPage($row,$additionalSql) {
         global $db;
-        $sql = "select wa.* from widget_widget_attr_1_m wwa inner join widget_attr wa on wwa.widget_attr_id=wa.id and wa.deleted=0 and wwa.deleted=0 and wwa.widget_id='".$row['id']."' ";
+        $sql = "select widget_attr.* from widget_widget_attr_1_m  inner join widget_attr  on widget_widget_attr_1_m.widget_attr_id=widget_attr.id and widget_attr.deleted=0 and widget_widget_attr_1_m.deleted=0 and widget_widget_attr_1_m.widget_id='".$row['id']."' ";
+        if($additionalSql) {
+            $sql .= $additionalSql;
+        }
         $rows = $db->fetchRows($sql,array("id"));
         
         $params = $row;
