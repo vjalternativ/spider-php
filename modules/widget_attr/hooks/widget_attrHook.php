@@ -18,6 +18,7 @@ class widget_attrLogicHook {
             global $entity;
             $widget = $entity->get("widget",$wid);
             $fields = AWidget::getWidgetFields($widget['widget_type']);
+            $jsonPrev = json_decode($data['description'],true);
             $json = array();
             if($fields) {
                 foreach($fields as $field) {
@@ -25,17 +26,18 @@ class widget_attrLogicHook {
                     $fieldval = "";
                     
                     
-                    if($field['type']=="file") {
+                    if($field['type']=="file") { 
                         
-                        //handle for existing
-                        /* if(!data['isnew'] || !empty($keyvalue[$field['name']])) {
-                            $mediaKeyValue = $entity->get("media_files",$keyvalue[$field['name']]);
-                            if(isset($mediaKeyValue['file_path'])) {
-                                
-                                unlink($mediaKeyValue['file_path']);
+                        
+                        if( isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error']=="0") {
+                        
+                            if(isset($jsonPrev[$field['name']]) && $jsonPrev[$field['name']]) {
+                                $mediaKeyValue = $entity->get("media_files",$jsonPrev[$field['name']]);
+                                if(isset($mediaKeyValue['file_path']) && file_exists($mediaKeyValue['file_path'])) {
+                                    unlink($mediaKeyValue['file_path']);
+                                }
                             }
-                        } */
-                        
+                            
                         $mediaKeyValue = array();
                         
                         $fileId = create_guid();
@@ -53,6 +55,10 @@ class widget_attrLogicHook {
                         $mediaId  = $entity->save("media_files",$mediaKeyValue);
                         
                         $fieldval = $mediaId;
+                        } else {
+                            $fieldval = isset($jsonPrev[$field['name']]) ? $jsonPrev[$field['name']] : "";
+                        }
+                        
                     }   else {
                         $fieldval = $_REQUEST[$field['name']];
                     }
