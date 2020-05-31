@@ -33,9 +33,11 @@ class widget_attrLogicHook {
                         
                             if(isset($jsonPrev[$field['name']]) && $jsonPrev[$field['name']]) {
                                 $mediaKeyValue = $entity->get("media_files",$jsonPrev[$field['name']]);
-                                if(isset($mediaKeyValue['file_path']) && file_exists($mediaKeyValue['file_path'])) {
-                                    unlink($mediaKeyValue['file_path']);
+                                if($mediaKeyValue) {
+                                    $mediaKeyValue['deleted']=1;
+                                    $entity->save("media_files",$mediaKeyValue);
                                 }
+                                
                             }
                             
                         $mediaKeyValue = array();
