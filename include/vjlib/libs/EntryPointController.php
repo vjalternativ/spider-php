@@ -80,6 +80,21 @@ class EntryPointController {
     function action_index() {
         $this->registerBreadcrumb("home", "Home", "");
     }
+    
+    function rendorPageTpl($page,$tpl,$params=array()) {
+        global $smarty,$vjconfig;
+        
+        $params +=  $this->params;
+        $smarty->assign("params",$params);
+        $smarty->assign("baseurl",$vjconfig['baseurl']);
+        $class = $page;
+        
+        $this->bootparams['controller_path']  = 'include/entrypoints/site/pages/'.$class.'/';
+        $this->bootparams['controller_tpl_path']  = 'include/entrypoints/site/pages/'.$class.'/tpls/'.$vjconfig['sitetpl'].'/';
+        
+        return $smarty->fetch($this->bootparams['controller_tpl_path'].$tpl);
+        
+    }
 }
 
 ?>

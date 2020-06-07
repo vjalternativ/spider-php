@@ -27,7 +27,10 @@ class VJSiteEntryPoint
         }
         if (isset($_REQUEST['method'])) {
             $this->method = 'action_' . $_REQUEST['method'];
+        } else if(isset($seoParams[1])) {
+            $this->method = 'action_'.$seoParams[1];
         }
+        
         if (file_exists($this->sitebasePath . '/pages/' . $this->page . '/' . $seoParams[0] . 'Controller.php') || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
             if ($this->page == "page") {
                 if (isset($seoParams[0]) && $seoParams[0]) {
@@ -78,13 +81,17 @@ class VJSiteEntryPoint
         $class = $this->page . 'Controller';
         $pageController = new $class();
         $pageController->bootparams += $this->bootparams;
-
+        
+        
+        $methodExists = true;
         if (! method_exists($pageController, $this->method)) {
             $this->method = "action_index";
+            $methodExists = false;
         }
         
-        
-        if ($pageController->routes) {
+        if($methodExists){
+            $pageController->{$this->method}();
+        } else if ($pageController->routes) {
             
             foreach ($seoParams as $key => $val) {
                 if (isset($pageController->routes[$key])) {
