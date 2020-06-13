@@ -1,4 +1,5 @@
-<?php 
+<?php
+ob_start();
 global $vjlib,$vjconfig,$seoParams;
 
 class SpiderPhpFramework {
