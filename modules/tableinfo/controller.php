@@ -492,9 +492,11 @@ class tableinfoController extends VJController {
 	        $db->query($sql,true);
 	        
 	        $sql = "delete from relationships where id='".$row['id']."'";
-	        //echo $sql;
-	        //die;
 	        $db->query($sql);
+	        
+	        $sql = "deleted from tableinfo where name='".$row['name']."'";
+	        $db->query($sql);        
+
 	    }
 	    
 	    
