@@ -22,7 +22,7 @@
 <body>
 
 <div class="container-fluid bg-primary padding-10">
-<a class="h2 a-none logo-label" href="{$baseurl}">{$vjconfig.sitename}</a>
+<a class="h2 a-none logo-label" href="{$fwbaseurl}">{$vjconfig.sitename}</a>
 {if $logout}
 	{$logout}
 	{$adminarea} 
