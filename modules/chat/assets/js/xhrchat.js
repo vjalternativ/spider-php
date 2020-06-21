@@ -13,6 +13,7 @@ function preUpdateUI(event) {
 	if(event == "connected" && isAgentLiveChat) {
 		$("#alternativlabs-chatpanel").removeClass("hide");
 		updatePresetUI();
+		window.parent.connectChatWindow();
 	}
 } 
 

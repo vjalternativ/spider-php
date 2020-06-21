@@ -1,6 +1,5 @@
 <?php
-require_once 'modules/user/authenticate/Authenticate.php';
-require_once 'service/rest/api/ARest.php';
+require_once $vjconfig['fwbasepath'].'modules/user/authenticate/Authenticate.php';
 
 class userRest extends ARest
 {
