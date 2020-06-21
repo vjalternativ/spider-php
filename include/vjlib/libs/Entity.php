@@ -351,7 +351,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			
 			unset($keyvalue['id']);
 		
-		} else {
+		} else if(!isset($keyvalue['new_with_id'])) {
+		    
 			$defaultFieldSet['date_entered'] = 'NOW()';
 			if(empty($current_user->id)) { 
 				$keyvalue['created_by'] = $keyvalue['id'];

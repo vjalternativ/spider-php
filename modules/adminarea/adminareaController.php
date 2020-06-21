@@ -248,21 +248,22 @@ class adminareaController extends VJController
             $jsonData['label'] = $entity['label'];
             $jsonData['fields'] = $desc['fields'];
             
-            $jsonData['listviewdef'] = array();
-            $jsonData['editviewdef'] = array();
-            $jsonData['detailviewdef'] = array();
-            $jsonData['searchviewdef'] = array();
+          //  echo "<pre>";print_r($entity);die;
+            $jsonData['listviewdef'] =isset($entity['listviewdef']) ? json_decode($entity['listviewdef']) : array();
+            $jsonData['editviewdef'] = isset($entity['editviewdef']) ? json_decode($entity['editviewdef']) :array();
+            $jsonData['detailviewdef'] = isset($entity['detailviewdef']) ? json_decode($entity['detailviewdef']) :array();
+            $jsonData['searchviewdef'] = isset($entity['searchviewdef']) ? json_decode($entity['searchviewdef']) :array();
             
-            if(isset($desc['metadata']['listview'])) {
+            if(isset($desc['metadata']['listview']) && !$jsonData['listviewdef']) {
                 $jsonData['listviewdef'] = $this->changeFieldLayout($desc['metadata']['listview'],true);
             }
-            if(isset($desc['metadata']['editview'])) {
+            if(isset($desc['metadata']['editview']) && !$jsonData['editviewdef']) {
                 $jsonData['editviewdef'] = $this->changeFieldLayout($desc['metadata']['editview']);
             }
-            if(isset($desc['metadata']['detailview'])) {
+            if(isset($desc['metadata']['detailview']) && !$jsonData['detailviewdef']) {
                 $jsonData['detailviewdef'] = $this->changeFieldLayout($desc['metadata']['detailview']);
             }
-            if(isset($desc['metadata']['searchview'])) {
+            if(isset($desc['metadata']['searchview']) && !$jsonData['searchviewdef']) {
                 $jsonData['searchviewdef'] = $this->changeFieldLayout($desc['metadata']['searchview'],true);
             }
             
@@ -276,6 +277,8 @@ class adminareaController extends VJController
             //file_put_contents("include/install/schemapatch/".$name.".json", json_encode($jsonData,JSON_PRETTY_PRINT));
          
         }
+        
+       // echo "<pre>";print_r($globalEntityList);die;
         
         file_put_contents("include/install/datapatch/tableinfo.json", json_encode($globalEntityList,JSON_PRETTY_PRINT));
         

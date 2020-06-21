@@ -179,6 +179,24 @@
         "searchviewdef": "{\"name\":\"name\"}",
         "isfirstrow": false
     },
+    "71241328-f814-5788-c47a-5eef88225bab": {
+        "id": "71241328-f814-5788-c47a-5eef88225bab",
+        "name": "sitemapjob",
+        "description": "eyJmaWVsZHMiOnsiaWQiOnsibmFtZSI6ImlkIiwidHlwZSI6ImlkIiwibm90bnVsbCI6dHJ1ZSwibGFiZWwiOiJMQkxfSUQifSwibmFtZSI6eyJuYW1lIjoibmFtZSIsInR5cGUiOiJ2YXJjaGFyIiwibGVuIjoyNTUsImxpbmsiOnRydWUsImxhYmVsIjoiTEJMX05BTUUifSwiZGVzY3JpcHRpb24iOnsibmFtZSI6ImRlc2NyaXB0aW9uIiwidHlwZSI6InRleHQiLCJsYWJlbCI6IkxCTF9ERVNDUklQVElPTiJ9LCJkYXRlX2VudGVyZWQiOnsibmFtZSI6ImRhdGVfZW50ZXJlZCIsInR5cGUiOiJkYXRldGltZSIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0RBVEVfRU5URVJFRCJ9LCJkYXRlX21vZGlmaWVkIjp7Im5hbWUiOiJkYXRlX21vZGlmaWVkIiwidHlwZSI6ImRhdGV0aW1lIiwibm90bnVsbCI6dHJ1ZSwibGFiZWwiOiJMQkxfREFURV9NT0RJRklFRCJ9LCJkZWxldGVkIjp7Im5hbWUiOiJkZWxldGVkIiwidHlwZSI6ImludCIsImRlZmF1bHQiOjAsImxhYmVsIjoiTEJMX0RFTEVURUQifSwibW9kaWZpZWRfdXNlcl9pZCI6eyJuYW1lIjoibW9kaWZpZWRfdXNlcl9pZCIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX01PRElGSUVEX1VTRVJfSUQifSwiY3JlYXRlZF9ieSI6eyJuYW1lIjoiY3JlYXRlZF9ieSIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0NSRUFURURfQlkifSwiYXNzaWduZWRfdXNlcl9pZCI6eyJuYW1lIjoiYXNzaWduZWRfdXNlcl9pZCIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0FTU0lHTkVEX1VTRVJfSUQifX19",
+        "date_entered": "2020-06-21 21:50:57",
+        "date_modified": "2020-06-21 21:50:57",
+        "deleted": "0",
+        "modified_user_id": "",
+        "created_by": "d5a2b0ef-fee7-1c14-fc78-5eca702bff29",
+        "assigned_user_id": "",
+        "label": "Sitemapjob",
+        "tabletype": "basic",
+        "detailviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":\"name\",\"gridsize\":6},{\"field\":\"date_entered\",\"gridsize\":6}]},{\"type\":\"row\",\"fields\":[{\"field\":\"description\",\"gridsize\":12}]}]",
+        "editviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":\"name\",\"gridsize\":6}]},{\"type\":\"row\",\"fields\":[{\"field\":\"description\",\"gridsize\":12}]}]",
+        "listviewdef": "{\"name\":\"name\",\"date_entered\":\"date_entered\"}",
+        "searchviewdef": "{\"name\":\"name\"}",
+        "isfirstrow": false
+    },
     "740f727d-1c9f-b812-caee-5eca70f304a5": {
         "id": "740f727d-1c9f-b812-caee-5eca70f304a5",
         "name": "category",
@@ -393,6 +411,24 @@
         "editviewdef": "[]",
         "listviewdef": "[]",
         "searchviewdef": "[]",
+        "isfirstrow": false
+    },
+    "a94917ca-d40c-1dbd-c65a-5eef793a55b1": {
+        "id": "a94917ca-d40c-1dbd-c65a-5eef793a55b1",
+        "name": "sitemap",
+        "description": "eyJmaWVsZHMiOnsiaWQiOnsibmFtZSI6ImlkIiwidHlwZSI6ImlkIiwibm90bnVsbCI6dHJ1ZSwibGFiZWwiOiJMQkxfSUQifSwibmFtZSI6eyJuYW1lIjoibmFtZSIsInR5cGUiOiJ2YXJjaGFyIiwibGVuIjoyNTUsImxpbmsiOnRydWUsImxhYmVsIjoiTEJMX05BTUUifSwiZGVzY3JpcHRpb24iOnsibmFtZSI6ImRlc2NyaXB0aW9uIiwidHlwZSI6InRleHQiLCJsYWJlbCI6IkxCTF9ERVNDUklQVElPTiJ9LCJkYXRlX2VudGVyZWQiOnsibmFtZSI6ImRhdGVfZW50ZXJlZCIsInR5cGUiOiJkYXRldGltZSIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0RBVEVfRU5URVJFRCJ9LCJkYXRlX21vZGlmaWVkIjp7Im5hbWUiOiJkYXRlX21vZGlmaWVkIiwidHlwZSI6ImRhdGV0aW1lIiwibm90bnVsbCI6dHJ1ZSwibGFiZWwiOiJMQkxfREFURV9NT0RJRklFRCJ9LCJkZWxldGVkIjp7Im5hbWUiOiJkZWxldGVkIiwidHlwZSI6ImludCIsImRlZmF1bHQiOjAsImxhYmVsIjoiTEJMX0RFTEVURUQifSwibW9kaWZpZWRfdXNlcl9pZCI6eyJuYW1lIjoibW9kaWZpZWRfdXNlcl9pZCIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX01PRElGSUVEX1VTRVJfSUQifSwiY3JlYXRlZF9ieSI6eyJuYW1lIjoiY3JlYXRlZF9ieSIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0NSRUFURURfQlkifSwiYXNzaWduZWRfdXNlcl9pZCI6eyJuYW1lIjoiYXNzaWduZWRfdXNlcl9pZCIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0FTU0lHTkVEX1VTRVJfSUQifSwiZmlsZXBhdGgiOnsibmFtZSI6ImZpbGVwYXRoIiwidHlwZSI6InZhcmNoYXIiLCJ0YWJsZSI6InByaW1hcnkiLCJsZW4iOiIyNTUifSwibGlua3MiOnsibmFtZSI6ImxpbmtzIiwidHlwZSI6ImludCIsInRhYmxlIjoicHJpbWFyeSJ9fX0=",
+        "date_entered": "2020-06-21 20:47:06",
+        "date_modified": "2020-06-21 20:47:06",
+        "deleted": "0",
+        "modified_user_id": "a94917ca-d40c-1dbd-c65a-5eef793a55b1",
+        "created_by": "d5a2b0ef-fee7-1c14-fc78-5eca702bff29",
+        "assigned_user_id": "",
+        "label": "Sitemap",
+        "tabletype": "basic",
+        "detailviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":{\"name\":\"name\"},\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":{\"name\":\"description\"},\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":{\"name\":\"filepath\"},\"gridsize\":\"6\"},{\"field\":{\"name\":\"links\"},\"gridsize\":\"6\"}]}]",
+        "editviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":{\"name\":\"name\"},\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":{\"name\":\"description\"},\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":{\"name\":\"filepath\"},\"gridsize\":\"6\"},{\"field\":{\"name\":\"links\"},\"gridsize\":\"6\"}]}]",
+        "listviewdef": "{\"name\":\"name\",\"filepath\":\"filepath\",\"links\":\"links\",\"date_entered\":\"date_entered\"}",
+        "searchviewdef": "{\"name\":\"name\"}",
         "isfirstrow": false
     },
     "ad87f490-7ab4-171a-1a93-5eca704df170": {

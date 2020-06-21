@@ -1,3 +1,18 @@
-[
-
-]
+{
+    "234e2179-231f-6eac-c0d4-5eef8cde751e": {
+        "id": "234e2179-231f-6eac-c0d4-5eef8cde751e",
+        "date_modified": "2020-06-21 22:07:15",
+        "deleted": "0",
+        "menu_id": "",
+        "tableinfo_id": "71241328-f814-5788-c47a-5eef88225bab",
+        "isfirstrow": true
+    },
+    "97a6dccd-16e4-71a6-2144-5eef87c0fa5a": {
+        "id": "97a6dccd-16e4-71a6-2144-5eef87c0fa5a",
+        "date_modified": "2020-06-21 21:44:51",
+        "deleted": "0",
+        "menu_id": "",
+        "tableinfo_id": "a94917ca-d40c-1dbd-c65a-5eef793a55b1",
+        "isfirstrow": false
+    }
+}
