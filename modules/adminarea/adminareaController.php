@@ -158,12 +158,30 @@ class adminareaController extends VJController
             
             $sql = "select * from ".$table." where deleted=0";
             $tableRows = $db->fetchRows($sql,array("id"));
+            $tableRowsByName = array();
+            foreach($tableRows as $row) {
+                if(isset($row['name'])) {
+                    $tableRowsByName[$row['name']] = $row['id'];
+                }
+            }
             foreach($rows as $id=>$row) {
                 if(isset($tableRows[$id])) {
                    echo "updating table ".$table." for ID ".$id."<br />";
                 } else {
-                    $row['new_with_id'] = true;
-                    echo "inserting table ".$table." for ID ".$id."<br />";
+                    
+                    if(isset($tableRowsByName[$row['name']])) {
+                        echo "updating existing table with new tableinfo ".$table." for ID ".$id."<br />";
+                        
+                        $sql = "update ".$table." set id='".$id."' where id='".$tableRowsByName[$row['name']]."' ";
+                        $db->query($sql);
+                        
+                        
+                        $row['id'] = $id;
+                        
+                    } else {
+                        $row['new_with_id'] = true;
+                        echo "inserting table ".$table." for ID ".$id."<br />";
+                    }
                 }
                 $row['hook_skip'] = true;
                 $entity->save($table,$row);
