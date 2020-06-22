@@ -4,7 +4,7 @@ class AlternativCron {
     var $jobs = array();
     function execute() {
         global $db;
-        $sql = "select * from scheduler where deleted=0 and status='Active'   order by date_modified asc";
+        $sql = "select now() as nowdate,* from scheduler where deleted=0 and status='Active'   order by date_modified asc";
         $rows = $db->fetchRows($sql,array("id"));
         $this->jobs = $rows;
         if($rows)
@@ -15,7 +15,7 @@ class AlternativCron {
         if($jobdata['jobstatus'] == "started") {
             return false;
         }
-        $today = new DateTime();
+        $today = new DateTime($jobdata['nowdate']);
         $dateModified = $jobdata['date_modified'];
         $date = new DateTime($dateModified);
         
