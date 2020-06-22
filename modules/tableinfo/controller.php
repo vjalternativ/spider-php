@@ -286,13 +286,14 @@ class tableinfoController extends VJController {
 		$listviewlayout=array();
 		
 		foreach($colorder as $key=> $col) {
-			$listviewlayout[$_REQUEST['field'][$key]] = $layout['fields'][$_REQUEST['field'][$key]];
+			//$listviewlayout[$_REQUEST['field'][$key]] = $layout['fields'][$_REQUEST['field'][$key]];
+		    $listviewlayout[$_REQUEST['field'][$key]]  =$_REQUEST['field'][$key];
 		}
 		
 		$layout['metadata'][$view] = $listviewlayout;
-		$info['description'] = base64_encode(json_encode($layout));
+		$info['listviewdef'] = json_encode($listviewlayout);
 		$entity->save("tableinfo",$info);
-		die;
+		echo "success";
    }
 	
 	function action_ajaxSaveLayout() {
