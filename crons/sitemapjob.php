@@ -2,7 +2,7 @@
 global $vjconfig;
 require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 
-class page_componentSitemapJob implements  CronJob   {
+class SitemapJob implements  CronJob   {
     
     public $updateval = 0;
     public function execute()

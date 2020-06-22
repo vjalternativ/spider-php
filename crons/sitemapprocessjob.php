@@ -13,7 +13,7 @@ class SiteMapProcessJob implements CronJob
     
     public function execute()
     {
-        global $db,$globalEntityList;
+        global $db,$globalEntityList,$vjconfig;
 
         
         $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' limit 1";
@@ -25,7 +25,7 @@ class SiteMapProcessJob implements CronJob
 
             $index = floor($this->offset / $this->linksperfile) + 1;
             
-            $file_name = 'sitemaps/sitemap-'.$index.'.xml';
+            $file_name = $vjconfig['basepath'].'sitemaps/sitemap-'.$index.'.xml';
             
             $isnew = true;
             
@@ -51,8 +51,8 @@ class SiteMapProcessJob implements CronJob
     
     function updateXml($data,$counter,$index) {
         
-        global $entity;
-        $file = 'sitemaps/sitemap-'.$index.'.xml';
+        global $entity,$vjconfig;
+        $file = $vjconfig['basepath'].'sitemaps/sitemap-'.$index.'.xml';
         
         $xmlDoc = new DOMDocument();
         $xmlDoc->preserveWhiteSpace = false;
@@ -198,7 +198,7 @@ class SiteMapProcessJob implements CronJob
         
         //save xml file
         $file_name = 'sitemap-'.$index.'.xml';
-        $xmlDoc->save("sitemaps/" . $file_name);
+        $xmlDoc->save($vjconfig['basepath']."sitemaps/" . $file_name);
         
         
         $data = array();
