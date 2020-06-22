@@ -25,7 +25,7 @@ class rolesViewDetail  extends ViewDetail {
     function afterDisplay() {
         parent::afterDisplay();
         global $db,$smarty,$vjconfig;
-        $sql = "select t.label,ri.module_access,ri.list_access,ri.edit_access,ri.delete_access,t.id as module_id from tableinfo t
+        $sql = "select t.name as label,ri.module_access,ri.list_access,ri.edit_access,ri.delete_access,t.id as module_id from tableinfo t
                 left join roles_item ri  on t.id=ri.module_id and ri.role_id = '".$this->record."' and ri.deleted=0 and t.deleted=0
                 where  t.deleted=0 and t.tabletype!='relationship'";
         $db->processHook['instance'] = $this;
