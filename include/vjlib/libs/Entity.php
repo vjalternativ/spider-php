@@ -347,8 +347,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			if(empty($current_user->id)) {
 				$keyvalue['modified_user_id'] = $keyvalue['id'];
 			}
-			$keyvalue['date_modified'] = 'NOW()';
-		    unset($keyvalue['id']);
+			unset($keyvalue['id']);
 		
 		} else if(!isset($keyvalue['new_with_id'])) {
 		    
@@ -377,7 +376,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			if(!isset($cols[$key])) {
 				continue;
 			}
-			if(isset($keyvalue[$key])) {
+			if(isset($keyvalue[$key]) && isset($keyvalue['new_with_id'])) {
 			    continue;
 			}
 			$strings[] = $key."=".$val;
