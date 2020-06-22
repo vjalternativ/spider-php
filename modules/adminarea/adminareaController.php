@@ -304,7 +304,7 @@ class adminareaController extends VJController
         $this->processSchemaAndDataPatch($data);
     }
     
-    function action_repairFrameowork() {
-        $this->repairFrameowork();
+    function action_repairFramework() {
+        $this->repairFramework();
     }
 }
