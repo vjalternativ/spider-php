@@ -344,7 +344,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		$defaultFieldSet['date_modified'] = 'NOW()';
 		
 		if(!$isnew) {
-			if(empty($current_users->id)) {
+			if(empty($current_user->id)) {
 				$keyvalue['modified_user_id'] = $keyvalue['id'];
 			}
 		
