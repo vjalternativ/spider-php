@@ -33,7 +33,7 @@ class AlternativCron {
     
     function process() {
         
-        global $entity,$vjconfig,$log;
+        global $entity,$vjconfig;
         foreach($this->jobs as $key => $jobdata) {
             if(!$this->isvalid($jobdata)) {
                 unset($this->jobs[$key]);
