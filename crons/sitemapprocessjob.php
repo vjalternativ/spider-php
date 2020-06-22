@@ -2,7 +2,7 @@
 global $vjconfig;
 require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 
-class page_componentSiteMapProcessJob implements CronJob
+class SiteMapProcessJob implements CronJob
 {
 
     public $job;
@@ -13,13 +13,10 @@ class page_componentSiteMapProcessJob implements CronJob
     
     public function execute()
     {
-        global $db,$log,$globalEntityList;
+        global $db,$globalEntityList;
 
-        $log->fatal("executing page_componentSiteMapProcessJob");
-        $sql = "delete from page_component where deleted=1";
-        $db->query($sql);
         
-        $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending'";
+        $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' limit 1";
         $row = $db->getRow($sql);
         if ($row) {
             
@@ -127,7 +124,7 @@ class page_componentSiteMapProcessJob implements CronJob
             $urlNode['childs'][] = $priorty;
             $data['childs'][] = $urlNode;
             
-            $sql = "update page_component set sitemap = ".$updateval." where id='".$row['id']."'";
+            $sql = "update ".$module." set sitemap = ".$updateval." where id='".$row['id']."'";
             $db->query($sql);
             $counter ++;
         }
