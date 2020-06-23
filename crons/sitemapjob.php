@@ -5,6 +5,7 @@ require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 class SitemapJob implements  CronJob   {
     
     public $updateval = 0;
+    
     public function execute()
     {
         global  $db;
@@ -22,22 +23,20 @@ class SitemapJob implements  CronJob   {
                 }
                 
             }
-       }   
        
-       $this->cleanupSiteMaps();
-       //$this->addSiteMapJob();
+            $this->cleanupSiteMaps();
+            $this->updateSiteMapJob();
+            
+        }   
+       
         
         
     }
     
-    function updateSiteMapJob() {
+    function updateSiteMapJob($row) {
         global $entity;
-        $row = array();
-        $row['name'] = "SITEMAPJOB ".date("Y-m-d H:i:s");
         $row['jobstatus'] = "pending";
-        $row['offsetval'] = "0";
         $row['updateval'] = $this->updateval;
-        
         $entity->save("sitemapjob",$row);  
     }
     
