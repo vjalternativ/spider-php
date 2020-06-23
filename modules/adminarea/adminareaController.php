@@ -153,7 +153,6 @@ class adminareaController extends VJController
     private function updateDataPatch($data) {
         
         $db = MysqliLib::getInstance();
-        $entity = Entity::getInstance();
         foreach($data as $table => $rows) {
             
             $sql = "select * from ".$table." where deleted=0";
@@ -164,7 +163,11 @@ class adminareaController extends VJController
                     $tableRowsByName[$row['name']] = $row['id'];
                 }
             }
+            
+            
             foreach($rows as $id=>$row) {
+                $isNew = false;
+                $sql = "UPDATE ";
                 if(isset($tableRows[$id])) {
                    echo "updating table ".$table." for ID ".$id."<br />";
                 } else {
@@ -179,12 +182,27 @@ class adminareaController extends VJController
                         $row['id'] = $id;
                         
                     } else {
-                        $row['new_with_id'] = true;
+                        $isNew = true;
+                        $sql = "INSERT INTO ";
+                        //$row['new_with_id'] = true;
                         echo "inserting table ".$table." for ID ".$id."<br />";
                     }
                 }
-                $row['hook_skip'] = true;
-                $entity->save($table,$row);
+                
+               $sql .= $table." SET ";
+               $cols = array();
+               unset($row['isfirstrow']);
+                foreach($row as $key=>$val) {
+                    $cols[$key] = $key."='".addslashes($val)."'"; 
+                }
+                $sql .= implode(",",$cols);
+               if(!$isNew) {
+                        $sql .= " WHERE id = '".$row['id']."'";
+               }
+               
+               $db->query($sql);
+                //$row['hook_skip'] = true;
+                //$entity->save($table,$row);
             }
         }
         
