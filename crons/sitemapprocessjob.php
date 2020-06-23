@@ -199,7 +199,6 @@ class SiteMapProcessJob implements CronJob
     
     function createXML ($childdata,$counter,$index) {
         global $entity,$vjconfig;
-        $dir = "sitemaps";
         $xmlDoc = new DOMDocument("1.0","UTF-8");
         
         $data = array();
