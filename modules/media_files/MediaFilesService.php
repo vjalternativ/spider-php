@@ -36,6 +36,11 @@ trait MediaFilesService  {
     }
     
     
+    public function getMediaLink($mediaId) {
+       global $vjconfig;
+       return $vjconfig['baseurl']."index.php?module=media_files&action=download&id=".$mediaId;
+    }
+    
     
 }
 ?>
