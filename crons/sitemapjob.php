@@ -9,44 +9,34 @@ class SitemapJob implements  CronJob   {
     public function execute()
     {
         global  $db;
-        
-        $sql = "select * from sitemapjob where deleted=0 and jobstatus != 'completed'";
-        $row = $db->getRow($sql);
-        if($row) {
-            
+        $sql = "select * from sitemapjob where deleted=0";
+        $rows = $db->fetchRows($sql,array('id'));
+        foreach($rows as $row) {
             if($row['jobstatus'] == "pending") {
-             return;   
+             continue;   
             } else {
-               
                 if($row['updateval']=="1") {
                     $this->updateval = 0;
                 } else {
                     $this->updateval =1;
                 }
-                
             }
-            $this->row = $row;
-            $this->cleanupSiteMaps();
-            
-            $this->updateSiteMapJob();
-            
-        }   
-       
-        
+            $row['updateval'] = $this->updateval;
+            $this->cleanupSiteMaps($row);
+            $this->updateSiteMapJob($row);
+         }
         
     }
     
-    function updateSiteMapJob() {
+    function updateSiteMapJob($row) {
         global $entity;
-        $row = $this->row;
         $row['jobstatus'] = "pending";
         $row['updateval'] = $this->updateval;
         $entity->save("sitemapjob",$row);  
     }
     
-    function cleanupSiteMaps() {
+    function cleanupSiteMaps($row) {
         global $db;
-        $row = $this->row;
         $sql= "delete from sitemap where page_module='".$row['page_module']."'";
         $db->query($sql);
     }
