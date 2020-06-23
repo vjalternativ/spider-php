@@ -81,7 +81,7 @@ class SiteMapProcessJob implements CronJob
         $date = date("Y-m-d");
         $timestamp = $date . 'T00:00:00+00:00';
 
-        $sql = "select id,name,alias from ".$module." where   alias is not null  and sitemap = ".$this->job['updateval'];
+        $sql = "select id,name,alias from ".$module." where   alias is not null  and ( sitemap = ".$this->job['updateval'];
         $updateval = 0;
         if($this->job['updateval']=="0") {
             $sql.= " or sitemap is null";
