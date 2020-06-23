@@ -5,7 +5,18 @@
 
 global $db,$jobdata;
 
-$sql = "select * from scheduler where deleted=0  and status='Active' and jobstatus='pending'  order by date_modified asc limit 1";
+$sql = "select * from scheduler where deleted=0  and status='Active'  and ";
+
+
+
+$jobdata=array();
+if(isset($_SERVER['argv'][1])) {
+    $sql.= " id = '".$_SERVER['argv'][1]."'" ;  
+} else {
+    $sql.= " jobstatus='pending' ";
+}
+
+$sql .= " order by date_modified asc limit 1";
 $jobdata = $db->getrow($sql);
 
 
