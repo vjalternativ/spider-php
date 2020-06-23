@@ -18,8 +18,10 @@ class SitemapJob implements  CronJob   {
              return;   
             } else {
                
-                if($row['updateval']=="0") {
-                    $this->updateval = 1;
+                if($row['updateval']=="1") {
+                    $this->updateval = 0;
+                } else {
+                    $this->updateval =1;
                 }
                 
             }
