@@ -147,6 +147,7 @@ class SiteMapProcessJob implements CronJob
                 $this->updateXml($data,$counter,$index);
             }
         } else {
+            $this->job['offsetval'] = 0;
             $this->job['jobstatus'] = "completed";
             $this->cleanupSiteMaps();
         }
