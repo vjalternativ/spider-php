@@ -52,7 +52,7 @@ class SystemLogicHook
         
         foreach($keyvalue as $key=>$val) {
             global $globalRelationshipList,$globalEntityList,$entity;
-            if(isset($globalRelationshipList[$key])) {
+            if(isset($globalRelationshipList[$key]) && $val) {
                 if($globalRelationshipList[$key]['rtype']=="1_M") {
                     $secondaryTable = $globalEntityList[$globalRelationshipList[$key]['secondarytable']]['name'];
                     $primaryRecord = $keyvalue['id'];
