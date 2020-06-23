@@ -10,7 +10,7 @@ class SitemapJob implements  CronJob   {
     {
         global  $db;
         
-        $sql = "select * from sitemapjob where deleted=0 ";
+        $sql = "select * from sitemapjob where deleted=0 and jobstatus != 'completed'";
         $row = $db->getRow($sql);
         if($row) {
             
