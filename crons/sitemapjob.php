@@ -5,7 +5,7 @@ require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 class SitemapJob implements  CronJob   {
     
     public $updateval = 0;
-    
+    public $row = array();
     public function execute()
     {
         global  $db;
@@ -23,8 +23,9 @@ class SitemapJob implements  CronJob   {
                 }
                 
             }
-       
+            $this->row = $row;
             $this->cleanupSiteMaps();
+            
             $this->updateSiteMapJob();
             
         }   
@@ -33,30 +34,19 @@ class SitemapJob implements  CronJob   {
         
     }
     
-    function updateSiteMapJob($row) {
+    function updateSiteMapJob() {
         global $entity;
+        $row = $this->row;
         $row['jobstatus'] = "pending";
         $row['updateval'] = $this->updateval;
         $entity->save("sitemapjob",$row);  
     }
     
     function cleanupSiteMaps() {
-        global $db,$vjconfig;
-       // $sql = "delete from sitemapjob";
-       // $db->query($sql);
-        $sql= "delete from sitemap";
+        global $db;
+        $row = $this->row;
+        $sql= "delete from sitemap where page_module='".$row['page_module']."'";
         $db->query($sql);
-        
-        
-        $dir = "sitemaps";
-        
-        $files = scandir($dir);
-        unset($files[0]);
-        unset($files[1]);
-        
-        foreach($files as $file) {
-            unlink($vjconfig['basepath']."sitemaps/".$file);
-        }
     }
 
     

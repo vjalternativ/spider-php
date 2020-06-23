@@ -10,7 +10,8 @@ class SiteMapProcessJob implements CronJob
     public $sitemap = false;
     public $linksperfile = 40000;
     public $processpages = 1000;
-    
+    public $path ='';
+    public $targetPath ='';
     public function execute()
     {
         global $db,$globalModuleList,$vjconfig;
@@ -24,10 +25,12 @@ class SiteMapProcessJob implements CronJob
             }
             $this->job = $row;
             $this->offset = $row['offsetval'];
-
+            
             $index = floor($this->offset / $this->linksperfile) + 1;
             
-            $file_name = $vjconfig['basepath'].'sitemaps/sitemap-'.$index.'.xml';
+            $this->targetPath = $vjconfig['basepath'].'sitemaps/'.$row['page_module'];
+            $this->path = $this->targetPath.'_tmp/';
+            $file_name = $this->path.'sitemap-'.$index.'.xml';
             
             $isnew = true;
             
@@ -35,7 +38,10 @@ class SiteMapProcessJob implements CronJob
                 $isnew = false;
                 $sql = "select * from sitemap where id='".$row['lastsitemap']."'";
                 $this->sitemap = $db->getRow($sql);
-            } 
+            } else {
+                $command= 'mkdir -p '.$this->path;
+                shell_exec($command);
+            }
             
             
             $module = $row['page_module'];
@@ -53,7 +59,7 @@ class SiteMapProcessJob implements CronJob
     function updateXml($data,$counter,$index) {
         
         global $entity,$vjconfig;
-        $file = $vjconfig['basepath'].'sitemaps/sitemap-'.$index.'.xml';
+        $file = $this->path.'sitemap-'.$index.'.xml';
         
         $xmlDoc = new DOMDocument();
         $xmlDoc->preserveWhiteSpace = false;
@@ -66,6 +72,7 @@ class SiteMapProcessJob implements CronJob
         
         $xmlDoc->save($file);
         $this->sitemap['links'] = $counter;
+        $this->sitemap['page_module'] = $this->job['page_module'];
         $entity->save("sitemap",$this->sitemap);
         
         
@@ -139,9 +146,22 @@ class SiteMapProcessJob implements CronJob
             }
         } else {
             $this->job['jobstatus'] = "completed";
+            $this->cleanupSiteMaps();
         }
         $entity->save("sitemapjob",$this->job);
         
+        
+        
+    }
+    
+    
+    function cleanupSiteMaps() {
+        global $vjconfig;
+        $dir = $this->targetPath;
+        $cmd = 'rm -rf '.$dir;
+        shell_exec($cmd);
+        $cmd = 'mv '.$this->path.' '.$this->targetPath;
+        shell_exec($cmd);
     }
     
     
