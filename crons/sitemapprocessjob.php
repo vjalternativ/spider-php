@@ -13,13 +13,15 @@ class SiteMapProcessJob implements CronJob
     
     public function execute()
     {
-        global $db,$globalEntityList,$vjconfig;
+        global $db,$globalModuleList,$vjconfig;
 
         
         $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' limit 1";
         $row = $db->getRow($sql);
         if ($row) {
-            
+            if($row['updateval']=="") {
+                $row['updateval'] =0;
+            }
             $this->job = $row;
             $this->offset = $row['offsetval'];
 
@@ -36,9 +38,8 @@ class SiteMapProcessJob implements CronJob
             } 
             
             
-            $moduleId = $row['module'];
-            if($moduleId && isset($globalEntityList[$moduleId])) {
-                $module = $globalEntityList[$moduleId];
+            $module = $row['page_module'];
+            if($module && isset($globalModuleList[$module])) {
                 $this->processXmlData($index,$isnew,$module);
             }
                         
@@ -80,8 +81,7 @@ class SiteMapProcessJob implements CronJob
         $date = date("Y-m-d");
         $timestamp = $date . 'T00:00:00+00:00';
 
-        $sql = "select id,name,alias from ".$module." where   alias is not null  and (sitemap = ".$this->job['updateval'];
-        
+        $sql = "select id,name,alias from ".$module." where   alias is not null  and sitemap = ".$this->job['updateval'];
         $updateval = 0;
         if($this->job['updateval']=="0") {
             $sql.= " or sitemap is null";
