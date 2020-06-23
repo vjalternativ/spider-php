@@ -806,8 +806,7 @@ class tableinfoController extends VJController {
 	    $rmodule = $_POST['rmodule'];
 	    $viewtype = $_POST['viewtype'];
 	    
-	    $meta  = $globalModuleList[$rmodule]['tableinfo']['metadata'][$viewtype];
-	    
+	    $meta  = json_decode($globalModuleList[$rmodule][$viewtype.'def'],1);
 	    $meta['type'] = $_POST['rowtype'];
 	    
 	    
