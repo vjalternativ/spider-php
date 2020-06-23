@@ -12,6 +12,7 @@ class SiteMapProcessJob implements CronJob
     public $processpages = 1000;
     public $path ='';
     public $targetPath ='';
+    public $sitemapbasepath = '';
     public function execute()
     {
         global $db,$globalModuleList,$vjconfig;
@@ -30,6 +31,7 @@ class SiteMapProcessJob implements CronJob
             
             $this->targetPath = $vjconfig['basepath'].'sitemaps/'.$row['page_module'];
             $this->path = $this->targetPath.'_tmp/';
+            $this->sitemapbasepath = $vjconfig['baseurl'].'sitemaps/'.$row['page_module'].'/';
             $file_name = $this->path.'sitemap-'.$index.'.xml';
             
             $isnew = true;
@@ -218,12 +220,12 @@ class SiteMapProcessJob implements CronJob
         
         //save xml file
         $file_name = 'sitemap-'.$index.'.xml';
-        $xmlDoc->save($vjconfig['basepath']."sitemaps/" . $file_name);
+        $xmlDoc->save($this->path . $file_name);
         
         
         $data = array();
         $data['name']  = $file_name;
-        $data['filepath'] =  $vjconfig['baseurl'].$dir.'/'.$file_name;
+        $data['filepath'] =  $this->sitemapbasepath.'/'.$file_name;
         $data['links'] = $counter;
         $id = $entity->save("sitemap",$data);
         $this->job['lastsitemap'] = $id;
