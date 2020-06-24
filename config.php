@@ -34,7 +34,7 @@ $vjconfig['adminemail'][] = "vj.alternativ@gmail.com";
 
 $vjconfig['sitetpl'] = "enr";
 
-
+$vjconfig['display_errors'] = false;
 
 if($_SERVER['HTTP_HOST']=="localhost") {
     
