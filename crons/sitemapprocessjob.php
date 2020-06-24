@@ -227,6 +227,7 @@ class SiteMapProcessJob implements CronJob
         $data['name']  = $file_name;
         $data['filepath'] =  $this->sitemapbasepath.$file_name;
         $data['links'] = $counter;
+        $data['page_module'] = $this->job['page_module'];
         $id = $entity->save("sitemap",$data);
         $this->job['lastsitemap'] = $id;
     }
