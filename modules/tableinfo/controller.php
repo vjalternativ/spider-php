@@ -174,7 +174,7 @@ class tableinfoController extends VJController {
 		
 		$fieldType = $_REQUEST['field-type'];
 		
-		
+		$_REQUEST['field-name'] = trim($_REQUEST['field-name']);
 		$temp = array("name" => $_REQUEST['field-name'],'type'=>$_REQUEST['field-type'],"table"=>"primary");
 		if($temp['type']=="relate" || $temp['type']=="file") {
 		     $fieldType = "char"; 
