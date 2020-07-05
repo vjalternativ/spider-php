@@ -12,6 +12,15 @@ class CurlRequest
 	 * @return mixed
 	 */
 	
+    private static $instance = null;
+    
+    static function getInstance() {
+        if(self::$instance==null) {
+            self::$instance = new CurlRequest();
+        }
+        return self::$instance;
+    }
+    
 	function call($url, $post,$header=array())
 	{
 	    $curl = curl_init();
@@ -30,7 +39,9 @@ class CurlRequest
 	    
 	    $response = curl_exec($curl);
 	    $err = curl_error($curl);
-	    
+	    if($err) {
+	        throw new Exception(curl_errno($curl));
+	    }
 	    curl_close($curl);
 	    
 		
