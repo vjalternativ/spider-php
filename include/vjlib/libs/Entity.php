@@ -422,6 +422,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			$id = create_guid();
 			$keyvalue['id'] = $id;
 			$sql = "INSERT INTO ";
+			$keyvalue['isnew'] = true;
 			foreach($keyvalue as $key=>$val) {
 			    if(isset($globalModuleList[$table]['tableinfo']['fields'][$key]['field_index']) && $globalModuleList[$table]['tableinfo']['fields'][$key]['field_index']=="unique") {
 			        $data  = $this->getwhere($table," ".$key." = '".$val."'" );
