@@ -69,7 +69,7 @@ class View {
 	        $roleModules  = $db->fetchRows($sql,array("module_id"));
 	    }
 	    $sql = "select m.id as menu_id,m.name as menu_name,t.* from menu_tableinfo_1_m mt
-                INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0
+                INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0 and mt.deleted=0
                 INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
 	    $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"id"));
 	    $sql = "select m.id as menu_id,sm.id as submenu_id,m.name as menu_name,sm.name as submenu_name,t.* from 
