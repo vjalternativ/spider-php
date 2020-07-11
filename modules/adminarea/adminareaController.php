@@ -45,6 +45,7 @@ class adminareaController extends VJController
                         if($field['type']=="nondb") {
                             continue;
                         }
+                        $field['name'] = trim($field['name']);
                         $dbField = $db->getfields($row['name']);
                         if(isset($dbField[$field['name']])) {
                             continue;
