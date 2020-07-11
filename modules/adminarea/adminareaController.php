@@ -175,8 +175,8 @@ class adminareaController extends VJController
                     if(isset($tableRowsByName[$row['name']])) {
                         echo "updating existing table with new tableinfo ".$table." for ID ".$id."<br />";
                         
-                        $sql = "update ".$table." set id='".$id."' where id='".$tableRowsByName[$row['name']]."' ";
-                        $db->query($sql);
+                        $sqla = "update ".$table." set id='".$id."' where id='".$tableRowsByName[$row['name']]."' ";
+                        $db->query($sqla);
                         
                         
                         $row['id'] = $id;
