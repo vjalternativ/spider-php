@@ -664,7 +664,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		if(!$table || !$name) {
 			die("create alias param is incorrect for ".$table." ".$name);
 		}
-		$sql = "select * from ".$table." where name ='".$name."'";
+		$sql = "select * from ".$table." where name like '".$name."%'";
 		$qry = $db->query($sql);
 		if($qry->num_rows==0) {
 			return $name;
@@ -719,9 +719,10 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		$secondaryinfo = $this->getwhere('tableinfo',"name='".$secondary."'");
 		
 		$name = strtolower($primaryinfo['name'].'_'.$secondaryinfo['name'].'_'.$type);
+		$name  = $alias = $this->createAlias('relationships',$name);
 		
 		if(isset($globalModuleList[$name])) {
-		    return false;
+		    return $name .= "_1";
 		}
 		if($type=='1_1') {
 			$fields = array();
@@ -737,7 +738,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		if($primaryinfo && $secondaryinfo) {
 			
 			
-			$alias = $this->createAlias('relationships',$name);
+		    
 			$fields = array();
 			$primaryid = strtolower($primary.'_id');
 			$secondaryid = strtolower($secondary.'_id');
