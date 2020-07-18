@@ -5,6 +5,7 @@ class ViewEdit  extends View {
 	public $tpl = 'include/tpls/editview.tpl';
 	public $def;
 	public $additionalContent;
+	public $additionalBodyContent = false;
 	
 	function __construct() {
 		$datatypes = array();
@@ -101,6 +102,9 @@ class ViewEdit  extends View {
 		$save .= '<div class="clearfix"></div>';
 		
 		$panelheading = $bs->getelement('div',ucfirst($globalModuleList[$this->module]['label']).' | Edit View'.$this->additionalContent,array('class'=>array('value'=>'panel-heading')));
+		if($this->additionalBodyContent) {
+		    $html .= $this->additionalBodyContent;
+		}
 		$panelbody = $bs->getelement('div',$html,array('class'=>array('value'=>'panel-body')));
 		$panelfooter = $bs->getelement('div',$save,array('class'=>array('value'=>'panel-footer')));
 		$panel = $bs->getelement('div',$panelheading.$panelbody.$panelfooter,array('class'=>array('value'=>'panel panel-info')));
@@ -319,5 +323,9 @@ class ViewEdit  extends View {
 		
 	}
 	
+	
+	function setAdditionalBodyContent($html) {
+	    $this->additionalBodyContent = $html;
+	}
 }
 ?>
