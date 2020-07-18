@@ -95,6 +95,16 @@ class EntryPointController {
         return $smarty->fetch($this->bootparams['controller_tpl_path'].$tpl);
         
     }
+    
+    function rendorSiteTpl($tpl,$params=array(),$site=false) {
+        global $smarty,$vjconfig;
+        $params +=  $this->params;
+        $smarty->assign("params",$params);
+        $smarty->assign("baseurl",$vjconfig['baseurl']);
+        $sitetpl =$site ? $site : $vjconfig['sitetpl'];
+        
+        return $smarty->fetch("include/entrypoints/site/tpls/".$sitetpl."/".$tpl);
+    }
 }
 
 ?>
