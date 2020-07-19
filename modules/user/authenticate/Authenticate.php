@@ -29,6 +29,10 @@ class Authenticate {
 	    if($roles) {
 	        $row['role_id'] = $roles['id'];
 	        $row['role_name'] = $roles['name'];
+	        
+	        $sql = "select * from ".$row['role_name']." where deleted=0 and ownership_id='".$row['id']."'";
+            $row['role_data'] = $db->getrow($sql); 
+	        
 	        $sql = "select ri.*,t.id as module_id,t.name as module_name from tableinfo t
                         left join roles_item ri on t.id=ri.module_id and role_id='".$roles['id']."' ";
 	        $row['module_access'] =  $db->fetchRows($sql,array("module_id"));
