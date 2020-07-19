@@ -1,8 +1,9 @@
 /**
  * Plugin for displaying floating Bootstrap 3 `.alert`s.
+ * 
  * @author odahcam
  * @version 1.0.0
- **/
+ */
 ;
 (function($, window, document, undefined) {
 
@@ -14,14 +15,16 @@
     }
 
     /**
-     * Store the plugin name in a variable. It helps you if later decide to change the plugin's name
-     * @type {string} pluginName
-     **/
+	 * Store the plugin name in a variable. It helps you if later decide to
+	 * change the plugin's name
+	 * 
+	 * @type {string} pluginName
+	 */
     var pluginName = 'bootoast';
 
     /*
-     * The plugin constructor.
-     */
+	 * The plugin constructor.
+	 */
     function BootstrapNotify(options) {
 
         if (options !== undefined) {
@@ -52,7 +55,8 @@
                 positionSelector = '.' + position.join('.'),
                 positionClass = position.join(' ');
 
-            // Define se o novo .alert deve ser inserido por primeiro ou último no container.
+            // Define se o novo .alert deve ser inserido por primeiro ou último
+			// no container.
             this.putTo = position[0] == 'bottom' ? 'appendTo' : 'prependTo';
 
             // Define o .glyphicon com base no .alert-<type>
@@ -97,13 +101,14 @@
 
     $.extend(BootstrapNotify.prototype, {
         /*
-         * Default options
-         * @type {Object} defaults
-         */
+		 * Default options @type {Object} defaults
+		 */
         defaults: {
             message: 'Helo!', // String: HTML
             type: 'info', // String: ['warning', 'success', 'danger', 'info']
-            position: 'bottom-center', // String: ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right']
+            position: 'bottom-center', // String: ['top-left', 'top-center',
+										// 'top-right', 'bottom-left',
+										// 'bottom-center', 'bottom-right']
             icon: undefined, // String: name
             timeout: false,
             animationDuration: 300, // Int: animation duration in miliseconds
@@ -111,9 +116,8 @@
             iconsource : "glyphicon"
         },
         /*
-         * Default icons
-         * @type {Object} icons
-         */
+		 * Default icons @type {Object} icons
+		 */
         icons: {
         	
         	"glyphicon" : {
@@ -124,18 +128,17 @@
         		
         	},
         	"fa" : {
-                warning: 'exclamation-sign',
+                warning: 'warning',
                 success: 'check-circle',
-                danger: 'remove-sign',
-                info: 'info-sign'
+                danger: 'times-circle',
+                info: 'info-circle'
         		
         	}
         	
         },
         /*
-         * Position Sinonymus
-         * @type {Object} positionSinonym
-         */
+		 * Position Sinonymus @type {Object} positionSinonym
+		 */
         positionSinonym: {
             bottom: 'bottom-center',
             leftBottom: 'bottom-left',
@@ -145,9 +148,8 @@
             leftTop: 'top-left'
         },
         /*
-         * Position Supported
-         * @type {array} positionSupported
-         */
+		 * Position Supported @type {array} positionSupported
+		 */
         positionSupported: [
             'top-left',
             'top-center',
@@ -156,10 +158,11 @@
             'bottom-right'
         ],
         /**
-         * @type {method} hide
-         * @param {int} timeout
-         * @return {int} setTimeoutID The setTimeout ID.
-         **/
+		 * @type {method} hide
+		 * @param {int}
+		 *            timeout
+		 * @return {int} setTimeoutID The setTimeout ID.
+		 */
         hide: function(timeout) {
             var plugin = this;
             return setTimeout(function() {
@@ -185,7 +188,7 @@
 class BSToast  {	
 	toastOption =  {
 			  message:"Toast message",
-			  timeout:400,
+			  timeout:4,
 			  position: 'bottom-right',
 			  dismissable: false,
 			  type : 'success',
@@ -198,10 +201,10 @@ class BSToast  {
 			this.toastOption.iconsource = "fa";
 		}
 	}
-	success = message => {
+	toast = (type,message) => {
 		var option = this.toastOption;
 		option.message = message;
-		option.type="success";
+		option.type=type;
 		bootoast(option);	
 	}
 	static getInstance(version) {
@@ -216,8 +219,26 @@ class BSToast  {
 class BS4Toast extends BSToast {
 	static bsVersion = 4;
 	
-	static success = message => {
+	static toast = (type,message) => {
 		var toast = this.getInstance(this.bsVersion);
-		toast.success(message);
-	} 	
+		toast.toast(type,message);
+	}
+	
+	static success = message => {
+		this.toast("success",message);
+	}
+	
+	static warning = message => {
+		this.toast("warning",message);
+	}
+	
+	static danger = message => {
+		this.toast("danger",message);
+	}
+	
+	static info = message => {
+		this.toast("nfo",message);
+	}
+	
+	
 }
