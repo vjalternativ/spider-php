@@ -1013,7 +1013,6 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/server_preference_store_list.php');
 	    $content = str_replace("__RELACE_PART__", var_export($globalServerPrefenreceStoreList,1), $content);
 	    file_put_contents($vjconfig['basepath'].'cache/server_preference_store_list.php', $content);
-	    
 	    require_once $vjconfig['basepath'].'cache/relationship_list.php';
 	    require_once $vjconfig['basepath'].'cache/entity_list.php';
 	    require_once $vjconfig['basepath'].'cache/module_list.php';

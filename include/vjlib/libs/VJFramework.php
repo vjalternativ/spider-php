@@ -28,8 +28,9 @@ class VJFramework {
 	    return self::$instance;
 	}
 	function initModules() {
-	    global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity,$globalServerPrefenreceStoreList;
+	    global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity,$globalServerPreferenceStoreList;
 	    
+	    $dataWrapper = DataWrapper::getInstance();
 	    if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
 	    
 	        if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
@@ -41,11 +42,10 @@ class VJFramework {
     	    
     	    if(file_exists($vjconfig['basepath'].'cache/server_preference_store_list.php')) {
     	        require_once $vjconfig['basepath'].'cache/server_preference_store_list.php';
-    	        require_once 'include/vjlib/libs/DataWrapper.php';
     	    }
     	    
     	    if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
-    	       return false;
+    	     //  return false;
     	    }
 	    }  else {
 	        $entity->generateCache();
@@ -53,9 +53,7 @@ class VJFramework {
 	    $dataWrapper->set("entity_list",$globalEntityList);
 	    $dataWrapper->set("module_list",$globalModuleList);
 	    $dataWrapper->set("relationship_list",$globalRelationshipList);
-	    $dataWrapper->set("server_preference_store_list",$globalServerPrefenreceStoreList);
-	    
-	
+	    $dataWrapper->set("server_preference_store_list",$globalServerPreferenceStoreList);	
 	}
 	
 	

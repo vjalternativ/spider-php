@@ -1,4 +1,4 @@
 <?php 
-global $serverPreferenceStoreList;
-$serverPreferenceStoreList  = __RELACE_PART__;
+global $globalServerPreferenceStoreList;
+$globalServerPreferenceStoreList  = __RELACE_PART__;
 ?>
