@@ -148,6 +148,7 @@ class VJSiteEntryPoint
             $view->sitetpl = $vjconfig['sitetpl'];
             $view->bootparams = $this->bootparams;
             $view->pagetplpath = $this->sitebasePath . '/pages/' . $this->page . '/tpls/' . $vjconfig['sitetpl'] . '/';
+            $view->pageurlpath = $vjconfig['urlbasepath'] . 'include/entrypoints/site/pages/' . $this->page."/";
             if (! empty($pageController->params)) {
                 $view->params = $pageController->params;
             }

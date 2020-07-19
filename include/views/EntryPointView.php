@@ -8,6 +8,7 @@ abstract class EntryPointView
     public $pagetplpath;
     public $headerparams = array();
     public $footerparams = array();
+    public $pageurlpath;
     
     function displayTpl($tpl,$params=array()) {
         global $smarty,$app_list_strings;
@@ -26,6 +27,10 @@ abstract class EntryPointView
         $smarty->assign('bootparams',$this->bootparams);
         $smarty->assign('params',$this->params);
         return $smarty->fetch($this->pagetplpath.$tpl);
+    }
+    
+    function loadJs($filename) {
+        echo '<script src="'.$this->pageurlpath."assets/js/".$filename.'"></script>';
     }
 
 }

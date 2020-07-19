@@ -41,7 +41,7 @@ class Bootstrap4  {
         require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/AWidget.php';
         
         global $db;
-        $sql = "select wa.* from widget_widget_attr_1_m wwa inner join widget_attr wa on wwa.widget_attr_id=wa.id and wa.deleted=0 and wwa.deleted=0 and wwa.widget_id='".$row['id']."' ";
+        $sql = "select wa.* from widget_widget_attr_1_m wwa inner join widget_attr wa on wwa.widget_attr_id=wa.id and wa.deleted=0 and wwa.deleted=0 and wwa.widget_id='".$row['id']."' order by wa.date_entered asc";
         $rows = $db->fetchRows($sql,array("id"));
         
         $params = array();
@@ -69,7 +69,7 @@ class Bootstrap4  {
     static function loadWidgetAtPosition($pos) {
         
         global $db;
-        $sql = "select * from widget where deleted=0 and status='Active' and position = '".$pos."' ";
+        $sql = "select * from widget where deleted=0 and status='Active' and position = '".$pos."' order by date_entered asc";
         $rows = $db->fetchRows($sql);
         $html = '';
         foreach($rows as $row) {

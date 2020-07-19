@@ -13,6 +13,7 @@ class EntryPointController {
     public $routes = array();
     public $page = "";
     public $method = "";
+    public $response = array('status' => "danger",'message' => "Something went wrong.");
     
     function __construct() {
         global $vjconfig;
