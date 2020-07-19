@@ -56,7 +56,7 @@
             this.putTo = position[0] == 'bottom' ? 'appendTo' : 'prependTo';
 
             // Define o .glyphicon com base no .alert-<type>
-            this.settings.icon = this.settings.icon || this.icons[this.settings.type];
+            this.settings.icon = this.settings.icon || this.icons[this.settings.iconsource][this.settings.type];
 
             var containerClass = pluginName + '-container';
 
@@ -66,7 +66,7 @@
             }
 
             // Adiciona o .alert ao .container conforme seu posicionamento.
-            this.$el = $('<div class="alert alert-' + this.settings.type + ' ' + pluginName + '"><span class="glyphicon glyphicon-' + this.settings.icon + '"></span><span class="bootoast-alert-container"><span class="bootoast-alert-content">' + this.content + '</span></span></div>')[this.putTo]('.' + containerClass + positionSelector);
+            this.$el = $('<div class="alert alert-' + this.settings.type + ' ' + pluginName + '"><span class="'+this.settings.iconsource+' '+this.settings.iconsource+'-' + this.settings.icon + ' pull-left"></span><span class="bootoast-alert-container pull-left"><span class="bootoast-alert-content">' + this.content + '</span></span><div class="clearfix"></div></div>')[this.putTo]('.' + containerClass + positionSelector);
 
             if (this.settings.dismissable === true) {
                 this.$el
@@ -107,17 +107,30 @@
             icon: undefined, // String: name
             timeout: false,
             animationDuration: 300, // Int: animation duration in miliseconds
-            dismissable: true
+            dismissable: true,
+            iconsource : "glyphicon"
         },
         /*
          * Default icons
          * @type {Object} icons
          */
         icons: {
-            warning: 'exclamation-sign',
-            success: 'ok-sign',
-            danger: 'remove-sign',
-            info: 'info-sign'
+        	
+        	"glyphicon" : {
+                warning: 'exclamation-sign',
+                success: 'ok-sign',
+                danger: 'remove-sign',
+                info: 'info-sign'
+        		
+        	},
+        	"fa" : {
+                warning: 'exclamation-sign',
+                success: 'check-circle',
+                danger: 'remove-sign',
+                info: 'info-sign'
+        		
+        	}
+        	
         },
         /*
          * Position Sinonymus
@@ -164,3 +177,47 @@
     };
 
 })(window.jQuery || false, window, document);
+
+
+
+
+
+class BSToast  {	
+	toastOption =  {
+			  message:"Toast message",
+			  timeout:400,
+			  position: 'bottom-right',
+			  dismissable: false,
+			  type : 'success',
+			  iconsource : 'glyphicon'
+	}
+	
+	static instance = null;
+	constructor(version){
+		if(version==4) {
+			this.toastOption.iconsource = "fa";
+		}
+	}
+	success = message => {
+		var option = this.toastOption;
+		option.message = message;
+		option.type="success";
+		bootoast(option);	
+	}
+	static getInstance(version) {
+		if(this.instance==null) {
+			this.instance = new BSToast(version);
+		}
+		return this.instance;
+	}
+}
+
+
+class BS4Toast extends BSToast {
+	static bsVersion = 4;
+	
+	static success = message => {
+		var toast = this.getInstance(this.bsVersion);
+		toast.success(message);
+	} 	
+}
