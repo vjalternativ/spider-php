@@ -1,5 +1,5 @@
 <?php 
-global $seoparams,$db,$current_user,$current_url,$app_list_strings,$vjconfig,$mod_string,$log,$smarty,$globalRelationshipList,$globalEntityList,$globalModuleList; 
+global $seoparams,$db,$current_user,$current_url,$app_list_strings,$vjconfig,$mod_string,$log,$smarty,$globalRelationshipList,$globalEntityList,$globalModuleList,$globalServerPrefenreceStoreList; 
 require_once $vjconfig['fwbasepath'].'include/language/lang.php';
 $langpath = $vjconfig['basepath'].'include/language/lang.php';
 if(file_exists($langpath)) {
@@ -28,8 +28,10 @@ class VJFramework {
 	    return self::$instance;
 	}
 	function initModules() {
-	    global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity;
+	    global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity,$globalServerPrefenreceStoreList;
+	    
 	    if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
+	    
 	        if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
 	            require_once $vjconfig['basepath'].'cache/relationship_entity_list.php';
 	        }
@@ -37,13 +39,21 @@ class VJFramework {
     	    require_once $vjconfig['basepath'].'cache/entity_list.php';
     	    require_once $vjconfig['basepath'].'cache/module_list.php';
     	    
+    	    if(file_exists($vjconfig['basepath'].'cache/server_preference_store_list.php')) {
+    	        require_once $vjconfig['basepath'].'cache/server_preference_store_list.php';
+    	        require_once 'include/vjlib/libs/DataWrapper.php';
+    	    }
+    	    
     	    if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
     	       return false;
     	    }
 	    }  else {
 	        $entity->generateCache();
 	    }
-	    
+	    $dataWrapper->set("entity_list",$globalEntityList);
+	    $dataWrapper->set("module_list",$globalModuleList);
+	    $dataWrapper->set("relationship_list",$globalRelationshipList);
+	    $dataWrapper->set("server_preference_store_list",$globalServerPrefenreceStoreList);
 	    
 	
 	}

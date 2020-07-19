@@ -930,14 +930,14 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	}
 	
 	public function generateCache() {
-	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$serverPreferenceStoreList;
+	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$globalServerPrefenreceStoreList;
 	    
 	    $globalModuleList = array();
 	    $globalRelationshipList = array();
 	    $globalEntityList  = array();
-	    $serverPreferenceStoreList = array();
+	    $globalServerPrefenreceStoreList = array();
 	    
-	    $serverPreferenceStoreList = $db->fetchRows("select * from server_preference_store where deleted=0",array("name"),false,false);
+	    $globalServerPrefenreceStoreList = $db->fetchRows("select * from server_preference_store where deleted=0",array("name"),false,false);
 	    
 	    
 	    $globalRelationshipEntityList = $db->fetchRows("select * from relationships where deleted=0",array("id"),false,false);
@@ -1011,7 +1011,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    
 	    
 	    $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/server_preference_store_list.php');
-	    $content = str_replace("__RELACE_PART__", var_export($serverPreferenceStoreList,1), $content);
+	    $content = str_replace("__RELACE_PART__", var_export($globalServerPrefenreceStoreList,1), $content);
 	    file_put_contents($vjconfig['basepath'].'cache/server_preference_store_list.php', $content);
 	    
 	    require_once $vjconfig['basepath'].'cache/relationship_list.php';
