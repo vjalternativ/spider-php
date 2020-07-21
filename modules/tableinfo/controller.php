@@ -297,60 +297,40 @@ class tableinfoController extends VJController {
    }
 	
 	function action_ajaxSaveLayout() {
-			global $entity,$db,$globalEntityList;
+			global $entity;
 			$viewtype = $_REQUEST['type'];
 			$id = $_REQUEST['record'];
 			$info= $entity->get('tableinfo',$id);
-			$layout = json_decode(base64_decode($info['description']),1);
-			$sql = "select * from relationships where secondarytable = '".$id."' and deleted=0 and rtype='1_M'";
-			$rlist  = $db->fetchRows($sql);
-			
-			foreach($rlist as $r) {
-			    $layout['fields'][$r['name']]['name'] =  $r['name'];
-			    $layout['fields'][$r['name']]['type'] =  'nondb';
-			    $layout['fields'][$r['name']]['rmodule'] =  $globalEntityList[$r['primarytable']]['name'];
-			    $layout['fields'][$r['name']]['label'] =  $r['primarytable_name'];
-			}
-            
-			
 			$metainfo  = array();
 			$rowindex =0 ;
 			$totalgrid = 0;
 			if(isset($_REQUEST['layout-field-type'])) {
 			    foreach($_REQUEST['layout-field-type'] as $key=>$type) {
+			        $type=trim($type);
+			        if($type=="") {
+			            $type="row";
+			            error_log("type is blank ".print_r($_REQUEST));
+			        }
 						$grid  = $_REQUEST['layout-gridsize'][$key];
-						
-						
 						if($totalgrid >0 && $grid =="12") {
 						    $rowindex++;
 						    $totalgrid =0;
 						}
-						
 						$metainfo[$rowindex]['type'] = $type;
-						
 						if($type=='hr') {
 						    $metainfo[$rowindex]['label'] = $_REQUEST['layout-field-label'][$key];
 						}  else if($type=='row' && isset( $_REQUEST['layout-field'][$key])) { 
 						    $field = $_REQUEST['layout-field'][$key];
 						 	$metainfo[$rowindex]['fields'][] = array( 'field'=> array("name"=>$field),'gridsize'=>$grid);
 						}
-						
-						
-						
-                        $totalgrid += $grid;
+						$totalgrid += $grid;
                         if($totalgrid=="12") {
                             $totalgrid=0;
                             $rowindex++;
-                            
                         }
-						
-						
 					}
 			}
 			
-			//echo "<pre>";print_r($metainfo);die;
-			$layout['metadata'][$viewtype] = $metainfo;
-			//$info['description'] = base64_encode(json_encode($layout));
 			$info[$viewtype.'def'] = json_encode($metainfo);
 			$entity->save("tableinfo",$info);
 			die;
