@@ -31,7 +31,7 @@ class VJSiteEntryPoint
             $this->method = 'action_'.$seoParams[1];
         }
         
-        if (file_exists($this->sitebasePath . '/pages/' . $this->page . '/' . $seoParams[0] . 'Controller.php') || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
+        if (file_exists($this->sitebasePath . '/pages/' . $this->page . '/' . $this->page . 'Controller.php') || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
             if ($this->page == "page") {
                 if (isset($seoParams[0]) && $seoParams[0]) {
                     $sql = "select * from page where alias='" . $seoParams[0] . "' and deleted=0";
