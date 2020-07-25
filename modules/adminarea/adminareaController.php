@@ -316,6 +316,15 @@ class adminareaController extends VJController
     function repairFramework() {
         global $vjconfig;
         $data = array();
+        
+        $db = MysqliLib::getInstance();
+        $sql = "select name,max(date_entered) as date_entered from tableinfo where deleted=0 group by name having count(*) > 1  ";
+        $rows = $db->fetchRows($sql,array("name"),"date_entered");
+        foreach($rows as $name=>$dateEntered) {
+            $sql = "delete from tableinfo where  name = '".$name."' and date_entered < '".$dateEntered."' ";
+            $db->query($sql);
+                
+        }
         foreach($this->repairTables as $tablename=>$row) {
             $row = json_decode(file_get_contents($vjconfig['fwbasepath']."include/install/datapatch/".$tablename.".json"),1);
             $data[$tablename] = $row;

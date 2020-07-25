@@ -915,14 +915,22 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	    if(isset($globalRelationshipList[$table])) {
 	        $coltable = substr($col, 0,strrpos($col,"_id"));
 	        $isSecondary = false;
-	        $rtable = $globalEntityList[$globalRelationshipList[$table]['primarytable']]['name'];
-	        if($rtable == substr($table,0,strlen($coltable))) {
-	            $isSecondary = true;
-	            $rtable = $globalEntityList[$globalRelationshipList[$table]['secondarytable']]['name'];
+	        if(isset($globalEntityList[$globalRelationshipList[$table]['primarytable']])) {
+    	        $rtable = $globalEntityList[$globalRelationshipList[$table]['primarytable']]['name'];
+    	        if($rtable == substr($table,0,strlen($coltable))) {
+    	            $isSecondary = true;
+    	            if(isset($globalEntityList[$globalRelationshipList[$table]['secondarytable']]['name'])) {
+    	                $rtable = $globalEntityList[$globalRelationshipList[$table]['secondarytable']]['name'];
+    	            } else {
+    	                die("secondary table not found in entity list ".$globalRelationshipList[$table]['secondarytable']);
+    	            }
+    	        }
+    	        $joincol = $rtable."_id";
+    	        $sql = "select ".$rtable.".* FROM ".$table." INNER JOIN ".$rtable." ON ".$table.".".$joincol."=".$rtable.".id and ".$rtable.".deleted=0 and ".$table.".deleted=0 and ".$table.".".$col."='".$value."'";
+        	    return $db->fetchRows($sql,array("id"));
+	        } else {
+	            die("entity not found for table ".$table);
 	        }
-	        $joincol = $rtable."_id";
-	        $sql = "select ".$rtable.".* FROM ".$table." INNER JOIN ".$rtable." ON ".$table.".".$joincol."=".$rtable.".id and ".$rtable.".deleted=0 and ".$table.".deleted=0 and ".$table.".".$col."='".$value."'";
-    	    return $db->fetchRows($sql,array("id"));
 	    } else {
 	      return false;  
 	    }
