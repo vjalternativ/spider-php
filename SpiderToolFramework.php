@@ -1,123 +1,157 @@
 <?php
 global $cliargs;
 $cliargs = false;
-if($argv) {
+if ($argv) {
     $cliargs = $argv;
 }
 
-require_once __DIR__.'/framework.php';
+require_once __DIR__ . '/framework.php';
 
 class SpiderToolFramework extends SpiderPhpFramework
 {
-    function __construct($sessionName=false) {
+
+    var $cliRegistrar = array();
+
+    function __construct($sessionName = false)
+    {
         $_REQUEST['spiderphp_mode'] = 'TOOL';
-        
+
         global $cronconfig;
-        
-        
-        
-        
+
         parent::__construct($sessionName);
-        
+
+        $this->cliRegistrar['create'] = array();
+        $this->cliRegistrar['create']['page']['view'] = "createPageView,page_name,view_name";
+        $this->cliRegistrar['create']['widget'] = "createWidget,widget_name";
     }
     
-    function executeActionTypePageController() {
-        
-    }
-    function executeActionTypePageView($pagename,$argv) {
+    function createWidget($params) {
         global $vjconfig;
-        $pagepath = $vjconfig['basepath'].'include/entrypoints/site/pages/'.$pagename;
-        if(is_dir($pagepath)) {
-            $viewtplpath = $pagepath."/".'views/'.$vjconfig['sitetpl']."/";
-            $cmd  = "mkdir -p ".$viewtplpath;
-            shell_exec($cmd);
-            $string = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/page/tplpageview.php');
-            if(isset($argv[5])) {
-                $viewname = $argv[5];
-                $string = str_replace("__PAGENAME__", $pagename, $string);
-                $string = str_replace("__VIEWNAME__", $viewname, $string);
-                file_put_contents($viewtplpath.'view.'.$viewname.'.php', $string);
-                $tplpath = $pagepath."/tpls/".$vjconfig['sitetpl']."/";
-                $cmd  = "mkdir -p ".$tplpath;
-                shell_exec($cmd);
-                file_put_contents($tplpath.$viewname.".tpl", "");
-                
-            
-            } else {
-                echo "specify action type view | viewname";
-            }
-        } else {
-            die("directory not exist ".$pagepath);
-        }
+        
+        $widgetName = $params['widget_name'];
+        $widgetPath = $vjconfig['basepath'] . 'include/entrypoints/site/widgets/' .$vjconfig['sitetpl']. '/'.$widgetName.'/';
+        $cmd = "mkdir -p " . $widgetPath;
+        shell_exec($cmd);
+        
+        $cmd = "cp -r ".$vjconfig['fwbasepath'].'include/vjlib/templates/frontend/samplewidget/* '.$widgetPath;
+        shell_exec($cmd);
+        
+        $packagejson = $widgetPath."package.json";
+        $packagejsonContent = file_get_contents($packagejson);
+        $packagejsonContent = str_replace("__WIDGET_NAME__", $widgetName, $packagejsonContent);
+        file_put_contents($packagejson, $packagejsonContent);
+        
+        $widgetController = $widgetPath."sampleWidget.php";
+        $widgetControllerContent = file_get_contents($widgetController);
+        $widgetControllerContent = str_replace("__WIDGET_NAME__", $widgetName, $widgetControllerContent);
+        file_put_contents($widgetController, $widgetControllerContent);
+        
+        $cmd = 'mv '.$widgetController.' '.$widgetPath.$widgetName.'Widget.php';
+        shell_exec($cmd);
+        $widgetTpl = $widgetPath."sampleWidget.tpl";
+        $cmd = 'mv '.$widgetTpl.' '.$widgetPath.$widgetName.'Widget.tpl';
+        shell_exec($cmd);
+        
         
     }
-    
-    function executeActionTypePage($tpl,$argv) {
-        if ($tpl == "controller") {
-                
-        } else if ($tpl == "view") {
-            if(isset($argv[4])) {
-                $this->executeActionTypePageView($argv[4],$argv);
-            } else {
-                echo "specify action type page view pagename";    
-            }
+
+    function createPageView($params)
+    {
+        global $vjconfig;
+        $pagename = $params['page_name'];
+        $pagepath = $vjconfig['basepath'] . 'include/entrypoints/site/pages/' . $pagename;
+        $viewtplpath = $pagepath . "/" . 'views/' . $vjconfig['sitetpl'] . "/";
+        $cmd = "mkdir -p " . $viewtplpath;
+        shell_exec($cmd);
+        $string = file_get_contents($vjconfig['fwbasepath'] . 'include/vjlib/templates/page/tplpageview.php');
+        if (isset($params['view_name'])) {
+            $viewname = $params['view_name'];
+            $string = str_replace("__PAGENAME__", $pagename, $string);
+            $string = str_replace("__VIEWNAME__", $viewname, $string);
+            file_put_contents($viewtplpath . 'view.' . $viewname . '.php', $string);
+            $tplpath = $pagepath . "/tpls/" . $vjconfig['sitetpl'] . "/";
+            $cmd = "mkdir -p " . $tplpath;
+            shell_exec($cmd);
+            file_put_contents($tplpath . $viewname . ".tpl", "");
         } else {
-             echo "specify correct page action type : controller  or view";
-        }
-    }
-    
-    function executeActionCreate($actionType,$argv) {
-        if ($actionType == "page") {
-            if(isset($argv[3])) {
-                $this->executeActionTypePage($argv[3],$argv);
-            } else {
-                echo "specify action type page template| controller or view";
-           }
-        } else if ($actionType == "module") {
-                
-        } else {
-                echo "specify correct create type : page module";
+            echo "specify action type view | viewname";
         }
     }
 
-    function exxecuteAction($action,$argv) {
-            if ($action == "create") {
-                if(isset($argv[2])) {
-                    $this->executeActionCreate($argv[2], $argv);
+    function processArgs($index, $args, $registrar)
+    {
+        if (isset($args[$index])) {
+
+            if (isset($registrar[$args[$index]])) {
+
+                if (is_array($registrar[$args[$index]])) {
+                    $newIndex = $index + 1;
+                    $this->processArgs($newIndex, $args, $registrar[$args[$index]]);
                 } else {
-                    echo "specify create type : page module";
+                    if ($registrar[$args[$index]]) {
+
+                        $options = explode(",", $registrar[$args[$index]]);
+
+                        $method = $options[0];
+                        unset($options[0]);
+
+                        $params = array();
+
+                        $isValid = true;
+                        $parg = "";
+                        foreach ($options as $op) {
+                            $index ++;
+                            if (isset($args[$index])) {
+                                $params[$op] = $args[$index];
+                            } else {
+                                $isValid = false;
+                                $parg = $op;
+                                break;
+                            }
+                        }
+                        if ($isValid) {
+                            if (method_exists($this, $method)) {
+                                $this->{$method}($params);
+                            } else {
+                                echo $method . " function not defined in class." . PHP_EOL;
+                            }
+                        } else {
+                            echo "specify " . $parg . " in arguments" . PHP_EOL;
+                        }
+                    } else {
+                        echo "option not defined" . PHP_EOL;
+                    }
                 }
             } else {
-                echo "specifiy correct action : create update delete";
+
+                $keys = array_keys($registrar);
+                $string = implode("/", $keys);
+                echo "Invalid input. Options are =>  " . $string . PHP_EOL;
             }
+        } else {
+            $keys = array_keys($registrar);
+            $string = implode("/", $keys);
+            echo "Invalid input. Options are =>  " . $string . PHP_EOL;
+        }
     }
 
     function execute()
     {
         global $cliargs, $cronconfig, $vjconfig;
-        
-        require_once $this->configpath.'/cronconfig.php';
-        if(isset($cronconfig[$this->configpath])) {
+
+        require_once $this->configpath . '/cronconfig.php';
+        if (isset($cronconfig[$this->configpath])) {
             $_SERVER['HTTP_HOST'] = $cronconfig[$this->configpath]['host'];
         }
-        require_once $this->configpath.'/config.php';
-        
-        $vjconfig['basepath'] = $this->configpath."/";
-        $vjconfig['fwbasepath'] = __DIR__."/";
-        
+        require_once $this->configpath . '/config.php';
+
+        $vjconfig['basepath'] = $this->configpath . "/";
+        $vjconfig['fwbasepath'] = __DIR__ . "/";
+
         $argv = $cliargs;
-        if ($argv) {
-            if (isset($argv[1])) {
-                $this->exxecuteAction($argv[1],$argv);
-            } else {
-                echo "specifiy action : create update delete";
-            }
-        } else {
-            echo "specifiy action : create update delete";
-        }
-        
-        echo PHP_EOL;
-        
+
+        $this->processArgs(1, $argv, $this->cliRegistrar);
+        echo "Job done.".PHP_EOL;
     }
 }
 
