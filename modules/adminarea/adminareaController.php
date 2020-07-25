@@ -200,7 +200,6 @@ class adminareaController extends VJController
                if(!$isNew) {
                         $sql .= " WHERE id = '".$row['id']."'";
                }
-               
                $db->query($sql);
                 //$row['hook_skip'] = true;
                 //$entity->save($table,$row);
@@ -318,7 +317,9 @@ class adminareaController extends VJController
         $data = array();
         
         $db = MysqliLib::getInstance();
-          
+         
+        $sql ="delete from tableinfo where deleted=1";
+        $db->query($sql);
         foreach($this->repairTables as $tablename=>$row) {
             $row = json_decode(file_get_contents($vjconfig['fwbasepath']."include/install/datapatch/".$tablename.".json"),1);
             $data[$tablename] = $row;
@@ -326,6 +327,34 @@ class adminareaController extends VJController
         $this->processSchemaAndDataPatch($data);
         
         
+        $sql = "select * from tableinfo where deleted=0";
+        $trows = $db->fetchRows($sql,array("id"));
+        
+        
+        $sql = "select * from relationships where deleted=0";
+        $rows = $db->fetchRows($sql,array("id"));
+        $entity = Entity::getInstance();
+        //echo "<pre>";print_r($rows);die;
+        foreach($rows as $row) {
+            if(isset($trows[$row['primarytable']]) && isset($trows[$row['secondarytable']])) {
+                $row['primary_table_text'] =  $trows[$row['primarytable']]['name'];
+                $row['secondary_table_text'] =  $trows[$row['secondarytable']]['name'];
+                $row['primarytable'] =  $trows[$row['primarytable']]['id'];
+                $row['secondarytable'] =  $trows[$row['secondarytable']]['id'];
+                $entity->save("relationships",$row);
+            
+            } else {
+                
+                if($row['primary_table_text'] && $row['secondary_table_text']) {
+                    
+                }
+                echo "relationship entity not found for ".$row['name']."<br/>";
+               /*  if(isset($globalEntityList[$row['primarytable']])) {
+                    die($globalEntityList[$row['primarytable']]);
+                } */
+            }
+            
+        }
         
     }
     
@@ -371,4 +400,6 @@ class adminareaController extends VJController
         
         
     }
+    
+    
 }

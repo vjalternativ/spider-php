@@ -878,6 +878,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	        
 	        $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['primarytable']]['name'].'_id'] = $primaryRecord;
 	        $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name'].'_id'] = $relationshipId;
+	        $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['primarytable']]['name'].'_text'] = $globalEntityList[$globalRelationshipList[$relationship]['primarytable']]['name'];
+	        $keyvalue[$globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name'].'_texxt'] = $globalEntityList[$globalRelationshipList[$relationship]['secondarytable']]['name'];
 	        $this->save($relationship, $keyvalue);
 	        return true;
 	    }
@@ -929,7 +931,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
     	        $sql = "select ".$rtable.".* FROM ".$table." INNER JOIN ".$rtable." ON ".$table.".".$joincol."=".$rtable.".id and ".$rtable.".deleted=0 and ".$table.".deleted=0 and ".$table.".".$col."='".$value."'";
         	    return $db->fetchRows($sql,array("id"));
 	        } else {
-	            die("entity not found for table ".$table);
+	            return false;
+	           // die("entity not found for table ".$table);
 	        }
 	    } else {
 	      return false;  
