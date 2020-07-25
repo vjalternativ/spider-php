@@ -318,21 +318,57 @@ class adminareaController extends VJController
         $data = array();
         
         $db = MysqliLib::getInstance();
-        $sql = "select name,max(date_entered) as date_entered from tableinfo where deleted=0 group by name having count(*) > 1  ";
-        $rows = $db->fetchRows($sql,array("name"),"date_entered");
-        foreach($rows as $name=>$dateEntered) {
-            $sql = "delete from tableinfo where  name = '".$name."' and date_entered < '".$dateEntered."' ";
-            $db->query($sql);
-                
-        }
+          
         foreach($this->repairTables as $tablename=>$row) {
             $row = json_decode(file_get_contents($vjconfig['fwbasepath']."include/install/datapatch/".$tablename.".json"),1);
             $data[$tablename] = $row;
         }
         $this->processSchemaAndDataPatch($data);
+        
+        
+        
     }
     
     function action_repairFramework() {
         $this->repairFramework();
+    }
+    
+    function action_cleanupmodules() {
+        $db = MysqliLib::getInstance();
+        $sql = "select name,group_concat(t.id) ids from tableinfo t group by t.name having count(*)>1";
+        $rows = $db->fetchRows($sql);
+        $data = array();
+        foreach($rows as $row) {
+            $ids = explode(",",$row['ids']);
+            $id = $ids[0];
+            unset($ids[0]);
+            $data[$id] = $ids;
+        }
+        
+        foreach($data as $id=>$ids) {
+            $sql ="update relationships set primarytable='".$id."' where primarytable in ('".implode("'.'",$ids)."') ";
+            $db->query($sql);
+            $sql ="update relationships set secondarytable='".$id."' where secondarytable in ('".implode("'.'",$ids)."') ";
+            $db->query($sql);
+            $sql = "delete from tableinfo where id in ('".implode("'.'",$ids)."')";
+            $db->query($sql);
+        }
+        $sql = "select name,group_concat(id) as ids from relationships group by name having count(*) > 1";
+        $rows = $db->fetchRows($sql);
+        $data = array();
+        foreach($rows as $row) {
+            $ids = explode(",",$row['ids']);
+            $id = $ids[0];
+            unset($ids[0]);
+            $sql = "delete from relationships where id in ('".implode("'.'",$ids)."')";
+            $db->query($sql);
+        }
+        
+        
+        //select r.*,t.id from relationships r left join tableinfo t on r.secondarytable=t.id where t.id is null;
+        //select name,count(*) from relationships group by name having count(*) > 1;
+        //select name,group_concat(t.id) ids from tableinfo t group by t.name having count(*)>1;
+        
+        
     }
 }
