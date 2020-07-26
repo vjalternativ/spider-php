@@ -12,7 +12,7 @@ class MediaFilesService implements IMediaFilesService  {
         $mediaId = false;
         if(isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error']=='0') {
             $mediaKeyValue=array();
-            if(!$keyvalue['isnew'] || !empty($keyvalue[$field['name']])) {
+            if((!isset($keyvalue['isnew']) || !$keyvalue['isnew']) && !empty($keyvalue[$field['name']])) {
                 $mediaKeyValue = $entity->get("media_files",$keyvalue[$field['name']]);
                 if(isset($mediaKeyValue['file_path'])) {
                     
