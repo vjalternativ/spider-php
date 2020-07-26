@@ -21,8 +21,22 @@ class SpiderToolFramework extends SpiderPhpFramework
         parent::__construct($sessionName);
 
         $this->cliRegistrar['create'] = array();
+        $this->cliRegistrar['create']['page']['controller'] = "createPageController,page_name";
         $this->cliRegistrar['create']['page']['view'] = "createPageView,page_name,view_name";
         $this->cliRegistrar['create']['widget'] = "createWidget,widget_name";
+    }
+    
+    function createPageController($params) {
+        global $vjconfig;
+        $name = $params['page_name'];
+        $controllerPath = $vjconfig['basepath'] . 'include/entrypoints/site/pages/'.$name.'/';
+        $cmd = "mkdir -p " . $controllerPath;
+        shell_exec($cmd);
+        $content = file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/page/tplpagecontroller.php');
+        $content = str_replace("__PAGENAME__",$name,$content);
+        file_put_contents($controllerPath.$name."Controller.php", $content);
+        
+        
     }
     
     function createWidget($params) {

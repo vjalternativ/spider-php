@@ -1,13 +1,13 @@
 <?php 
-trait MediaFilesService  {
+class MediaFilesService implements IMediaFilesService  {
     
-    function saveMediaFileByFieldName($fieldName,$keyvalue) {
+   public function saveMediaFileByFieldName($fieldName,$keyvalue) {
         $field = array();
         $field['name'] = $fieldName;
         return $this->saveMediaFileByFieldArray($field, $keyvalue);
     }
     
-    function saveMediaFileByFieldArray($field,$keyvalue) {
+    public function saveMediaFileByFieldArray($field,$keyvalue) {
         global $entity,$vjconfig;
         $mediaId = false;
         if(isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error']=='0') {

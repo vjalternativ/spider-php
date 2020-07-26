@@ -90,17 +90,20 @@ class VJSiteEntryPoint
         }
         
         if($methodExists){
+           $this->validateSession($pageController,$this->method);
             $pageController->{$this->method}();
         } else if ($pageController->routes) {
             
             foreach ($seoParams as $key => $val) {
                 if (isset($pageController->routes[$key])) {
                     $method = 'action_' . $pageController->routes[$key];
+                    $this->validateSession($pageController,$method);
                     $pageController->{$method}();
                 } else {
                   
                     $method = "action_".$val;
                     if ( method_exists($pageController, $method)) {
+                        $this->validateSession($pageController,$method);
                         $pageController->{$method}();
                     }
                 }
@@ -109,6 +112,7 @@ class VJSiteEntryPoint
             $method = end($seoParams);
             //$method = prev($seoParams);
             if (method_exists($pageController, "action_" . $method)) {
+                $this->validateSession($pageController,"action_".$method);
                 $pageController->{"action_" . $method}();
             } else {
                 $pageController->{$this->method}();
@@ -128,6 +132,7 @@ class VJSiteEntryPoint
             if (! method_exists($pageController, $this->method)) {
                 $this->method = "action_index";
             }
+            $this->validateSession($pageController,$this->method);
             $pageController->{$this->method}();
             $this->bootparams = $pageController->bootparams;
         }
@@ -212,5 +217,14 @@ class VJSiteEntryPoint
         $smarty->assign("params", $this->view->params);
         $smarty->assign("footerparams", $this->footerparams);
         echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');
+    }
+    
+    private function validateSession($pageController,$method) {
+        if(isset($pageController->authFunctions[$method])) {
+            $isAuthorized =  sessioncheck("current_user");
+            if(!$isAuthorized) {
+                die("access denied.");
+            }
+        }
     }
 }
