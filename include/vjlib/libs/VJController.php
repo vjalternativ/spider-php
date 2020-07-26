@@ -128,9 +128,26 @@ class VJController  {
 			    $keyvalue[$key] = $val;
 			}
 			
-			
 			$tableinfo = $globalModuleList[$table];
+		    	
+			$editviewdef = json_decode($globalModuleList[$table]['editviewdef'],1);
 			
+			foreach($editviewdef as $row) {
+			    if(isset($row['fields'])) {
+			        foreach($row as $col) {
+			            if(isset($col['field'])) {
+			                $fkey = $col['field'];
+			                $field = $tableinfo['tableinfo']['fields'][$fkey];
+			                if($field['type'] == "checkbox") {
+			                    if(!isset($_REQUEST[$field['name']])) {
+			                        $keyvalue[$field['name']] = 0;
+			                    }
+			                }
+			                
+			            }
+			        }
+			    }
+			}
 			
 			if(isset($globalModuleList[$table]['metadata_info']['editview']['fields'])) {
 			    foreach($globalModuleList[$table]['metadata_info']['editview']['fields'] as $fkey=>$fval) {
@@ -226,7 +243,8 @@ class VJController  {
 			}
 			
 			
-		
+			
+			
 			
 			if(isset($_REQUEST['parent_module']) && isset($_REQUEST['parent_record']) && isset($_REQUEST['rel'])) {
 			    $relationship = $_REQUEST['rel'];
@@ -235,8 +253,9 @@ class VJController  {
 			    $entity->addRelationship($relationship,$id);
 			    redirect($parentModule,"detailview",array("record"=>$entity->record));
 			    exit();
+			} else {
+			    redirect($module,"detailview",array("record"=>$id));
 			}
-			redirect($module);
 		}
 		
 		

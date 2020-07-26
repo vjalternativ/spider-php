@@ -160,7 +160,6 @@ abstract class AWidget {
     
     
     static function loadWidget($widgetName,$params) {
-        global $vjconfig;
         $params = self::processParams($widgetName, $params);
         return  self::rendorWidget($widgetName,$params);
     }
