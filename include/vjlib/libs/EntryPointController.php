@@ -106,6 +106,11 @@ class EntryPointController {
         
         return $smarty->fetch("include/entrypoints/site/tpls/".$sitetpl."/".$tpl);
     }
+    
+    function setResponse($status,$message) {
+        $this->response['status'] = $status;
+        $this->response['message'] = $message;
+    }
 }
 
 ?>

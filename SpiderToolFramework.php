@@ -60,14 +60,14 @@ class SpiderToolFramework extends SpiderPhpFramework
         global $vjconfig;
         $pagename = $params['page_name'];
         $pagepath = $vjconfig['basepath'] . 'include/entrypoints/site/pages/' . $pagename;
-        $viewtplpath = $pagepath . "/" . 'views/' . $vjconfig['sitetpl'] . "/";
+        $viewtplpath = $pagepath . "/" . 'views/';
         $cmd = "mkdir -p " . $viewtplpath;
         shell_exec($cmd);
         $string = file_get_contents($vjconfig['fwbasepath'] . 'include/vjlib/templates/page/tplpageview.php');
         if (isset($params['view_name'])) {
             $viewname = $params['view_name'];
             $string = str_replace("__PAGENAME__", $pagename, $string);
-            $string = str_replace("__VIEWNAME__", $viewname, $string);
+            $string = str_replace("__VIEWNAME__", ucfirst($viewname), $string);
             file_put_contents($viewtplpath . 'view.' . $viewname . '.php', $string);
             $tplpath = $pagepath . "/tpls/" . $vjconfig['sitetpl'] . "/";
             $cmd = "mkdir -p " . $tplpath;
