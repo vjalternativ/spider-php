@@ -58,6 +58,7 @@ class VJSiteEntryPoint
         
         
         require_once $vjconfig['fwbasepath'] . 'include/vjlib/libs/EntryPointController.php';
+        require_once $vjconfig['fwbasepath'] . 'include/vjlib/service/WidgetServiceRegistrar.php';
         
         global $smarty;
         $smarty->assign("bootparams", $this->bootparams);

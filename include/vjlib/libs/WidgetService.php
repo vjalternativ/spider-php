@@ -19,16 +19,10 @@ class WidgetService implements IWidget {
         return  $this->rendorWidget($widgetType,$params);
     }
 
-    private function rendorWidget($widgetType,$params=array()) {
-        global $vjconfig,$smarty;
-        
-        $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetType;
-        $smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
-        $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
+    private function getResourcesHtml() {
         $html = "";
         $datawrapper = DataWrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
-        
         if($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
             foreach($widgetdatawrapper['resources'] as $path=>$resource) {
                 if(isset($resource['counter']) && $resource['counter']==0)  {
@@ -37,12 +31,22 @@ class WidgetService implements IWidget {
                     } else if($resource['type']=="js") {
                         $html .='<script src="'.$vjconfig['urlbasepath'].$path.'" ></script>';
                     }
+                    unset($widgetdatawrapper['resources'][$path]);
                 }
+                $datawrapper->set("widget_data_wrapper", $widgetdatawrapper);
             }
         }
+        return $html;
+    }
+    
+    private function rendorWidget($widgetType,$params=array()) {
+        global $vjconfig,$smarty;
         
+        $html = $this->getResourcesHtml();
         
-        
+        $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetType;
+        $smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
+        $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
         
         
         if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetType."/".$widgetType."Widget.tpl")) {
