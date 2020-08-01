@@ -1,6 +1,6 @@
 <?php 
 
-class Widget implements IWidget {
+class WidgetService implements IWidget {
     
     public function getWidget($widgetType)
     {
@@ -27,12 +27,11 @@ class Widget implements IWidget {
         $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
         $html = "";
         $datawrapper = DataWrapper::getInstance();
-        $widgetdatawrapper = $datawrapper->get($widgetType);
+        $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
         
         if($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
-            foreach($widgetdatawrapper['resources'] as $relativefilepath=>$resource) {
+            foreach($widgetdatawrapper['resources'] as $path=>$resource) {
                 if(isset($resource['counter']) && $resource['counter']==0)  {
-                    $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetType."/assets/".$resource['type']."/".$relativefilepath;
                     if($resource['type']=="css") {
                         $html .='<link rel="stylesheet" href="'.$vjconfig['urlbasepath'].$path.'" />';
                     } else if($resource['type']=="js") {

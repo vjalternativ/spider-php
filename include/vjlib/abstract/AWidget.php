@@ -119,12 +119,11 @@ abstract class AWidget {
         
         $html = "";
         $datawrapper = DataWrapper::getInstance();
-        $widgetdatawrapper = $datawrapper->get($widgetName);
+        $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
         
         if($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
-            foreach($widgetdatawrapper['resources'] as $relativefilepath=>$resource) {
+            foreach($widgetdatawrapper['resources'] as $path=>$resource) {
                 if(isset($resource['counter']) && $resource['counter']==0)  {
-                    $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetName."/assets/".$resource['type']."/".$relativefilepath;
                     if($resource['type']=="css") {
                         $html .='<link rel="stylesheet" href="'.$vjconfig['urlbasepath'].$path.'" />';
                     } else if($resource['type']=="js") {
@@ -296,19 +295,19 @@ abstract class AWidget {
         $widget = get_called_class();
         $widgetfolder = str_replace("Widget", "", $widget);
         $datawrapper = DataWrapper::getInstance();
-        $widgetdatawrapper = $datawrapper->get($widgetfolder);
+        $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
         if(!$widgetdatawrapper) {
             $widgetdatawrapper = array();
         }
         $counter =0;
-        if(isset($widgetdatawrapper['resources'][$relativefilepath]))  {
-            $counter = $widgetdatawrapper['resources'][$relativefilepath]+1;
-        } 
         $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetfolder."/assets/".$type."/".$relativefilepath;
+        if(isset($widgetdatawrapper['resources'][$path]))  {
+            $counter = $widgetdatawrapper['resources'][$path]['counter']+1;
+        } 
         if(file_exists($vjconfig['basepath'].$path)) {
-            $widgetdatawrapper['resources'][$relativefilepath]['counter'] = $counter;
-            $widgetdatawrapper['resources'][$relativefilepath]['type'] = $type;
-            $datawrapper->set($widgetfolder, $widgetdatawrapper);
+            $widgetdatawrapper['resources'][$path]['counter'] = $counter;
+            $widgetdatawrapper['resources'][$path]['path'] = $type;
+            $datawrapper->set("widget_data_wrapper", $widgetdatawrapper);
         }
     }
 }

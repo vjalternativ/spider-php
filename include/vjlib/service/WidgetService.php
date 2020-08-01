@@ -1,16 +1,16 @@
 <?php 
 global $vjconfig;
-require_once $vjconfig['fwbasepath'].'include/vjlib/interface/IWidget.php';
-require_once $vjconfig['fwbasepath'].'include/vjlib/libs/Widget.php';
-class WidgetService {
+require_once $vjconfig['fwbasepath'].'include/vjlib/interface/IWidgetService.php';
+require_once $vjconfig['fwbasepath'].'include/vjlib/libs/WidgetService.php';
+class WidgetServiceRegistrar {
     private static $instnace = null;
     static function getInstance() {
         if(self::$instnace ==null) {
-            self::$instnace = new Widget();
+            self::$instnace = new WidgetService();
         }
-        return self::getIWidget(self::$instnace);
+        return self::getIWidgetService(self::$instnace);
    }
-   private static function getIWidget(IWidget $ob) {
+   private static function getIWidgetService(IWidgetService $ob) {
         return $ob;
    }
 }
