@@ -27,7 +27,7 @@ class SpiderPhpFramework {
         
         
         
-        $newdir = $_SERVER['SCRIPT_FILENAME'];
+        $newdir = isset($_SERVER['SCRIPT_FILENAME']) ? $_SERVER['SCRIPT_FILENAME'] : ""; 
         $this->configpath = substr($newdir, 0,strrpos($newdir,"/"));;
         $dir  = substr($this->configpath,0,strrpos($this->configpath,"/"));
         if(file_exists($dir.'/'.'config.php')) {
@@ -91,6 +91,7 @@ class SpiderPhpFramework {
         
         
         if(!isset($vjconfig['fwbaseurl'])) {
+            die("fwbaseurl is not set");
             $vjconfig['fwbaseurl'] = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].str_replace($_SERVER['DOCUMENT_ROOT'],"",$dir);
         }
         
