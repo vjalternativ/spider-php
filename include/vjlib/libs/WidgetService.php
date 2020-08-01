@@ -1,25 +1,84 @@
 <?php 
 
-class WidgetService implements IWidget {
+class WidgetService implements IWidgetService {
     
-    public function getWidget($widgetType)
+    
+    
+    
+    public function getWidget($widgetType,$row=false)
     {
         $db = MysqliLib::getInstance();
         $sql = "select * from widget where deleted=0 and status='Active' and widget_type='".$widgetType."'  ";
         $rows = $db->fetchRows($sql);
         $html = '';
         foreach($rows as $row) {
-            $html .= $this->loadWidgetByData($row);
+            $html .= $this->getWidgetForRecord($row);
         }
         return $html;
     }
     
-    public function getWidgetByParams($widgetType,$params) {
-        $params = $this->processParams($widgetType, $params);
+    public function getWidgetForParams($widgetType,$params) {
+        $ob = $this->getWidgetObject($widgetType);
+        $params = $ob->processWidgetParams( $params);
         return  $this->rendorWidget($widgetType,$params);
     }
 
+    private function getWidgetObject($widget) {
+        global $vjconfig;
+        $ob = false;
+        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
+            require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+            $class = $widget.'Widget';
+            $ob = new $class;
+        } else {
+            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php")) {
+                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
+                $class = $widget.'Widget';
+                $ob = new $class;
+            }else {
+                echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
+                die("widget not found ".$widget);
+                
+            }
+            return $ob;
+        }
+    }
+    
+    public function getWidgetForRecord($row,$orderByName=false) {
+        global $db;
+        $additionalSql= "";
+        if($orderByName) {
+            $additionalSql = " order by widget_attr.name ".$orderByName;
+        }
+        $sql = "select widget_attr.* from widget_widget_attr_1_m  inner join widget_attr  on widget_widget_attr_1_m.widget_attr_id=widget_attr.id and widget_attr.deleted=0 and widget_widget_attr_1_m.deleted=0 and widget_widget_attr_1_m.widget_id='".$row['id']."' ";
+        if($additionalSql) {
+            $sql .= $additionalSql;
+        }
+        $rows = $db->fetchRows($sql,array("id"));
+        $widgetObject = $this->getWidgetObject($row['widget_type']);
+        
+        $row['config'] = json_decode($row['description'],1);
+        
+        $params =array();
+        $params['config'] = $row['config'];
+        $checkFirst = true;
+        foreach($rows as $id => $data) {
+            $params['data'][$id]["isfirst"] = false;
+            if($checkFirst) {
+                $params['data'][$id]["isfirst"] = true;
+                $checkFirst =false;
+            }
+            $params['data'][$id]["name"]  = $data['name'];
+            $params['data'][$id]['attrs'] = json_decode($data['description'],1);
+            $params['data'][$id] = $widgetObject->processWidgetParams($params['data'][$id]);
+            
+        }
+        
+        $params['widget']  = $widgetObject->processWidgetAttrs($row);
+        return $this->rendorWidget($row['widget_type'],$params);
+    }
     private function getResourcesHtml() {
+        global $vjconfig;
         $html = "";
         $datawrapper = DataWrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
@@ -68,84 +127,25 @@ class WidgetService implements IWidget {
         }
         return $html;
     }
-    
-    private function processParams($widget,$params) {
-        global $vjconfig;
-        
-        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
-            require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
-            $class = $widget.'Widget';
-            $ob = new $class;
-            return $ob->processWidgetParams($params);
-        } else {
-            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php")) {
-                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
-                $class = $widget.'Widget';
-                $ob = new $class;
-                return $ob->processWidgetParams($params);
-            }else {
-                echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
-                die("widget not found ".$widget);
-                
-            }
-            return $params;
-        }
-    }
-    
-    private function loadWidgetByData($row,$additionalSql=false) {
+    public function getWidgetForPage($widgetType,$orderByName=false)
+    {
         
         global $db;
-        $sql = "select widget_attr.* from widget_widget_attr_1_m  inner join widget_attr  on widget_widget_attr_1_m.widget_attr_id=widget_attr.id and widget_attr.deleted=0 and widget_widget_attr_1_m.deleted=0 and widget_widget_attr_1_m.widget_id='".$row['id']."' ";
-        if($additionalSql) {
-            $sql .= $additionalSql;
-        }
-        $rows = $db->fetchRows($sql,array("id"));
-        
-        $params = $row;
-        
-        $checkFirst = true;
-        foreach($rows as $id => $data) {
+        $pageData = DataWrapper::getInstance()->get("pagedata");
+        if($pageData) {
+            $id = $pageData['id'];
+            $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.widget_type='".$widgetType."' and pw.page_id='".$id."' and w.status='Active' ";
+            $widgets = $db->fetchRows($sql);
+            $html = "";
             
-            $params['data'][$id]["isfirst"] = false;
-            
-            if($checkFirst) {
-                $params['data'][$id]["isfirst"] = true;
-                $checkFirst =false;
+            foreach($widgets as $widget) {
+                $html .= $this->getWidgetForRecord($widget,$orderByName);
             }
-            $params['data'][$id]["name"]  = $data['name'];
-            $params['data'][$id]['attrs'] = json_decode($data['description'],1);
-            $params['data'][$id] = self::processParams($row['widget_type'],$params['data'][$id]);
-            
+            return $html;
         }
-        $params = $this->processAttrs($row, $params);
-        return $this->getWidgetByParams($row['widget_type'],$params);
+        
     }
     
-    
-    private function processAttrs($widgetData,$params) {
-        global $vjconfig;
-        $widget = $widgetData['widget_type'];
-        $params['widget'] = $widgetData;
-        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
-            require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
-            $class = $widget.'Widget';
-            $ob = new $class;
-            return $ob->processWidgetAttrs($params);
-        } else {
-            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php")) {
-                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
-                $class = $widget.'Widget';
-                $ob = new $class;
-                return $ob->processWidgetAttrs($params);
-            }else {
-                echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
-                die("widget not found ".$widget);
-                
-            }
-            return $params;
-        }
-    }
-
     
 }
 ?>

@@ -1,18 +1,25 @@
 <?php 
 class ModalUtil {
-  static function getModal($id,$title,$bgclass,$body,$footer=false,$footercontent=false ,$display=false){
-        $enquiryModalParams = array();
-        $enquiryModalParams['id'] = $id;
-        $enquiryModalParams['title'] = $title;
-        $enquiryModalParams['headerbgclass'] = $bgclass;
-        $enquiryModalParams['body'] = $body;
-        $enquiryModalParams['display'] = $display;
-        if($footer) {
-            $enquiryModalParams['footer'] = $footer;
-            $enquiryModalParams['footerbutton'] = $footercontent;
+    static function getModal($id,$showheader,$title,$header,$bgclass,$body,$showfooter=false,$footercontent=false ,$display=false){
+        $params = array();
+        $params['id'] = $id;
+        $params['showheader'] = $showheader;
+        $params['header'] = $header;
+        $params['title'] = $title;
+        $params['headerbgclass'] = $bgclass;
+        $params['body'] = $body;
+        $params['display'] = $display;
+        if($showfooter) {
+            $params['showfooter'] = $showfooter;
+            $params['footerbutton'] = $footercontent;
         }
         $widgetService = WidgetServiceRegistrar::getWidgetServiceInstance();
-        return   $widgetService->getWidget("bs3modal", $enquiryModalParams);
+        return $widgetService->getWidgetForParams("bs3modal", $params);
+    }
+    
+    
+    static function getBlockModalWithoutHeaderAndFooter($id,$body) {
+       return self::getModal($id,false,false,false,false,$body,false,false ,true);
     }
 }
 ?>

@@ -70,8 +70,8 @@ abstract class AWidget {
                 $ob = new $class;
                 return $ob->processWidgetParams($params);
             }else {
-                echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
-                die("widget not found ".$widget);
+                echo $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
+                die(" widget not found ".$widget);
                 
             }
             return $params;
