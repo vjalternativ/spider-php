@@ -120,7 +120,6 @@ abstract class AWidget {
         $html = "";
         $datawrapper = DataWrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
-        
         if($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
             foreach($widgetdatawrapper['resources'] as $path=>$resource) {
                 if(isset($resource['counter']) && $resource['counter']==0)  {
@@ -306,7 +305,7 @@ abstract class AWidget {
         } 
         if(file_exists($vjconfig['basepath'].$path)) {
             $widgetdatawrapper['resources'][$path]['counter'] = $counter;
-            $widgetdatawrapper['resources'][$path]['path'] = $type;
+            $widgetdatawrapper['resources'][$path]['type'] = $type;
             $datawrapper->set("widget_data_wrapper", $widgetdatawrapper);
         }
     }
