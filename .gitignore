@@ -7,3 +7,4 @@ controlarea
 org.*
 .project
 .buildpath
+php_errors.log
