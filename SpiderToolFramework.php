@@ -16,7 +16,6 @@ class SpiderToolFramework extends SpiderPhpFramework
     {
         $_REQUEST['spiderphp_mode'] = 'TOOL';
 
-        global $cronconfig;
 
         parent::__construct($sessionName);
 
@@ -24,6 +23,53 @@ class SpiderToolFramework extends SpiderPhpFramework
         $this->cliRegistrar['create']['page']['controller'] = "createPageController,page_name";
         $this->cliRegistrar['create']['page']['view'] = "createPageView,page_name,view_name";
         $this->cliRegistrar['create']['widget'] = "createWidget,widget_name";
+        $this->cliRegistrar['create']['module']['logichook'] = "createModuleLogichook,module_name";
+    }
+    
+    
+    function _getFWTemplateFileContents($path) {
+        global $vjconfig;
+        return file_get_contents($vjconfig['fwbasepath'].'include/vjlib/templates/'.$path);
+        
+    }
+    
+    
+    function _replaceContent($relativeTemplatePath,$targetPath,$keyvalue) {
+        
+        
+        if(file_exists($targetPath)) {
+            echo $targetPath." already existing. skipping..".PHP_EOL;
+        } else {
+            
+            $content = $this->_getFWTemplateFileContents($relativeTemplatePath);
+            foreach($keyvalue as $key=>$value) {
+                $content = str_replace($key,$value,$content);
+            }
+            
+            
+            file_put_contents($targetPath, $content);
+            echo $targetPath." ".PHP_EOL;
+            
+        }
+        
+        
+    }
+    
+    function createModuleLogichook($params) {
+        
+        global $vjconfig;
+        $name = $params['module_name'];
+        
+        $modulepath = $vjconfig['basepath'].'custom/modules/'.$name.'/';
+        $hookpath = $modulepath.'/hooks/';
+        
+        $command = "mkdir -p ".$hookpath;
+        shell_exec($command);
+        
+        $keyvalue =array("__MODULENAME__" => $name);
+        $this->_replaceContent('module/hooks/moduleLogicHook.php', $hookpath.$name.'LogicHook.php', $keyvalue);
+        $this->_replaceContent('module/logic_hooks.php', $modulepath.'logic_hooks.php', $keyvalue);
+        
     }
     
     function createPageController($params) {
@@ -77,19 +123,21 @@ class SpiderToolFramework extends SpiderPhpFramework
         $viewtplpath = $pagepath . "/" . 'views/';
         $cmd = "mkdir -p " . $viewtplpath;
         shell_exec($cmd);
-        $string = file_get_contents($vjconfig['fwbasepath'] . 'include/vjlib/templates/page/tplpageview.php');
-        if (isset($params['view_name'])) {
-            $viewname = $params['view_name'];
-            $string = str_replace("__PAGENAME__", $pagename, $string);
-            $string = str_replace("__VIEWNAME__", ucfirst($viewname), $string);
-            file_put_contents($viewtplpath . 'view.' . $viewname . '.php', $string);
-            $tplpath = $pagepath . "/tpls/" . $vjconfig['sitetpl'] . "/";
-            $cmd = "mkdir -p " . $tplpath;
-            shell_exec($cmd);
+        
+        $viewname = $params['view_name'];
+        $keyvalue = array("__PAGENAME__"=>$pagename,"__VIEWNAME__"=>ucfirst($viewname));
+        
+        
+        $this->_replaceContent("page/tplpageview.php", $viewtplpath . 'view.' . $viewname . '.php', $keyvalue);
+        
+        $tplpath = $pagepath . "/tpls/" . $vjconfig['sitetpl'] . "/";
+        $cmd = "mkdir -p " . $tplpath;
+        shell_exec($cmd);
+        
+        if(!file_exists($tplpath . $viewname . ".tpl")) {
             file_put_contents($tplpath . $viewname . ".tpl", "");
-        } else {
-            echo "specify action type view | viewname";
         }
+         
     }
 
     function processArgs($index, $args, $registrar)
