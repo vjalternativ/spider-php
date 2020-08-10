@@ -24,8 +24,29 @@ class SpiderToolFramework extends SpiderPhpFramework
         $this->cliRegistrar['create']['page']['view'] = "createPageView,page_name,view_name";
         $this->cliRegistrar['create']['widget'] = "createWidget,widget_name";
         $this->cliRegistrar['create']['module']['logichook'] = "createModuleLogichook,module_name";
+        $this->cliRegistrar['create']['module']['view'] = "createModuleView,module_name,view_name";
     }
     
+    
+    function _mkdir($relativepath) {
+    
+        $command = "mkdir -p ".$relativepath;
+        
+        shell_exec($command);
+    }
+    
+    function createModuleView($params) {
+        $module = $params['module_name'];
+        $viewname = $params['view_name'];
+        $keyvalue = array("__PAGENAME__"=>$module,"__VIEWNAMECAP__"=>ucfirst($viewname),"__VIEWNAME__"=>$viewname);
+    
+        global $vjconfig;
+        $moduleTargetPath = $vjconfig['basepath'].'custom/modules/'.$module.'/';
+        $moduleviewTargetPath  = $moduleTargetPath."views/";
+        $this->_mkdir($moduleviewTargetPath);
+        $this->_replaceContent("page/tplpageview.php", $moduleviewTargetPath.'view.'.$viewname.'.php', $keyvalue);
+        
+    }
     
     function _getFWTemplateFileContents($path) {
         global $vjconfig;
