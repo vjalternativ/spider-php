@@ -125,7 +125,7 @@ class SpiderToolFramework extends SpiderPhpFramework
         shell_exec($cmd);
         
         $viewname = $params['view_name'];
-        $keyvalue = array("__PAGENAME__"=>$pagename,"__VIEWNAME__"=>ucfirst($viewname));
+        $keyvalue = array("__PAGENAME__"=>$pagename,"__VIEWNAMECAP__"=>ucfirst($viewname),"__VIEWNAME__"=>$viewname);
         
         
         $this->_replaceContent("page/tplpageview.php", $viewtplpath . 'view.' . $viewname . '.php', $keyvalue);
