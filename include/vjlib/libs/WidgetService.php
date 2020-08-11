@@ -36,7 +36,6 @@ class WidgetService implements IWidgetService {
                 $class = $widget.'Widget';
                 $ob = new $class;
             }else {
-                echo $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
                 die("widget not found ".$widget);
                 
             }

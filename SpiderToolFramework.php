@@ -25,8 +25,20 @@ class SpiderToolFramework extends SpiderPhpFramework
         $this->cliRegistrar['create']['widget'] = "createWidget,widget_name";
         $this->cliRegistrar['create']['module']['logichook'] = "createModuleLogichook,module_name";
         $this->cliRegistrar['create']['module']['view'] = "createModuleView,module_name,view_name";
+        $this->cliRegistrar['create']['module']['controller'] = "createModuleController,module_name";
     }
     
+    
+    function createModuleController($params) {
+        global $vjconfig;
+        
+        $module = $params['module_name'];
+        $modulePath = $vjconfig['basepath'].'custom/modules/'.$module.'/';
+        $this->_mkdir($modulePath);
+        $keyvalue = array("__MODULENAME__"=>$module);
+        $this->_replaceContent("module/moduleController.php", $modulePath.$module.'Controller.php', $keyvalue);
+        
+    }
     
     function _mkdir($relativepath) {
     

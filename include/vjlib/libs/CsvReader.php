@@ -44,8 +44,10 @@ class CSVReader
             $counter = $this->counter;
             while (! feof($file)) {
                 $data = fgetcsv($file);
-                $counter ++;
-                $callback->processData($counter, $data);
+                if($data) {
+                    $counter ++;
+                    $callback->processData($counter, $data);
+                }
             }
             fclose($file);
         }
