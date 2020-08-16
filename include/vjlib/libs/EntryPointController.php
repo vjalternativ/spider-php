@@ -63,7 +63,7 @@ class EntryPointController
         $this->redirectView['method'] = 'action_' . $method;
     }
 
-    function rendorTpl($tpl, $params = array())
+    function rendorTpl($tpl, $params = array(),$sitetpl=false)
     {
         global $smarty, $vjconfig;
 
@@ -72,9 +72,9 @@ class EntryPointController
         $smarty->assign("baseurl", $vjconfig['baseurl']);
         $class = get_called_class();
         $class = str_replace("Controller", "", $class);
-
+        $siteTpl = $sitetpl ? $sitetpl : $vjconfig['sitetpl'];
         $this->bootparams['controller_path'] = 'include/entrypoints/site/pages/' . $class . '/';
-        $this->bootparams['controller_tpl_path'] = 'include/entrypoints/site/pages/' . $class . '/tpls/' . $vjconfig['sitetpl'] . '/';
+        $this->bootparams['controller_tpl_path'] = 'include/entrypoints/site/pages/' . $class . '/tpls/' . $siteTpl . '/';
 
         return $smarty->fetch($this->bootparams['controller_tpl_path'] . $tpl);
     }
