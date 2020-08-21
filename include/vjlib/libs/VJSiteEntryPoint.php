@@ -81,7 +81,6 @@ class VJSiteEntryPoint
         $class = $this->page . 'Controller';
         $pageController = new $class();
         $pageController->bootparams += $this->bootparams;
-        $smarty->assign("bootparams", $this->bootparams);
         
         
         $methodExists = true;
@@ -121,7 +120,7 @@ class VJSiteEntryPoint
         }
 
         $this->bootparams = $pageController->bootparams;
-
+        
         if ($pageController->redirectView) {
             $this->page = $pageController->redirectView['page'];
             $this->method = $pageController->redirectView['method'];
@@ -165,7 +164,8 @@ class VJSiteEntryPoint
 
             $this->headerparams = array_merge($this->headerparams, $view->headerparams);
             $this->footerparams = array_merge($this->footerparams, $view->footerparams);
-
+            $smarty->assign("bootparams", $this->bootparams);
+            
             $this->loadHeader();
             $view->display();
             $this->loadFooter();
