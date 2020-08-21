@@ -61,7 +61,6 @@ class VJSiteEntryPoint
         require_once $vjconfig['fwbasepath'] . 'include/vjlib/service/WidgetServiceRegistrar.php';
         
         global $smarty;
-        $smarty->assign("bootparams", $this->bootparams);
         $smarty->assign("basepath", $vjconfig['basepath']);
         $smarty->assign("baseurl", $vjconfig['baseurl']);
         $smarty->assign("fwurlbasepath", $vjconfig['fwurlbasepath']);
@@ -82,6 +81,7 @@ class VJSiteEntryPoint
         $class = $this->page . 'Controller';
         $pageController = new $class();
         $pageController->bootparams += $this->bootparams;
+        $smarty->assign("bootparams", $this->bootparams);
         
         
         $methodExists = true;
