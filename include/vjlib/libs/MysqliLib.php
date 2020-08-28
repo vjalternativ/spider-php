@@ -369,5 +369,18 @@ class MysqliLib {
 	    $this->processHook = array();
 	}
 	
+	function insert($table,$row) {
+	    
+	    $sql= "INSERT INTO ".$table." SET ";
+	    $fields = $this->getfields($table);
+	    foreach($row as $key=>$val) {
+	        $val = addslashes($val);
+	        if(isset($fields[$key])) {
+	            $sql .= $key." = '".$val."'  ";
+	        }
+	    }
+	    return $this->query($sql,true);
+	}
+	
 	
 }
