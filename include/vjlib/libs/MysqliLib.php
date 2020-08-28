@@ -373,12 +373,15 @@ class MysqliLib {
 	    
 	    $sql= "INSERT INTO ".$table." SET ";
 	    $fields = $this->getfields($table);
+	    
+	    $fieldSet= array();
 	    foreach($row as $key=>$val) {
 	        $val = addslashes($val);
 	        if(isset($fields[$key])) {
-	            $sql .= $key." = '".$val."'  ";
+	            $fieldSet[] = $key." = '".$val."'";
 	        }
 	    }
+	    $sql .= implode(",",$fieldSet);
 	    return $this->query($sql,true);
 	}
 	
