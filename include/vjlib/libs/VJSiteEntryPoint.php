@@ -30,7 +30,7 @@ class VJSiteEntryPoint
         } else if(isset($seoParams[1])) {
             $this->method = 'action_'.$seoParams[1];
         }
-        
+
         if (file_exists($this->sitebasePath . '/pages/' . $this->page . '/' . $this->page . 'Controller.php') || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
             if ($this->page == "page") {
                 if (isset($seoParams[0]) && $seoParams[0]) {
@@ -47,29 +47,38 @@ class VJSiteEntryPoint
             } else {
                 $sql = "select * from page where alias='" . $this->page . "' and deleted=0 ";
                 $row = $db->getrow($sql);
-                DataWrapper::getInstance()->set("pagedata", $row);
-                
+                if($row) {
+                    DataWrapper::getInstance()->set("pagedata", $row);
+                }
+
+            }
+
+            $pageData = DataWrapper::getInstance()->get("pagedata");
+            if($pageData) {
+                $this->bootparams['meta_key']=$pageData['meta_key'];
+                $this->bootparams['meta_des']=$pageData['meta_desc'];
+                $this->bootparams['meta_title']=$pageData['meta_title'];
             }
         } else {
 
             die("404 page not found");
         }
 
-        
-        
+
+
         require_once $vjconfig['fwbasepath'] . 'include/vjlib/libs/EntryPointController.php';
         require_once $vjconfig['fwbasepath'] . 'include/vjlib/service/WidgetServiceRegistrar.php';
-        
+
         global $smarty;
         $smarty->assign("basepath", $vjconfig['basepath']);
         $smarty->assign("baseurl", $vjconfig['baseurl']);
         $smarty->assign("fwurlbasepath", $vjconfig['fwurlbasepath']);
-        
-        
+
+
         if (file_exists($this->sitebasePath . '/bootstrap.php')) {
             require_once $this->sitebasePath . '/bootstrap.php';
             $mainController = new bootstrapController();
-            $this->bootparams = $mainController->params;
+            $this->bootparams += $mainController->params;
         }
         global $db;
 
@@ -81,26 +90,26 @@ class VJSiteEntryPoint
         $class = $this->page . 'Controller';
         $pageController = new $class();
         $pageController->bootparams += $this->bootparams;
-        
-        
+
+
         $methodExists = true;
         if (! method_exists($pageController, $this->method)) {
             $this->method = "action_index";
             $methodExists = false;
         }
-        
+
         if($methodExists){
            $this->validateSession($pageController,$this->method);
             $pageController->{$this->method}();
         } else if ($pageController->routes) {
-            
+
             foreach ($seoParams as $key => $val) {
                 if (isset($pageController->routes[$key])) {
                     $method = 'action_' . $pageController->routes[$key];
                     $this->validateSession($pageController,$method);
                     $pageController->{$method}();
                 } else {
-                  
+
                     $method = "action_".$val;
                     if ( method_exists($pageController, $method)) {
                         $this->validateSession($pageController,$method);
@@ -120,7 +129,7 @@ class VJSiteEntryPoint
         }
 
         $this->bootparams = $pageController->bootparams;
-        
+
         if ($pageController->redirectView) {
             $this->page = $pageController->redirectView['page'];
             $this->method = $pageController->redirectView['method'];
@@ -157,6 +166,7 @@ class VJSiteEntryPoint
             if (! empty($pageController->params)) {
                 $view->params = $pageController->params;
             }
+            $view->params +=$this->bootparams;
             $this->view = $view;
 
             $this->loadHeaderController();
@@ -165,7 +175,7 @@ class VJSiteEntryPoint
             $this->headerparams = array_merge($this->headerparams, $view->headerparams);
             $this->footerparams = array_merge($this->footerparams, $view->footerparams);
             $smarty->assign("bootparams", $this->bootparams);
-            
+
             $this->loadHeader();
             $view->display();
             $this->loadFooter();
@@ -209,7 +219,7 @@ class VJSiteEntryPoint
         echo "<script>var urlbasepath = '" . $vjconfig['urlbasepath'] . "';</script>";
         echo "<script>var fwbaseurl = '" . $vjconfig['fwbaseurl'] . "';</script>";
         echo "<script>var fwurlbasepath = '" . $vjconfig['fwurlbasepath'] . "';</script>";
-        
+
     }
 
     function loadFooter()
@@ -219,7 +229,7 @@ class VJSiteEntryPoint
         $smarty->assign("footerparams", $this->footerparams);
         echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');
     }
-    
+
     private function validateSession($pageController,$method) {
         if(isset($pageController->authFunctions[$method])) {
             $isAuthorized =  sessioncheck("current_user");
