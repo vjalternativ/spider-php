@@ -1,4 +1,6 @@
 <?php
+$dir = __DIR__.'/';
+require_once $dir.'../../libs/lib_current_user.php';
 class BackendResourceController  {
     public $view = false;
     //private $data;
@@ -15,7 +17,33 @@ class BackendResourceController  {
     public $seoparams = array();
     public $ignoreRecords = array();
     public $additionalJoin = false;
+    var $action;
 
+    function __construct() {
+
+        global $globalModuleList;
+
+        $current_user = lib_current_user::getInstance()->sessionCheck();
+
+            if(!isset($this->nonauth[$this->action]) && !$current_user) {
+                die("Invalid Session");
+            } else  {
+                if(isset($this->nonauth[$this->action]) && $current_user && isset($this->nonauth[$this->action]['redirect'])) {
+                    redirect($this->nonauth[$this->action]['redirect']['module'], $this->nonauth[$this->action]['redirect']['action']);
+                }
+
+                if(!isset($this->nonauth[$this->action]) && $current_user) {
+                    if(!$current_user->isDeveloper) {
+                        if(!(isset($globalModuleList[$this->module]) && isset($current_user['module_access'][$globalModuleList[$this->module]['id']])  && $current_user['module_access'][$globalModuleList[$this->module]['id']]['module_access'])) {
+                            die("Access denied !");
+                        }
+                    }
+                }
+            }
+
+
+
+    }
 
     function utcToTimezone($datetime) {
         $vjconfig = lib_config::getInstance()->getConfig();

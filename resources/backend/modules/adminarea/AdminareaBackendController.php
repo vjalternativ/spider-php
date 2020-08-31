@@ -8,6 +8,8 @@ class AdminareaBackendController extends BackendResourceController
     public $repairTables = array();
 
     function __construct() {
+
+        parent::__construct();
         $this->repairTables["tableinfo"]=1;
         $this->repairTables["relationships"]=1;
         $this->repairTables["tableinfo_relationships_1_m"]=1;
