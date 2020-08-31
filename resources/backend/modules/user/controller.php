@@ -52,7 +52,7 @@ class userController extends VJController  {
 
 
 	function action_logout() {
-		global $vjconfig;
+		$vjconfig = lib_config::getInstance()->getConfig();
 		session_destroy();
 		header('location:'.$vjconfig['fwurlbasepath']);
 	}

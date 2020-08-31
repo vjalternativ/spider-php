@@ -24,7 +24,7 @@ class ViewEdit  extends View {
 		$datatypes['datetime'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control  datetimepicker')));
 		
 		$this->datatypeFields = $datatypes;
-		global $vjconfig;
+		$vjconfig = lib_config::getInstance()->getConfig();
 		$this->tpl = $vjconfig['fwbasepath'].'include/tpls/editview.tpl';
 		
 	}

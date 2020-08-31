@@ -1,12 +1,12 @@
 <?php 
-global $vjconfig;
+$vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/APosition.php';
 class WidgetBackendController extends BackendResourceController {
     
     function action_ajaxGetPositions() {
         
         
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $page = $_GET['page'];
         if(file_exists($vjconfig['basepath']."include/entrypoints/site/layout/".$vjconfig['sitetpl']."/".$vjconfig['sitetpl']."Positions.php")) {
             require_once $vjconfig['basepath']."include/entrypoints/site/layout/".$vjconfig['sitetpl']."/".$vjconfig['sitetpl']."Positions.php";

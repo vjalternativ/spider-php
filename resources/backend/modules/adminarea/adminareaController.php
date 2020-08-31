@@ -1,5 +1,5 @@
 <?php
-global $vjconfig;
+$vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'modules/user/authenticate/Authenticate.php';
 
 class adminareaController extends VJController
@@ -140,7 +140,7 @@ class adminareaController extends VJController
     {
         
         $this->repairFramework();
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $data = json_decode(file_get_contents($vjconfig['basepath']."schemajson/schema.json"),1);
         $this->processSchemaAndDataPatch($data);
     }
@@ -210,7 +210,7 @@ class adminareaController extends VJController
     
     function action_updateschema() {
             $db = lib_mysqli::getInstance();
-	    global $vjconfig;
+	    $vjconfig = lib_config::getInstance()->getConfig();
             $data = array();
             foreach($this->repairTables as $table=>$val) {
                 $sql = "select * from ".$table." where deleted=0";
@@ -314,7 +314,7 @@ class adminareaController extends VJController
     
     
     function repairFramework() {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $data = array();
         
         $db = MysqliLib::getInstance();

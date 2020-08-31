@@ -150,7 +150,7 @@ class SchemaDataPatcher {
     
     
     function repairFramework() {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $data = array();
         foreach($this->repairTables as $tablename=>$row) {
             $row = json_decode(file_get_contents($vjconfig['fwbasepath']."include/install/datapatch/".$tablename.".json"),1);

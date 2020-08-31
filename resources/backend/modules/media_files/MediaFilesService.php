@@ -37,7 +37,7 @@ class MediaFilesService implements IMediaFilesService  {
     
     
     public function getMediaLink($mediaId) {
-       global $vjconfig;
+       $vjconfig = lib_config::getInstance()->getConfig();
        return $vjconfig['fwbaseurl']."index.php?module=media_files&action=download&id=".$mediaId;
     }
     

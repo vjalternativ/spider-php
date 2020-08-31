@@ -2,7 +2,7 @@
 class userViewSite extends View {
 	function display() {
 
-		global $vjconfig;
+		$vjconfig = lib_config::getInstance()->getConfig();
 		$bs = lib_bootstrap::getInstance()->getVars();
 		$path = $vjconfig['basepath'];
 		$path .= 'modules/user/tpls/login.tpl';

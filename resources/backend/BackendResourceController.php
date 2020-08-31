@@ -18,7 +18,7 @@ class BackendResourceController  {
 
 
     function utcToTimezone($datetime) {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $serverTimeZone = "UTC";
         if(isset($vjconfig['server_timezone'])) {
             $serverTimeZone = $vjconfig['server_timezone'];

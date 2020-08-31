@@ -199,7 +199,7 @@ class ViewDetail extends View
 
         $this->datatypeFields = $datatypes;
 
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $this->tpl = $vjconfig['fwbasepath'] . 'include/tpls/detailview.tpl';
 
         $entity->load_relationships();

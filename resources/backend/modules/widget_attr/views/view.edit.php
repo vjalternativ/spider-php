@@ -26,7 +26,7 @@ class widget_attrViewEdit extends ViewEdit {
                 
                 $wtype = $wdata['widget_type'];
                 
-                global $vjconfig;
+                $vjconfig = lib_config::getInstance()->getConfig();
                 
                 $file = "include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php";
                 

@@ -3,7 +3,7 @@ require_once 'include/vjlib/abstract/AWidget.php';
 class widget_attrLogicHook {
     
     function beforeSave(&$data) {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $wid = false;
         if(isset($data['parent_record']) && $data['parent_record']) {
         

@@ -20,7 +20,7 @@ class widgetViewEdit extends ViewEdit {
         $folders=  array_combine($folders,$folders);
         
         
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $sitefolder = scandir($vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl'].'/');
         
         unset($sitefolder[0]);
@@ -59,7 +59,7 @@ class widgetViewEdit extends ViewEdit {
         }
         
         
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         if(file_exists($vjconfig['basepath']."include/entrypoints/site/layout/".$vjconfig['sitetpl']."/".$vjconfig['sitetpl']."Positions.php")) {
             require_once $vjconfig['basepath']."include/entrypoints/site/layout/".$vjconfig['sitetpl']."/".$vjconfig['sitetpl']."Positions.php";
         }
@@ -100,7 +100,7 @@ class widgetViewEdit extends ViewEdit {
         }
         $wtype = $this->data['widget_type'];
         
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         
         $file = "include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php";
         
@@ -135,7 +135,7 @@ class widgetViewEdit extends ViewEdit {
     }
     
     function display() {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         parent::display();
         echo '<script src="'.$vjconfig['fwbaseurl'].'modules/widget/assets/js/widget.js"></script>';
     }

@@ -19,7 +19,7 @@ class chatViewIndex extends ViewBasic {
     
     
     function loadHeader() {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
         echo "<script> var fwbaseurl ='".$vjconfig['fwbaseurl']."' </script>";
         if(isset($_REQUEST['fw_sess_mode'])) {
