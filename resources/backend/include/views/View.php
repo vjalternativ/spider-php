@@ -151,8 +151,8 @@ class View {
 
         $vars  =  lib_bootstrap::getInstance()->getVars();
 
-        $vars['cssList']['bootstrap']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'assets/bootstrap/css/bootstrap.min.css" />';
-        $vars['cssList']['custom']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'assets/css/custom.css" />';
+        $vars['cssList']['bootstrap']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'resources/backend/assets/bootstrap/css/bootstrap.min.css" />';
+        $vars['cssList']['custom']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'resources/backend/assets/css/custom.css" />';
 
 
 
