@@ -1,49 +1,49 @@
 <?php
-global $vjconfig;
-$vjconfig = array();
+global $config;
+$config = array();
 
-$vjconfig['baseurl'] = 'https://boomerangtrip.com/';
-$vjconfig['fwbaseurl'] = $vjconfig['baseurl'] .'controlarea/';
+$config['baseurl'] = 'https://boomerangtrip.com/';
+$config['fwbaseurl'] = $config['baseurl'] .'controlarea/';
 
-$vjconfig['sitename'] = "Spider-PHP Control Panel";
-$vjconfig['timezone'] = "Asia/Kolkata";
+$config['sitename'] = "Spider-PHP Control Panel";
+$config['timezone'] = "Asia/Kolkata";
 
-$vjconfig['mysql']['host'] = "localhost";
+$config['mysql']['host'] = "localhost";
 
-$vjconfig['mysql']['user'] = "boomerangdemo";
+$config['mysql']['user'] = "boomerangdemo";
 
-$vjconfig['mysql']['password'] = "boomerangtrip";
+$config['mysql']['password'] = "boomerangtrip";
 
-$vjconfig['mysql']['database'] = "boomerangtripdemo";
-
-
-$vjconfig['framework']['default_module'] = "user";
-$vjconfig['framework']['default_action'] = "login";
-
-$vjconfig['framework']['default_mode'] = "entryPoint";
-$vjconfig['framework']['default_entrypoint'] = "site";
-
-$vjconfig['framework']['after_login_module'] = "user";
-$vjconfig['framework']['after_login_action'] = "home";
-
-$vjconfig['framework']['seourl'] = false;
-$vjconfig['defaultlang'] = 'en_us';
+$config['mysql']['database'] = "boomerangtripdemo";
 
 
-$vjconfig['adminemail'][] = "vj.alternativ@gmail.com";
+$config['framework']['default_module'] = "user";
+$config['framework']['default_action'] = "login";
 
-$vjconfig['sitetpl'] = "enr";
+$config['framework']['default_mode'] = "entryPoint";
+$config['framework']['default_entrypoint'] = "site";
 
-$vjconfig['display_errors'] = false;
+$config['framework']['after_login_module'] = "user";
+$config['framework']['after_login_action'] = "home";
+
+$config['framework']['seourl'] = false;
+$config['defaultlang'] = 'en_us';
+
+
+$config['adminemail'][] = "vj.alternativ@gmail.com";
+
+$config['sitetpl'] = "enr";
+
+$config['display_errors'] = false;
 
 if($_SERVER['HTTP_HOST']=="localhost") {
-    
-    $vjconfig['baseurl'] = 'http://localhost/spider-php/';
-    $vjconfig['fwbaseurl'] = $vjconfig['baseurl'] . 'controlarea' ;
-    
-    $vjconfig['mysql']['user'] = "root";
-    $vjconfig['mysql']['password'] = "root";
-    $vjconfig['mysql']['database'] = "spiderphp";
-    $vjconfig['display_errors'] = true;
-    
+
+    $config['baseurl'] = 'http://localhost/spider-php/';
+    $config['fwbaseurl'] = $config['baseurl'] . 'controlarea' ;
+
+    $config['mysql']['user'] = "root";
+    $config['mysql']['password'] = "root";
+    $config['mysql']['database'] = "spiderphp";
+    $config['display_errors'] = true;
+
 }

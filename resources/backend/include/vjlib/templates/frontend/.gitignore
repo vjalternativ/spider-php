@@ -1,0 +1,7 @@
+.htaccess
+controlarea
+/controlarea/
+templates_c/
+media_files/
+locks/*
+cache/*

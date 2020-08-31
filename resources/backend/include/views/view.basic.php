@@ -1,0 +1,57 @@
+<?php
+
+class ViewBasic extends View
+{
+
+    public $html = false;
+
+    public $heading = false;
+
+    public $tpl = 'include/tpls/basicview.tpl';
+
+    function display()
+    {
+        $vjconfig = lib_config::getInstance()->getConfig();
+		global  $vjlib;
+        
+        // $tpl = $vjconfig['basepath'].$this->tpl;
+        
+        if (! $this->heading) {
+            $this->heading = $this->module;
+        }
+        
+        $bs = $vjlib->BootStrap;
+        if (! $this->html) {
+            
+            $this->html = $this->module;
+        }
+        
+        $panelheading = $bs->getelement('div', ucfirst($this->heading) . ' | Basic View', array(
+            'class' => array(
+                'value' => 'panel-heading'
+            )
+        ));
+        $panelbody = $bs->getelement('div', $this->html, array(
+            'class' => array(
+                'value' => 'panel-body'
+            )
+        ));
+        $panelfooter = $bs->getelement('div', '', array(
+            'class' => array(
+                'value' => 'panel-footer'
+            )
+        ));
+        $panel = $bs->getelement('div', $panelheading . $panelbody, array(
+            'class' => array(
+                'value' => 'panel panel-info'
+            )
+        ));
+        $this->params = array(
+            'module' => $this->module,
+            'panel' => $panel
+        );
+        parent::display();
+    }
+}
+
+?>

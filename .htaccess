@@ -1,0 +1,11 @@
+Options  FollowSymLinks
+RewriteEngine On
+
+
+
+
+RewriteCond %{REQUEST_URI} !\.(gif|jpg|png|css|js|etc|flv|swf|mp4|mov)$ [NC]
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteRule ^.*$ ./test.php

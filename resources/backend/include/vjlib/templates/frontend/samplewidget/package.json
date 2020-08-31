@@ -1,0 +1,16 @@
+{
+  "name": "@spider-php-widgets/__WIDGET_NAME__",
+  "version": "1.0.0",
+  "description": "",
+  "main": "na",
+  "scripts": {
+        "postinstall": "sh install.sh",
+        "test": "na"
+  },
+  "repository": {
+    "type": "git",
+    "url": "na"
+  },
+  "author": "",
+  "license": "ISC"
+}

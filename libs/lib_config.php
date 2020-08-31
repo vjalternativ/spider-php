@@ -1,0 +1,47 @@
+<?php
+class lib_config {
+    private static $instance = null;
+
+    private $config;
+
+    function __construct() {
+        $dir = __DIR__;
+        $fwbasepath = substr($dir,0,strrpos($dir,"/"))."/";
+        if(isset($_SERVER['argv'])) {
+            if(substr($_SERVER['SCRIPT_FILENAME'],0,1)=="/") {
+                $dir = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"/")).'/';
+            } else {
+                $path = $_SERVER['PWD']  .'/'. $_SERVER['SCRIPT_FILENAME'];
+                $dir = substr($path,0,strrpos($path,"/")).'/';
+            }
+        } else if(isset($_SERVER['SCRIPT_FILENAME'])){
+            $dir = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"/")).'/';
+        }
+
+
+        global $config;
+        require_once $dir.'config.php';
+
+        $this->config = $config;
+        $this->config['fwbasepath'] = $fwbasepath;
+        $this->config['basepath'] = $dir;
+
+    }
+
+
+    static function getInstance() {
+        if(self::$instance==null) {
+            self::$instance = new lib_config();
+        }
+        return self::$instance;
+    }
+
+    function get($key) {
+        return isset($this->config[$key]) ? $this->config[$key] : false;
+    }
+
+    function getConfig() {
+        return $this->config;
+    }
+}
+?>
