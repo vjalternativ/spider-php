@@ -190,7 +190,7 @@ class View {
 			$smarty->assign("activeModuleId",$this->activeModuleId);
 			$smarty->assign("current_user",$current_user);
 
-			echo $smarty->fetch($vjconfig['fwbasepath'].'include/vjlib/libs/tpls/header.tpl');
+			echo $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/include/tpls/header.tpl');
 
 
 
