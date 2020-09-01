@@ -57,7 +57,7 @@ class LogicHook {
     
     
     function getEmailGroupEmails() {
-        global $db;
+        $db = lib_mysqli::getInstance();
         
         
     }

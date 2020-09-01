@@ -67,7 +67,7 @@ class chatController extends VJController {
     }
     
     function action_ajaxReadPackets(){
-        global $db;
+        $db = lib_mysqli::getInstance();
         $sessionId = session_id();
         $sql = "select * from strangerchat where st_session_id='".$sessionId."' and deleted=0";
         $row = $db->getrow($sql);
@@ -513,7 +513,7 @@ class chatController extends VJController {
     
     
     function deleteSignaling($sessionId) {
-        global $db;
+        $db = lib_mysqli::getInstance();
         $sql = "delete from webrtcsignal where session_id='".$sessionId."' ";
         $db->query($sql);
     }
@@ -598,7 +598,7 @@ class chatController extends VJController {
     }
     
     function action_storeSDP() {
-        global $db;
+        $db = lib_mysqli::getInstance();
         $type = $_POST['type'];
         $sdp = $_POST['sdp'];
         $callNo = session_id();
@@ -616,7 +616,7 @@ class chatController extends VJController {
     
     function action_fetchSDP() {
         ini_set("display_errors",1);
-        global $db;
+        $db = lib_mysqli::getInstance();
         $callNo = $_GET["callNo"];
         $type = $_GET['calltype'];
         $sdp = "";

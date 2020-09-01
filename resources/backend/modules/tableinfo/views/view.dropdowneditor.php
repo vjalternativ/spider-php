@@ -6,7 +6,7 @@ class tableinfoViewDropdownEditor extends ViewBasic
     function display()
     {
         global $app_list_strings, $vjlib, $vjconfig;
-        $bs = $vjlib->BootStrap;
+        $bs = lib_bootstrap::getInstance();
         $rows = array();
         $counter = 0;
         $rowcounter = 0;
@@ -42,7 +42,7 @@ class tableinfoViewDropdownEditor extends ViewBasic
         ));
         
         $url = "index.php?module=tableinfo&action=saveoption";
-        $url = processurl($url);
+        $url = lib_util::processUrl($url);
         
         $html = $script . $table;
         

@@ -58,7 +58,7 @@ class UserBackendController extends BackendResourceController  {
 	}
 
 	function action_changePwd(){
-	    global $db;
+	    $db = lib_mysqli::getInstance();
 	    $record= $_REQUEST['record'];
 	    $sql="select * from user where id='".$record."'and deleted=0";
 	    $qry= $db->query($sql);
@@ -69,7 +69,7 @@ class UserBackendController extends BackendResourceController  {
 
 	}
 	function action_getNewpwd() {
-	    global $db;
+	    $db = lib_mysqli::getInstance();
 
 	    $id=$_REQUEST['id'];
 	    $password=md5($_REQUEST['user_hash_new']);

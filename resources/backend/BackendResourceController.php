@@ -327,8 +327,7 @@ class BackendResourceController  {
 
 
     function results($sql = false,$paginate=true,$url=false) {
-        global $vjlib,$current_url;
-
+        global $current_url;
         $vardef = lib_util::getvardef($this->entity);
         $listviewdef = $vardef['metadata']['listview'];
         $this->listview['metadata'] = $listviewdef;

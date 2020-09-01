@@ -212,7 +212,7 @@ class ViewDetail extends View
         $module = ucfirst($this->module);
         $href = "index.php?module=tableinfo&action=editview";
         $defaultLayout = $this->getDefaultLayout();
-        $href = processUrl($href);
+        $href = lib_util::processUrl($href);
         $this->params += array(
             'module' => $module,
             'panel' => $defaultLayout
@@ -224,7 +224,7 @@ class ViewDetail extends View
     function afterDisplay()
     {
         global $entity, $vjlib, $smarty, $vjconfig;
-        $bs = $vjlib->BootStrap;
+        $bs = lib_bootstrap::getInstance();
 
         foreach ($this->subpanels as $subpanels) {
 
@@ -299,7 +299,7 @@ class ViewDetail extends View
     function getDefaultLayout()
     {
         global $entity, $vjlib, $globalModuleList;
-        $bs = $vjlib->BootStrap;
+        $bs = lib_bootstrap::getInstance();
         $tableinfo = $entity->getwhere("tableinfo", "name ='" . $this->module . "'");
         $vardef = json_decode(base64_decode($tableinfo['description']), 1);
 
@@ -435,7 +435,7 @@ class ViewDetail extends View
         global $vjlib, $mod_string;
         $def = $vardef['metadata'][$defkey];
 
-        $bs = $vjlib->BootStrap;
+        $bs = lib_bootstrap::getInstance();
         $formgroup = '';
         foreach ($def as $item) {
             if ($item['type'] == 'row') {

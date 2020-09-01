@@ -5,7 +5,9 @@ class lib_util
 
     function redirect($module, $action = false, $params = array())
     {
-        $string = "index.php?module=" . $module;
+
+        $basepath = lib_config::getInstance()->get("baseurl").$_GET['resource'].'/';
+        $string = $basepath."index.php?module=" . $module;
         if ($action) {
             $string .= "&action=" . $action;
         }

@@ -20,7 +20,7 @@ class ViewBasic extends View
             $this->heading = $this->module;
         }
         
-        $bs = $vjlib->BootStrap;
+        $bs = lib_bootstrap::getInstance();
         if (! $this->html) {
             
             $this->html = $this->module;

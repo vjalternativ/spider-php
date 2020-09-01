@@ -74,7 +74,7 @@ class TableinfoBackendController extends BackendResourceController {
 		$process['id'] = array("tag"=>"input",'' ,'attr'=>array("type"=>"radio","name"=>"dependent_records","onclick"=>"setrelate('".$field."')","data-relate-name"=>'',"class"=>'relate_field_id'),"isdualtag" => false);
 		$rows = $db->getrows($sql,'id',false,false,$process);
 		
-		$bs = $vjlib->BootStrap;
+		$bs = lib_bootstrap::getInstance();
 		$params = array();
 		$params['headers'] = array("id","name");
 		$table = $bs->generateTable($rows,$params);
@@ -87,7 +87,7 @@ class TableinfoBackendController extends BackendResourceController {
 	
 		global $app_list_strings,$vjlib;
 	
-		$bs = $vjlib->BootStrap;
+		$bs = lib_bootstrap::getInstance();
 		
 		$list = $app_list_strings[$_REQUEST['list']];
 		
@@ -456,7 +456,7 @@ class TableinfoBackendController extends BackendResourceController {
 	}
 	
 	function action_deleteRelationship() {
-	    global $db;
+	    $db = lib_mysqli::getInstance();
 	    
 	    $id = $_REQUEST['module_id'];
 	    $relationshipIds = isset($_REQUEST['relationship_ids']) ? $_REQUEST['relationship_ids'] : array();
@@ -488,7 +488,7 @@ class TableinfoBackendController extends BackendResourceController {
 	}
 	
 	function action_dowloadschema() {
-	    global $db;
+	    $db = lib_mysqli::getInstance();
 	    
 	    $sql = "select * from tableinfo where deleted=0" ;
 	    $tableinfo = $db->fetchRows($sql,array("name"));

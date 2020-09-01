@@ -1,10 +1,11 @@
 <?php
 class Media_filesBackendController extends BackendResourceController  {
-    
+
     function __construct() {
         $this->nonauth['download'] = '';
+        parent::__construct();
     }
-    
+
     function action_download() {
        global $entity;
        ob_end_clean();
@@ -14,10 +15,10 @@ class Media_filesBackendController extends BackendResourceController  {
        header('Content-Disposition: filename="'.$media['name'].'"');
        header('Content-type: '.$media['file_type']);
        readfile($url);
-       
+
     }
-    
-    
-    
-    
+
+
+
+
 }

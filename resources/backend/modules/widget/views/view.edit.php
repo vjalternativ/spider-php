@@ -5,7 +5,7 @@ class widgetViewEdit extends ViewEdit {
     
     
     function preDisplay() {
-        global $db;
+        $db = lib_mysqli::getInstance();
         
         
         parent::preDisplay();

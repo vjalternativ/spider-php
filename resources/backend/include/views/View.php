@@ -161,7 +161,7 @@ class View {
 		$logout = false;
 		$adminarea = false;
 		$href = "index.php?resource=backend&module=user&action=logout";
-		//$href = processUrl($href);
+		//$href = lib_util::processUrl($href);
 		if(!empty($current_user->id)) {
 		    $logout = lib_util::getelement('a','Logout',array('class'=>array('value'=>'btn btn-info pull-right'),'href'=>array('value' => $href)));
 			if($current_user->user_type == 'developer') {

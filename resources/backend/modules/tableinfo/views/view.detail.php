@@ -4,7 +4,7 @@ class tableinfoViewDetail  extends ViewDetail {
 
 function getalltables() {
 
-global $db;
+$db = lib_mysqli::getInstance();
 $sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user' or tabletype='cstm' or tabletype='basic_wod'";
 return $db->getrows($sql,'id');
 }
@@ -14,7 +14,7 @@ return $db->getrows($sql,'id');
 		
 		$db = lib_mysqli::getInstance();
 	    global $entity,$vjlib,$app_list_strings,$globalEntityList,$globalRelationshipList,$vjconfig;
-		$bs = $vjlib->BootStrap;
+		$bs = lib_bootstrap::getInstance();
 		
 		
 		$panelheading = $bs->getelement('div', 'Manage',array('class'=>array('value'=>'panel-heading')));
@@ -342,7 +342,7 @@ return $db->getrows($sql,'id');
 		$smarty->assign("fields",$tableinfo['fields']);
 		
 		$url = "index.php?module=tableinfo&action=dropdowneditor";
-		$url = processurl($url);
+		$url = lib_util::processUrl($url);
 		$smarty->assign("dropdownurl",$url);
 		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."modules/tableinfo/tpls/relationshipmodel.tpl");
 		$path = $vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutmanager.tpl";
