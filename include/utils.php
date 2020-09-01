@@ -13,16 +13,16 @@ function redirect($module,$action=false,$params=array()) {
 }
 
 function sessioncheck($var) {
-	
-	
+
+
 	if(!isset($_SESSION[$var])) {
 		return false;
 	}
-	
+
 	//return $_SESSION[$var];
 	if($var =='current_user') {
 	$array = json_decode($_SESSION[$var],1);
-		
+
 	global $current_user;
 	$obj = new Entity();
 		foreach($array as $key=>$val) {
@@ -34,7 +34,7 @@ function sessioncheck($var) {
 		print_r($obj);
 	}
 	return $_SESSION[$var];
-	
+
 }
 
 
@@ -84,8 +84,8 @@ function ensure_length(&$string, $length) {
 function processUrl($url) {
 	global $vjconfig;
 	if($vjconfig['framework']['seourl']) {
-		return true; 
-		
+		return true;
+
 		//todo
 	} else {
 		return  $url;
@@ -99,7 +99,7 @@ function processSeoUrl() {
 
 	if (count ( $seoparams ) == 1) {
 		$this->module = $vjconfig['framework']['single_param_module'];
-		$this->action = $vjconfig['framework']['single_param_action']; 
+		$this->action = $vjconfig['framework']['single_param_action'];
 	} else if (count ( $seoparams ) > 1) {
 		$this->module = $seoparams [0];
 		$this->action = $seoparams [1];
@@ -119,41 +119,41 @@ function getParams() {
 }
 
 function getelement($name='button',$val='button',$attr = array(),$isdualtag=true) {
-	
-	
+
+
 	//$html = $this->vars[$name][$dclass];
 	$html = '<'.$name.' ';
-	
-		
+
+
 		if($attr) {
 			$html .= processAttr($attr);
 		}
-		
-		if(!$isdualtag) 
-		{ 
+
+		if(!$isdualtag)
+		{
 			$html .= ' /';
-			
+
 		}
 		$html .= '>';
-		
+
 		if($isdualtag)
 		{
 		$html .= $val.'</'.$name.'>';
-		} 
+		}
 		return $html;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -169,7 +169,7 @@ function processAttr($proc=array()) {
 	$attributes = "";
 	foreach($proc as $attrkey=>$attr) {
 		$attribute = '';
-		
+
 		if(!is_array($attr)) {
 		$attr = array("value"=>$attr);
 		}
@@ -182,19 +182,19 @@ function processAttr($proc=array()) {
 		}
 		$attributes .=$attribute.' ';
 	}
-	
+
 	return $attributes;
-	
+
 }
 function getvardef($table) {
 			global $db,$mod_string;
 			$sql = "select * from tableinfo where name='".$table."' and deleted=0";
 			$row = $db->getrow($sql);
-			
+
 			if($row) {
-			
+
 			$moduleinfo = json_decode(base64_decode($row['description']),1);
-			
+
 			$metadata = isset($moduleinfo['metadata'])? $moduleinfo['metadata'] : array("metadata"=>array());
 			if(isset($row['listviewdef']) && $row['listviewdef']) {
 			    $metadata['listview'] = json_decode($row['listviewdef'],1);
@@ -204,17 +204,17 @@ function getvardef($table) {
 			        }
 			    }
 			}
-			
+
 			if(isset($row['editviewdef']) && $row['editviewdef']) {
 			    $metadata['editview'] = json_decode($row['editviewdef'],1);
-			    
-			    
+
+
 			}
-			
+
 			if(isset($row['detailviewdef']) && $row['detailviewdef']) {
 			    $metadata['detailview'] = json_decode($row['detailviewdef'],1);
 			}
-			
+
 			if(isset($row['searchviewdef']) && $row['searchviewdef']) {
 			    $metadata['searchview'] = json_decode($row['searchviewdef'],1);
 			    foreach($metadata['searchview'] as $key=>$field) {
@@ -223,33 +223,33 @@ function getvardef($table) {
 			        }
 			    }
 			}
-			
-			
+
+
 			unset($moduleinfo['metadata']);
 			return array("fields"=>$moduleinfo,"metadata"=>$metadata);
-			
-			
+
+
 			} else {
-			    
+
 			    debug_print_backtrace();
 			die("entity ".$table." not found");
-			} 
-			
+			}
+
 		}
-		
-		
+
+
 		function getLabel($lbl) {
 		    global $mod_string;
 		    return isset($mod_string[$lbl]) ? $mod_string[$lbl] : $lbl;
 		}
-		
-		
+
+
 		function getEntityField($table,$field) {
 		    global $globalModuleList;
 		    if(isset($globalModuleList[$table]) && isset($globalModuleList[$table]['tableinfo']['fields'][$field])) {
 		        return $globalModuleList[$table]['tableinfo']['fields'][$field];
 		    }
-		    
+
 		    return false;
 		}
 ?>

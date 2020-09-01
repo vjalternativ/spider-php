@@ -80,6 +80,8 @@ class lib_framework {
             }
         }
 
+
+        $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'index';
         $this->module = $_GET['module'];
         $this->action = $_GET['action'];
 

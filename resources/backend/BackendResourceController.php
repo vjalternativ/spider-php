@@ -23,26 +23,56 @@ class BackendResourceController  {
 
         global $globalModuleList;
 
-        $current_user = lib_current_user::getInstance()->sessionCheck();
+        $current_user = lib_current_user::sessionCheck('current_user');
+        if(!isset($this->nonauth[$this->action]) && !$current_user) {
+            die("Invalid Session");
+        } else  {
+            if(isset($this->nonauth[$this->action]) && $current_user && isset($this->nonauth[$this->action]['redirect'])) {
+                redirect($this->nonauth[$this->action]['redirect']['module'], $this->nonauth[$this->action]['redirect']['action']);
+            }
 
-            if(!isset($this->nonauth[$this->action]) && !$current_user) {
-                die("Invalid Session");
-            } else  {
-                if(isset($this->nonauth[$this->action]) && $current_user && isset($this->nonauth[$this->action]['redirect'])) {
-                    redirect($this->nonauth[$this->action]['redirect']['module'], $this->nonauth[$this->action]['redirect']['action']);
-                }
-
-                if(!isset($this->nonauth[$this->action]) && $current_user) {
-                    if(!$current_user->isDeveloper) {
-                        if(!(isset($globalModuleList[$this->module]) && isset($current_user['module_access'][$globalModuleList[$this->module]['id']])  && $current_user['module_access'][$globalModuleList[$this->module]['id']]['module_access'])) {
-                            die("Access denied !");
-                        }
+            if(!isset($this->nonauth[$this->action]) && $current_user) {
+                if(!$current_user->isDeveloper) {
+                    if(!(isset($globalModuleList[$this->module]) && isset($current_user['module_access'][$globalModuleList[$this->module]['id']])  && $current_user['module_access'][$globalModuleList[$this->module]['id']]['module_access'])) {
+                        die("Access denied !");
                     }
                 }
             }
+        }
+        die("here");
+        $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
+        $this->initModules();
 
 
+    }
 
+    function initModules() {
+        global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity,$globalServerPreferenceStoreList;
+
+        $dataWrapper = DataWrapper::getInstance();
+        if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
+
+            if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
+                require_once $vjconfig['basepath'].'cache/relationship_entity_list.php';
+            }
+            require_once $vjconfig['basepath'].'cache/relationship_list.php';
+            require_once $vjconfig['basepath'].'cache/entity_list.php';
+            require_once $vjconfig['basepath'].'cache/module_list.php';
+
+            if(file_exists($vjconfig['basepath'].'cache/server_preference_store_list.php')) {
+                require_once $vjconfig['basepath'].'cache/server_preference_store_list.php';
+            }
+
+            if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
+                //  return false;
+            }
+        }  else {
+            $entity->generateCache();
+        }
+        $dataWrapper->set("entity_list",$globalEntityList);
+        $dataWrapper->set("module_list",$globalModuleList);
+        $dataWrapper->set("relationship_list",$globalRelationshipList);
+        $dataWrapper->set("server_preference_store_list",$globalServerPreferenceStoreList);
     }
 
     function utcToTimezone($datetime) {
@@ -295,7 +325,7 @@ class BackendResourceController  {
     function results($sql = false,$paginate=true,$url=false) {
         global $vjlib,$current_url;
 
-        $vardef = getvardef($this->entity);
+        $vardef = lib_util::getvardef($this->entity);
         $listviewdef = $vardef['metadata']['listview'];
         $this->listview['metadata'] = $listviewdef;
         $this->listview['searchlayout'] = $vardef['metadata']['searchview'];

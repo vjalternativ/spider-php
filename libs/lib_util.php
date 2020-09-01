@@ -178,9 +178,9 @@ class lib_util
         return $attributes;
     }
 
-    function getvardef($table)
+    static function getvardef($table)
     {
-        global $db, $mod_string;
+        $db = lib_mysqli::getInstance();
         $sql = "select * from tableinfo where name='" . $table . "' and deleted=0";
         $row = $db->getrow($sql);
 

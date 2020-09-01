@@ -1,15 +1,30 @@
 <?php
 class lib_current_user {
     private static $instance = null;
-    static function getInstance() {
+
+
+    static function getEntityInstance() {
         if(self::$instance==null) {
-            self::$instance = new lib_current_user();
+            self::$instance = new lib_entity();
         }
         return self::$instance;
     }
 
-    function sessionCheck() {
-        isset($_SESSION['current_user']) ? $_SESSION['current_user'] : false;
+    static function sessionCheck($var) {
+        if(!isset($_SESSION[$var])) {
+            return false;
+        }
+        if($var =='current_user') {
+            $array = json_decode($_SESSION[$var],1);
+
+            foreach($array as $key=>$val) {
+                self::$instance->$key = $val;
+            }
+            return self::$instance;
+         }
+         return  $_SESSION[$var];
+
+
     }
 
 
