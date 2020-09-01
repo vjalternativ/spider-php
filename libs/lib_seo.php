@@ -20,8 +20,7 @@ class lib_seo
         return isset($this->params[$index]) ? $this->params[$index] : false;
     }
 
-    function init()
-    {
+    function __construct() {
         $config = lib_config::getInstance();
         $httpProtocol = "http";
         if (isset($_SERVER['HTTPS'])) {

@@ -1,7 +1,6 @@
 <?php
 class lib_config {
     private static $instance = null;
-
     private $config;
 
     function __construct() {
@@ -29,6 +28,8 @@ class lib_config {
     }
 
 
+
+
     static function getInstance() {
         if(self::$instance==null) {
             self::$instance = new lib_config();
@@ -43,5 +44,7 @@ class lib_config {
     function getConfig() {
         return $this->config;
     }
+
+
 }
 ?>

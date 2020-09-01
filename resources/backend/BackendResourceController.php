@@ -109,7 +109,7 @@ class BackendResourceController  {
 
 
     function defaultPaginate($sql) {
-        global $vjlib,$db,$vjconfig;
+        global $db,$vjconfig;
 
         $paginate = Paginate::getInstance();
         $paginate->url = 'index.php?module='.$this->entity.'&pageindex=';
@@ -119,7 +119,7 @@ class BackendResourceController  {
         $paginate->sql = $sql;
         $paginate->db = $db;
 
-        $url = $vjconfig['fwurlbasepath']."index.php?module=".$this->entity."&action=detailview&record=key_id";
+        $url = $vjconfig['fwurlbasepath']."backend/index.php?module=".$this->entity."&action=detailview&record=key_id";
         $url = processUrl($url);
         $paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
         $paginate->setProcessHook($this, "processListRow");

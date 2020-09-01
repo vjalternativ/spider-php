@@ -9,9 +9,36 @@ class lib_framework {
     private $action;
     private $resource;
     private $record;
+    private $sessionName = "ATVSESS";
+    private $resourcePath;
+
+    function __construct($sessionName = false) {
+
+        $params = lib_seo::getInstance()->getParams();
 
 
+        $resource = isset($params[0]) ? $params[0] : lib_config::getInstance()->get("default_resource");
+        $this->resourcePath = $this->getResourcePath($resource);
+        $_GET['resource'] = $resource;
+        $this->resource = $resource;
 
+
+        if(isset($_REQUEST['spiderphp_mode'])) {
+            $this->frameworkMode = $_REQUEST['spiderphp_mode'];
+        }
+
+        if(isset($_REQUEST['fw_sess_mode'])) {
+            $this->sessionName .= '_'.$_REQUEST['fw_sess_mode'];
+        } else {
+            if($sessionName) {
+                $this->sessionName = $sessionName;
+            } else {
+                $this->sessionName .= '_'.$this->resource;
+            }
+        }
+
+        $this->initSession($sessionName);
+    }
 
     function _getResourceAbsoluteFilePath($relativePath,$isMandatory=false) {
 
@@ -42,19 +69,27 @@ class lib_framework {
 
     }
 
+
+    private function initSession($sessionName=false) {
+        session_name($this->sessionName);
+        ini_set('session.gc_maxlifetime', 28800);
+        session_set_cookie_params(28800);
+        session_start();
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Credentials: true");
+        ini_set("memory_limit",-1);
+        set_time_limit(0);
+        error_reporting(E_ALL);
+
+    }
+
     function execute() {
 
 
-        $libSeo = lib_seo::getInstance();
-        $libSeo->init();
+        $params = lib_seo::getInstance()->getParams();
 
-        $params =$libSeo->getParams();
-
-
-        $resource = isset($params[0]) ? $params[0] : lib_config::getInstance()->get("default_resource");
-        $resourcePath = $this->getResourcePath($resource);
-        $_GET['resource'] = $resource;
-        $this->resource = $resource;
+        $resource = $this->resource;
+        $resourcePath = $this->resourcePath;
 
         if(!isset($_GET['module'])) {
             if(isset($params[1])) {

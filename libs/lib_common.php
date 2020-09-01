@@ -6,7 +6,7 @@ require_once $dir.'lib_mysqli.php';
 require_once $dir.'lib_entity.php';
 class lib_common {
 
-    function init() {
+    function init($session=false) {
         $mysqli = lib_mysqli::getInstance();
         $config = lib_config::getInstance()->get("mysql");
         $mysqli->connect($config['host'],$config['user'],$config['password'],$config['database']);

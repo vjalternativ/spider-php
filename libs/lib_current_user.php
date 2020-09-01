@@ -11,14 +11,16 @@ class lib_current_user {
     }
 
     static function sessionCheck($var) {
+
         if(!isset($_SESSION[$var])) {
             return false;
         }
         if($var =='current_user') {
             $array = json_decode($_SESSION[$var],1);
+             $user = self::getEntityInstance();
 
             foreach($array as $key=>$val) {
-                self::$instance->$key = $val;
+                $user->$key = $val;
             }
             return self::$instance;
          }
