@@ -223,7 +223,8 @@ class ViewDetail extends View
 
     function afterDisplay()
     {
-        global $entity, $vjlib, $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $entity = lib_entity::getInstance();
         $bs = lib_bootstrap::getInstance();
         $smarty = lib_smarty::getSmartyInstance();
         foreach ($this->subpanels as $subpanels) {
@@ -253,7 +254,7 @@ class ViewDetail extends View
             $pageinfo['container_id'] = $subpanels['id'];
 
             $pageinfo['record'] = $entity->record;
-            $pagingHtml = $vjlib->Paginate->getPagingHtml($pageinfo, true);
+            $pagingHtml = lib_paginate::getInstance()->getPagingHtml($pageinfo, true);
 
             $table .= $pagingHtml;
 

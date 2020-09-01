@@ -49,6 +49,13 @@ class BackendResourceController  {
         }
         $this->initModules();
 
+        if($this->entity) {
+            $entity = lib_entity::getInstance();
+            $entity->module = $this->entity;
+            $tableinfo = $entity->getwhere("tableinfo","name='".$this->entity."'");
+            $entity->tableinfo = $tableinfo;
+        }
+
     }
 
     function initModules() {
@@ -471,7 +478,7 @@ class BackendResourceController  {
         $pageinfo['container_id'] =  $_REQUEST['container_id'];
 
         $pageinfo['record'] =  $entity->record;
-        $pagingHtml = $vjlib->Paginate->getPagingHtml($pageinfo,true);
+        $pagingHtml = lib_paginate::getInstance()->getPagingHtml($pageinfo,true);
 
         $table .= $pagingHtml;
         echo $table;

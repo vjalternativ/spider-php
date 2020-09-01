@@ -15,7 +15,12 @@ class lib_paginate {
 	public $process = array();
 	public $processHook = array("instance"=>"","method"=>"","enumList"=>array());
 	public $extrafields = array();
-	private static $instance;
+	private static $instance = null;
+
+	function __construct() {
+	    $this->db = lib_mysqli::getInstance();
+	}
+
 	static function getInstance() {
 	    if(self::$instance==null) {
 	        self::$instance = new lib_paginate();
@@ -26,7 +31,7 @@ class lib_paginate {
 	function setProcessHook($instance,$method) {
 
 
-	    $this->db = lib_mysqli::getInstance();
+
 	    $this->processHook['instance'] = $instance;
 	    $this->processHook['method'] = $method;
 
@@ -35,6 +40,8 @@ class lib_paginate {
 	}
 
 	function process() {
+
+
 		$url=$this->url;
 		$index=$this->index;
 		$noresult = $this->noresult;

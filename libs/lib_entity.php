@@ -783,7 +783,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	function results($tentity = false,$sql = false,$paginate=true,$url=false,$index=false) {
 			global $vjlib,$current_url;
 
-			$vardef = getvardef($tentity);
+			$vardef = lib_util::getvardef($tentity);
 			$listviewdef = $vardef['metadata']['listview'];
 			$this->listview['metadata'] = $listviewdef;
 
@@ -801,7 +801,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 				}
 			       $counter++;
 			}
-			$paginate = $vjlib->Paginate;
+			$paginate = lib_paginate::getInstance();
 
 			$paginate->module = $tentity;
 			$paginate->href = $current_url;
@@ -843,22 +843,19 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function defaultPaginate($sql,$tentity=false) {
-			global $vjlib,$db,$vjconfig;
-
-			$paginate = $vjlib->Paginate;
+			$paginate = lib_paginate::getInstance();
 			$paginate->url = '';
 			$paginate->index ='id';
 			$paginate->noresult = 10;
 			$paginate->endto = 10;
 			$paginate->sql = $sql;
-			$paginate->db = $db;
 
 			$url = "./index.php?module=".$tentity."&action=detailview&record=key_id";
 			if(isset($_REQUEST['module']) && isset($_REQUEST['record']) && isset($_REQUEST['get_relationship_name'])) {
 			    $url .= "&parent_module=".$_REQUEST['module']."&parent_id=".$_REQUEST['record']."&parent_relationship=".$_REQUEST['get_relationship_name'];
 			}
 
-			$url = processUrl($url);
+			$url = lib_util::processUrl($url);
 			$paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
 	}
 
