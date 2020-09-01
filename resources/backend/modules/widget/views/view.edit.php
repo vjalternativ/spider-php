@@ -65,7 +65,7 @@ class widgetViewEdit extends ViewEdit {
         }
         
         if($pageId) {
-            global $entity;
+            $entity = lib_entity::getInstance();
             $pageData = $entity->get("page",$pageId);
             $page = $pageData['name'];
             if(file_exists($vjconfig['basepath']."include/entrypoints/site/pages/".$page."/layout/".$vjconfig['sitetpl']."/".$page."Positions.php")) {

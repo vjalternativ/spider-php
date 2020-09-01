@@ -17,7 +17,7 @@ class TableinfoBackendController extends BackendResourceController {
 	}
 	
 	function action_save() {
-		global $entity;
+		$entity = lib_entity::getInstance();
 		if(empty($_POST['name'])) {
 			die("table name should not be empty");
 		}
@@ -96,13 +96,13 @@ class TableinfoBackendController extends BackendResourceController {
 		foreach($list as $key=>$value) {
 			$row = array();
 			
-			$keyelem = getelement('input','',array('value'=>$key,'type'=>'text','class'=>'form-control','name'=>'key[]'),false);
-			$valelem = getelement('input','',array('value'=>$value,'type'=>'text','class'=>'form-control','name'=>'val[]'),false);
-			$hiddenlistelem = getelement('input','',array('value'=>$_REQUEST['list'],'type'=>'hidden','class'=>'form-control','name'=>'list'),false);
+			$keyelem = lib_util::getelement('input','',array('value'=>$key,'type'=>'text','class'=>'form-control','name'=>'key[]'),false);
+			$valelem = lib_util::getelement('input','',array('value'=>$value,'type'=>'text','class'=>'form-control','name'=>'val[]'),false);
+			$hiddenlistelem = lib_util::getelement('input','',array('value'=>$_REQUEST['list'],'type'=>'hidden','class'=>'form-control','name'=>'list'),false);
 			
 			$row['key'] = $keyelem;
 			$row['value'] =  $valelem;
-			$row['action'] = getelement('button','+',array('type'=>'button','class'=>'btn btn-primary btn-sm','onclick'=>"newoptionrow()")).'&nbsp;'.getelement('button','x',array('type'=>'button','class'=>'btn btn-danger btn-sm','onclick'=>"deleteoptionrow(".$counter.")"));
+			$row['action'] = lib_util::getelement('button','+',array('type'=>'button','class'=>'btn btn-primary btn-sm','onclick'=>"newoptionrow()")).'&nbsp;'.getelement('button','x',array('type'=>'button','class'=>'btn btn-danger btn-sm','onclick'=>"deleteoptionrow(".$counter.")"));
 			$rows[] = $row;
 			$counter++;
 		}
@@ -127,17 +127,17 @@ class TableinfoBackendController extends BackendResourceController {
 	
 			$row = array();
 			$count = $_REQUEST['count'];
-			$keyelem = getelement('input','',array('value'=>'','type'=>'text','class'=>'form-control','name'=>'key[]'),false);
-			$valelem = getelement('input','',array('value'=>'','type'=>'text','class'=>'form-control','name'=>'val[]'),false);
+			$keyelem = lib_util::getelement('input','',array('value'=>'','type'=>'text','class'=>'form-control','name'=>'key[]'),false);
+			$valelem = lib_util::getelement('input','',array('value'=>'','type'=>'text','class'=>'form-control','name'=>'val[]'),false);
 			
-			$action = getelement('button','+',array('type'=>'button','class'=>'btn btn-primary btn-sm','onclick'=>"newoptionrow()")).'&nbsp;'.getelement('button','x',array('type'=>'button','class'=>'btn btn-danger btn-sm','onclick'=>"deleteoptionrow(".$count.")"));
+			$action = lib_util::getelement('button','+',array('type'=>'button','class'=>'btn btn-primary btn-sm','onclick'=>"newoptionrow()")).'&nbsp;'.getelement('button','x',array('type'=>'button','class'=>'btn btn-danger btn-sm','onclick'=>"deleteoptionrow(".$count.")"));
 	
-	$td = getelement('td',$keyelem);
-	$td .= getelement('td',$valelem);
-	$td .= getelement('td',$action);
+	$td = lib_util::getelement('td',$keyelem);
+	$td .= lib_util::getelement('td',$valelem);
+	$td .= lib_util::getelement('td',$action);
 	
 	
-	$tr = getelement('tr',$td,array("class"=>'opt-row','id'=>'opt-'+$count));
+	$tr = lib_util::getelement('tr',$td,array("class"=>'opt-row','id'=>'opt-'+$count));
 	
 	echo $tr;
 	die;
@@ -253,7 +253,7 @@ class TableinfoBackendController extends BackendResourceController {
 	}
 	
 	function action_saverelationship() {
-		global $entity;
+		$entity = lib_entity::getInstance();
 		$primarymod = $_REQUEST['primarymod'];
 		$secodaryid = $_REQUEST['secondarytable'];
 		$secondaryinfo= $entity->get('tableinfo',$secodaryid);
@@ -298,7 +298,7 @@ class TableinfoBackendController extends BackendResourceController {
    }
 	
 	function action_ajaxSaveLayout() {
-			global $entity;
+			$entity = lib_entity::getInstance();
 			$viewtype = $_REQUEST['type'];
 			$id = $_REQUEST['record'];
 			$info= $entity->get('tableinfo',$id);
@@ -338,7 +338,7 @@ class TableinfoBackendController extends BackendResourceController {
 	}
 	
 	function action_deleteRecord() {
-		global $entity;
+		$entity = lib_entity::getInstance();
 		$mod = $_REQUEST['mod'];
 		$id = $_REQUEST['id'];
 		$info = $entity->get($mod,$id);
@@ -417,7 +417,7 @@ class TableinfoBackendController extends BackendResourceController {
 	    $record= $_REQUEST['record'];
 	    $relname = $_REQUEST['relname'];
 	    $relId = $_REQUEST['relid'];
-	    global $entity;
+	    $entity = lib_entity::getInstance();
 	    $entity->record = $record;
 	    $entity->removeRelationship($relname,$relId);
 	    die("success");
@@ -515,7 +515,7 @@ class TableinfoBackendController extends BackendResourceController {
 	
 	function action_updateschema() {
 	    $db = lib_mysqli::getInstance();
-	    global $entity;
+	    $entity = lib_entity::getInstance();
 	    $json  = file_get_contents("schemajson/schema.json");
 	    
 	    $data = json_decode($json,1);
@@ -576,7 +576,7 @@ class TableinfoBackendController extends BackendResourceController {
 	function  action_importdata() {
 	    ini_set("display_errors",1);
 	    $db = lib_mysqli::getInstance();
-	    global $entity;
+	    $entity = lib_entity::getInstance();
 	    $module = $_POST['importmodule'];
 	    $_SESSION['reqresp']['status'] ="success";
 	    $_SESSION['reqresp']['message'] ="Imported Sucessfully records : ";
@@ -747,7 +747,7 @@ class TableinfoBackendController extends BackendResourceController {
     	    
     	    
     	    $db = lib_mysqli::getInstance();
-	    global $entity;
+	    $entity = lib_entity::getInstance();
     	    $mod = $_REQUEST['mod'];
     	    
     	    
@@ -771,7 +771,7 @@ class TableinfoBackendController extends BackendResourceController {
 	function action_migratetable() {
 	    
 	     $db = lib_mysqli::getInstance();
-	    global $entity;
+	    $entity = lib_entity::getInstance();
 	     $sql = "select ss.name,c.id as country_id from states ss 
                 INNER JOIN countries cs on ss.country_id=cs.id 
                 INNER JOIN country c on cs.sortname = c.iso_code

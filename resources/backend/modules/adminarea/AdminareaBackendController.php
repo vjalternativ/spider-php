@@ -148,7 +148,7 @@ class AdminareaBackendController extends BackendResourceController
     }
 
     function action_generateCache() {
-        global $entity;
+        $entity = lib_entity::getInstance();
         $entity->generateCache();
     }
 

@@ -13,7 +13,7 @@ class tableinfoViewDropdownEditor extends ViewBasic
         
         foreach ($app_list_strings as $list => $val) {
             $counter ++;
-            $list = getelement('a', $list, array(
+            $list = lib_util::getelement('a', $list, array(
                 'href' => '#',
                 'onclick' => "ajaxeditoption('" . $list . "')"
             ));
@@ -29,7 +29,7 @@ class tableinfoViewDropdownEditor extends ViewBasic
             $rows[$rowcounter][] = "";
         }
         
-        $script = getelement('script', '', array(
+        $script = lib_util::getelement('script', '', array(
             "src" => 'modules/tableinfo/assets/layoutmanager.js'
         ));
         $table = $bs->generateTable($rows, array(
@@ -46,12 +46,12 @@ class tableinfoViewDropdownEditor extends ViewBasic
         
         $html = $script . $table;
         
-        $submit = getelement('button', 'Save', array(
+        $submit = lib_util::getelement('button', 'Save', array(
             'type' => 'submit',
             'class' => 'btn btn-primary'
         ));
         
-        $button = getelement('button', "Add New", array(
+        $button = lib_util::getelement('button', "Add New", array(
             "class" => 'btn btn-info',
             "onclick" => "newdropdown()"
         ));

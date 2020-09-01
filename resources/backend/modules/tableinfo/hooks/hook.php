@@ -2,7 +2,7 @@
 class tableinfoLogicHook {
     
     function afterSave(&$keyvalue) {
-        global $entity;
+        $entity = lib_entity::getInstance();
         if($keyvalue['hook_isnew'] && $keyvalue['tabletype']=="user") {
             $id = $keyvalue['id'];
             $data = array();

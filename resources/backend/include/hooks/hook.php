@@ -5,7 +5,7 @@ class SystemLogicHook
 
     function beforeSave(&$keyvalue)
     {
-        global $entity;
+        $entity = lib_entity::getInstance();
         if ($keyvalue['hook_tabletype'] == "user") {
             $keyval = array();
 

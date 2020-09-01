@@ -3,7 +3,7 @@ class LogicHook {
     function beforeSave(&$keyvalue) {
         
         
-        global $entity;
+        $entity = lib_entity::getInstance();
         if(isset($keyvalue['isnew']) && $keyvalue['isnew']) {
              $keyval = array();
             $keyval['user_name'] = $keyvalue['username'];

@@ -17,7 +17,7 @@ class ViewDetail extends View
 
     function __construct()
     {
-        global $entity;
+        $entity = lib_entity::getInstance();
         $datatypes = array();
         $datatypes['varchar'] = array(
             'isdualtag' => false,
@@ -264,7 +264,7 @@ class ViewDetail extends View
             $heading .= '<input type="hidden" id="subpanel_rtable-' . $subpanels['id'] . '"   value="' . $subpanels['rtable'] . '" />';
             $heading .= '<input type="hidden" id="subpanel_relname-' . $subpanels['id'] . '"   value="' . $subpanels['name'] . '" />';
 
-            
+
             $parentModule = "";
             $parentId = "";
             $parentRecord = $_REQUEST['record'];
@@ -275,7 +275,7 @@ class ViewDetail extends View
             $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_module"   value="' . $parentModule . '" />';
             $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_id"   value="' . $parentId . '" />';
             $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_record"   value="' . $parentRecord . '" />';
-            
+
             $heading .= '<a href="index.php?module=' . $subpanels['rtable'] . '&action=editview&parent_module=' . $this->module . '&parent_record=' . $this->record . '&rel=' . $subpanels['name'] . '"><button class="btn btn-primary pull-right">Add New</button></a>';
             $heading .= '<button class="btn btn-success pull-right margin-right-10" onclick="selectSubpanelItems(\'' . $subpanels['id'] . '\')">Select</button>';
             $heading .= '<div class="clearfix"></div>';
@@ -298,7 +298,8 @@ class ViewDetail extends View
 
     function getDefaultLayout()
     {
-        global $entity, $vjlib, $globalModuleList;
+        global $globalModuleList;
+        $entity  = lib_entity::getInstance();
         $bs = lib_bootstrap::getInstance();
         $tableinfo = $entity->getwhere("tableinfo", "name ='" . $this->module . "'");
         $vardef = json_decode(base64_decode($tableinfo['description']), 1);
@@ -370,12 +371,12 @@ class ViewDetail extends View
         $metadata = $vardef['metadata'];
 
         $html = $this->parseDetailViewDef('detailview', $vardef);
-        $editButton = getelement("a", "EDIT", array(
+        $editButton = lib_util::getelement("a", "EDIT", array(
             "href" => "index.php?module=" . $this->module . "&action=editview&record=" . $this->record,
             "class" => "btn btn-primary pull-right"
         ));
         $editButton .= $this->additionalContent;
-        $editButton .= getelement("div", "", array(
+        $editButton .= lib_util::getelement("div", "", array(
             "class" => "clearfix"
         ));
         $panelheading = $bs->getelement('div', ucfirst($globalModuleList[$this->module]['label']) . ' | Detail View' . $editButton, array(
@@ -463,13 +464,13 @@ class ViewDetail extends View
                         if (isset($field['label'])) {
                             $label = isset($mod_string[$field['label']]) ? $mod_string[$field['label']] : $field['label'];
                         }
-                        $addon = getelement('span', $label, array(
+                        $addon = lib_util::getelement('span', $label, array(
                             "class" => 'input-group-addon'
                         ));
 
                         $fhtml = $bs->getelement($attr[0], '', $attr[1], $isdualtag);
 
-                        $fhtml = getelement("div", $attr[1]['name']['value'], array(
+                        $fhtml = lib_util::getelement("div", $attr[1]['name']['value'], array(
                             "class" => "form-control"
                         ));
                         if ($field['type'] == "file" && ! empty($this->data[$field['name']])) {
@@ -484,9 +485,9 @@ class ViewDetail extends View
                             if ($this->data[$field['name']]) {
                                 $checkAttr['checked'] = "checked";
                             }
-                            $fhtml = getelement("input", '', $checkAttr, false);
+                            $fhtml = lib_util::getelement("input", '', $checkAttr, false);
 
-                            $fhtml = getelement("div", $fhtml, array(
+                            $fhtml = lib_util::getelement("div", $fhtml, array(
                                 "class" => "form-control"
                             ));
                         }

@@ -347,7 +347,7 @@ return $db->getrows($sql,'id');
 		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."modules/tableinfo/tpls/relationshipmodel.tpl");
 		$path = $vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
-		$script = getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'modules/tableinfo/assets/layoutmanager.js'));
+		$script = lib_util::getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;
 		
 	

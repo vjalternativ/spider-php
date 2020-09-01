@@ -15,7 +15,7 @@ class widget_attrLogicHook {
         }
     
         if($wid) {
-            global $entity;
+            $entity = lib_entity::getInstance();
             $widget = $entity->get("widget",$wid);
             $fields = AWidget::getWidgetFields($widget['widget_type']);
             $jsonPrev = json_decode($data['description'],true);

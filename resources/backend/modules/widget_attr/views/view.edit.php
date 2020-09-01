@@ -19,7 +19,7 @@ class widget_attrViewEdit extends ViewEdit {
         }
         if($widgetId) {
             
-            global $entity;
+            $entity = lib_entity::getInstance();
             
             $wdata = $entity->get("widget",$widgetId);
             if($wdata) {

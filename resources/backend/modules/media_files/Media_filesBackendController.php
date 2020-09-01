@@ -7,7 +7,7 @@ class Media_filesBackendController extends BackendResourceController  {
     }
 
     function action_download() {
-       global $entity;
+       $entity = lib_entity::getInstance();
        ob_end_clean();
        $id = $_REQUEST['id'];
        $media = $entity->get("media_files",$id);

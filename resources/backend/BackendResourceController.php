@@ -479,7 +479,7 @@ class BackendResourceController  {
     }
 
     function action_addSubpanelRelationship() {
-        global $entity;
+        $entity = lib_entity::getInstance();
         $relname = $_REQUEST['relname'];
         $record = $_REQUEST['record'];
 

@@ -29,7 +29,7 @@ class chatController extends VJController {
     
     
     function processPackets($rows,$reorder=false) {
-        global $entity;
+        $entity = lib_entity::getInstance();
         $packets = array();
         $opackets = array();
         foreach($rows as $row) {
@@ -261,7 +261,7 @@ class chatController extends VJController {
     
     function action_ajaxStrangerChatConnectVideo(){
         $db = lib_mysqli::getInstance();
-	    global $entity;
+	    $entity = lib_entity::getInstance();
         $result = array('status'=>'no_user_avail','chatId'=>'');
         $sessionId = session_id();
         
@@ -353,7 +353,7 @@ class chatController extends VJController {
         
         $resp = array("status"=>"success");
         
-        global $entity;
+        $entity = lib_entity::getInstance();
         
         $sessionId =  session_id();
         $jsonString = $_POST['data'];
@@ -375,7 +375,7 @@ class chatController extends VJController {
         
         $resp = array("status"=>"success");
         
-        global $entity;
+        $entity = lib_entity::getInstance();
         
         $sessionId =  session_id();
         $jsonString = $_POST['data'];
@@ -396,7 +396,7 @@ class chatController extends VJController {
         
         $resp = array("status"=>"success");
         
-        global $entity;
+        $entity = lib_entity::getInstance();
         
         $sessionId =  session_id();
         $jsonString = $_POST['data'];
@@ -519,7 +519,7 @@ class chatController extends VJController {
     }
     
     function action_ajaxDisconnectChat() {
-        global $entity;
+        $entity = lib_entity::getInstance();
         $sessionId = session_id();
         
         $data = $entity->getwhere("strangerchat","name = '".$sessionId."' ");
@@ -635,7 +635,7 @@ class chatController extends VJController {
     
     function action_poll() {
         $db = lib_mysqli::getInstance();
-	    global $entity;
+	    $entity = lib_entity::getInstance();
         $sessionId = session_id();
         
         

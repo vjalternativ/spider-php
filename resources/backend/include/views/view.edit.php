@@ -259,18 +259,18 @@ class ViewEdit  extends View {
     						    if($val==$okey) {
     						        $opattr['selected'] = "selected";
     						    }
-    							$optionhtml .= getelement('option',$oval,$opattr);
+    							$optionhtml .= lib_util::getelement('option',$oval,$opattr);
     						}
 						}
-						$field = getelement($attr[0],$optionhtml,$attr[1],$isdualtag);
+						$field = lib_util::getelement($attr[0],$optionhtml,$attr[1],$isdualtag);
 
 
 						} else if($fieldarray['type']=="checkbox") {
 						    if($val=='1') {
 						      $attr[1]['checked'] = "checked";
-						      $field = getelement($attr[0],"",$attr[1],$isdualtag);
+						      $field = lib_util::getelement($attr[0],"",$attr[1],$isdualtag);
 						    }
-						    $field = getelement("div",$field,array("class"=>"form-control"));
+						    $field = lib_util::getelement("div",$field,array("class"=>"form-control"));
 						}
 
 						$elementhtml = $addon.$field;
