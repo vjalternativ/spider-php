@@ -1,6 +1,7 @@
 <?php
 $dir = __DIR__.'/';
 require_once $dir.'lib_config.php';
+require_once $dir.'lib_datawrapper.php';
 require_once $dir.'lib_mysqli.php';
 require_once $dir.'lib_entity.php';
 class lib_common {

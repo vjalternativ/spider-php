@@ -7,7 +7,7 @@ class UserBackendController extends BackendResourceController  {
 		$this->nonauth['authenticate'] = array();
 		$this->nonauth['logout'] = array();
 		$this->nonauth['home'] = array();
-
+		parent::__construct();
 	}
 
 	function action_login() {

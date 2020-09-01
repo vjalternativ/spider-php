@@ -23,6 +23,12 @@ class BackendResourceController  {
 
         global $globalModuleList;
 
+        $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
+        $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
+
+
+
+
         $current_user = lib_current_user::sessionCheck('current_user');
         if(!isset($this->nonauth[$this->action]) && !$current_user) {
             die("Invalid Session");
@@ -39,8 +45,6 @@ class BackendResourceController  {
                 }
             }
         }
-        die("here");
-        $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
         $this->initModules();
 
 
@@ -49,7 +53,7 @@ class BackendResourceController  {
     function initModules() {
         global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity,$globalServerPreferenceStoreList;
 
-        $dataWrapper = DataWrapper::getInstance();
+        $dataWrapper = lib_datawrapper::getInstance();
         if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
 
             if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
