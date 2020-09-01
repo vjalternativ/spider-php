@@ -1,6 +1,8 @@
 <?php
 $dir = __DIR__.'/';
 require_once $dir.'../../libs/lib_current_user.php';
+require_once $dir.'../../libs/lib_paginate.php';
+
 class BackendResourceController  {
     public $view = false;
     //private $data;
@@ -28,13 +30,12 @@ class BackendResourceController  {
 
 
 
-
         $current_user = lib_current_user::sessionCheck('current_user');
         if(!isset($this->nonauth[$this->action]) && !$current_user) {
             die("Invalid Session");
         } else  {
             if(isset($this->nonauth[$this->action]) && $current_user && isset($this->nonauth[$this->action]['redirect'])) {
-                redirect($this->nonauth[$this->action]['redirect']['module'], $this->nonauth[$this->action]['redirect']['action']);
+                lib_util::redirect($this->nonauth[$this->action]['redirect']['module'], $this->nonauth[$this->action]['redirect']['action']);
             }
 
             if(!isset($this->nonauth[$this->action]) && $current_user) {
@@ -47,11 +48,10 @@ class BackendResourceController  {
         }
         $this->initModules();
 
-
     }
 
     function initModules() {
-        global $globalRelationshipList,$globalRelationshipEntityList,$globalModuleList,$db,$globalEntityList,$vjconfig,$entity,$globalServerPreferenceStoreList;
+        global $globalRelationshipList,$globalModuleList,$globalEntityList,$vjconfig,$entity,$globalServerPreferenceStoreList;
 
         $dataWrapper = lib_datawrapper::getInstance();
         if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
@@ -111,7 +111,7 @@ class BackendResourceController  {
     function defaultPaginate($sql) {
         global $db,$vjconfig;
 
-        $paginate = Paginate::getInstance();
+        $paginate = lib_paginate::getInstance();
         $paginate->url = 'index.php?module='.$this->entity.'&pageindex=';
         $paginate->index =1;
         $paginate->noresult = 10;
@@ -120,7 +120,7 @@ class BackendResourceController  {
         $paginate->db = $db;
 
         $url = $vjconfig['fwurlbasepath']."backend/index.php?module=".$this->entity."&action=detailview&record=key_id";
-        $url = processUrl($url);
+        $url = lib_util::processUrl($url);
         $paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
         $paginate->setProcessHook($this, "processListRow");
 
@@ -361,7 +361,7 @@ class BackendResourceController  {
             }
 
         }
-        $paginate = $vjlib->Paginate;
+        $paginate = lib_paginate::getInstance();
 
         $paginate->module = $this->entity;
         $paginate->href = $current_url;

@@ -184,7 +184,7 @@ class lib_mysqli {
 					    $proc['attr'][$pkey] = $tempattr;
 					}
 
-					$processList[$key]  = getelement($proc['tag'],$rowval,$proc['attr'],$isdualtag);
+					$processList[$key]  = lib_util::getelement($proc['tag'],$rowval,$proc['attr'],$isdualtag);
 
 
 

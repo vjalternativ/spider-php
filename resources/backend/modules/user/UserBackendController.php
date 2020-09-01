@@ -12,7 +12,7 @@ class UserBackendController extends BackendResourceController  {
 
 	function action_login() {
 
-		global $current_user;
+		$current_user = lib_current_user::getEntityInstance();
 		if(!empty($current_user->id)) {
 			redirect('user','cpanel');
 		}

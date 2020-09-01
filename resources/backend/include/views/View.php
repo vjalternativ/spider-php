@@ -58,7 +58,7 @@ class View {
 
 	function getAllMenu() {
 	    $db = lib_mysqli::getInstance();
-	    global $current_user;
+	    $current_user = lib_current_user::getEntityInstance();
 
 	    if(!$current_user) {
 	        return array();
@@ -142,7 +142,7 @@ class View {
 	}
 
 	function loadHeader() {
-		global $current_user;
+		$current_user = lib_current_user::getEntityInstance();
 
 		$vjconfig = lib_config::getInstance()->getConfig();
         $smarty = lib_smarty::getSmartyInstance();
@@ -198,7 +198,7 @@ class View {
 
 	}
 	function loadFooter() {
-		global $current_user;
+		$current_user = lib_current_user::getEntityInstance();
 		$smarty = lib_smarty::getSmartyInstance();
 		$vjconfig = lib_config::getInstance()->getConfig();
 		$path = $vjconfig['fwbasepath'];

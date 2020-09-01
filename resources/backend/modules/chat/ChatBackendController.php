@@ -97,7 +97,7 @@ class ChatBackendController extends BackendResourceController {
     
     function action_getInitMessage() {
         $db = lib_mysqli::getInstance();
-	    global $current_user;
+	    $current_user = lib_current_user::getEntityInstance();
         
         
         $result = array("status"=>"fail");
