@@ -157,12 +157,15 @@ class lib_paginate {
 	}
 
 	function getPagingHtml($pageinfo,$ajaxMode=false) {
-	       global $smarty,$vjconfig;
+
+	       $smarty= lib_smarty::getSmartyInstance();
+           $vjconfig= lib_config::getInstance()->getConfig();
+
 	       $smarty->assign('pageinfo',$pageinfo);
 	       $smarty->assign('ajaxMode',$ajaxMode);
 
 
-	       return $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/paginghtml.tpl");
+	       return $smarty->fetch($vjconfig['fwbasepath']."resources/backend/include/tpls/paginghtml.tpl");
 	}
 }
 ?>

@@ -54,9 +54,11 @@ class lib_framework {
             $resourcePath =  $fwpath;
         } else {
             if($isMandatory) {
-                return false;
+                die("resource not found ".$relativePath);
             }
-            die("resource not found ".$relativePath);
+            return false;
+
+
         }
 
         return substr($resourcePath,0,strrpos($resourcePath,"/")).$filename;
@@ -126,13 +128,19 @@ class lib_framework {
             $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
 
             $modulePath = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'/'.$class.'.php');
-            $pathinterface = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'I'.ucfirst($_GET['module']).ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller.php',true);
-               require_once $resourcePath;
+            $pathinterface = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'I'.ucfirst($_GET['module']).ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller.php');
+            require_once $resourcePath;
 
                if($pathinterface) {
                 require_once $pathinterface;
                }
 
+               $class = ucfirst($_GET['resource']).'ResourceController';
+               if($modulePath) {
+                   $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
+               } else {
+                   $modulePath = $resourcePath;
+               }
                require_once $modulePath;
 
 
@@ -176,13 +184,10 @@ class lib_framework {
                         } else {
                             $isview = false;
                         }
-
                         if(!$isview) {
                             $class = 'View'.ucfirst($controller->view);
                         }
-
                         $view = new $class;
-
                         if(isset($controller->listview)) {
                             $view->listview += $controller->listview;
                         }
@@ -198,14 +203,10 @@ class lib_framework {
                         }
                         $view->loadHeader();
                         $view->preDisplay();
-
-
                         $view->display();
                         $view->afterDisplay();
                         $view->loadFooter();
                     }
-
-
                } else {
                    die("404");
                }
