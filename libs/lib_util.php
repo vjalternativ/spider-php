@@ -89,7 +89,8 @@ class lib_util
 
     static function processUrl($url)
     {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance();
+
         if ($vjconfig['framework']['seourl']) {
             return true;
 
@@ -101,7 +102,8 @@ class lib_util
 
     static function processSeoUrl()
     {
-        global $seoparams, $vjconfig;
+        $vjconfig = lib_config::getInstance();
+
         // use either global or by object property
         $seoparams = getParams();
 
@@ -116,7 +118,7 @@ class lib_util
 
     function getParams()
     {
-        global $sugar_config, $current_url;
+        
         $params = array();
         $baseUrlCount = strlen($sugar_config['base_url']);
         $url = substr($_SERVER['REQUEST_URI'], $baseUrlCount);
@@ -239,7 +241,8 @@ class lib_util
 
     static function getEntityField($table, $field)
     {
-        global $globalModuleList;
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
         if (isset($globalModuleList[$table]) && isset($globalModuleList[$table]['tableinfo']['fields'][$field])) {
             return $globalModuleList[$table]['tableinfo']['fields'][$field];
         }

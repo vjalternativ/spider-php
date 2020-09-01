@@ -75,7 +75,8 @@ class lib_entity {
 
 
 	function createEntity($entityName,$params=array(),$repair=false) {
-	    global $globalModuleList;
+	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 	    //$this->generateCache();
 
 	    if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
@@ -399,7 +400,10 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function saveIntoDB($table,$keyvalue,$where=false,$return = false) {
-	    global $db,$vjlib,$logicHook,$globalModuleList,$globalLogicHook,$vjconfig;
+	    $db = lib_mysqli::getInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$vjconfig = lib_config::getInstance();
+
 	    $isnew = false;
 		$sql = "UPDATE ";
 		$logicHook[$table] = array("before_save"=>array(),"after_save"=>array());
@@ -526,7 +530,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 	function removeRelationshpRows($table,$id) {
 
-	    global $globalModuleList,$db;
+	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$db = lib_mysqli::getInstance();
+
 
 	    if(isset($globalModuleList[$table]['relationships'])) {
 
@@ -571,7 +577,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function get($table,$id) {
-	    global $globalEntityList,$globalModuleList;
+	    $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 
 	    $db= lib_mysqli::getInstance();
 	    $this->module = $table;
@@ -711,7 +719,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	}
 
     function createRelationship($primary =false,$secondary=false,$type=false,$label=false,$secondlabel=false) {
-		global $entity,$globalModuleList;
+		$entity = lib_entity::getInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
     	if(!$primary || !$secondary || !$type) {
 			die("Incorrect parameters for create relationship ".$primary." ".$secondary." ".$type);
 		}
@@ -781,7 +791,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		return $rows;
 	}
 	function results($tentity = false,$sql = false,$paginate=true,$url=false,$index=false) {
-			global $vjlib,$current_url;
+			
 
 			$vardef = lib_util::getvardef($tentity);
 			$listviewdef = $vardef['metadata']['listview'];
@@ -804,7 +814,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			$paginate = lib_paginate::getInstance();
 
 			$paginate->module = $tentity;
-			$paginate->href = $current_url;
+			$paginate->href = $_SERVER['REQUEST_URI'];
 			$paginate->extrafields = array();
 
 
@@ -862,7 +872,10 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 	function saveRelationship($relationship,$primaryRecord,$relationshipId) {
 
-	    global $globalRelationshipList,$globalEntityList,$db;
+	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$db = lib_mysqli::getInstance();
+
 
 	    if(isset($globalRelationshipList[$relationship])) {
 
@@ -892,7 +905,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function removeRelationship($relationship,$relId) {
-	    global $globalEntityList,$globalRelationshipList;
+	    $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+
 
 
 
@@ -909,7 +924,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function getRelatedData($table,$col,$value) {
-	    global $globalRelationshipList,$globalEntityList;
+	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+
 
 	    $db = lib_mysqli::getInstance();
 
@@ -940,7 +957,12 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	}
 
 	public function generateCache() {
-	    global $globalRelationshipList,$globalModuleList,$db,$globalEntityList,$vjconfig,$globalServerPrefenreceStoreList;
+	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$db = lib_mysqli::getInstance();
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$vjconfig = lib_config::getInstance();
+
 
 	    $globalModuleList = array();
 	    $globalRelationshipList = array();
