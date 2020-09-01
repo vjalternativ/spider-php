@@ -13,8 +13,18 @@ return $db->getrows($sql,'id');
 		parent::display();
 
 		$db = lib_mysqli::getInstance();
-	    global $entity,$app_list_strings,$globalEntityList,$globalRelationshipList,$vjconfig;
-		$bs = lib_bootstrap::getInstance();
+	    $entity = lib_entity::getInstance();
+
+	    $app_list_strings=lib_datawrapper::getInstance()->get("app_list_string_list");
+
+
+	    global $globalEntityList,$globalRelationshipList;
+
+
+	    $vjconfig =lib_config::getInstance()->getConfig();
+
+
+	    $bs = lib_bootstrap::getInstance();
 
 
 		$panelheading = $bs->getelement('div', 'Manage',array('class'=>array('value'=>'panel-heading')));

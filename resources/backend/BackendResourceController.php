@@ -26,8 +26,6 @@ class BackendResourceController  {
     function __construct() {
 
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-
-
         $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
         $this->record = isset($_GET['record']) ? $_GET['record'] : false;
@@ -67,15 +65,23 @@ class BackendResourceController  {
     }
 
     function initModules() {
-        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$vjconfig = lib_config::getInstance();
-$entity = lib_entity::getInstance();
-$globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_preference_store_list");
-
 
         $dataWrapper = lib_datawrapper::getInstance();
+        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $entity = lib_entity::getInstance();
+        $globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_preference_store_list");
+        require_once $vjconfig['fwbasepath'].'resources/backend/include/language/lang.php';
+        $langpath = $vjconfig['basepath'].'resources/backend/include/language/lang.php';
+        if(file_exists($langpath)) {
+            require_once $langpath;
+        }
+
+        require_once $vjconfig['fwbasepath'].'include/language/'.$vjconfig['defaultlang'].'.string.php';
+
+
         if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
 
             if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
@@ -132,7 +138,7 @@ $globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_p
 
     function defaultPaginate($sql) {
         $db = lib_mysqli::getInstance();
-$vjconfig = lib_config::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
 
 
         $paginate = lib_paginate::getInstance();
@@ -143,7 +149,7 @@ $vjconfig = lib_config::getInstance();
         $paginate->sql = $sql;
         $paginate->db = $db;
 
-        $url = $vjconfig['fwurlbasepath']."backend/index.php?module=".$this->entity."&action=detailview&record=key_id";
+        $url = $vjconfig['urlbasepath']."backend/index.php?module=".$this->entity."&action=detailview&record=key_id";
         $url = lib_util::processUrl($url);
         $paginate->process['name'] = array("tag"=>"a",'value'=>'key_name','attr'=>array("href"=>$url));
         $paginate->setProcessHook($this, "processListRow");
@@ -199,10 +205,10 @@ $vjconfig = lib_config::getInstance();
 
     function action_save() {
         $entity = lib_entity::getInstance();
-$db = lib_mysqli::getInstance();
-$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$vjconfig = lib_config::getInstance();
+        $db = lib_mysqli::getInstance();
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $vjconfig = lib_config::getInstance()->getConfig();
 
         $data = $_POST;
 
@@ -470,7 +476,7 @@ $vjconfig = lib_config::getInstance();
     function action_getAjaxSubPanelData() {
         $entity = lib_entity::getInstance();
 $db = lib_smarty::getSmartyInstance();
-$vjconfig = lib_config::getInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
 
         $ptable = $_REQUEST['ptable'];
         $relname = $_REQUEST['relname'];

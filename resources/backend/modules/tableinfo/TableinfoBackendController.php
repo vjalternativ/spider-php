@@ -8,6 +8,7 @@ class TableinfoBackendController extends BackendResourceController {
         $this->nonauth['ajaxrelatemodal'] = array();
         $this->nonauth['ajaxRemoveRelationship'] = array();
         $this->nonauth['deleteRecord'] = array();
+        parent::__construct();
     }
 
 	function action_editview() {

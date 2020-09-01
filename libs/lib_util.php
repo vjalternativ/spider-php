@@ -89,7 +89,7 @@ class lib_util
 
     static function processUrl($url)
     {
-        $vjconfig = lib_config::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
 
         if ($vjconfig['framework']['seourl']) {
             return true;
@@ -118,7 +118,7 @@ class lib_util
 
     function getParams()
     {
-        
+
         $params = array();
         $baseUrlCount = strlen($sugar_config['base_url']);
         $url = substr($_SERVER['REQUEST_URI'], $baseUrlCount);
