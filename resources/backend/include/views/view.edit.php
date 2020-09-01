@@ -157,7 +157,7 @@ class ViewEdit  extends View {
 	}
 
 	function parseEditViewDef($def) {
-		global $vjlib,$app_list_strings,$mod_string,$entity;
+		global $app_list_strings,$mod_string,$entity;
 		$bs = lib_bootstrap::getInstance();
 		$formgroup = '';
 		foreach($def as $item) {

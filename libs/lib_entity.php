@@ -573,7 +573,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	function get($table,$id) {
 	    global $globalEntityList,$globalModuleList;
 
-	    $db= MysqliLib::getInstance();
+	    $db= lib_mysqli::getInstance();
 	    $this->module = $table;
 
 		$tableinfo = $globalModuleList[$table];

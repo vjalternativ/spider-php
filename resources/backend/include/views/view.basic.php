@@ -12,20 +12,19 @@ class ViewBasic extends View
     function display()
     {
         $vjconfig = lib_config::getInstance()->getConfig();
-		global  $vjlib;
-        
+
         // $tpl = $vjconfig['basepath'].$this->tpl;
-        
+
         if (! $this->heading) {
             $this->heading = $this->module;
         }
-        
+
         $bs = lib_bootstrap::getInstance();
         if (! $this->html) {
-            
+
             $this->html = $this->module;
         }
-        
+
         $panelheading = $bs->getelement('div', ucfirst($this->heading) . ' | Basic View', array(
             'class' => array(
                 'value' => 'panel-heading'

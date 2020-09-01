@@ -122,6 +122,9 @@ class lib_framework {
         $this->module = $_GET['module'];
         $this->action = $_GET['action'];
 
+        $this->record = isset($_GET['record']) ? $_GET['record'] : false;
+
+
         if(isset($_GET['module']) && isset($_GET['action'])) {
 
 

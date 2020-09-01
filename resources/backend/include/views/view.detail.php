@@ -434,7 +434,7 @@ class ViewDetail extends View
 
     function parseDetailViewDef($defkey, $vardef)
     {
-        global $vjlib, $mod_string;
+        global  $mod_string;
         $def = $vardef['metadata'][$defkey];
 
         $bs = lib_bootstrap::getInstance();

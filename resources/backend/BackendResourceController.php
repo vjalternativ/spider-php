@@ -21,14 +21,16 @@ class BackendResourceController  {
     public $ignoreRecords = array();
     public $additionalJoin = false;
     var $action;
+    var $record;
 
     function __construct() {
 
-        global $globalModuleList;
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 
         $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
-
+        $this->record = isset($_GET['record']) ? $_GET['record'] : false;
 
 
         $current_user = lib_current_user::sessionCheck('current_user');
@@ -54,12 +56,24 @@ class BackendResourceController  {
             $entity->module = $this->entity;
             $tableinfo = $entity->getwhere("tableinfo","name='".$this->entity."'");
             $entity->tableinfo = $tableinfo;
+
+            if($this->record) {
+                $entity->record = $this->record;
+                $data = $entity->get($this->entity,$this->record);
+                $this->params['data'] = $data;
+            }
         }
 
     }
 
     function initModules() {
-        global $globalRelationshipList,$globalModuleList,$globalEntityList,$vjconfig,$entity,$globalServerPreferenceStoreList;
+        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$vjconfig = lib_config::getInstance();
+$entity = lib_entity::getInstance();
+$globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_preference_store_list");
+
 
         $dataWrapper = lib_datawrapper::getInstance();
         if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
@@ -117,7 +131,9 @@ class BackendResourceController  {
 
 
     function defaultPaginate($sql) {
-        global $db,$vjconfig;
+        $db = lib_mysqli::getInstance();
+$vjconfig = lib_config::getInstance();
+
 
         $paginate = lib_paginate::getInstance();
         $paginate->url = 'index.php?module='.$this->entity.'&pageindex=';
@@ -182,7 +198,12 @@ class BackendResourceController  {
     }
 
     function action_save() {
-        global $entity,$db,$globalEntityList,$globalModuleList,$vjconfig;
+        $entity = lib_entity::getInstance();
+$db = lib_mysqli::getInstance();
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$vjconfig = lib_config::getInstance();
+
         $data = $_POST;
 
         $module = $this->entity;
@@ -335,7 +356,7 @@ class BackendResourceController  {
 
 
     function results($sql = false,$paginate=true,$url=false) {
-        global $current_url;
+
         $vardef = lib_util::getvardef($this->entity);
         $listviewdef = $vardef['metadata']['listview'];
         $this->listview['metadata'] = $listviewdef;
@@ -371,7 +392,7 @@ class BackendResourceController  {
         $paginate = lib_paginate::getInstance();
 
         $paginate->module = $this->entity;
-        $paginate->href = $current_url;
+        $paginate->href = $_SERVER['REQUEST_URI'];
         $paginate->extrafields = array();
 
 
@@ -447,7 +468,10 @@ class BackendResourceController  {
 
 
     function action_getAjaxSubPanelData() {
-        global $entity,$vjlib,$smarty,$vjconfig;
+        $entity = lib_entity::getInstance();
+$db = lib_smarty::getSmartyInstance();
+$vjconfig = lib_config::getInstance();
+
         $ptable = $_REQUEST['ptable'];
         $relname = $_REQUEST['relname'];
 

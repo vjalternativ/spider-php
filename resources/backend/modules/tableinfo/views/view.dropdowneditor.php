@@ -5,30 +5,30 @@ class tableinfoViewDropdownEditor extends ViewBasic
 
     function display()
     {
-        global $app_list_strings, $vjlib, $vjconfig;
+        global $app_list_strings, $vjconfig;
         $bs = lib_bootstrap::getInstance();
         $rows = array();
         $counter = 0;
         $rowcounter = 0;
-        
+
         foreach ($app_list_strings as $list => $val) {
             $counter ++;
             $list = lib_util::getelement('a', $list, array(
                 'href' => '#',
                 'onclick' => "ajaxeditoption('" . $list . "')"
             ));
-            
+
             $rows[$rowcounter][] = $list;
             if ($counter == 4) {
                 $counter = 0;
                 $rowcounter ++;
             }
         }
-        
+
         for ($j = $counter; $j < 4; $j ++) {
             $rows[$rowcounter][] = "";
         }
-        
+
         $script = lib_util::getelement('script', '', array(
             "src" => 'modules/tableinfo/assets/layoutmanager.js'
         ));
@@ -40,22 +40,22 @@ class tableinfoViewDropdownEditor extends ViewBasic
                 3
             )
         ));
-        
+
         $url = "index.php?module=tableinfo&action=saveoption";
         $url = lib_util::processUrl($url);
-        
+
         $html = $script . $table;
-        
+
         $submit = lib_util::getelement('button', 'Save', array(
             'type' => 'submit',
             'class' => 'btn btn-primary'
         ));
-        
+
         $button = lib_util::getelement('button', "Add New", array(
             "class" => 'btn btn-info',
             "onclick" => "newdropdown()"
         ));
-        
+
         $smarty = new Smarty();
         $smarty->assign('heading', 'Options');
         $smarty->assign('body', '');
