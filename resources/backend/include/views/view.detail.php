@@ -223,9 +223,9 @@ class ViewDetail extends View
 
     function afterDisplay()
     {
-        global $entity, $vjlib, $smarty, $vjconfig;
+        global $entity, $vjlib, $vjconfig;
         $bs = lib_bootstrap::getInstance();
-
+        $smarty = lib_smarty::getSmartyInstance();
         foreach ($this->subpanels as $subpanels) {
 
             $pageinfo = $entity->get_relationships($subpanels['name'], false, $subpanels);
@@ -286,9 +286,9 @@ class ViewDetail extends View
 
         $filterhtml = $smarty->fetch($vjconfig['fwbasepath'] . "include/tpls/subpanelfilter.tpl");
 
-        $modal = new Modal();
+        $modal = new lib_modal();
         $modal->id = "subpanel";
-        $modal->heading = getLabel("LBL_RELATED_RECORDS");
+        $modal->heading = lib_util::getLabel("LBL_RELATED_RECORDS");
         $modal->afterheader = $filterhtml;
         $modal->extrafooter = '<button type="submit" class="btn btn-primary">Select</button>';
         $modal->formaction = 'index.php?module=' . $_GET['module'] . '&action=addSubpanelRelationship&record=' . $_GET['record'] . '&primaryModule=' . $_GET['module'];

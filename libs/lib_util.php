@@ -231,13 +231,13 @@ class lib_util
         }
     }
 
-    function getLabel($lbl)
+    static function getLabel($lbl)
     {
         global $mod_string;
         return isset($mod_string[$lbl]) ? $mod_string[$lbl] : $lbl;
     }
 
-    function getEntityField($table, $field)
+    static function getEntityField($table, $field)
     {
         global $globalModuleList;
         if (isset($globalModuleList[$table]) && isset($globalModuleList[$table]['tableinfo']['fields'][$field])) {
