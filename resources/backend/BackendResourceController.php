@@ -32,6 +32,7 @@ class BackendResourceController  {
 
 
         $current_user = lib_current_user::sessionCheck('current_user');
+
         if(!isset($this->nonauth[$this->action]) && !$current_user) {
             die("Invalid Session");
         } else  {

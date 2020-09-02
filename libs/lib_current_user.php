@@ -5,7 +5,7 @@ class lib_current_user {
 
     static function getEntityInstance() {
         if(self::$instance==null) {
-            self::$instance = new lib_entity();
+            return  self::sessionCheck('current_user');
         }
         return self::$instance;
     }
@@ -13,15 +13,16 @@ class lib_current_user {
     static function sessionCheck($var) {
 
         if(!isset($_SESSION[$var])) {
-            return false;
+            return null;
         }
         if($var =='current_user') {
             $array = json_decode($_SESSION[$var],1);
-             $user = self::getEntityInstance();
+             $user = new lib_entity();
 
             foreach($array as $key=>$val) {
                 $user->$key = $val;
             }
+            self::$instance  = $user;
             return self::$instance;
          }
          return  $_SESSION[$var];
