@@ -11,9 +11,6 @@ class ViewBasic extends View
 
     function display()
     {
-        $vjconfig = lib_config::getInstance()->getConfig();
-
-        // $tpl = $vjconfig['basepath'].$this->tpl;
 
         if (! $this->heading) {
             $this->heading = $this->module;

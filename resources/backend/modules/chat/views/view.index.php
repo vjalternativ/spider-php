@@ -1,12 +1,12 @@
-<?php 
+<?php
 class chatViewIndex extends ViewBasic {
-    
-    
+
+
     function display() {
-        
-       $db = lib_mysqli::getInstance();
-$db = lib_current_user::getEntityInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
+
+       $smarty = lib_smarty::getSmartyInstance();
+       $current_user = lib_current_user::getEntityInstance();
+       $vjconfig = lib_config::getInstance()->getConfig();
 
        $isAgentForLiveChat = false;
        $heading = "Live Chat With Us";
@@ -17,10 +17,10 @@ $vjconfig = lib_config::getInstance()->getConfig();
        $smarty->assign("heading",$heading);
        $smarty->assign("is_agent_livechat",$isAgentForLiveChat);
        echo $smarty->fetch($vjconfig['fwbasepath']."modules/chat/tpls/index.tpl");
-        
+
     }
-    
-    
+
+
     function loadHeader() {
         $vjconfig = lib_config::getInstance()->getConfig();
         echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
@@ -32,12 +32,12 @@ $vjconfig = lib_config::getInstance()->getConfig();
             echo "<script> var autoconnect = true; </script>";
         } else {
             echo "<script> var autoconnect = false; </script>";
-            
+
         }
     }
-    
+
     function loadFooter() {
-        
+
     }
 }
 

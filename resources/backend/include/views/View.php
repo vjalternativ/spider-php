@@ -217,7 +217,7 @@ class View {
 
 
 	function show($path) {
-	    $db = lib_mysqli::getInstance();
+	    $smarty = lib_smarty::getSmartyInstance();
 
 	    foreach($this->params as $key=>$val) {
 	        $smarty->assign($key,$val);

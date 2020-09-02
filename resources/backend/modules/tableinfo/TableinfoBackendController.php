@@ -680,7 +680,7 @@ $db = lib_mysqli::getInstance();
 	    ini_set("display_errors",1);
 	    $db = lib_mysqli::getInstance();
 	    $entity = lib_entity::getInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
+        $vjconfig = lib_config::getInstance()->getConfig();
 
 	    $module = $_POST['importmodule'];
 	    $_SESSION['reqresp']['status'] ="success";
