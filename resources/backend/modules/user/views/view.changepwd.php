@@ -2,7 +2,8 @@
 
 class userViewChangePwd extends View {
     function display() {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
+
      $this->tpl= 'modules/user/tpls/changepwd.tpl';
    // echo $html;
    //$this->assign("changepwd",$this->params['changepwd']);

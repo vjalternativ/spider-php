@@ -5,7 +5,9 @@ class tableinfoViewDropdownEditor extends ViewBasic
 
     function display()
     {
-        global $app_list_strings, $vjconfig;
+        $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+$vjconfig = lib_config::getInstance()->getConfig();
+
         $bs = lib_bootstrap::getInstance();
         $rows = array();
         $counter = 0;

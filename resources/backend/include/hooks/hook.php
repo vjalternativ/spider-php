@@ -35,7 +35,9 @@ class SystemLogicHook
 
     function afterSave(&$keyvalue)
     {
-        global $entity, $globalModuleList;
+        $entity = lib_entity::getInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
         if ($keyvalue['hook_tabletype'] == "user") {
             if (isset($keyvalue['deleted']) && $keyvalue['deleted'] == "1" && isset($keyvalue['ownership_id']) && ! empty($keyvalue['ownership_id'])) {
                 $data = $entity->get($globalModuleList[$entity->hookTable]['tableinfo']['fields']['ownership_id']['rmodule'], $keyvalue['ownership_id']);
@@ -51,7 +53,10 @@ class SystemLogicHook
         }
         
         foreach($keyvalue as $key=>$val) {
-            global $globalRelationshipList,$globalEntityList,$entity;
+            $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$entity = lib_entity::getInstance();
+
             if(isset($globalRelationshipList[$key]) && $val) {
                 if($globalRelationshipList[$key]['rtype']=="1_M") {
                     $secondaryTable = $globalEntityList[$globalRelationshipList[$key]['secondarytable']]['name'];
@@ -72,7 +77,8 @@ class SystemLogicHook
     function workflowAfterSave(&$keyvalue)
     {
         $db = lib_mysqli::getInstance();
-	    global  $globalModuleList;
+	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 
         if (isset($globalModuleList['workflow'])) {
 
@@ -102,7 +108,11 @@ class SystemLogicHook
 
     function executeWorkFlowMail($flow, $keyval)
     {
-        global $entity, $globalModuleList, $smarty, $vjconfig;
+        $entity = lib_entity::getInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$db = lib_smarty::getSmartyInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+
         $fields = $globalModuleList[$keyval['hook_table']]['tableinfo']['fields'];
 
         $data = $entity->get($keyval['hook_table'], $keyval['id']);

@@ -8,7 +8,9 @@ class MediaFilesService implements IMediaFilesService  {
     }
     
     public function saveMediaFileByFieldArray($field,$keyvalue) {
-        global $entity,$vjconfig;
+        $entity = lib_entity::getInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+
         $mediaId = false;
         if(isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error']=='0') {
             $mediaKeyValue=array();

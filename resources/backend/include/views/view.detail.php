@@ -299,7 +299,8 @@ class ViewDetail extends View
 
     function getDefaultLayout()
     {
-        global $globalModuleList;
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
         $entity  = lib_entity::getInstance();
         $bs = lib_bootstrap::getInstance();
         $tableinfo = $entity->getwhere("tableinfo", "name ='" . $this->module . "'");
@@ -325,7 +326,8 @@ class ViewDetail extends View
             }
         }
 
-        global $globalEntityList;
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+
         if (isset($globalModuleList[$tableinfo['name']]['relationships'])) {
             foreach ($globalModuleList[$tableinfo['name']]['relationships'] as $rel) {
                 if ($rel['rtype'] == "CSTM") {
@@ -434,7 +436,8 @@ class ViewDetail extends View
 
     function parseDetailViewDef($defkey, $vardef)
     {
-        global  $mod_string;
+        $mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
+
         $def = $vardef['metadata'][$defkey];
 
         $bs = lib_bootstrap::getInstance();

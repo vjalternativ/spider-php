@@ -401,19 +401,25 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 	function saveIntoDB($table,$keyvalue,$where=false,$return = false) {
 	    $db = lib_mysqli::getInstance();
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$vjconfig = lib_config::getInstance();
-
-	    $isnew = false;
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $vjconfig = lib_config::getInstance();
+        $isnew = false;
 		$sql = "UPDATE ";
-		$logicHook[$table] = array("before_save"=>array(),"after_save"=>array());
-		$globalLogicHook = array("before_save"=>array(),"after_save"=>array());
-
-		$vjlib->loadf($vjconfig['fwbasepath']."include/logic_hooks.php",true,false);
-		$vjlib->loadf($vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php",false,false);
 
 
-		$vjlib->loadf($vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php",false,false);
+		require $vjconfig['fwbasepath']."include/logic_hooks.php";
+		$globalLogicHook  = lib_datawrapper::getInstance()->get("global_logichook_list");
+
+		if(file_exists($vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php")) {
+		    require $vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php";
+		}
+
+		if(file_exists($vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php")) {
+		    require $vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php";
+		}
+
+		$logicHook = lib_datawrapper::getInstance()->get("logichook_list");
+
 
 
 		if(isset($keyvalue['hook_skip']) && $keyvalue['hook_skip']) {
@@ -465,9 +471,8 @@ $vjconfig = lib_config::getInstance();
 
 
 		foreach($globalLogicHook['before_save'] as $hook) {
-		    $vjlib->loadf($vjconfig['fwbasepath'].$hook[1]);
+		    require_once $vjconfig['fwbasepath'].$hook[1];
 		    $hookobj = new $hook[2];
-
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
@@ -475,10 +480,16 @@ $vjconfig = lib_config::getInstance();
 		//echo "<pre>";print_r($logicHook[$table]);echo "<pre>";
 		foreach($logicHook[$table]['before_save'] as $hook) {
 
-		    $isHook = $vjlib->loadf($vjconfig['basepath'].$hook[1],false);
+		    $isHook =false;
+
+		    if(file_exists($vjconfig['basepath'].$hook[1])) {
+		        $isHook = true;
+		        require_once $vjconfig['basepath'].$hook[1];
+		    }
+
 
 		    if(!$isHook) {
-		        $vjlib->loadf($vjconfig['fwbasepath'].$hook[1]);
+		        require_once $vjconfig['fwbasepath'].$hook[1];
 		    }
 		    $hookobj = new $hook[2];
 
@@ -502,21 +513,34 @@ $vjconfig = lib_config::getInstance();
 
 
 		foreach($globalLogicHook['after_save'] as $hook) {
-		    $vjlib->loadf($vjconfig['fwbasepath'].$hook[1]);
+		    require_once $vjconfig['fwbasepath'].$hook[1];
 		    $hookobj = new $hook[2];
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
 		foreach($logicHook[$table]['after_save'] as $hook) {
 
-		    $found = $vjlib->loadf($vjconfig['basepath'].$hook[1],false);
+		    $found = false;
+
+		    if(file_exists($vjconfig['basepath'].$hook[1])) {
+		        $found = true;
+		        require_once $vjconfig['basepath'].$hook[1];
+		    }
+
 		    if(!$found) {
-		        $vjlib->loadf($vjconfig['fwbasepath'].$hook[1],false);
+
+		        if(file_exists($vjconfig['fwbasepath'].$hook[1])) {
+		            require_once $vjconfig['fwbasepath'].$hook[1];
+		        }
 		    }
 		    $hookobj = new $hook[2];
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
+
+
+		lib_datawrapper::getInstance()->set("logichook_list", $logicHook);
+
 
 		if(isset($keyvalue['deleted']) && $keyvalue=='1') {
 		    $this->removeRelationshpRows($table, $keyvalue['id']);
@@ -531,7 +555,7 @@ $vjconfig = lib_config::getInstance();
 	function removeRelationshpRows($table,$id) {
 
 	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$db = lib_mysqli::getInstance();
+        $db = lib_mysqli::getInstance();
 
 
 	    if(isset($globalModuleList[$table]['relationships'])) {
@@ -791,7 +815,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 		return $rows;
 	}
 	function results($tentity = false,$sql = false,$paginate=true,$url=false,$index=false) {
-			
+
 
 			$vardef = lib_util::getvardef($tentity);
 			$listviewdef = $vardef['metadata']['listview'];

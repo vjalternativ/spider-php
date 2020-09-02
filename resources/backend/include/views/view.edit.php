@@ -31,7 +31,9 @@ class ViewEdit  extends View {
 
 	function preDisplay() {
 
-	    global $entity,$globalModuleList;
+	    $entity = lib_entity::getInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 	    $entity = new lib_entity();
 
 	    $tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
@@ -79,7 +81,8 @@ class ViewEdit  extends View {
 	}
 
 	function getDefaultLayout() {
-		global $globalModuleList;
+		$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 		$bs = lib_bootstrap::getInstance();
 
 		//$tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
@@ -157,7 +160,10 @@ class ViewEdit  extends View {
 	}
 
 	function parseEditViewDef($def) {
-		global $app_list_strings,$mod_string,$entity;
+		$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+$mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
+$entity = lib_entity::getInstance();
+
 		$bs = lib_bootstrap::getInstance();
 		$formgroup = '';
 		foreach($def as $item) {

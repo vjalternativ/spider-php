@@ -3,7 +3,9 @@ require_once 'include/vjlib/abstract/AWidget.php';
 class widgetLogicHook {
     
     function beforeSave(&$data) {
-            global $entity,$vjconfig;
+            $entity = lib_entity::getInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+
             $fields = AWidget::getWidgetConfigFields($data['widget_type']);
             
             $json = array();

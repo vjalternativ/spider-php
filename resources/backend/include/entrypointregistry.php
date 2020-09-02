@@ -1,5 +1,9 @@
 <?php
-global $entrypoints,$vjconfig;
+$entrypoints = lib_datawrapper::getInstance()->get("entrypoints_list");
+if(!$entrypoints) {
+    $entrypoints = array();
+}
+$vjconfig = lib_config::getInstance()->getConfig();
 $entrypoints['install'] = array("path"=>$vjconfig['fwbasepath']."include/entrypoints/install.php",'auth'=>false);
 $entrypoints['patch'] = array("path"=>$vjconfig['fwbasepath']."include/entrypoints/patch.php",'auth'=>false);
 $entrypoints['site'] = array("path"=>$vjconfig['fwbasepath']."include/entrypoints/site/index.php",'auth'=>false,'type'=>'siteEntryPoint');

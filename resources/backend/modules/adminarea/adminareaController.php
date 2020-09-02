@@ -253,7 +253,9 @@ class adminareaController extends VJController
     }
     
     function action_showPatch() {
-        global $globalEntityList,$vjconfig;
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$vjconfig = lib_config::getInstance()->getConfig();
+
         
         $this->repairTables['user'] = 1;
         foreach($globalEntityList as $key=>$entity) {

@@ -19,7 +19,10 @@ class LogicHook {
     
     
     function afterSave(&$keyvalue) {
-        global $entity,$globalModuleList,$db;
+        $entity = lib_entity::getInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$db = lib_mysqli::getInstance();
+
         
         if($keyvalue['date_entered']==$keyvalue['date_modified']) {
             $emailGroundId = $keyvalue['email_group'];

@@ -4,7 +4,10 @@ class chatViewIndex extends ViewBasic {
     
     function display() {
         
-       global $smarty,$current_user,$vjconfig;
+       $db = lib_smarty::getSmartyInstance();
+$db = lib_current_user::getEntityInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+
        $isAgentForLiveChat = false;
        $heading = "Live Chat With Us";
        if($current_user && isset($current_user->privileges['agent.live.chat'])) {

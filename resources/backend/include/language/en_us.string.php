@@ -1,5 +1,6 @@
 <?php
-global $mod_string;
+$mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
+
 $mod_string['LBL_ID'] = 'Id';
 $mod_string['LBL_NAME'] = 'Name';
 $mod_string['LBL_DESCRIPTION'] = 'Description';

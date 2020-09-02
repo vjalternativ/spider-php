@@ -129,7 +129,9 @@ class ChatBackendController extends BackendResourceController {
     
     function action_ajaxStrangerChatConnect(){
         $db = lib_mysqli::getInstance();
-	    global $entity,$current_user;
+	    $entity = lib_entity::getInstance();
+$db = lib_current_user::getEntityInstance();
+
         
         
         $stdesc = "";
@@ -414,7 +416,9 @@ class ChatBackendController extends BackendResourceController {
     }
     
     function action_ajaxStrangerChatConnectOld() {
-        global $servercache,$log;
+        $servercache = lib_server_cache::getInstance();
+$log = lib_logger::getInstance();
+
         
         $result = array('status'=>'no_user_avail','chatId'=>'');
         $availUserInfo = $servercache->get("availUsersJson");
@@ -477,7 +481,9 @@ class ChatBackendController extends BackendResourceController {
     }
     
     function action_ajaxSendMessage() {
-        global $servercache,$log;
+        $servercache = lib_server_cache::getInstance();
+$log = lib_logger::getInstance();
+
         $sessionId = session_id();
         $stragerChatInfo = $servercache->get("strangerChatJson");
         //$engagedUserInfo = $servercache->get("engagedUserJson");
@@ -493,7 +499,8 @@ class ChatBackendController extends BackendResourceController {
     }
     
     function action_ajaxGetChatData() {
-        global $servercache;
+        $servercache = lib_server_cache::getInstance();
+
         $stragerChatInfo = $servercache->get("strangerChatJson");
         $engagedUserInfo = $servercache->get("engagedUserJson");
         
@@ -553,7 +560,8 @@ class ChatBackendController extends BackendResourceController {
     }
     
     function action_ajaxDisconnectChatOld() {
-        global $servercache;
+        $servercache = lib_server_cache::getInstance();
+
         
         $stragerChatInfo = $servercache->get("strangerChatJson");
         $engagedUserInfo = $servercache->get("engagedUserJson");
@@ -587,7 +595,8 @@ class ChatBackendController extends BackendResourceController {
     }
     
     function action_test() {
-        global $servercache;
+        $servercache = lib_server_cache::getInstance();
+
         $stragerChatInfo = $servercache->get("strangerChatJson");
         $engagedUserInfo = $servercache->get("engagedUserJson");
         $availUserInfo = $servercache->get("availUsersJson");

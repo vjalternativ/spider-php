@@ -14,7 +14,9 @@ class Authenticate {
 
 
 	function processSession($row) {
-	    global $current_user,$globalModuleList;
+	    $db = lib_current_user::getEntityInstance();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 	    $db = lib_mysqli::getInstance();
 	    $sql = "select r.id,r.name from  roles_user_1_m ru
                     INNER JOIN roles r on ru.roles_id = r.id and ru.deleted=0 and r.deleted=0 and ru.user_id = '".$row['id']."'

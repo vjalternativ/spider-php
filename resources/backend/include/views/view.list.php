@@ -13,7 +13,9 @@ class ViewList  extends View {
 
 	}
 	function display() {
- 		global $mod_string,$globalModuleList;
+ 		$mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
  		$bs = lib_bootstrap::getInstance();
  		$rows = $this->listview['pageinfo']['data'];
  		$rows = array_slice($rows, 0,$this->listview['pageinfo']['resultperpage'],true);

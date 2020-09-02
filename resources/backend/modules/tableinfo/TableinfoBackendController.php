@@ -54,7 +54,9 @@ class TableinfoBackendController extends BackendResourceController {
 
 	function action_ajaxrelatemodal() {
 	   $db = lib_mysqli::getInstance();
-	    global $globalRelationshipList,$globalEntityList;
+	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+
 		$module = $_REQUEST['rmodule'];
 		$value = $_REQUEST['value'];
 		$field = $_REQUEST['field'];
@@ -86,7 +88,8 @@ class TableinfoBackendController extends BackendResourceController {
 
 	function action_ajaxeditoption() {
 
-		global $app_list_strings;
+		$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+
 
 		$bs = lib_bootstrap::getInstance();
 
@@ -146,7 +149,8 @@ class TableinfoBackendController extends BackendResourceController {
 
 	function action_saveoption() {
 
-	global $app_list_strings;
+	$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+
 
 
 	$list = $_POST['list'];
@@ -235,7 +239,8 @@ class TableinfoBackendController extends BackendResourceController {
 		    $table .= "_".$temp['table'];
 		}
 
-		global $globalModuleList;
+		$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 		if(!isset($globalModuleList[$table])) {
 		   $entity->createEntity($table,array("type"=>"cstm"));
 		} */
@@ -266,7 +271,10 @@ class TableinfoBackendController extends BackendResourceController {
 	}
 
 	function action_ajaxSaveListViewLayout() {
-	    global $entity,$db,$globalEntityList;
+	    $entity = lib_entity::getInstance();
+$db = lib_mysqli::getInstance();
+$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+
 		$id= $_REQUEST['id'];
 		$colorder = $_REQUEST['colorder'];
 		$view = $_REQUEST['view'];
@@ -351,7 +359,12 @@ class TableinfoBackendController extends BackendResourceController {
 
 
 	function action_ajaxFetchSubpanleList() {
-	    global $entity,$smarty,$vjconfig,$globalRelationshipList,$globalRelationshipEntityList;
+	    $entity = lib_entity::getInstance();
+$db = lib_smarty::getSmartyInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+$globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+$globalRelationshipEntityList = lib_datawrapper::getInstance()->get("relationship_entity_list");
+
 	    try {
 	        $rtable = $_REQUEST['rtable'];
 	        $relname = $_REQUEST['relname'];
@@ -367,7 +380,8 @@ class TableinfoBackendController extends BackendResourceController {
 
 
 
-    	            global $globalEntityList;
+    	            $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+
     	            $db=MysqliLib::getInstance();
     	            $sql = "select * from ".$parentRelationship['name']." where deleted=0 and ".$globalEntityList[$parentRelationship['secondarytable']]['name']."_id='".$parentRecord."'";
     	            $primaryField = $globalEntityList[$parentRelationship['primarytable']]['name']."_id";
@@ -426,7 +440,9 @@ class TableinfoBackendController extends BackendResourceController {
 
 
 	function action_deleteFields() {
-	    global $entity,$db;
+	    $entity = lib_entity::getInstance();
+$db = lib_mysqli::getInstance();
+
 
 	    $id = $_REQUEST['module_id'];
 	    $fields = isset($_REQUEST['field']) ? $_REQUEST['field'] : array();
@@ -663,7 +679,9 @@ class TableinfoBackendController extends BackendResourceController {
 	function  action_import() {
 	    ini_set("display_errors",1);
 	    $db = lib_mysqli::getInstance();
-	    global $entity,$vjconfig;
+	    $entity = lib_entity::getInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+
 	    $module = $_POST['importmodule'];
 	    $_SESSION['reqresp']['status'] ="success";
 	    $_SESSION['reqresp']['message'] ="Imported Sucessfully records : ";
@@ -787,7 +805,10 @@ class TableinfoBackendController extends BackendResourceController {
 
 
 	function action_ajaxAddlayoutrow() {
-	    global $smarty,$vjconfig,$globalModuleList;
+	    $db = lib_smarty::getSmartyInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 
 
 	    $rmodule = $_POST['rmodule'];

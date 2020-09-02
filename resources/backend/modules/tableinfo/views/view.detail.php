@@ -18,7 +18,9 @@ return $db->getrows($sql,'id');
 	    $app_list_strings=lib_datawrapper::getInstance()->get("app_list_string_list");
 
 
-	    global $globalEntityList,$globalRelationshipList;
+	    $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+$globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+
 
 
 	    $vjconfig =lib_config::getInstance()->getConfig();
@@ -208,7 +210,8 @@ return $db->getrows($sql,'id');
 		$addnewrelationship = $bs->getelement("button","New Relationship",array("class"=>'btn btn-primary margin-top-10',"data-toggle"=>"modal", "data-target"=>"#newrelationshipmodal"));
 		$relationshiptabcontent = $bs->getelement('div',$addnewrelationship.$relationshiptable,array("id"=>'relationships-tab',"class"=>"tab-pane fade"));
 
-		global $smarty;
+		$db = lib_smarty::getSmartyInstance();
+
 
 		$listviewfieldarray = array();
 		if(isset($tableinfo['metadata']['listview'])) {
@@ -339,7 +342,9 @@ return $db->getrows($sql,'id');
 
 		echo $bs->processhtml($panel);
 
-		global $smarty,$vjconfig;
+		$db = lib_smarty::getSmartyInstance();
+$vjconfig = lib_config::getInstance()->getConfig();
+
 
 
 		$tables = $this->getalltables();

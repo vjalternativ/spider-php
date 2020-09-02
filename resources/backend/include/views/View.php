@@ -91,7 +91,8 @@ class View {
 
 	    $module = $this->module;
 
-	    global $globalModuleList;
+	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+
 	    $moduleTableId = isset($globalModuleList[$module]['id']) ? $globalModuleList[$module]['id'] : false;
 	    $menuData = array();
 	    foreach($submenumodules as $mid=>$menus) {
@@ -216,7 +217,8 @@ class View {
 
 
 	function show($path) {
-	    global $smarty;
+	    $db = lib_smarty::getSmartyInstance();
+
 	    foreach($this->params as $key=>$val) {
 	        $smarty->assign($key,$val);
 	    }
@@ -243,7 +245,9 @@ class View {
 	}
 
 	function processDefForLang($suffix,$vardef,$deftype="editview") {
-	    global $globalModuleList,$entity;
+	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+$entity = lib_entity::getInstance();
+
 	    $langTable = $this->module."_".$suffix;
 
 
