@@ -25,7 +25,7 @@ class rolesViewDetail  extends ViewDetail {
     function afterDisplay() {
         parent::afterDisplay();
         $db = lib_mysqli::getInstance();
-	    $db = lib_smarty::getSmartyInstance();
+	    $smarty = lib_smarty::getSmartyInstance();
 $vjconfig = lib_config::getInstance()->getConfig();
 
         $sql = "select t.name as label,ri.module_access,ri.list_access,ri.edit_access,ri.delete_access,t.id as module_id from tableinfo t

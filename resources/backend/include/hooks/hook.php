@@ -10,7 +10,7 @@ class SystemLogicHook
             $keyval = array();
 
             if ($keyvalue['hook_isnew']) {
-                
+
                 $isExist = $entity->getwhere("user","user_name='".$keyvalue['username']."'");
                 if($isExist) {
                     die("this account is already registerd.");
@@ -51,7 +51,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
                 $entity->addRelationship("roles_user_1_m", $keyvalue['ownership_id']);
             }
         }
-        
+
         foreach($keyvalue as $key=>$val) {
             $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
 $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
@@ -70,8 +70,8 @@ $entity = lib_entity::getInstance();
                 }
             }
         }
-        
-        
+
+
     }
 
     function workflowAfterSave(&$keyvalue)
@@ -82,37 +82,36 @@ $entity = lib_entity::getInstance();
 
         if (isset($globalModuleList['workflow'])) {
 
-            
-            
-            
+
+
+
             $sql = "select * from workflow where deleted=0 and status='Active' and workflow_module='" . $keyvalue['hook_table_id'] . "'";
-                
+
             $qry = $db->query($sql,true);
-            
+
             if($qry) {
                 $rows = $db->fetchRows($sql, array(
                     "id"
                 ));
                 foreach ($rows as $row) {
                     if ($row['is_expr']) {}
-                    
+
                     if ($row['runs_on'] == "new" && $keyvalue['hook_isnew']) {
                         $this->executeWorkFlowMail($row, $keyvalue);
                     }
                 }
             }
-            
-            
+
+
         }
     }
 
     function executeWorkFlowMail($flow, $keyval)
     {
         $entity = lib_entity::getInstance();
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$db = lib_smarty::getSmartyInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
-
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $smarty = lib_smarty::getSmartyInstance();
         $fields = $globalModuleList[$keyval['hook_table']]['tableinfo']['fields'];
 
         $data = $entity->get($keyval['hook_table'], $keyval['id']);

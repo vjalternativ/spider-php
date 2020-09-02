@@ -4,7 +4,7 @@ class chatViewIndex extends ViewBasic {
     
     function display() {
         
-       $db = lib_smarty::getSmartyInstance();
+       $db = lib_mysqli::getInstance();
 $db = lib_current_user::getEntityInstance();
 $vjconfig = lib_config::getInstance()->getConfig();
 

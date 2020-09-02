@@ -210,7 +210,8 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$addnewrelationship = $bs->getelement("button","New Relationship",array("class"=>'btn btn-primary margin-top-10',"data-toggle"=>"modal", "data-target"=>"#newrelationshipmodal"));
 		$relationshiptabcontent = $bs->getelement('div',$addnewrelationship.$relationshiptable,array("id"=>'relationships-tab',"class"=>"tab-pane fade"));
 
-		$db = lib_smarty::getSmartyInstance();
+		$db = lib_mysqli::getInstance();
+		$smarty = lib_smarty::getSmartyInstance();
 
 
 		$listviewfieldarray = array();
@@ -342,8 +343,8 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 
 		echo $bs->processhtml($panel);
 
-		$db = lib_smarty::getSmartyInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
+		$smarty = lib_smarty::getSmartyInstance();
+		$vjconfig = lib_config::getInstance()->getConfig();
 
 
 

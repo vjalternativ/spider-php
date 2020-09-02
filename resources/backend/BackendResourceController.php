@@ -476,8 +476,8 @@ class BackendResourceController  {
 
     function action_getAjaxSubPanelData() {
         $entity = lib_entity::getInstance();
-$db = lib_smarty::getSmartyInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
+        $smarty = lib_mysqli::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
 
         $ptable = $_REQUEST['ptable'];
         $relname = $_REQUEST['relname'];

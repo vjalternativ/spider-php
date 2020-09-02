@@ -11,7 +11,7 @@ abstract class EntryPointView
     public $pageurlpath;
     
     function displayTpl($tpl,$params=array()) {
-        $db = lib_smarty::getSmartyInstance();
+        $smarty = lib_smarty::getSmartyInstance();
 $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
 
         $smarty->assign('bootparams',$this->bootparams);
@@ -25,7 +25,7 @@ $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
     
     
     function fetch($tpl) {
-        $db = lib_smarty::getSmartyInstance();
+        $smarty = lib_smarty::getSmartyInstance();
 
         $smarty->assign('bootparams',$this->bootparams);
         $smarty->assign('params',$this->params);

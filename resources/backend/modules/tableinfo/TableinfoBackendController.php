@@ -360,10 +360,10 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	function action_ajaxFetchSubpanleList() {
 	    $entity = lib_entity::getInstance();
-$db = lib_smarty::getSmartyInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
-$globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-$globalRelationshipEntityList = lib_datawrapper::getInstance()->get("relationship_entity_list");
+		$smarty = lib_smarty::getSmartyInstance();
+		$vjconfig = lib_config::getInstance()->getConfig();
+		$globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+		$globalRelationshipEntityList = lib_datawrapper::getInstance()->get("relationship_entity_list");
 
 	    try {
 	        $rtable = $_REQUEST['rtable'];
@@ -382,7 +382,7 @@ $globalRelationshipEntityList = lib_datawrapper::getInstance()->get("relationshi
 
     	            $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
-    	            $db=MysqliLib::getInstance();
+    	            $db=lib_mysqli::getInstance();
     	            $sql = "select * from ".$parentRelationship['name']." where deleted=0 and ".$globalEntityList[$parentRelationship['secondarytable']]['name']."_id='".$parentRecord."'";
     	            $primaryField = $globalEntityList[$parentRelationship['primarytable']]['name']."_id";
 
@@ -805,23 +805,15 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
 
 	function action_ajaxAddlayoutrow() {
-	    $db = lib_smarty::getSmartyInstance();
-$vjconfig = lib_config::getInstance()->getConfig();
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-
-
-
+	    $smarty = lib_smarty::getSmartyInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 	    $rmodule = $_POST['rmodule'];
 	    $viewtype = $_POST['viewtype'];
-
 	    $meta  = json_decode($globalModuleList[$rmodule][$viewtype.'def'],1);
 	    $meta['type'] = $_POST['rowtype'];
-
-
 	    $smarty->assign("meta",$meta);
 	    $smarty->assign("viewtype",$viewtype);
-
-
 	    echo $smarty->fetch($vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutrow.tpl");
 	}
 
