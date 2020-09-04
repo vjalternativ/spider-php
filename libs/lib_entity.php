@@ -402,7 +402,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	function saveIntoDB($table,$keyvalue,$where=false,$return = false) {
 	    $db = lib_mysqli::getInstance();
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $vjconfig = lib_config::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
         $isnew = false;
 		$sql = "UPDATE ";
 
@@ -429,7 +429,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 		if((!isset($keyvalue['id']) || empty($keyvalue['id'])) && !$where) {
 			$isnew = true;
-			$id = create_guid();
+			$id = lib_util::create_guid();
 			$keyvalue['id'] = $id;
 			$sql = "INSERT INTO ";
 			$keyvalue['isnew'] = true;
@@ -982,10 +982,10 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	public function generateCache() {
 	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$db = lib_mysqli::getInstance();
-$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$vjconfig = lib_config::getInstance();
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $db = lib_mysqli::getInstance();
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+        $vjconfig = lib_config::getInstance()->getConfig();
 
 
 	    $globalModuleList = array();

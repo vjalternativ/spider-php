@@ -138,7 +138,7 @@ class lib_framework {
            }
 
 
-           echo "module path".$modulePath;die;
+           //echo "module path".$modulePath;die;
            $class = ucfirst($_GET['resource']).'ResourceController';
            if($modulePath) {
                $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
@@ -169,14 +169,23 @@ class lib_framework {
                     $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
 
                     $entity->record = $this->record;
-                    require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/View.php';
-                    require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.basic.php';
+                    require_once $vjconfig['fwbasepath'].'include/views/View.php';
+                    require_once $vjconfig['fwbasepath'].'include/views/ResourceView.php';
+                    require_once $vjconfig['fwbasepath'].'include/views/view.basic.php';
+
+
+                    if(file_exists($vjconfig['basepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php')) {
+                        require_once $vjconfig['basepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php';
+                    } else {
+                        require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php';
+                    }
+
                     if(file_exists($vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php')) {
                         require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php';
                     }
 
 
-                    $filepath= $vjconfig['basepath'].'custom/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+                    $filepath= $vjconfig['basepath'].'/resources/'.$this->resource.'/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
                     if(!file_exists($filepath)) {
                         $filepath =$vjconfig['fwbasepath'].'/resources/backend/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
                     }
@@ -200,16 +209,17 @@ class lib_framework {
                         $view->record = $this->record;
                     }
                     if(!empty($controller->params)) {
-                        $view->params = $controller->params;
+
+                        $view->params = array_merge($view->params,$controller->params);
                         if(isset($controller->params['data'])) {
                             $view->data = $controller->params['data'];
                         }
                     }
-                    $view->loadHeader();
+                    $view->_loadHeader();
                     $view->preDisplay();
                     $view->display();
                     $view->afterDisplay();
-                    $view->loadFooter();
+                    $view->_loadFooter();
                 }
            } else {
                die("404");

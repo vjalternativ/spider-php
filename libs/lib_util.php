@@ -41,7 +41,7 @@ class lib_util
         return $_SESSION[$var];
     }
 
-    function create_guid()
+    static function create_guid()
     {
         $microTime = microtime();
         list ($a_dec, $a_sec) = explode(" ", $microTime);
@@ -49,26 +49,26 @@ class lib_util
         $dec_hex = dechex($a_dec * 1000000);
         $sec_hex = dechex($a_sec);
 
-        ensure_length($dec_hex, 5);
-        ensure_length($sec_hex, 6);
+        self::ensure_length($dec_hex, 5);
+        self::ensure_length($sec_hex, 6);
 
         $guid = "";
         $guid .= $dec_hex;
-        $guid .= create_guid_section(3);
+        $guid .= self::create_guid_section(3);
         $guid .= '-';
-        $guid .= create_guid_section(4);
+        $guid .= self::create_guid_section(4);
         $guid .= '-';
-        $guid .= create_guid_section(4);
+        $guid .= self::create_guid_section(4);
         $guid .= '-';
-        $guid .= create_guid_section(4);
+        $guid .= self::create_guid_section(4);
         $guid .= '-';
         $guid .= $sec_hex;
-        $guid .= create_guid_section(6);
+        $guid .= self::create_guid_section(6);
 
         return $guid;
     }
 
-    function create_guid_section($characters)
+    static function create_guid_section($characters)
     {
         $return = "";
         for ($i = 0; $i < $characters; $i ++) {
@@ -77,7 +77,7 @@ class lib_util
         return $return;
     }
 
-    function ensure_length(&$string, $length)
+    static function ensure_length(&$string, $length)
     {
         $strlen = strlen($string);
         if ($strlen < $length) {
@@ -102,27 +102,22 @@ class lib_util
 
     static function processSeoUrl()
     {
-        $vjconfig = lib_config::getInstance();
+        //$vjconfig = lib_config::getInstance()->getConfig();
 
         // use either global or by object property
-        $seoparams = getParams();
+        //$seoparams = getParams();
 
-        if (count($seoparams) == 1) {
-            $this->module = $vjconfig['framework']['single_param_module'];
-            $this->action = $vjconfig['framework']['single_param_action'];
-        } else if (count($seoparams) > 1) {
-            $this->module = $seoparams[0];
-            $this->action = $seoparams[1];
-        }
+            //todo
     }
 
     function getParams()
     {
 
+        $vjconfig = lib_config::getInstance()->getConfig();
+
         $params = array();
-        $baseUrlCount = strlen($sugar_config['base_url']);
+        $baseUrlCount = strlen($vjconfig['base_url']);
         $url = substr($_SERVER['REQUEST_URI'], $baseUrlCount);
-        $current_url = $url;
         if ($url == '') {
             return $params;
         }
