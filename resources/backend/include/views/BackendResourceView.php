@@ -1,4 +1,7 @@
 <?php
+$dir = __DIR__.'/';
+require_once $dir.'../../../../libs/lib_bootstrap.php';
+
 class BackendResourceView extends ResourceView {
 
     function display() {
@@ -107,34 +110,40 @@ class BackendResourceView extends ResourceView {
 
     }
 
-    function loadHeader() {
+    function _loadHeader() {
         $current_user = lib_current_user::getEntityInstance();
+
         $vjconfig = lib_config::getInstance()->getConfig();
         $smarty = lib_smarty::getSmartyInstance();
-        $bs = lib_bootstrap::getInstance();
-        $bs->vars['cssList']['bootstrap']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].$bs->vars['path'].'bootstrap/css/bootstrap.min.css" />';
-        $bs->vars['cssList']['custom']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].$bs->vars['path'].'css/custom.css" />';
+
+
+
+        $vars  =  lib_bootstrap::getInstance()->getVars();
+
+        $vars['cssList']['bootstrap']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'resources/backend/assets/bootstrap/css/bootstrap.min.css" />';
+        $vars['cssList']['custom']= '<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'resources/backend/assets/css/custom.css" />';
+
 
 
         //$bs->vars['jsList']['jquery']= '<script  href="'.$bs->vars['path'].'js/jquery-3.1.1.min.js" ><script>';
 
         $logout = false;
         $adminarea = false;
-        $href = "index.php?module=user&action=logout";
-        $href = processUrl($href);
+        $href = "index.php?resource=backend&module=user&action=logout";
+        //$href = lib_util::processUrl($href);
         if(!empty($current_user->id)) {
-            $logout = getelement('a','Logout',array('class'=>array('value'=>'btn btn-info pull-right'),'href'=>array('value' => $href)));
+            $logout = lib_util::getelement('a','Logout',array('class'=>array('value'=>'btn btn-info pull-right'),'href'=>array('value' => $href)));
             if($current_user->user_type == 'developer') {
-                $href = processUrl("index.php?module=adminarea&action=home");
+                $href = lib_util::processUrl("index.php?module=adminarea&action=home");
 
-                $adminarea = getelement('a','Administrator',array('class'=>array('value'=>'btn btn-success margin-right-10 pull-right'),'href'=>array('value' => $href)));
+                $adminarea = lib_util::getelement('a','Administrator',array('class'=>array('value'=>'btn btn-success margin-right-10 pull-right'),'href'=>array('value' => $href)));
             }
         }
 
 
         $this->isLoggedIn = $logout;
 
-        $smarty->assign("bs",$bs->vars);
+        $smarty->assign("bs",$vars);
         $smarty->assign("logout",$logout);
         $smarty->assign("adminarea",$adminarea);
         $smarty->assign("vjconfig",$vjconfig);
@@ -150,17 +159,17 @@ class BackendResourceView extends ResourceView {
         $smarty->assign("activeModuleId",$this->activeModuleId);
         $smarty->assign("current_user",$current_user);
 
-        echo $smarty->fetch($vjconfig['fwbasepath'].'include/vjlib/libs/tpls/header.tpl');
+        echo $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/include/tpls/header.tpl');
 
 
 
 
 
     }
-    function loadFooter() {
-        $vjconfig = lib_config::getInstance()->getConfig();
+    function _loadFooter() {
         $current_user = lib_current_user::getEntityInstance();
         $smarty = lib_smarty::getSmartyInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
         $path = $vjconfig['fwbasepath'];
         $smarty->assign("logout",$this->isLoggedIn);
 
@@ -237,6 +246,12 @@ class BackendResourceView extends ResourceView {
         $vardef['metadata'][$deftype] = $newDef;
         return $vardef;
     }
+    public function loadHeader()
+    {}
+
+    public function loadFooter()
+    {}
+
 
 }
 ?>

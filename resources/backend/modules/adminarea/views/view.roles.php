@@ -1,5 +1,5 @@
 <?php
-class adminareaViewRoles extends View {
+class adminareaViewRoles extends BackendResourceView {
 	function display() {
 	    $vjconfig = lib_config::getInstance()->getConfig();
 	    $path = $vjconfig['fwbasepath'].'modules/adminarea/tpls/roles.tpl';

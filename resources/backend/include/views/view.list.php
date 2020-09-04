@@ -1,5 +1,5 @@
 <?php
-class ViewList  extends View {
+class ViewList  extends BackendResourceView {
 	public $datatypeFields = array();
 	public $metadata =array();
 	function __construct() {

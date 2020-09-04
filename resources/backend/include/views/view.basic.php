@@ -1,6 +1,6 @@
 <?php
 
-class ViewBasic extends View
+class ViewBasic extends BackendResourceView
 {
 
     public $html = false;

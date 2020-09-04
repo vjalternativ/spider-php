@@ -1,5 +1,5 @@
 <?php
-class userViewLogin extends View {
+class userViewLogin extends BackendResourceView {
 	function display() {
 
 		$vjconfig = lib_config::getInstance()->getConfig();

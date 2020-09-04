@@ -1,5 +1,5 @@
 <?php
-class ViewEdit  extends View {
+class ViewEdit  extends BackendResourceView {
 
 	public $datatypeFields = array();
 	public $tpl = 'include/tpls/editview.tpl';

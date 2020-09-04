@@ -1,5 +1,5 @@
 <?php
-class userViewHome extends View {
+class userViewHome extends BackendResourceView {
 	function display() {
 		$vjconfig = lib_config::getInstance()->getConfig();
 		$current_user = lib_current_user::getEntityInstance();

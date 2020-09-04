@@ -1,6 +1,6 @@
 <?php
 
-class ViewDetail extends View
+class ViewDetail extends BackendResourceView
 {
 
     public $datatypeFields = array();

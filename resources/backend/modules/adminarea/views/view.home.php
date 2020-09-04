@@ -1,5 +1,5 @@
 <?php
-class adminareaViewHome extends View {
+class adminareaViewHome extends BackendResourceView {
 	function display() {
 	    $vjconfig = lib_config::getInstance()->getConfig();
 	    $this->tpl = $vjconfig['fwbasepath'].'modules/adminarea/tpls/home.tpl';
