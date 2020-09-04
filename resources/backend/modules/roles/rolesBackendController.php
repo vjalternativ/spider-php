@@ -1,5 +1,5 @@
 <?php
-class RolesBackendController extends BackendResourceController {
+class rolesBackendController extends BackendResourceController {
     
     function action_saveAccess() {
         $db = lib_mysqli::getInstance();

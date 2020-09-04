@@ -1,5 +1,5 @@
 <?php
-class Media_filesBackendController extends BackendResourceController  {
+class media_filesBackendController extends BackendResourceController  {
 
     function __construct() {
         $this->nonauth['download'] = '';

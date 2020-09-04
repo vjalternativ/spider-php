@@ -1,5 +1,5 @@
 <?php
-class chatController extends VJController {
+class chatBackendController extends BackendResourceController {
     
     public $userTypeVsChatUserTypeMap = array(); 
     

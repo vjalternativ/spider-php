@@ -1,5 +1,5 @@
 <?php
-class TableinfoBackendController extends BackendResourceController {
+class tableinfoBackendController extends BackendResourceController {
 
     function __construct() {
 

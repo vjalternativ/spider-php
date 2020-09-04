@@ -1,7 +1,7 @@
 <?php 
 $vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'include/vjlib/abstract/APosition.php';
-class WidgetBackendController extends BackendResourceController {
+class widgetBackendController extends BackendResourceController {
     
     function action_ajaxGetPositions() {
         

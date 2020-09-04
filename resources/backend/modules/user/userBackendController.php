@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/authenticate/Authenticate.php';
-class UserBackendController extends BackendResourceController  {
+class userBackendController extends BackendResourceController  {
 
 	function __construct() {
 		$this->nonauth['login'] = array("redirect"=>array("module"=>"user","action"=>"home"));

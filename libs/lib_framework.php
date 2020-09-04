@@ -118,6 +118,7 @@ class lib_framework {
         }
 
 
+
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'index';
         $this->module = $_GET['module'];
         $this->action = $_GET['action'];
@@ -127,92 +128,92 @@ class lib_framework {
 
         if(isset($_GET['module']) && isset($_GET['action'])) {
 
-
-            $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
-
+            $class= $_GET['module'].ucfirst($_GET['resource']).'Controller';
             $modulePath = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'/'.$class.'.php');
             $pathinterface = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'I'.ucfirst($_GET['module']).ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller.php');
             require_once $resourcePath;
 
-               if($pathinterface) {
-                require_once $pathinterface;
-               }
-
-               $class = ucfirst($_GET['resource']).'ResourceController';
-               if($modulePath) {
-                   $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
-               } else {
-                   $modulePath = $resourcePath;
-               }
-               require_once $modulePath;
+           if($pathinterface) {
+            require_once $pathinterface;
+           }
 
 
-               $action = 'action_'.$_GET['action'];
-
-               $controller = new $class;
-
-               $vjconfig = lib_config::getInstance()->getConfig();
-               $entity = lib_entity::getInstance();
-
-
-               if(method_exists($controller, $action)) {
-                   $controller->{$action}();
+           echo "module path".$modulePath;die;
+           $class = ucfirst($_GET['resource']).'ResourceController';
+           if($modulePath) {
+               $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
+           } else {
+               $modulePath = $resourcePath;
+           }
+           require_once $modulePath;
 
 
-                    if(!empty($controller->view)) {
+           $action = 'action_'.$_GET['action'];
 
-                        require_once $vjconfig['fwbasepath'].'libs/lib_smarty.php';
+           $controller = new $class;
 
-                        $smarty  = lib_smarty::getSmartyInstance();
-                        $smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
-                        $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
-
-                        $entity->record = $this->record;
-                        require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/View.php';
-                        require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.basic.php';
-                        if(file_exists($vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php')) {
-                            require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php';
-                        }
+           $vjconfig = lib_config::getInstance()->getConfig();
+           $entity = lib_entity::getInstance();
 
 
-                        $filepath= $vjconfig['basepath'].'custom/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
-                        if(!file_exists($filepath)) {
-                            $filepath =$vjconfig['fwbasepath'].'/resources/backend/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
-                        }
-                        $class = $this->module.'View'.ucfirst($controller->view);
-                        $isview = true;
+           if(method_exists($controller, $action)) {
+               $controller->{$action}();
 
-                        if(file_exists($filepath)) {
-                            require_once $filepath;
-                        } else {
-                            $isview = false;
-                        }
-                        if(!$isview) {
-                            $class = 'View'.ucfirst($controller->view);
-                        }
-                        $view = new $class;
-                        if(isset($controller->listview)) {
-                            $view->listview += $controller->listview;
-                        }
-                        $view->module = $this->module;
-                        if($this->record) {
-                            $view->record = $this->record;
-                        }
-                        if(!empty($controller->params)) {
-                            $view->params = $controller->params;
-                            if(isset($controller->params['data'])) {
-                                $view->data = $controller->params['data'];
-                            }
-                        }
-                        $view->loadHeader();
-                        $view->preDisplay();
-                        $view->display();
-                        $view->afterDisplay();
-                        $view->loadFooter();
+
+                if(!empty($controller->view)) {
+
+                    require_once $vjconfig['fwbasepath'].'libs/lib_smarty.php';
+
+                    $smarty  = lib_smarty::getSmartyInstance();
+                    $smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
+                    $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
+
+                    $entity->record = $this->record;
+                    require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/View.php';
+                    require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.basic.php';
+                    if(file_exists($vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php')) {
+                        require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php';
                     }
-               } else {
-                   die("404");
-               }
+
+
+                    $filepath= $vjconfig['basepath'].'custom/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+                    if(!file_exists($filepath)) {
+                        $filepath =$vjconfig['fwbasepath'].'/resources/backend/modules/' . $this->module .'/views/view.'.$controller->view.'.php';
+                    }
+                    $class = $this->module.'View'.ucfirst($controller->view);
+                    $isview = true;
+
+                    if(file_exists($filepath)) {
+                        require_once $filepath;
+                    } else {
+                        $isview = false;
+                    }
+                    if(!$isview) {
+                        $class = 'View'.ucfirst($controller->view);
+                    }
+                    $view = new $class;
+                    if(isset($controller->listview)) {
+                        $view->listview += $controller->listview;
+                    }
+                    $view->module = $this->module;
+                    if($this->record) {
+                        $view->record = $this->record;
+                    }
+                    if(!empty($controller->params)) {
+                        $view->params = $controller->params;
+                        if(isset($controller->params['data'])) {
+                            $view->data = $controller->params['data'];
+                        }
+                    }
+                    $view->loadHeader();
+                    $view->preDisplay();
+                    $view->display();
+                    $view->afterDisplay();
+                    $view->loadFooter();
+                }
+           } else {
+               die("404");
+           }
 
 
 
