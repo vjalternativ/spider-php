@@ -1,47 +1,54 @@
 <?php
 class lib_logger {
-    public $type = "INFO";
+    private $logFile;
+    private $threadId=false;
+    private static $instance = null;
+    function __construct($logfile=false) {
+            $this->logFile = $logfile ? $logfile : "logger.log";
+            $this->threadId = uniqid();
+    }
 
-
-    private static $instance;
-    static function getInstance() {
+    static function getInstace() {
         if(self::$instance==null) {
             self::$instance = new lib_logger();
         }
         return self::$instance;
     }
-    function fatal($log) {
-        $type = "FATAL";
-        $this->log($log);
+
+    private function log($type,$message) {
+        $date = date("Y-m-d");
+        $logmessage = date("Y-m-d H:i:s").' : ';
+        if($this->threadId) {
+            $logmessage .= $this->threadId." ";
+        }
+        $logmessage .= $type.' : '.$message.PHP_EOL;
+        $dir = __DIR__.'/../';
+        $path = $dir."logs/".$date.'/';
+
+
+        if(!is_dir($path)) {
+            $cmd ='mkdir -p '.$path;
+            shell_exec($cmd);
+        }
+        $path .= $this->logFile;
+
+        echo $logmessage;
+        error_log($logmessage,3,$path);
     }
 
-    function info($log) {
-        $type = "INFO";
-        $this->log($log);
+    function error($message) {
+        $this->log("ERROR",$message);
+    }
+    function warn($message) {
+        $this->log("WARN",$message);
+    }
+    function debug($message) {
+        $this->log("DEBUG",$message);
+    }
+    function info($message) {
+        $this->log("INFO",$message);
     }
 
-    function debuug($log) {
-        $type = "DEBUG";
-        $this->log($log);
-    }
 
-    function warning($log) {
-        $type = "WARNING";
-        $this->log($log);
-    }
-
-   function log($log) {
-        error_log(date("Y-m-d H:i:s")." : ".$this->type." : ".$log."\n",3,"framework.log");
-
-    }
-
-    function doLog($type,$log,$path) {
-        error_log(date("Y-m-d H:i:s")." : ".$type." : ".$log."\n",3,$path);
-    }
-
-    function justlog($log,$path) {
-        error_log($log."\n",3,$path);
-
-    }
 }
 ?>
