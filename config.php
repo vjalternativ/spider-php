@@ -36,6 +36,15 @@ $config['sitetpl'] = "enr";
 
 $config['display_errors'] = false;
 
+$config['resources'] = array("backend","frontend","cli");
+$config['default_resource'] =  "frontend";
+$config['default_resource_module']['backend'] =  "user";
+$config['default_resource_action']['backend'] =  "login";
+$config['default_resource_module']['frontend'] =  "page";
+$config['default_resource_action']['frontend'] =  "index";
+$config['resource_alias']['backend'] = 'controlarea';
+
+
 if($_SERVER['HTTP_HOST']=="localhost") {
 
     $config['baseurl'] = 'http://localhost/spider-php/';
