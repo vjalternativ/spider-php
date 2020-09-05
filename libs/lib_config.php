@@ -24,6 +24,7 @@ class lib_config {
         $this->config = $config;
         $this->config['fwbasepath'] = $fwbasepath;
         $this->config['basepath'] = $dir;
+        $this->config['resource_alias']['backend'] = isset($this->config['resource_alias']['backend']) ? $this->config['resource_alias']['backend'] : 'backend';
 
     }
 

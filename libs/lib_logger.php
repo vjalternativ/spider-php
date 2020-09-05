@@ -8,7 +8,7 @@ class lib_logger {
             $this->threadId = uniqid();
     }
 
-    static function getInstace() {
+    static function getInstance() {
         if(self::$instance==null) {
             self::$instance = new lib_logger();
         }

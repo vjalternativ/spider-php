@@ -7,6 +7,8 @@ class FrontendResourceController   {
     private $page;
     protected $siteBasePath;
 
+    protected $sitetpl;
+
 
     function __construct() {
 
@@ -15,8 +17,11 @@ class FrontendResourceController   {
         $this->sitebasePath = $vjconfig['basepath'] . 'include/entrypoints/site/';
 
         $this->page = $_GET['module'];
+        $this->params['sitetpl'] =  $vjconfig['sitetpl'];
+
 
         $seoParams = lib_seo::getInstance()->getParams();
+
         $db = lib_mysqli::getInstance();
         if (file_exists($this->sitebasePath . '/pages/' . $this->page . '/' . $this->page . 'Controller.php') || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
             if ($this->page == "page") {

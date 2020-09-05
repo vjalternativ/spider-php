@@ -53,7 +53,7 @@ class userBackendController extends BackendResourceController  {
 	function action_logout() {
 		$vjconfig = lib_config::getInstance()->getConfig();
 		session_destroy();
-		header('location:'.$vjconfig['urlbasepath'].'backend/');
+		header('location:'.$vjconfig['urlbasepath'].$vjconfig['resource_alias']['backend']);
 	}
 
 	function action_changePwd(){

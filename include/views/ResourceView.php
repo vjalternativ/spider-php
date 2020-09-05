@@ -26,6 +26,7 @@ abstract class ResourceView
     public $headerparams = array();
     public $footerparams = array();
     public $pageurlpath;
+    protected $sitebasePath;
 
 
     function setLoadHeaderFooter($b=true) {
@@ -49,16 +50,23 @@ abstract class ResourceView
 
 
     function _loadHeader() {
+
+
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
+
+        $this->sitebasePath = $vjconfig['basepath'].'resources/'.$_GET['resource'].'/';
+
+        $smarty->assign("baseurl", $vjconfig['baseurl']);
+
         $smarty->assign("params", $this->params);
         $smarty->assign("headerparams", $this->headerparams);
         echo "<script>var baseurl = '" . $vjconfig['baseurl'] . "';</script>";
         echo "<script>var urlbasepath = '" . $vjconfig['urlbasepath'] . "';</script>";
         echo "<script>var fwbaseurl = '" . $vjconfig['fwbaseurl'] . "';</script>";
-        echo "<script>var fwurlbasepath = '" . $vjconfig['fwurlbasepath'] . "';</script>";
+        echo "<script>var fwurlbasepath = '" . $vjconfig['resource_alias']['backend'] . "';</script>";
         $this->loadHeader();
-        echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
+        echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
 
     }
 
@@ -68,7 +76,8 @@ abstract class ResourceView
         $smarty->assign("params", $this->params);
         $smarty->assign("footerparams", $this->footerparams);
         $this->loadFooter();
-        echo $smarty->fetch($this->sitebasePath . '/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');
+
+        echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');
     }
 
 

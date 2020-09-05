@@ -409,7 +409,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 		require $vjconfig['fwbasepath']."include/logic_hooks.php";
 		$globalLogicHook  = lib_datawrapper::getInstance()->get("global_logichook_list");
-
+		$globalLogicHook = $globalLogicHook? $globalLogicHook : array("before_save"=>array(),"after_save"=>array());
 		if(file_exists($vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php")) {
 		    require $vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php";
 		}
@@ -419,6 +419,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		}
 
 		$logicHook = lib_datawrapper::getInstance()->get("logichook_list");
+		$logicHook = $logicHook ? $logicHook :array($table => array("before_save"=>array(),"after_save"=>array()));
 
 
 
@@ -476,8 +477,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
-		//echo $table;
-		//echo "<pre>";print_r($logicHook[$table]);echo "<pre>";
+
 		foreach($logicHook[$table]['before_save'] as $hook) {
 
 		    $isHook =false;
@@ -496,6 +496,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		    $this->hookTable = $table;
 		    $hookobj->{$hook[3]}($keyvalue);
 		}
+
 
 		$this->data = $keyvalue;
 		$sql .= $table." ".$this->getupdateByIdString($keyvalue,$isnew,$columns,$where);

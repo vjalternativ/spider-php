@@ -4,6 +4,8 @@ require_once $dir.'lib_config.php';
 require_once $dir.'lib_datawrapper.php';
 require_once $dir.'lib_mysqli.php';
 require_once $dir.'lib_entity.php';
+require_once $dir.'lib_logger.php';
+
 class lib_common {
 
     function init($session=false) {
