@@ -3,7 +3,7 @@ global $config;
 $config = array();
 
 $config['baseurl'] = 'https://boomerangtrip.com/';
-$config['fwbaseurl'] = $config['baseurl'] .'controlarea/';
+$config['fwbaseurl'] = $config['baseurl'] .'spider-php/';
 
 $config['sitename'] = "Spider-PHP Control Panel";
 $config['timezone'] = "Asia/Kolkata";
@@ -39,7 +39,7 @@ $config['display_errors'] = false;
 if($_SERVER['HTTP_HOST']=="localhost") {
 
     $config['baseurl'] = 'http://localhost/spider-php/';
-    $config['fwbaseurl'] = $config['baseurl'] . 'controlarea' ;
+    $config['fwbaseurl'] = $config['baseurl'] . 'spider-php' ;
 
     $config['mysql']['user'] = "root";
     $config['mysql']['password'] = "root";

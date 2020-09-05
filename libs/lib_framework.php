@@ -29,8 +29,8 @@ class lib_framework {
 
         if(isset($params[0])) {
             $aliasVsResource = array_flip($config['resource_alias']);
-            if(isset($aliasVsResource[$resource])) {
-                $resource  = $aliasVsResource[$resource];
+            if(isset($aliasVsResource[$params[0]])) {
+                $resource  = $aliasVsResource[$params[0]];
                 $this->usingConigDefaultResource = false;
             } else if(in_array($params[0],$config['resources'])) {
                 $resource = $params[0];
@@ -181,6 +181,7 @@ class lib_framework {
 
         $this->record = isset($_GET['record']) ? $_GET['record'] : false;
 
+       // echo $this->resource.' '.$this->module.' '.$this->action;die;
 
         if(isset($_GET['module']) && isset($_GET['action'])) {
             $class= $_GET['module'].ucfirst($_GET['resource']).'Controller';
