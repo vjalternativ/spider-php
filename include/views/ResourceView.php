@@ -57,6 +57,10 @@ abstract class ResourceView
 
         $this->sitebasePath = $vjconfig['basepath'].'resources/'.$_GET['resource'].'/';
 
+
+        $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$vjconfig['sitetpl'].'/';
+
+
         $smarty->assign("baseurl", $vjconfig['baseurl']);
 
         $smarty->assign("params", $this->params);
@@ -110,7 +114,9 @@ abstract class ResourceView
 
 
     function displayTpl($tpl,$params=array()) {
-        global $smarty,$app_list_strings;
+        $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
+        $smarty = lib_smarty::getSmartyInstance();
+
         $smarty->assign('bootparams',$this->bootparams);
         $this->params += $params;
         $smarty->assign('params',$this->params);
@@ -121,7 +127,7 @@ abstract class ResourceView
 
 
     function fetch($tpl) {
-        global $smarty;
+        $smarty = lib_smarty::getSmartyInstance();
         $smarty->assign('bootparams',$this->bootparams);
         $smarty->assign('params',$this->params);
         return $smarty->fetch($this->pagetplpath.$tpl);
