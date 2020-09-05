@@ -1,5 +1,7 @@
 <?php
 $dir = __DIR__.'/';
+
+require_once $dir.'lib_common.php';
 require_once $dir.'lib_seo.php';
 require_once $dir.'lib_util.php';
 require_once $dir.'lib_smarty.php';
@@ -13,8 +15,13 @@ class lib_framework {
     private $sessionName = "ATVSESS";
     private $resourcePath;
     private $usingConigDefaultResource = true;
+    protected $configpath;
+
 
     function __construct($sessionName = false) {
+
+        $common = new lib_common();
+        $common->init();
 
         $params = lib_seo::getInstance()->getParams();
         $config = lib_config::getInstance()->getConfig();
@@ -29,6 +36,10 @@ class lib_framework {
                 $resource = $params[0];
                 $this->usingConigDefaultResource = false;
             }
+        }
+
+        if(isset($_GET['resource'])) {
+            $resource = $_GET['resource'];
         }
         $this->resourcePath = $this->getResourcePath($resource);
         $_GET['resource'] = $resource;
@@ -181,8 +192,6 @@ class lib_framework {
             require_once $pathinterface;
            }
 
-
-           //echo "module path".$modulePath;die;
            $class = ucfirst($_GET['resource']).'ResourceController';
            if($modulePath) {
                $class= ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller';
@@ -273,6 +282,10 @@ class lib_framework {
 
         }
 
+    }
+
+    function setConfigPath($path) {
+        $this->configpath = $path;
     }
 
 }
