@@ -17,7 +17,7 @@ class FrontendResourceController extends ResourceController  {
         parent::__construct();
         $vjconfig = lib_config::getInstance()->getConfig();
 
-        $this->sitebasePath = $vjconfig['basepath'] . 'include/entrypoints/site/';
+        $this->sitebasePath = $vjconfig['basepath'] . 'resources/'.$_GET['resource'].'/modules/';
 
         $this->page = $_GET['module'];
         $this->params['sitetpl'] =  $vjconfig['sitetpl'];
@@ -26,7 +26,11 @@ class FrontendResourceController extends ResourceController  {
         $seoParams = lib_seo::getInstance()->getParams();
 
         $db = lib_mysqli::getInstance();
-        if (file_exists($this->sitebasePath . '/pages/' . $this->page . '/' . $this->page . 'Controller.php') || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
+
+
+        $controller  = $this->sitebasePath  . $this->page . '/' . $this->page .ucfirst($_GET['resource']). 'Controller.php';
+
+        if (file_exists($controller)|| file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
             if ($this->page == "page") {
                 if (isset($seoParams[0]) && $seoParams[0]) {
                     $sql = "select * from page where alias='" . $seoParams[0] . "' and deleted=0";
