@@ -1,9 +1,9 @@
 <?php 
-require_once 'controlarea/include/vjlib/abstract/AWidget.php';
-require_once 'controlarea/include/vjlib/abstract/APosition.php';
+require_once 'spider-php/include/vjlib/abstract/AWidget.php';
+require_once 'spider-php/include/vjlib/abstract/APosition.php';
 require_once 'include/entrypoints/site/layout/enr/enrPositions.php';
-require_once 'controlarea/include/vjlib/libs/bootstrap4/bootstrap4.php';
-require_once 'controlarea/include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
+require_once 'spider-php/include/vjlib/libs/bootstrap4/bootstrap4.php';
+require_once 'spider-php/include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
 
 
 class sitetplHeaderController extends EntryPointController {
