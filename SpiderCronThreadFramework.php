@@ -6,6 +6,7 @@ class SpiderCronThreadFramework extends lib_framework {
 
             $_REQUEST['spiderphp_mode'] = 'CRONTHREAD';
             $_GET['resource'] = 'cli';
+            $_SERVER['HTTP_HOST'] = 'localhost';
             parent::__construct($sessionName);
     }
 
