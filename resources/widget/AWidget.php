@@ -119,7 +119,7 @@ abstract class AWidget {
 
 
         $html = "";
-        $datawrapper = DataWrapper::getInstance();
+        $datawrapper = lib_datawrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
         if($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
             foreach($widgetdatawrapper['resources'] as $path=>$resource) {

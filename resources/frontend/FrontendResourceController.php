@@ -1,7 +1,9 @@
 <?php
 $dir = __DIR__.'/';
 require_once $dir.'../widget/WidgetServiceRegistrar.php';
-class FrontendResourceController   {
+require_once $dir.'../../libs/lib_current_user.php';
+
+class FrontendResourceController  {
 
 
     private $page;
@@ -11,6 +13,8 @@ class FrontendResourceController   {
 
 
     function __construct() {
+
+
 
         $vjconfig = lib_config::getInstance()->getConfig();
 
@@ -57,6 +61,12 @@ class FrontendResourceController   {
         }
 
     }
+
+    function getBreadcrumb()
+    {
+        return DataWrapper::getInstance()->get("breadcrumb");
+    }
+
 
 }
 ?>
