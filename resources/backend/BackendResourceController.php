@@ -4,7 +4,7 @@ require_once $dir.'../../libs/lib_current_user.php';
 require_once $dir.'../../libs/lib_paginate.php';
 require_once $dir.'../../libs/lib_modal.php';
 
-class BackendResourceController  {
+class BackendResourceController  extends ResourceController {
     public $view = false;
     //private $data;
     public $params;
@@ -25,10 +25,15 @@ class BackendResourceController  {
 
     function __construct() {
 
+        parent::__construct();
+
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
         $this->record = isset($_GET['record']) ? $_GET['record'] : false;
+
+
+
 
 
         $current_user = lib_current_user::sessionCheck('current_user');
@@ -48,7 +53,7 @@ class BackendResourceController  {
                 }
             }
         }
-        $this->initModules();
+
 
         if($this->entity) {
             $entity = lib_entity::getInstance();
@@ -65,48 +70,7 @@ class BackendResourceController  {
 
     }
 
-    function initModules() {
 
-        $dataWrapper = lib_datawrapper::getInstance();
-        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-        $vjconfig = lib_config::getInstance()->getConfig();
-        $entity = lib_entity::getInstance();
-        $globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_preference_store_list");
-        require_once $vjconfig['fwbasepath'].'resources/backend/include/language/lang.php';
-        $langpath = $vjconfig['basepath'].'resources/backend/include/language/lang.php';
-        if(file_exists($langpath)) {
-            require_once $langpath;
-        }
-
-        require_once $vjconfig['fwbasepath'].'include/language/'.$vjconfig['defaultlang'].'.string.php';
-
-
-        if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
-
-            if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
-                require_once $vjconfig['basepath'].'cache/relationship_entity_list.php';
-            }
-            require_once $vjconfig['basepath'].'cache/relationship_list.php';
-            require_once $vjconfig['basepath'].'cache/entity_list.php';
-            require_once $vjconfig['basepath'].'cache/module_list.php';
-
-            if(file_exists($vjconfig['basepath'].'cache/server_preference_store_list.php')) {
-                require_once $vjconfig['basepath'].'cache/server_preference_store_list.php';
-            }
-
-            if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
-                //  return false;
-            }
-        }  else {
-            $entity->generateCache();
-        }
-        $dataWrapper->set("entity_list",$globalEntityList);
-        $dataWrapper->set("module_list",$globalModuleList);
-        $dataWrapper->set("relationship_list",$globalRelationshipList);
-        $dataWrapper->set("server_preference_store_list",$globalServerPreferenceStoreList);
-    }
 
     function utcToTimezone($datetime) {
         $vjconfig = lib_config::getInstance()->getConfig();

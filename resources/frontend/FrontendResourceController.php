@@ -3,7 +3,7 @@ $dir = __DIR__.'/';
 require_once $dir.'../widget/WidgetServiceRegistrar.php';
 require_once $dir.'../../libs/lib_current_user.php';
 
-class FrontendResourceController  {
+class FrontendResourceController extends ResourceController  {
 
 
     private $page;
@@ -14,8 +14,7 @@ class FrontendResourceController  {
 
     function __construct() {
 
-
-
+        parent::__construct();
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $this->sitebasePath = $vjconfig['basepath'] . 'include/entrypoints/site/';
@@ -64,7 +63,17 @@ class FrontendResourceController  {
 
     function getBreadcrumb()
     {
-        return DataWrapper::getInstance()->get("breadcrumb");
+        return lib_datawrapper::getInstance()->get("breadcrumb");
+    }
+
+    function registerBreadcrumb($id, $title, $alias, $params = array())
+    {
+        $dataWrapper = lib_datawrapper::getInstance();
+        $breadcrumb = $dataWrapper->get("breadcrumb");
+        $breadcrumb[$id]['title'] = $title;
+        $breadcrumb[$id]['alias'] = $alias;
+        $breadcrumb[$id]['params'] = $params;
+        $dataWrapper->set("breadcrumb", $breadcrumb);
     }
 
 

@@ -135,6 +135,7 @@ class lib_framework {
 
 
         $params = lib_seo::getInstance()->getParams();
+        $vjconfig = lib_config::getInstance()->getConfig();
         $resource = $this->resource;
         $resourcePath = $this->resourcePath;
 
@@ -181,9 +182,10 @@ class lib_framework {
 
         $this->record = isset($_GET['record']) ? $_GET['record'] : false;
 
-       // echo $this->resource.' '.$this->module.' '.$this->action;die;
+        //echo $this->resource.' '.$this->module.' '.$this->action;die;
 
         if(isset($_GET['module']) && isset($_GET['action'])) {
+            require_once $vjconfig['fwbasepath'].'resources/ResourceController.php';
             $class= $_GET['module'].ucfirst($_GET['resource']).'Controller';
             $modulePath = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'/'.$class.'.php');
             $pathinterface = $this->_getResourceAbsoluteFilePath($resource.'/modules/'.$_GET['module'].'I'.ucfirst($_GET['module']).ucfirst($_GET['module']).ucfirst($_GET['resource']).'Controller.php');
@@ -207,10 +209,13 @@ class lib_framework {
 
            $controller = new $class;
 
+
            $vjconfig = lib_config::getInstance()->getConfig();
            $entity = lib_entity::getInstance();
 
-           if(method_exists($controller, $action)) {
+           if(!method_exists($controller, $action)) {
+               $action = 'action_index';
+           }
 
                $controller->{$action}();
 
@@ -275,9 +280,7 @@ class lib_framework {
                     $view->afterDisplay();
                     $view->_loadFooter();
                 }
-           } else {
-               die("404");
-           }
+
 
 
 
