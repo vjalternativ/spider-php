@@ -18,7 +18,7 @@ class lib_framework {
     protected $configpath = false;
 
 
-    function __construct($sessionName = false) {
+    function init($sessionName = false) {
 
         $common = new lib_common();
         $common->init();
@@ -131,8 +131,9 @@ class lib_framework {
 
     }
 
-    function execute() {
+    function execute($sessionName=false) {
 
+        $this->init($sessionName);
 
         $params = lib_seo::getInstance()->getParams();
         $vjconfig = lib_config::getInstance()->getConfig();
