@@ -50,6 +50,10 @@ class lib_logger {
         $this->log("INFO",$message);
     }
 
+    function fatal($message) {
+        $this->log("ERROR",$message);
+    }
+
 
 }
 ?>
