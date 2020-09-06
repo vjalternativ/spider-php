@@ -111,7 +111,7 @@ class WidgetService implements IWidgetService {
 
 
 
-        $ob->rendorTpl($ob->getModule().'Widget.tpl',$params);
+        $html .= $ob->rendorTpl($ob->getModule().'Widget.tpl',$params);
 
 
         return $html;
