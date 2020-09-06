@@ -29,7 +29,8 @@ class lib_config {
                 $this->config['resource_alias']['backend'] = isset($this->config['resource_alias']['backend']) ? $this->config['resource_alias']['backend'] : 'backend';
 
         } else {
-                $err = print_r(debug_backtrace(),1);
+                $server = $_SERVER;
+                $err = print_r($server,1);
                 lib_logger::getInstance()->error($err);
                 throw new ErrorException($err);
         }
