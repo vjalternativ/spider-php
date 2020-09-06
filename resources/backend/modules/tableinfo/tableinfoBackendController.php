@@ -88,7 +88,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	function action_ajaxeditoption() {
 
-		$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+		$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
 
 
 		$bs = lib_bootstrap::getInstance();
@@ -149,7 +149,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	function action_saveoption() {
 
-	$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+	$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
 
 
 

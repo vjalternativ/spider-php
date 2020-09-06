@@ -12,7 +12,7 @@ abstract class EntryPointView
     
     function displayTpl($tpl,$params=array()) {
         $smarty = lib_smarty::getSmartyInstance();
-$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings");
+$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
 
         $smarty->assign('bootparams',$this->bootparams);
         $this->params += $params;

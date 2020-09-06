@@ -161,8 +161,8 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 	function parseEditViewDef($def) {
 		$app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
-$mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
-$entity = lib_entity::getInstance();
+        $mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
+        $entity = lib_entity::getInstance();
 
 		$bs = lib_bootstrap::getInstance();
 		$formgroup = '';
