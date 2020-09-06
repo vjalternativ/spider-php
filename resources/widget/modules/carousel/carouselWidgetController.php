@@ -1,5 +1,5 @@
 <?php 
-class carouselWidget extends AWidget {
+class carouselWidgetController extends WidgetResourceController {
     
     
     function __construct() {

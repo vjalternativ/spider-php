@@ -1,6 +1,6 @@
 <?php
 
-class cardWidget extends AWidget {
+class cardWidgetController extends WidgetResourceController {
     public function processWidgetParams($params)
     {
         return $params;

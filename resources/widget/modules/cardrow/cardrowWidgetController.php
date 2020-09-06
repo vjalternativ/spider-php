@@ -3,7 +3,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'include/vjlib/libs/bootstrap4/bootstrap4.php';
 require_once $vjconfig['fwbasepath'].'include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
 
-class cardrowWidget extends AWidget {
+class cardrowWidgetController extends WidgetResourceController {
 
 
 

@@ -1,5 +1,5 @@
 <?php 
-class elementWidget extends AWidget {
+class buttonWidgetController extends WidgetResourceController {
     public function processWidgetParams($params)
     {
         return $params;

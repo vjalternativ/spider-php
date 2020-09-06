@@ -1,5 +1,5 @@
 <?php 
-class tabWidget extends AWidget {
+class tabWidgetController extends WidgetResourceController {
     
     var $checkFirst = true;
     var $id = false;

@@ -1,5 +1,5 @@
 <?php
-class breadcrumbWidget extends AWidget {
+class breadcrumbWidgetController extends WidgetResourceController {
     public function processWidgetParams($params)
     {
         

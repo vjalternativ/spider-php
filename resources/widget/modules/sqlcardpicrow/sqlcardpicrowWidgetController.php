@@ -1,5 +1,5 @@
 <?php 
-class sqlcardpicrowWidget extends AWidget {
+class sqlcardpicrowWidgetController extends WidgetResourceController {
     function __construct() {
         $this->registerField("maxrows","int");
         $this->registerField("maxcardsperrow","int");

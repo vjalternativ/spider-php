@@ -1,5 +1,5 @@
 <?php 
-class topheaderWidget extends AWidget {
+class topheaderWidgetController extends WidgetResourceController {
     
     
     function __construct() {

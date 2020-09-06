@@ -1,5 +1,5 @@
 <?php 
-class sqlcarddataWidget extends AWidget {
+class sqlcarddataWidgetController extends WidgetResourceController {
     function __construct() {
         $this->registerField("sql","text");
         $this->registerField("seoparam","int");
