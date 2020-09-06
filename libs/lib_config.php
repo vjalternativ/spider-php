@@ -19,9 +19,13 @@ class lib_config {
 
 
         global $config;
+        try {
         require_once $dir.'config.php';
-
+        } catch(Exception $e) {
+            throw new ErrorException($e->getMessage());
+        }
         $this->config = $config;
+        ini_set("display_errors",$this->config['display_errors']);
         $this->config['fwbasepath'] = $fwbasepath;
         $this->config['basepath'] = $dir;
         $this->config['resource_alias']['backend'] = isset($this->config['resource_alias']['backend']) ? $this->config['resource_alias']['backend'] : 'backend';

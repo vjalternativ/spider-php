@@ -316,7 +316,7 @@ class BackendResourceController  extends ResourceController {
             redirect($parentModule,"detailview",array("record"=>$entity->record));
             exit();
         } else {
-            redirect($module,"detailview",array("record"=>$id));
+            lib_util::redirect($module,"detailview",array("record"=>$id));
         }
     }
 
