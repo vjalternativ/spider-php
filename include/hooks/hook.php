@@ -10,7 +10,7 @@ class SystemLogicHook
             $keyval = array();
 
             if ($keyvalue['hook_isnew']) {
-                
+
                 $isExist = $entity->getwhere("user","user_name='".$keyvalue['username']."'");
                 if($isExist) {
                     die("this account is already registerd.");
@@ -49,7 +49,7 @@ class SystemLogicHook
                 $entity->addRelationship("roles_user_1_m", $keyvalue['ownership_id']);
             }
         }
-        
+
         foreach($keyvalue as $key=>$val) {
             global $globalRelationshipList,$globalEntityList,$entity;
             if(isset($globalRelationshipList[$key]) && $val) {
@@ -65,8 +65,8 @@ class SystemLogicHook
                 }
             }
         }
-        
-        
+
+
     }
 
     function workflowAfterSave(&$keyvalue)
@@ -75,27 +75,27 @@ class SystemLogicHook
 
         if (isset($globalModuleList['workflow'])) {
 
-            
-            
-            
+
+
+
             $sql = "select * from workflow where deleted=0 and status='Active' and workflow_module='" . $keyvalue['hook_table_id'] . "'";
-                
+
             $qry = $db->query($sql,true);
-            
+
             if($qry) {
                 $rows = $db->fetchRows($sql, array(
                     "id"
                 ));
                 foreach ($rows as $row) {
                     if ($row['is_expr']) {}
-                    
+
                     if ($row['runs_on'] == "new" && $keyvalue['hook_isnew']) {
                         $this->executeWorkFlowMail($row, $keyvalue);
                     }
                 }
             }
-            
-            
+
+
         }
     }
 
@@ -152,7 +152,7 @@ class SystemLogicHook
 
         if (strpos($flow['description'], "@all_fields") !== false) {
             $smarty->assign("rows", $rows);
-            $html = $smarty->fetch("modules/workflow/tpls/all_fields.tpl");
+            $html = $smarty->fetch($vjconfig['fwbasepath']."resources/backend/modules/workflow/tpls/all_fields.tpl");
             $flow['description'] = str_replace("@all_fields", $html, $flow['description']);
         }
 
