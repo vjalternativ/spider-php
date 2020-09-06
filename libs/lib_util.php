@@ -3,7 +3,7 @@
 class lib_util
 {
 
-    function redirect($module, $action = false, $params = array())
+   static function redirect($module, $action = false, $params = array())
     {
 
         $basepath = lib_config::getInstance()->get("baseurl").$_GET['resource'].'/';
@@ -18,7 +18,7 @@ class lib_util
         exit();
     }
 
-    function sessioncheck($var)
+   static function sessioncheck($var)
     {
         if (! isset($_SESSION[$var])) {
             return false;
@@ -110,7 +110,7 @@ class lib_util
             //todo
     }
 
-    function getParams()
+   static function getParams()
     {
 
         $vjconfig = lib_config::getInstance()->getConfig();
