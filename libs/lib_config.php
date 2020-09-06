@@ -22,9 +22,10 @@ class lib_config {
         try {
         require_once $dir.'config.php';
         } catch(Exception $e) {
-            throw new ErrorException($e->getMessage());
+            lib_logger::getInstance()->error(print_r(debug_backtrace(),1));
         }
         $this->config = $config;
+        $this->config['display_errors'] = $this->config['display_errors'] ? $this->config['display_errors'] : false;
         ini_set("display_errors",$this->config['display_errors']);
         $this->config['fwbasepath'] = $fwbasepath;
         $this->config['basepath'] = $dir;
