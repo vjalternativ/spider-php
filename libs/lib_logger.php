@@ -33,7 +33,7 @@ class lib_logger {
         }
         $path .= $this->logFile;
 
-        echo $logmessage;
+
         error_log($logmessage,3,$path);
     }
 
