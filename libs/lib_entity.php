@@ -410,12 +410,12 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		require $vjconfig['fwbasepath']."include/logic_hooks.php";
 		$globalLogicHook  = lib_datawrapper::getInstance()->get("global_logichook_list");
 		$globalLogicHook = $globalLogicHook? $globalLogicHook : array("before_save"=>array(),"after_save"=>array());
-		if(file_exists($vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php")) {
-		    require $vjconfig['fwbasepath']."modules/".$table."/logic_hooks.php";
+		if(file_exists($vjconfig['fwbasepath']."resources/backend/modules/".$table."/logic_hooks.php")) {
+		    require $vjconfig['fwbasepath']."resources/backend/modules/".$table."/logic_hooks.php";
 		}
 
-		if(file_exists($vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php")) {
-		    require $vjconfig['basepath']."custom/modules/".$table."/logic_hooks.php";
+		if(file_exists($vjconfig['basepath']."resources/backend/modules/".$table."/logic_hooks.php")) {
+		    require $vjconfig['basepath']."resources/backend/modules/".$table."/logic_hooks.php";
 		}
 
 		$logicHook = lib_datawrapper::getInstance()->get("logichook_list");
