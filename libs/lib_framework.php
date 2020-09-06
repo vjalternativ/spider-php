@@ -25,8 +25,8 @@ class lib_framework {
 
     function init($sessionName = false) {
 
-        $common = new lib_common($this->configpath);
-        $common->init();
+        $common = new lib_common();
+        $common->init($this->configpath);
 
         $params = lib_seo::getInstance()->getParams();
         $config = lib_config::getInstance($this->configpath)->getConfig();

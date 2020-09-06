@@ -1,6 +1,8 @@
 <?php
 class lib_common {
 
+
+
     function init($configPath) {
 
         $dir = __DIR__.'/';
