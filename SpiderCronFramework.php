@@ -4,11 +4,12 @@ class SpiderCronFramework extends lib_framework {
 
 
     private $sessionName;
-    function __construct($sessionName=false) {
+    function __construct($path,$sessionName=false) {
             $_REQUEST['spiderphp_mode'] = 'CRON';
             $_GET['resource'] = 'cli';
             $_SERVER['HTTP_HOST'] = 'localhost';
             $this->sessionName = $sessionName;
+            parent::__construct($path,$sessionName);
     }
 
     function execute() {
@@ -34,7 +35,7 @@ class SpiderCronFramework extends lib_framework {
             $_SERVER['HTTP_HOST'] = $cronconfig[$this->configpath]['host'];
             $_REQUEST['entryPoint'] = "cron";
             $_GET['module'] = "cron";
-            parent::execute($this->sessionName);
+            parent::execute();
         } else {
             echo "cronpath not set at ".$this->configpath." \n";
         }
