@@ -36,6 +36,7 @@ class ResourceController {
                 return $fwpath;
             }
         }
+
         return false;
     }
 
@@ -55,10 +56,13 @@ class ResourceController {
         $this->params['controller_path'] = $this->getRealPath('resources/'.$this->resource.'/modules/' . $this->module . '/');
 
         if($this->params['controller_path']) {
-            $this->params['controller_tpl_path'] = $this->getRealPath($this->params['controller_path']  . 'tpls/' . $siteTpl . '/');
+
+            $tplPath = 'resources/'.$this->resource.'/modules/' . $this->module . '/'. 'tpls/' ;
+            $this->params['controller_tpl_path'] = $this->getRealPath($tplPath. $siteTpl . '/');
             if(!$this->params['controller_tpl_path']) {
-                $this->params['controller_tpl_path'] = $this->getRealPath($this->params['controller_path']  . 'tpls/default/');
+                $this->params['controller_tpl_path'] = $this->getRealPath($tplPath . 'default/');
             }
+
             if($this->params['controller_tpl_path']) {
                 return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
             }
