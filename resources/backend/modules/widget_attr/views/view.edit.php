@@ -24,40 +24,11 @@ class widget_attrViewEdit extends ViewEdit {
             $wdata = $entity->get("widget",$widgetId);
             if($wdata) {
                 $wtype = $wdata['widget_type'];
-
                 $vjconfig = lib_config::getInstance()->getConfig();
-
-
                 require_once $vjconfig['fwbasepath']. 'resources/widget/WidgetServiceRegistrar.php';
+                $fields  = WidgetServiceRegistrar::getWidgetServiceInstance()->getWidgetFileds($wtype);
 
-                $widgetService  = WidgetServiceRegistrar::getWidgetServiceInstance();
-
-                $widgetService->getWidget($widgetType);
-
-                $file = $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$wtype."/".$wtype."Widget.php";
-
-                $isFound = false;
-                if(file_exists($file)) {
-                    $isFound = true;
-                } else {
-                    $file = $vjconfig['basepath'].'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$wtype."/".$wtype."Widget.php";
-                    if(file_exists($file)) {
-                        $isFound = true;
-                    }
-                }
-
-                if($isFound) {
-                    require_once $file;
-                    $class = $wtype."Widget";
-
-                    $this->def['fields']  =array();
-
-                    $this->def['metadata']['editview']  =array();
-
-                    $x =  new  $class;
-                   // $x=new IWidget();
-                    $fields = $x->getFields();
-
+                if($fields) {
                     $nameField = array("name"=>"name","type"=>"varchar");
                     $this->def['fields']['name'] = $nameField;
                     $this->def['metadata']['editview']['name']['type'] = 'row';

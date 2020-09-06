@@ -23,24 +23,25 @@ class WidgetService implements IWidgetService {
         return  $this->rendorWidget($widgetType,$params);
     }
 
+    private function _geWidgetObject(WidgetResourceController $ob) {
+        return $ob;
+    }
+
     private function getWidgetObject($widget) {
         $vjconfig = lib_config::getInstance()->getConfig();
         $ob = false;
-        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php")) {
-            require_once $vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widget."/".$widget."Widget.php";
-            $class = $widget.'Widget';
-            $ob = new $class;
+        $path ="resources/widget/modules/".$widget."/".$widget."WidgetController.php";
+        if(file_exists($vjconfig['fwbasepath'].$path)) {
+            $path = $vjconfig['fwbasepath'].$path;
+        } else if(file_exists($vjconfig['basepath'].$path)) {
+            $path = $vjconfig['basepath'].$path;
         } else {
-            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php")) {
-                require_once $vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widget."/".$widget."Widget.php";
-                $class = $widget.'Widget';
-                $ob = new $class;
-            }else {
-                die("widget not found ".$widget);
-
-            }
-            return $ob;
+           return false;
         }
+        require_once $path;
+        $class = $widget.'WidgetController';
+        $ob = new $class;
+        return $this->_geWidgetObject($ob);
     }
 
     public function getWidgetForRecord($row,$orderByName=false) {
@@ -145,6 +146,15 @@ class WidgetService implements IWidgetService {
         }
 
     }
+    public function getWidgetFileds($widgetType)
+    {
+        $widget = $this->getWidgetObject($widgetType);
+        if($widget) {
+           return $widget->getFields();
+        }
+        return false;
+    }
+
 
 
 }

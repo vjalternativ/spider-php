@@ -3,6 +3,7 @@
 require_once $vjconfig['fwbasepath'].'resources/widget/IWidgetService.php';
 require_once $vjconfig['fwbasepath'].'resources/widget/WidgetService.php';
 require_once $vjconfig['fwbasepath'].'resources/widget/AWidget.php';
+require_once $vjconfig['fwbasepath'].'resources/widget/WidgetResourceController.php';
 
 class WidgetServiceRegistrar {
     private static $instnace = null;
