@@ -8,9 +8,9 @@
   
   <!-- The slideshow -->
   <div class="carousel-inner">
-    {foreach from=$params item=slide}
+    {foreach from=$params.data item=slide}
     <div class="carousel-item {if $slide.isfirst}active{/if}">
-      <img src="{$fwurlbasepath}index.php?module=media_files&action=download&id={$slide.attrs.image}" alt="">
+      <img src="{$urlbasepath}backend/index.php?module=media_files&action=download&id={$slide.attrs.image}" alt="">
     </div>
     {/foreach}
     
