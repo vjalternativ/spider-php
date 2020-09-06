@@ -19,17 +19,20 @@ class lib_config {
 
 
         global $config;
-        try {
-        require_once $dir.'config.php';
-        } catch(Exception $e) {
-            lib_logger::getInstance()->error(print_r(debug_backtrace(),1));
+        if(file_exists($dir.'config.php')) {
+                require_once $dir.'config.php';
+                $this->config = $config;
+                $this->config['display_errors'] = isset($this->config['display_errors']) ? $this->config['display_errors'] : false;
+                ini_set("display_errors",$this->config['display_errors']);
+                $this->config['fwbasepath'] = $fwbasepath;
+                $this->config['basepath'] = $dir;
+                $this->config['resource_alias']['backend'] = isset($this->config['resource_alias']['backend']) ? $this->config['resource_alias']['backend'] : 'backend';
+
+        } else {
+                $err = print_r(debug_backtrace(),1);
+                lib_logger::getInstance()->error($err);
+                throw new ErrorException($err);
         }
-        $this->config = $config;
-        $this->config['display_errors'] = $this->config['display_errors'] ? $this->config['display_errors'] : false;
-        ini_set("display_errors",$this->config['display_errors']);
-        $this->config['fwbasepath'] = $fwbasepath;
-        $this->config['basepath'] = $dir;
-        $this->config['resource_alias']['backend'] = isset($this->config['resource_alias']['backend']) ? $this->config['resource_alias']['backend'] : 'backend';
 
     }
 
