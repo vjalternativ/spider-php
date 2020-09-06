@@ -30,7 +30,7 @@ class AliasLogicHook {
     }
     
     function beforeSave(&$keyvalue) {
-        global $db;
+        $db = lib_mysqli::getInstance();
         $alias=self::slugify($keyvalue['name']);
         $keyvalue['alias']=$alias;
         if($keyvalue['isnew']) {
