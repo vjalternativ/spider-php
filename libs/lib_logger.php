@@ -22,7 +22,8 @@ class lib_logger {
             $logmessage .= $this->threadId." ";
         }
         $logmessage .= $type.' : '.$message.PHP_EOL;
-        $dir = __DIR__.'/../';
+        $dir = lib_config::getInstance()->get("basepath");
+
         $path = $dir."logs/".$date.'/';
 
 

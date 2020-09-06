@@ -3,7 +3,7 @@ class lib_config {
     private static $instance = null;
     private $config;
 
-    function __construct() {
+    function __construct($configPath) {
         $dir = __DIR__;
         $fwbasepath = substr($dir,0,strrpos($dir,"/"))."/";
         if(isset($_SERVER['argv'])) {
@@ -17,7 +17,9 @@ class lib_config {
             $dir = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"/")).'/';
         }
 
-
+        if($configPath) {
+            $dir = $configPath.'/';
+        }
         global $config;
         if(file_exists($dir.'config.php')) {
                 require_once $dir.'config.php';
@@ -31,7 +33,6 @@ class lib_config {
         } else {
                 $server = $_SERVER;
                 $err = print_r($server,1);
-                lib_logger::getInstance()->error($err);
                 throw new ErrorException($err);
         }
 
@@ -40,9 +41,9 @@ class lib_config {
 
 
 
-    static function getInstance() {
+    static function getInstance($configPath=false) {
         if(self::$instance==null) {
-            self::$instance = new lib_config();
+            self::$instance = new lib_config($configPath);
         }
         return self::$instance;
     }

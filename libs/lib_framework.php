@@ -15,7 +15,7 @@ class lib_framework {
     private $sessionName = "ATVSESS";
     private $resourcePath;
     private $usingConigDefaultResource = true;
-    protected $configpath;
+    protected $configpath = false;
 
 
     function __construct($sessionName = false) {
@@ -24,7 +24,7 @@ class lib_framework {
         $common->init();
 
         $params = lib_seo::getInstance()->getParams();
-        $config = lib_config::getInstance()->getConfig();
+        $config = lib_config::getInstance($this->configpath)->getConfig();
         $resource = lib_config::getInstance()->get("default_resource");
 
         if(isset($params[0])) {
