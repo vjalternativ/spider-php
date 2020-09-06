@@ -6,7 +6,7 @@ class WidgetResourceController extends ResourceController {
     protected $fields = array();
     protected $configFields = array();
     private $widgetInstance = null;
-    protected $params;
+
     private function getField($name,$type) {
         $fieldData = array();
         $fieldData['name'] = $name;
@@ -163,11 +163,7 @@ class WidgetResourceController extends ResourceController {
     }
 
     public  function rendor($params=array()) {
-        //echo get_class(self);
-        $class = get_called_class();
-        $widget = str_replace("Widget", "", $class);
-        return $this->rendorWidget($widget,$this->params);
-
+                return $this->rendorTpl($this->module.'Widget.tpl',$params);
     }
 
     static function loadWidgetAtPositionByPage($pos) {

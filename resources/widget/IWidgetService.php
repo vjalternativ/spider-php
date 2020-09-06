@@ -5,6 +5,7 @@ interface IWidgetService {
     function getWidgetForPage($widgetType,$orderByName=false);
     function getWidgetForRecord($row,$orderByName=false);
     function getWidgetFileds($widgetType);
+    function getWidgetAtPosition($pos,$orderByName=false);
 
 }
 ?>

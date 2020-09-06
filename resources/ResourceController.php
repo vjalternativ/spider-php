@@ -2,51 +2,41 @@
 class ResourceController {
 
 
-    function initModules() {
 
-        $dataWrapper = lib_datawrapper::getInstance();
-        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-        $vjconfig = lib_config::getInstance()->getConfig();
-        $entity = lib_entity::getInstance();
-        $globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_preference_store_list");
-        require_once $vjconfig['fwbasepath'].'resources/backend/include/language/lang.php';
-        $langpath = $vjconfig['basepath'].'resources/backend/include/language/lang.php';
-        if(file_exists($langpath)) {
-            require_once $langpath;
-        }
-
-        require_once $vjconfig['fwbasepath'].'include/language/'.$vjconfig['defaultlang'].'.string.php';
-
-
-        if(file_exists($vjconfig['basepath'].'cache/relationship_list.php')) {
-
-            if(file_exists($vjconfig['basepath'].'cache/relationship_entity_list.php')) {
-                require_once $vjconfig['basepath'].'cache/relationship_entity_list.php';
-            }
-            require_once $vjconfig['basepath'].'cache/relationship_list.php';
-            require_once $vjconfig['basepath'].'cache/entity_list.php';
-            require_once $vjconfig['basepath'].'cache/module_list.php';
-
-            if(file_exists($vjconfig['basepath'].'cache/server_preference_store_list.php')) {
-                require_once $vjconfig['basepath'].'cache/server_preference_store_list.php';
-            }
-
-            if($globalModuleList || !isset($_REQUEST['entryPoint']) || $_REQUEST['entryPoint']!="install" ) {
-                //  return false;
-            }
-        }  else {
-            $entity->generateCache();
-        }
-        $dataWrapper->set("entity_list",$globalEntityList);
-        $dataWrapper->set("module_list",$globalModuleList);
-        $dataWrapper->set("relationship_list",$globalRelationshipList);
-        $dataWrapper->set("server_preference_store_list",$globalServerPreferenceStoreList);
-    }
+    protected $resource;
+    protected $module;
+    protected $params = array();
 
     function __construct() {
-        $this->initModules();
+        $reflector = new ReflectionObject($this);
+        $str = $reflector->getFileName();
+        $str = str_replace("modules/","",$str);
+        $str = substr($str,0,strrpos($str,"/"));
+        $this->module = substr($str,(strrpos($str,"/")+1));
+        $str = substr($str,0,strrpos($str,"/"));
+        $this->resource = substr($str,(strrpos($str,"/")+1));
+    }
+
+
+
+    protected function getRealPath($dir,$isFile=false) {
+        $libConfig = lib_config::getInstance();
+        $path = $libConfig->get("basepath").$dir;
+        $fwpath= $libConfig->get("fwbasepath").$dir;
+        if($isFile) {
+            if(file_exists($path)) {
+                return $path;
+            } else if(file_exists($fwpath)) {
+                return $fwpath;
+            }
+        } else {
+            if(is_dir($path)) {
+                return $path;
+            } else if(is_dir($fwpath)) {
+                return $fwpath;
+            }
+        }
+        return false;
     }
 
     function rendorTpl($tpl, $params = array(),$sitetpl=false)
@@ -54,16 +44,37 @@ class ResourceController {
         $smarty =  lib_smarty::getSmartyInstance();
         $vjconfig= lib_config::getInstance()->getConfig();
 
-        $params += $this->params;
+
+
+        $params =$this->params ? array_merge($params, $this->params) : $params;
         $smarty->assign("params", $params);
         $smarty->assign("baseurl", $vjconfig['baseurl']);
-        $class = get_called_class();
-        $class = str_replace("Controller", "", $class);
         $siteTpl = $sitetpl ? $sitetpl : $vjconfig['sitetpl'];
-        $this->params['controller_path'] = 'resources/'.$_GET['resource'].'/modules/' . $_GET['module'] . '/';
-        $this->params['controller_tpl_path'] = 'resources/'.$_GET['resource'].'/modules/' . $_GET['module'] . '/tpls/' . $siteTpl . '/';
 
-        return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
+
+        $this->params['controller_path'] = $this->getRealPath('resources/'.$this->resource.'/modules/' . $this->module . '/');
+
+        if($this->params['controller_path']) {
+            $this->params['controller_tpl_path'] = $this->getRealPath($this->params['controller_path']  . 'tpls/' . $siteTpl . '/');
+            if(!$this->params['controller_tpl_path']) {
+                $this->params['controller_tpl_path'] = $this->getRealPath($this->params['controller_path']  . 'tpls/default/');
+            }
+            if($this->params['controller_tpl_path']) {
+                return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
+            }
+        }
+
+        throw new Exception("tpl not configured ".$tpl);
+
+
+
+    }
+
+    function getResource() {
+        return $this->resource;
+    }
+    function getModule() {
+        return $this->module;
     }
 }
 ?>

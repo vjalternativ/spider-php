@@ -20,7 +20,7 @@ class WidgetService implements IWidgetService {
     public function getWidgetForParams($widgetType,$params) {
         $ob = $this->getWidgetObject($widgetType);
         $params = $ob->processWidgetParams( $params);
-        return  $this->rendorWidget($widgetType,$params);
+        return  $this->rendorWidget($ob,$params);
     }
 
     private function _geWidgetObject(WidgetResourceController $ob) {
@@ -75,7 +75,7 @@ class WidgetService implements IWidgetService {
         }
 
         $params['widget']  = $widgetObject->processWidgetAttrs($row);
-        return $this->rendorWidget($row['widget_type'],$params);
+        return $this->rendorWidget($widgetObject,$params);
     }
     private function getResourcesHtml() {
         $vjconfig = lib_config::getInstance()->getConfig();
@@ -98,53 +98,55 @@ class WidgetService implements IWidgetService {
         return $html;
     }
 
-    private function rendorWidget($widgetType,$params=array()) {
+    private function rendorWidget(WidgetResourceController $ob,$params=array()) {
+
         $vjconfig = lib_config::getInstance()->getConfig();
         $smarty = lib_smarty::getSmartyInstance();
 
         $html = $this->getResourcesHtml();
 
-        $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetType;
-        $smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
-        $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
+        //$smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
+        //$smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
+        //$smarty->assign("params",$params);
 
 
-        if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetType."/".$widgetType."Widget.tpl")) {
-            $smarty->assign("params",$params);
 
-            $html .= $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetType."/".$widgetType."Widget.tpl");
-            if(file_exists($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetType."/".$widgetType."Widget.css")) {
-                $link ='<link rel="stylesheet" href="'.$vjconfig['fwbaseurl'].'include/vjlib/libs/bootstrap4/widgets/'.$widgetType.'/'.$widgetType.'Widget.css" />';
-                $html = $link.$html;
-            }
+        $ob->rendorTpl($ob->getModule().'Widget.tpl',$params);
 
-        } else {
-            if(file_exists($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetType."/".$widgetType."Widget.tpl")) {
-                $smarty->assign("params",$params);
-                $html .= $smarty->fetch($vjconfig['basepath']."include/entrypoints/site/widgets/".$vjconfig['sitetpl']."/".$widgetType."/".$widgetType."Widget.tpl");
-            } else {
-                die($vjconfig['fwbasepath']."include/vjlib/libs/bootstrap4/widgets/".$widgetType."/".$widgetType."Widget.tpl not f" );
-            }
-        }
+
         return $html;
     }
-    public function getWidgetForPage($widgetType,$orderByName=false)
-    {
 
-        $db = lib_mysqli::getInstance();
-        $pageData = lib_datawrapper::getInstance()->get("pagedata");
-        if($pageData) {
-            $id = $pageData['id'];
-            $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.widget_type='".$widgetType."' and pw.page_id='".$id."' and w.status='Active' ";
+
+    private function _getWidgetForSql($sql,$orderByName=false) {
+            $db = lib_mysqli::getInstance();
             $widgets = $db->fetchRows($sql);
             $html = "";
-
             foreach($widgets as $widget) {
                 $html .= $this->getWidgetForRecord($widget,$orderByName);
             }
             return $html;
+
+    }
+
+    private function _getWidgetForPageAtPosition($widgetType,$pos=false,$orderByName=false) {
+
+        $pageData = lib_datawrapper::getInstance()->get("pagedata");
+        if($pageData) {
+            $id = $pageData['id'];
+            $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.widget_type='".$widgetType."' and pw.page_id='".$id."' and w.status='Active' ";
+            if($pos) {
+                $sql .= " AND w.position='".$pos."' ";
+            }
+            return $this->_getWidgetForSql($sql,$orderByName);
         }
 
+
+    }
+
+    public function getWidgetForPage($widgetType,$orderByName=false)
+    {
+       return $this->_getWidgetForPageAtPosition($widgetType,false,$orderByName);
     }
     public function getWidgetFileds($widgetType)
     {
@@ -154,6 +156,13 @@ class WidgetService implements IWidgetService {
         }
         return false;
     }
+
+
+    public function getWidgetAtPosition($pos,$orderByName =false) {
+        $sql = "select w.* from widget w WHERE w.deleted=0 and  w.position='".$pos."' ";
+        return $this->_getWidgetForSql($sql,$orderByName);
+    }
+
 
 
 
