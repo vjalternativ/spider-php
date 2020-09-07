@@ -4,17 +4,24 @@ class SpiderCronFramework extends lib_framework {
 
 
     private $sessionName;
+    private $configPath;
     function __construct($path,$sessionName=false) {
             $_REQUEST['spiderphp_mode'] = 'CRON';
             $_GET['resource'] = 'cli';
             $this->sessionName = $sessionName;
-            parent::__construct($path,$sessionName);
+            global $cronconfig;
+            require_once $path.'/cronconfig.php';
+            if(isset($cronconfig[$path])) {
+                $this->configPath = $path;
+                $_SERVER['HTTP_HOST'] = $cronconfig[$this->configpath]['host'];
+                $_GET['module'] = "cron";
+                parent::__construct($path,$sessionName);
+            }
     }
 
     function execute() {
 
 
-        global $cronconfig;
 
         $lockfile = $this->configpath.'/locks/cronlock.lock';
         $lockfilehandle = fopen ( $lockfile, 'w' );
@@ -28,12 +35,8 @@ class SpiderCronFramework extends lib_framework {
 
         echo "Lock file acquired -> Running\n";
 
-        require_once $this->configpath.'/cronconfig.php';
 
-        if(isset($cronconfig[$this->configpath])) {
-            $_SERVER['HTTP_HOST'] = $cronconfig[$this->configpath]['host'];
-            $_REQUEST['entryPoint'] = "cron";
-            $_GET['module'] = "cron";
+        if($this->configpath) {
             lib_logger::getInstance()->info("executing cron for host ".$_SERVER['HTTP_HOST']);
             parent::execute();
         } else {
