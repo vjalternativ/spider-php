@@ -39,7 +39,14 @@ class FrontendResourceController extends ResourceController  {
                     }
                     $row = $db->getrow($sql);
                     if ($row) {
-                        DataWrapper::getInstance()->set("pagedata", $row);
+                        lib_datawrapper::getInstance()->set("pagedata", $row);
+                        $this->page = "page";
+                    }
+                } else {
+                    $sql = "select * from page where alias='home' and deleted=0";
+                    $row = $db->getrow($sql);
+                    if ($row) {
+                        lib_datawrapper::getInstance()->set("pagedata", $row);
                         $this->page = "page";
                     }
                 }

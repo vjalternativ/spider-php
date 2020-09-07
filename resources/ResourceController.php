@@ -62,7 +62,9 @@ class ResourceController {
             if(!$this->params['controller_tpl_path']) {
                 $this->params['controller_tpl_path'] = $this->getRealPath($tplPath . 'default/');
             }
-
+            if(!$this->params['controller_tpl_path']) {
+                $this->params['controller_tpl_path'] = $this->params['controller_path'];
+            }
             if($this->params['controller_tpl_path']) {
                 return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
             }

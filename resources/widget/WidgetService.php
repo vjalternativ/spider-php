@@ -73,7 +73,6 @@ class WidgetService implements IWidgetService {
             $params['data'][$id] = $widgetObject->processWidgetParams($params['data'][$id]);
 
         }
-
         $params['widget']  = $widgetObject->processWidgetAttrs($row);
         return $this->rendorWidget($widgetObject,$params);
     }
