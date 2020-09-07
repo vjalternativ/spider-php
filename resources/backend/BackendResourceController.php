@@ -27,8 +27,10 @@ class BackendResourceController  extends ResourceController {
 
         parent::__construct();
 
+
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
+        $this->module = $this->entity;
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
         $this->record = isset($_GET['record']) ? $_GET['record'] : false;
 
