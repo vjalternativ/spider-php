@@ -162,6 +162,16 @@ class WidgetService implements IWidgetService {
         $sql = "select w.* from widget w WHERE w.deleted=0 and  w.position='".$pos."' ";
         return $this->_getWidgetForSql($sql,$orderByName);
     }
+    public function getWidgetConfigFields($widgetType)
+    {
+        $widget = $this->getWidgetObject($widgetType);
+        if($widget) {
+            return $widget->getConfigFields();
+        }
+        return false;
+
+    }
+
 
 
 

@@ -6,6 +6,6 @@ interface IWidgetService {
     function getWidgetForRecord($row,$orderByName=false);
     function getWidgetFileds($widgetType);
     function getWidgetAtPosition($pos,$orderByName=false);
-
+    function getWidgetConfigFields($widgetType);
 }
 ?>
