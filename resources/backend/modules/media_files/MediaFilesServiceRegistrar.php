@@ -1,7 +1,7 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
-require_once $vjconfig['fwbasepath'].'modules/media_files/IMediaFilesService.php';
-require_once $vjconfig['fwbasepath'].'modules/media_files/MediaFilesService.php';
+require_once $vjconfig['fwbasepath'].'resources/backend/modules/media_files/IMediaFilesService.php';
+require_once $vjconfig['fwbasepath'].'resources/backend/modules/media_files/MediaFilesService.php';
 class MediaFilesServiceRegistrar {
 
     static $instance = null;
