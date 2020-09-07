@@ -1,9 +1,11 @@
 <?php
+global $jobdata;
 
 class cronprocessCliController extends CliResourceController {
     function action_index() {
         $db = lib_mysqli::getInstance();
         $sql = "select * from scheduler where deleted=0  and status='Active'  and ";
+        global $jobdata;
         $jobdata=array();
         if(isset($_SERVER['argv'][1])) {
             $sql.= " id = '".$_SERVER['argv'][1]."'" ;
@@ -16,7 +18,9 @@ class cronprocessCliController extends CliResourceController {
         if($jobdata) {
             register_shutdown_function('shutdown');
 
-            global $jobdata,$entity;
+
+
+            $entity =lib_entity::getInstance();
             $jobdata['jobstatus'] = "started";
             $entity->save("scheduler",$jobdata);
 
@@ -51,7 +55,9 @@ class cronprocessCliController extends CliResourceController {
 }
 
 function shutdown() {
-    global $jobdata,$entity,$vjconfig;
+    global $jobdata;
+    $entity =lib_entity::getInstance();
+    $vjconfig = lib_config::getInstance()->getConfig();
     $jobdata['jobstatus'] = "completed";
     $entity->save("scheduler",$jobdata);
     shell_exec("php ".$vjconfig['basepath']."cronthread.php > /dev/null 2>/dev/null &");
