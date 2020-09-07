@@ -1,5 +1,5 @@
 <?php
-global $vjconfig;
+$vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'] . 'include/vjlib/interface/CronJob.php';
 require_once $vjconfig['fwbasepath'] . 'include/lib/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'] . 'include/lib/PHPMailer-master/src/PHPMailer.php';
@@ -48,14 +48,14 @@ class SendMail implements CronJob
      */
     function getAllContexts()
     {
-        global $db;
+        $db = lib_mysqli::getInstance();
 
         $contexts = array();
         $contexts['overallLimit'] = 0;
         $today = date('Y-m-d');
         $sqlGetContext = "SELECT oea.*,oec.name as context FROM outbound_email_accounts oea
             INNER JOIN outbound_email_context_outbound_email_accounts_1_m oeac on oea.id= oeac.outbound_email_accounts_id and oeac.deleted=0
-            INNER JOIN outbound_email_context oec on  oeac.outbound_email_context_id = oec.id	and oec.deleted=0 
+            INNER JOIN outbound_email_context oec on  oeac.outbound_email_context_id = oec.id	and oec.deleted=0
             WHERE oea.used_today is null or oea.used_today < oea.maxlimit or oea.date_last_used != '$today'  order by oea.used_today ASC";
         $resultGetContext = $db->query($sqlGetContext);
 
@@ -99,7 +99,7 @@ class SendMail implements CronJob
      */
     function getAllNotSentEmails($contexts, $last_used)
     {
-        global $db;
+        $db=  lib_mysqli::getInstance();
         $emails = array();
         $sqlGetEmailContextMatrix = "SELECT * FROM email_buffer WHERE (is_sent_successfully=0 or is_sent_successfully is null) AND (last_attempt < DATE_SUB(NOW(), INTERVAL " . $last_used . " HOUR) or last_attempt is null) AND (send_attempts < 3 or send_attempts is null) ORDER BY date_entered desc";
         $resultGetEmailContextMatrix = $db->query($sqlGetEmailContextMatrix);
@@ -156,7 +156,7 @@ class SendMail implements CronJob
 
         echo "Lock file acquired -> Running\n";
 
-        global $db;
+        $db = lib_mysqli::getInstance();
         // $mails_one_run = 25; // number of mails to send in one run of cron job
         $mail_delete_after = 10; // days, after which successfully sent mails will be deleted from email_buffer table
 
@@ -388,7 +388,7 @@ class SendMail implements CronJob
 
     function updateEmailWiseCounter($toArray = array(), $ccArray = array(), $bccArray = array(), $mailSubject)
     {
-        global $db;
+        $db =  lib_mysqli::getInstance();
 
         $start = "[CASE:";
         $end = "]";
@@ -471,7 +471,7 @@ class SendMail implements CronJob
 
     function sendErrorMails($info, $error, $senderAccount)
     {
-        global $db;
+        $db =  lib_mysqli::getInstance();
         $id = $info['id'];
         $subject = html_entity_decode($info['email_subject'], ENT_QUOTES);
         // SELECTING AN ACCOUNT TO SEND MAIL
