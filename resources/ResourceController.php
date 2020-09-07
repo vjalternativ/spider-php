@@ -80,5 +80,9 @@ class ResourceController {
     function getModule() {
         return $this->module;
     }
+
+    function getParams() {
+        return $this->params;
+    }
 }
 ?>

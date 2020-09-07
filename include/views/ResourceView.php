@@ -137,5 +137,9 @@ abstract class ResourceView
         echo '<script src="'.$this->pageurlpath."assets/js/".$filename.'"></script>';
     }
 
+    function mergeParams($params) {
+        $this->params = array_merge($this->params,$params);
+    }
+
 }
 

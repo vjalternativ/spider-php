@@ -1,5 +1,5 @@
 <?php
-global $vjconfig;
+$vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'include/vjlib/libs/CsvCallbackHandler.php';
 
 class CSVReader
@@ -8,13 +8,13 @@ class CSVReader
     var $isvalid = false;
 
     var $actualPath = false;
-    
+
     var $counter  = 0;
 
-    
+
     function setPath($path) {
         if (isset($_FILES[$path])) {
-            
+
             if ($_FILES[$path]['error'] == '0') {
                 $this->isvalid = true;
                 $this->actualPath = $_FILES[$path]['tmp_name'];
@@ -23,16 +23,16 @@ class CSVReader
             if(file_exists($path)) {
                 $this->isvalid = true;
                 $this->actualPath = $path;
-                
+
             }
         }
     }
-    
+
     function __construct($path)
     {
         $this->setPath($path);
     }
-    
+
     function setCounter($counter) {
         $this->counter = $counter;
     }

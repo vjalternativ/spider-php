@@ -274,11 +274,11 @@ class lib_framework {
                     if($this->record) {
                         $view->record = $this->record;
                     }
-                    if(!empty($controller->params)) {
-
-                        $view->params = array_merge($view->params,$controller->params);
-                        if(isset($controller->params['data'])) {
-                            $view->data = $controller->params['data'];
+                    $params  = $controller->getParams();
+                    if($params) {
+                        $view->mergeParams($params);
+                        if(isset($params['data'])) {
+                            $view->data = $params['data'];
                         }
                     }
                     $view->_loadHeader();
