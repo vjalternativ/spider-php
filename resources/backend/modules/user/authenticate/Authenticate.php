@@ -15,7 +15,7 @@ class Authenticate {
 
 	function processSession($row) {
 	    $db = lib_current_user::getEntityInstance();
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 	    $db = lib_mysqli::getInstance();
 	    $sql = "select r.id,r.name from  roles_user_1_m ru
@@ -36,9 +36,9 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 	        $sql = "select * from ".$row['role_name']." where deleted=0 and ownership_id='".$row['id']."'";
             $row['role_data'] = $db->getrow($sql);
 
-	        $sql = "select ri.*,t.id as module_id,t.name as module_name from tableinfo t
+	        $sql = "select ri.*,t.name as module_name,t.name as module_name from tableinfo t
                         left join roles_item ri on t.id=ri.module_id and role_id='".$roles['id']."' ";
-	        $row['module_access'] =  $db->fetchRows($sql,array("module_id"));
+	        $row['module_access'] =  $db->fetchRows($sql,array("module_name"));
 	        $sql = "select p.name from roles_privilege_1_m rp
                             INNER JOIN privilege p on rp.privilege_id=p.id and p.deleted=0 and rp.roles_id ='".$roles['id']."' and  rp.deleted=0  ";
 	        $row['privileges'] =  $db->fetchRows($sql,array("name"),"name");

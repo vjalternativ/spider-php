@@ -32,10 +32,6 @@ class BackendResourceController  extends ResourceController {
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
         $this->record = isset($_GET['record']) ? $_GET['record'] : false;
 
-
-
-
-
         $current_user = lib_current_user::sessionCheck('current_user');
 
         if(!isset($this->nonauth[$this->action]) && !$current_user) {
@@ -47,7 +43,7 @@ class BackendResourceController  extends ResourceController {
 
             if(!isset($this->nonauth[$this->action]) && $current_user) {
                 if(!$current_user->isDeveloper) {
-                    if(!(isset($globalModuleList[$this->module]) && isset($current_user['module_access'][$globalModuleList[$this->module]['id']])  && $current_user['module_access'][$globalModuleList[$this->module]['id']]['module_access'])) {
+                    if(!(isset($globalModuleList[$this->entity]) && isset($current_user->module_access[$this->entity]))) {
                         die("Access denied !");
                     }
                 }
