@@ -34,9 +34,7 @@ class SpiderCronFramework extends lib_framework {
 
         echo "Lock file acquired -> Running\n";
 
-
         if($this->configpath) {
-            lib_logger::getInstance()->info("executing cron for host ".$_SERVER['HTTP_HOST']);
             parent::execute();
         } else {
             echo "cronpath not set at ".$this->configpath." \n";

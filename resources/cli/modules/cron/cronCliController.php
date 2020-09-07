@@ -8,7 +8,6 @@ class cronCliController extends CliResourceController {
         $sql = "select now() as nowdate,scheduler.* from scheduler where deleted=0 and status='Active'   order by date_modified asc";
         $rows = $db->fetchRows($sql,array("id"));
         $this->jobs = $rows;
-        lib_logger::getInstance()->info("got cron request");
         if($rows)
         $this->process();
     }
@@ -36,7 +35,6 @@ class cronCliController extends CliResourceController {
     function process() {
         $entity  = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
-        lib_logger::getInstance()->info("processing cronrequest");
 
         foreach($this->jobs as $key => $jobdata) {
             if(!$this->isvalid($jobdata)) {
@@ -48,8 +46,6 @@ class cronCliController extends CliResourceController {
                  $jobdata['jobstatus'] = "pending";
                  $entity->save("scheduler",$jobdata);
              }
-             lib_logger::getInstance()->info("executing cronthread");
-
              shell_exec("php ".$vjconfig['basepath']."cronthread.php > /dev/null 2>/dev/null &");
          }
 

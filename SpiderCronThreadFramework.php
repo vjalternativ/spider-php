@@ -21,7 +21,6 @@ class SpiderCronThreadFramework extends lib_framework {
 
     function execute() {
 
-        global $cronconfig;
         $lockfile = $this->configpath.'/locks/cronthread.lock';
         $lockfilehandle = fopen ( $lockfile, 'w' );
         if ($lockfilehandle === false) {
@@ -33,9 +32,6 @@ class SpiderCronThreadFramework extends lib_framework {
         }
 
         echo "Lock file acquired -> Running\n";
-
-        require_once $this->configpath.'/cronconfig.php';
-
         if($this->configpath) {
             parent::execute();
         } else {
