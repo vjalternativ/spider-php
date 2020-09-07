@@ -1,5 +1,5 @@
 <?php
-global $vjconfig;
+$vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 
 class SiteMapProcessJob implements CronJob
@@ -15,7 +15,9 @@ class SiteMapProcessJob implements CronJob
     public $sitemapbasepath = '';
     public function execute()
     {
-        global $db,$globalModuleList,$vjconfig;
+        $db = lib_mysqli::getInstance();
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $vjconfig = lib_config::getInstance()->getConfig();
 
         
         $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' limit 1";
@@ -60,7 +62,8 @@ class SiteMapProcessJob implements CronJob
     
     function updateXml($data,$counter,$index) {
         
-        global $entity,$vjconfig;
+        $entity = lib_entity::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
         $file = $this->path.'sitemap-'.$index.'.xml';
         
         $xmlDoc = new DOMDocument();
@@ -82,7 +85,10 @@ class SiteMapProcessJob implements CronJob
 
     function processXmlData($index,$isNew,$module)
     {   
-        global $db,$entity,$vjconfig,$log;
+        $db = lib_mysqli::getInstance();
+        $entity = lib_entity::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $log = lib_logger::getInstance();
         $data = array();
         $data['childs'] = array();
         $havePages = false;
@@ -159,7 +165,7 @@ class SiteMapProcessJob implements CronJob
     
     
     function cleanupSiteMaps() {
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         $dir = $this->targetPath;
         $cmd = 'rm -rf '.$dir;
         shell_exec($cmd);
@@ -199,7 +205,8 @@ class SiteMapProcessJob implements CronJob
     }
     
     function createXML ($childdata,$counter,$index) {
-        global $entity,$vjconfig;
+        $entity = lib_entity::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
         $xmlDoc = new DOMDocument("1.0","UTF-8");
         
         $data = array();

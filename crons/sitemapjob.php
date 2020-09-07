@@ -1,5 +1,5 @@
 <?php 
-global $vjconfig;
+$vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 
 class SitemapJob implements  CronJob   {
@@ -8,7 +8,7 @@ class SitemapJob implements  CronJob   {
     public $row = array();
     public function execute()
     {
-        global  $db;
+        $db = lib_mysqli::getInstance();
         $sql = "select * from sitemapjob where deleted=0";
         $rows = $db->fetchRows($sql,array('id'));
         foreach($rows as $row) {
@@ -29,14 +29,14 @@ class SitemapJob implements  CronJob   {
     }
     
     function updateSiteMapJob($row) {
-        global $entity;
+        $entity = lib_entity::getInstance();
         $row['jobstatus'] = "pending";
         $row['updateval'] = $this->updateval;
         $entity->save("sitemapjob",$row);  
     }
     
     function cleanupSiteMaps($row) {
-        global $db;
+        $db = lib_mysqli::getInstance();
         $sql= "delete from sitemap where page_module='".$row['page_module']."'";
         $db->query($sql);
     }

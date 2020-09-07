@@ -3,7 +3,8 @@ require_once 'include/vjlib/interface/CronJob.php';
 
 class CleanUp implements  CronJob {
     function execute() {
-        global $vjconfig,$db;
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $db = lib_mysqli::getInstance();
 
         $sql = "select * from csvimporter where deleted = 1 ";
         
