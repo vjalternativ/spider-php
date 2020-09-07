@@ -4,7 +4,6 @@ class SpiderCronFramework extends lib_framework {
 
 
     private $sessionName;
-    private $configpath;
     function __construct($path,$sessionName=false) {
             $_REQUEST['spiderphp_mode'] = 'CRON';
             $_GET['resource'] = 'cli';

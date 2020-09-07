@@ -3,7 +3,6 @@ require_once __DIR__.'/libs/lib_framework.php';
 class SpiderCronThreadFramework extends lib_framework {
 
     private $sessionName;
-    private $configpath;
     function __construct($path,$sessionName=false) {
 
             $_REQUEST['spiderphp_mode'] = 'CRONTHREAD';
