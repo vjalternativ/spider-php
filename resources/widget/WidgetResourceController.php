@@ -297,9 +297,9 @@ class WidgetResourceController extends ResourceController {
         $counter =0;
 
         $path = 'resources/widget/modules/'.$widgetfolder."/assets/".$type."/".$relativefilepath;
-        $path  = $this->getRealPath($path,true);
-
-
+        if(!file_exists($vjconfig['basepath'].$path)) {
+            $path = 'spider-php/'.$path;
+        }
         if(isset($widgetdatawrapper['resources'][$path]))  {
             $counter = $widgetdatawrapper['resources'][$path]['counter']+1;
         }
