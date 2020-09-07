@@ -288,15 +288,18 @@ class WidgetResourceController extends ResourceController {
 
     function loadresource($type,$relativefilepath) {
         $vjconfig = lib_config::getInstance()->getConfig();
-        $widget = get_called_class();
-        $widgetfolder = str_replace("Widget", "", $widget);
+        $widgetfolder = $this->module;
         $datawrapper = lib_datawrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
         if(!$widgetdatawrapper) {
             $widgetdatawrapper = array();
         }
         $counter =0;
-        $path = 'include/entrypoints/site/widgets/'.$vjconfig['sitetpl']."/".$widgetfolder."/assets/".$type."/".$relativefilepath;
+
+        $path = 'resources/widget/modules/'.$widgetfolder."/assets/".$type."/".$relativefilepath;
+        $path  = $this->getRealPath($path,true);
+
+
         if(isset($widgetdatawrapper['resources'][$path]))  {
             $counter = $widgetdatawrapper['resources'][$path]['counter']+1;
         }
