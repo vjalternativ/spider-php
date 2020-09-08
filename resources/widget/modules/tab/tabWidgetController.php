@@ -40,7 +40,7 @@ class tabWidgetController extends WidgetResourceController {
         
         
         if(isset($params['attrs']['sql'])) {
-            global $db;
+            $db = lib_mysqli::getInstance();
             $sql = $params['attrs']['sql'];
             
             $params['tabs'] = $db->fetchRows($sql,array(   array( "key" => $params['attrs']['primary_id'],"cols"=> array($params['attrs']["tabheader_name_field"])),$params['attrs']['secondary_id']));

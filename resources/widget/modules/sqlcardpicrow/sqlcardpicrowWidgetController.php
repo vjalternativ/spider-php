@@ -15,7 +15,9 @@ class sqlcardpicrowWidgetController extends WidgetResourceController {
     {
         
         
-        global $db,$vjconfig,$seoParams;
+        $db = lib_mysqli::getInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $seoParams = lib_seo::getInstance()->getParams();
         $sql = $params['attrs']['sql'];
         if(!$params['attrs']['sql']) {
             echo "<pre>";print_r($params);die;

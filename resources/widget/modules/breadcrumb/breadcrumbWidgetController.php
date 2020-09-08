@@ -3,7 +3,7 @@ class breadcrumbWidgetController extends WidgetResourceController {
     public function processWidgetParams($params)
     {
         
-        global $vjconfig;
+        $vjconfig = lib_config::getInstance()->getConfig();
         if(is_array($params)) {
         $foundkey = false;
         
