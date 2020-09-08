@@ -116,7 +116,7 @@ class WidgetResourceController extends ResourceController {
         $smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
         $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
 
-
+        echo "loading resource for ".$widgetName." ".$path."<br />";
         $html = "";
         $datawrapper = lib_datawrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
@@ -124,6 +124,7 @@ class WidgetResourceController extends ResourceController {
             foreach($widgetdatawrapper['resources'] as $path=>$resource) {
                 if(isset($resource['counter']) && $resource['counter']==0)  {
                     if($resource['type']=="css") {
+
                         $html .='<link rel="stylesheet" href="'.$vjconfig['urlbasepath'].$path.'" />';
                     } else if($resource['type']=="js") {
                         $html .='<script src="'.$vjconfig['urlbasepath'].$path.'" ></script>';
@@ -296,7 +297,7 @@ class WidgetResourceController extends ResourceController {
         }
         $counter =0;
 
-        $path = 'resources/widget/modules/'.$widgetfolder."/assets/".$type."/".$relativefilepath;
+        $path = 'resources/widget/modules/'.$widgetfolder."/".$relativefilepath;
         if(!file_exists($vjconfig['basepath'].$path)) {
             $path = 'spider-php/'.$path;
         }
