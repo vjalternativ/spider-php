@@ -5,6 +5,7 @@ class lib_smarty {
 
     private static $instance = null;
 
+
     static function getSmartyInstance() {
         if(self::$instance==null) {
             self::$instance = new Smarty();

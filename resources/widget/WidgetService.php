@@ -7,7 +7,7 @@ class WidgetService implements IWidgetService {
 
     public function getWidget($widgetType,$row=false)
     {
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         $sql = "select * from widget where deleted=0 and status='Active' and widget_type='".$widgetType."'  ";
         $rows = $db->fetchRows($sql);
         $html = '';
