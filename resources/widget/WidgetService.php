@@ -19,8 +19,13 @@ class WidgetService implements IWidgetService {
 
     public function getWidgetForParams($widgetType,$params) {
         $ob = $this->getWidgetObject($widgetType);
-        $params = $ob->processWidgetParams( $params);
-        return  $this->rendorWidget($ob,$params);
+        if($ob) {
+            $params = $ob->processWidgetParams( $params);
+            return  $this->rendorWidget($ob,$params);
+        } else {
+            echo $widgetType." not found <br />";
+        }
+
     }
 
     private function _geWidgetObject(WidgetResourceController $ob) {
@@ -31,10 +36,10 @@ class WidgetService implements IWidgetService {
         $vjconfig = lib_config::getInstance()->getConfig();
         $ob = false;
         $path ="resources/widget/modules/".$widget."/".$widget."WidgetController.php";
-        if(file_exists($vjconfig['fwbasepath'].$path)) {
-            $path = $vjconfig['fwbasepath'].$path;
-        } else if(file_exists($vjconfig['basepath'].$path)) {
+        if(file_exists($vjconfig['basepath'].$path)) {
             $path = $vjconfig['basepath'].$path;
+        } else if(file_exists($vjconfig['fwbasepath'].$path)) {
+            $path = $vjconfig['fwbasepath'].$path;
         } else {
            return false;
         }

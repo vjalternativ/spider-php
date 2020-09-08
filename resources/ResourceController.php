@@ -50,6 +50,7 @@ class ResourceController {
         $params =$this->params ? array_merge($params, $this->params) : $params;
         $smarty->assign("params", $params);
         $smarty->assign("baseurl", $vjconfig['baseurl']);
+        $smarty->assign("urlbasepath", $vjconfig['urlbasepath']);
         $siteTpl = $sitetpl ? $sitetpl : $vjconfig['sitetpl'];
 
 
