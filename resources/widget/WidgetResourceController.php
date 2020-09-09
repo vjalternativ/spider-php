@@ -188,7 +188,7 @@ class WidgetResourceController extends ResourceController {
 
     static function loadWidgetByPage($widget,$addtionalSqlForAttr=false,$additionalSqlForWidget=false) {
         $db = lib_mysqli::getInstance();
-        $pageData = DataWrapper::getInstance()->get("pagedata");
+        $pageData = lib_datawrapper::getInstance()->get("pagedata");
         if($pageData) {
             $id = $pageData['id'];
             $sql = "select w.* from widget w inner join page_widget_m_m pw on w.id=pw.widget_id and pw.deleted=0 and w.deleted=0 and w.widget_type='".$widget."' and pw.page_id='".$id."' and w.status='Active' ";

@@ -27,7 +27,7 @@ class SchemaDataPatcher {
     
     private function repairTableSchema($rows) {
         $entity = Entity::getInstance();
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         foreach ($rows as $row) {
             $desc = json_decode(base64_decode($row['description']),1);
             $sql = "select 1 from ".$row['name']." limit 1";
@@ -120,7 +120,7 @@ class SchemaDataPatcher {
     
     private function updateDataPatch($data) {
         
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         $entity = Entity::getInstance();
         foreach($data as $table => $rows) {
             

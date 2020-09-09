@@ -36,7 +36,7 @@ class adminareaBackendController extends BackendResourceController
 
     private function repairTableSchema($rows) {
         $entity = Entity::getInstance();
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         foreach ($rows as $row) {
             $desc = json_decode(base64_decode($row['description']),1);
             $sql = "select 1 from ".$row['name']." limit 1";
@@ -155,7 +155,7 @@ class adminareaBackendController extends BackendResourceController
 
     private function updateDataPatch($data) {
 
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         foreach($data as $table => $rows) {
 
             $sql = "select * from ".$table." where deleted=0";
@@ -307,7 +307,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
         $repairTables = $this->repairTables;
         unset($repairTables["tableinfo"]);
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         foreach($repairTables as $key=>$data) {
             $sql ="select * from ".$key." where deleted=0";
             $data = $db->fetchRows($sql,array("id"));
@@ -321,7 +321,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
         $vjconfig = lib_config::getInstance()->getConfig();
         $data = array();
 
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
 
         $sql ="delete from tableinfo where deleted=1";
         $db->query($sql);
@@ -368,7 +368,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
     }
 
     function action_cleanupmodules() {
-        $db = MysqliLib::getInstance();
+        $db = lib_mysqli::getInstance();
         $sql = "select name,group_concat(t.id) ids from tableinfo t group by t.name having count(*)>1";
         $rows = $db->fetchRows($sql);
         $data = array();

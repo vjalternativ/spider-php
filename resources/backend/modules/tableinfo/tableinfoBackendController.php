@@ -175,7 +175,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 	function action_addfield() {
 
 
-		$db = MysqliLib::getInstance();
+		$db = lib_mysqli::getInstance();
 		$entity  = Entity::getInstance();
 
 		$fieldType = $_REQUEST['field-type'];
