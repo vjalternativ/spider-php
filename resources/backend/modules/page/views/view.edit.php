@@ -7,8 +7,8 @@ class pageViewEdit extends ViewEdit {
     
     function afterDisplay() {
         echo '<script src="include/vjlib/assets/ckeditor/ckeditor.js"></script>';
-     //   echo '<link rel="stylesheet" href="modules/page/assets/css/edit.css" />';
-        echo '<script src="modules/page/assets/js/edit.js"></script>';
+     //   echo '<link rel="stylesheet" href="resources/backend/modules/page/assets/css/edit.css" />';
+        echo '<script src="resources/backend/modules/page/assets/js/edit.js"></script>';
         
     }
 }

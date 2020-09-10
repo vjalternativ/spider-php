@@ -162,7 +162,7 @@ $entity = lib_entity::getInstance();
 
         if (strpos($flow['description'], "@all_fields") !== false) {
             $smarty->assign("rows", $rows);
-            $html = $smarty->fetch("modules/workflow/tpls/all_fields.tpl");
+            $html = $smarty->fetch("resources/backend/modules/workflow/tpls/all_fields.tpl");
             $flow['description'] = str_replace("@all_fields", $html, $flow['description']);
         }
 

@@ -16,7 +16,7 @@ class chatViewIndex extends ViewBasic {
        }
        $smarty->assign("heading",$heading);
        $smarty->assign("is_agent_livechat",$isAgentForLiveChat);
-       echo $smarty->fetch($vjconfig['fwbasepath']."modules/chat/tpls/index.tpl");
+       echo $smarty->fetch($vjconfig['fwbasepath']."resources/backend/modules/chat/tpls/index.tpl");
 
     }
 

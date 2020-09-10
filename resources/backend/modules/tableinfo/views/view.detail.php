@@ -360,8 +360,8 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$url = "index.php?module=tableinfo&action=dropdowneditor";
 		$url = lib_util::processUrl($url);
 		$smarty->assign("dropdownurl",$url);
-		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."modules/tableinfo/tpls/relationshipmodel.tpl");
-		$path = $vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutmanager.tpl";
+		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."resources/backend/modules/tableinfo/tpls/relationshipmodel.tpl");
+		$path = $vjconfig['fwbasepath']."resources/backend/modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
 		$script = lib_util::getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'resources/backend/modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;

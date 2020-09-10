@@ -814,7 +814,7 @@ $db = lib_mysqli::getInstance();
 	    $meta['type'] = $_POST['rowtype'];
 	    $smarty->assign("meta",$meta);
 	    $smarty->assign("viewtype",$viewtype);
-	    echo $smarty->fetch($vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutrow.tpl");
+	    echo $smarty->fetch($vjconfig['fwbasepath']."resources/backend/modules/tableinfo/tpls/layoutrow.tpl");
 	}
 
 
