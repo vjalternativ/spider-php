@@ -106,7 +106,7 @@ class widgetViewEdit extends ViewEdit
     {
         $vjconfig = lib_config::getInstance()->getConfig();
         parent::display();
-        echo '<script src="' . $vjconfig['fwbaseurl'] . 'modules/widget/assets/js/widget.js"></script>';
+        echo '<script src="' . $vjconfig['fwbaseurl'] . 'resources/backend/modules/widget/assets/js/widget.js"></script>';
     }
 }
 ?>

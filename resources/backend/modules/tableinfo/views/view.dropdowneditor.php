@@ -32,7 +32,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
         }
 
         $script = lib_util::getelement('script', '', array(
-            "src" => 'modules/tableinfo/assets/layoutmanager.js'
+            "src" => 'resources/backend/modules/tableinfo/assets/layoutmanager.js'
         ));
         $table = $bs->generateTable($rows, array(
             "headers" => array(

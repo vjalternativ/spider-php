@@ -256,7 +256,7 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$smarty->assign("view",'listview');
 		$smarty->assign("record",$this->record);
 
-		$listviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/listview.tpl');
+		$listviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/modules/tableinfo/tpls/listview.tpl');
 		$listviewtabcontent = $bs->getelement('div',$listviewhtml,array("id"=>'listviewlayout-tab',"class"=>"tab-pane fade"));
 
 
@@ -287,7 +287,7 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$smarty->assign("table",$listviewLayoutTable);
 		$smarty->assign("view",'searchview');
 		$smarty->assign("tbid",$params['tbid']);
-		$listviewfilterhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/listview.tpl');
+		$listviewfilterhtml = $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/modules/tableinfo/tpls/listview.tpl');
 		$listviewfiltertabcontent = $bs->getelement('div',$listviewfilterhtml,array("id"=>'listviewfilterlayout-tab',"class"=>"tab-pane fade"));
 
 
@@ -296,7 +296,7 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$smarty->assign('viewtype','editview');
 		$smarty->assign("metadata",isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array());
 		$smarty->assign("layout_param_list",$app_list_strings["layout_param_list"]);
-		$editviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/editview.tpl');
+		$editviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/modules/tableinfo/tpls/editview.tpl');
 		$editviewtabcontent = $bs->getelement('div',$editviewhtml,array("id"=>'editviewlayout-tab',"class"=>"tab-pane fade"));
 
 		$smarty->assign('viewtype','detailview');
@@ -307,7 +307,7 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 
 		$smarty->assign("version",rand(1000,9999));
 
-		$detailviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'modules/tableinfo/tpls/editview.tpl');
+		$detailviewhtml = $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/modules/tableinfo/tpls/editview.tpl');
 
 		$detailviewtabcontent = $bs->getelement('div',$detailviewhtml,array("id"=>'detailviewlayout-tab',"class"=>"tab-pane fade"));
 
@@ -363,7 +363,7 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."modules/tableinfo/tpls/relationshipmodel.tpl");
 		$path = $vjconfig['fwbasepath']."modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
-		$script = lib_util::getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'modules/tableinfo/assets/layoutmanager.js'));
+		$script = lib_util::getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'resources/backend/modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;
 
 
