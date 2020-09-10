@@ -40,7 +40,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
     public function getMediaLink($mediaId) {
        $vjconfig = lib_config::getInstance()->getConfig();
-       return $vjconfig[' urlbasepath']."backend/index.php?module=media_files&action=download&id=".$mediaId;
+       return $vjconfig['urlbasepath']."backend/index.php?module=media_files&action=download&id=".$mediaId;
     }
 
 
