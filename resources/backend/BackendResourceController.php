@@ -312,7 +312,7 @@ class BackendResourceController  extends ResourceController {
             $parentModule = $_REQUEST['parent_module'];
             $entity->record = $_REQUEST['parent_record'];
             $entity->addRelationship($relationship,$id);
-            redirect($parentModule,"detailview",array("record"=>$entity->record));
+            lib_util::redirect($parentModule,"detailview",array("record"=>$entity->record));
             exit();
         } else {
             lib_util::redirect($module,"detailview",array("record"=>$id));
