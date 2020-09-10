@@ -3,7 +3,7 @@ $dir = __DIR__.'/';
 require_once $dir.'../../libs/lib_current_user.php';
 require_once $dir.'../../libs/lib_paginate.php';
 require_once $dir.'../../libs/lib_modal.php';
-require_once $vjconfig['fwbasepath'].'resources/widget/WidgetServiceRegistrar.php';
+require_once $dir.'../widget/WidgetServiceRegistrar.php';
 
 class BackendResourceController  extends ResourceController {
     public $view = false;
