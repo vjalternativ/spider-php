@@ -1,12 +1,12 @@
-<?php 
+<?php
 class MediaFilesService implements IMediaFilesService  {
-    
+
    public function saveMediaFileByFieldName($fieldName,$keyvalue) {
         $field = array();
         $field['name'] = $fieldName;
         return $this->saveMediaFileByFieldArray($field, $keyvalue);
     }
-    
+
     public function saveMediaFileByFieldArray($field,$keyvalue) {
         $entity = lib_entity::getInstance();
 $vjconfig = lib_config::getInstance()->getConfig();
@@ -17,7 +17,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
             if((!isset($keyvalue['isnew']) || !$keyvalue['isnew']) && !empty($keyvalue[$field['name']])) {
                 $mediaKeyValue = $entity->get("media_files",$keyvalue[$field['name']]);
                 if(isset($mediaKeyValue['file_path'])) {
-                    
+
                     unlink($mediaKeyValue['file_path']);
                 }
             }
@@ -36,13 +36,13 @@ $vjconfig = lib_config::getInstance()->getConfig();
         }
         return $mediaId;
     }
-    
-    
+
+
     public function getMediaLink($mediaId) {
        $vjconfig = lib_config::getInstance()->getConfig();
-       return $vjconfig['fwbaseurl']."index.php?module=media_files&action=download&id=".$mediaId;
+       return $vjconfig[' urlbasepath']."backend/index.php?module=media_files&action=download&id=".$mediaId;
     }
-    
-    
+
+
 }
 ?>
