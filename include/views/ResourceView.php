@@ -54,13 +54,8 @@ abstract class ResourceView
 
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
-
         $this->sitebasePath = $vjconfig['basepath'].'resources/'.$_GET['resource'].'/';
-
-
         $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$vjconfig['sitetpl'].'/';
-
-
         $smarty->assign("baseurl", $vjconfig['baseurl']);
 
         $smarty->assign("params", $this->params);
@@ -139,6 +134,17 @@ abstract class ResourceView
 
     function mergeParams($params) {
         $this->params = array_merge($this->params,$params);
+    }
+
+    function rendorSiteTpl($tpl,$params=array(),$sitetpl=false) {
+        $smarty = lib_smarty::getSmartyInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
+        $this->params += $params;
+        $siteTplPath = $sitetpl ? $this->sitebasePath.'include/tpls/'.$sitetpl.'/' : $this->sitebasePath.'include/tpls/'.$vjconfig['sitetpl'].'/';
+        $smarty->assign("params",$this->params);
+        return $smarty->fetch($siteTplPath.$tpl);
+
+
     }
 
 }
