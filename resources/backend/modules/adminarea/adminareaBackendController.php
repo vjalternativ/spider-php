@@ -35,7 +35,7 @@ class adminareaBackendController extends BackendResourceController
 
 
     private function repairTableSchema($rows) {
-        $entity = Entity::getInstance();
+        $entity = lib_entity::getInstance();
         $db = lib_mysqli::getInstance();
         foreach ($rows as $row) {
             $desc = json_decode(base64_decode($row['description']),1);
@@ -131,7 +131,7 @@ class adminareaBackendController extends BackendResourceController
 
 
     private function processSchemaAndDataPatch($data) {
-        $entity = Entity::getInstance();
+        $entity = lib_entity::getInstance();
         $rows = $data['tableinfo'];
         $this->repairTableSchema($rows);
         $this->updateDataPatch($data);
@@ -256,9 +256,7 @@ class adminareaBackendController extends BackendResourceController
 
     function action_showPatch() {
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$vjconfig = lib_config::getInstance()->getConfig();
-
-
+        $vjconfig = lib_config::getInstance()->getConfig();
         $this->repairTables['user'] = 1;
         foreach($globalEntityList as $key=>$entity) {
 
@@ -297,7 +295,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
             $globalEntityList[$key]['editviewdef'] = json_encode($jsonData['editviewdef']);
             $globalEntityList[$key]['detailviewdef'] = json_encode($jsonData['detailviewdef']);
             $globalEntityList[$key]['searchviewdef'] = json_encode($jsonData['searchviewdef']);
-            //file_put_contents("include/install/schemapatch/".$name.".json", json_encode($jsonData,JSON_PRETTY_PRINT));
+            file_put_contents("include/install/schemapatch/".$name.".json", json_encode($jsonData,JSON_PRETTY_PRINT));
 
         }
 
@@ -338,7 +336,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
         $sql = "select * from relationships where deleted=0";
         $rows = $db->fetchRows($sql,array("id"));
-        $entity = Entity::getInstance();
+        $entity = lib_entity::getInstance();
         //echo "<pre>";print_r($rows);die;
         foreach($rows as $row) {
             if(isset($trows[$row['primarytable']]) && isset($trows[$row['secondarytable']])) {

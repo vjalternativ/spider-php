@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{$fwbaseurl}modules/tableinfo/assets/layoutmanager.css" />
+<link rel="stylesheet" href="{$fwbaseurl}resources/backend/modules/tableinfo/assets/layoutmanager.css" />
 <div id="newfieldmodal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 

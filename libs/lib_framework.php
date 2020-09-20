@@ -340,6 +340,10 @@ class lib_framework {
         $dataWrapper->set("module_list",$globalModuleList);
         $dataWrapper->set("relationship_list",$globalRelationshipList);
         $dataWrapper->set("server_preference_store_list",$globalServerPreferenceStoreList);
+        $app_list_strings  = $dataWrapper->get("app_list_strings_list");
+        $applistModuleList = array_keys($globalModuleList);
+        $app_list_strings['module_list'] =  array_combine($applistModuleList, $applistModuleList);
+        $dataWrapper->set("app_list_strings_list",$app_list_strings);
     }
 
 }

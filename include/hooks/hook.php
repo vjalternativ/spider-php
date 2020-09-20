@@ -75,15 +75,10 @@ class SystemLogicHook
     function workflowAfterSave(&$keyvalue)
     {
         $db = lib_mysqli::getInstance();
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
+        if (isset($app_list_strings['module_list']['workflow'])) {
 
-        if (isset($globalModuleList['workflow'])) {
-
-
-
-
-            $sql = "select * from workflow where deleted=0 and status='Active' and workflow_module='" . $keyvalue['hook_table_id'] . "'";
-
+            $sql = "select * from workflow where deleted=0 and status='Active' and workflow_module='" . $keyvalue['hook_table'] . "'";
             $qry = $db->query($sql,true);
 
             if($qry) {

@@ -26,7 +26,7 @@ class SchemaDataPatcher {
     }
     
     private function repairTableSchema($rows) {
-        $entity = Entity::getInstance();
+        $entity = lib_entity::getInstance();
         $db = lib_mysqli::getInstance();
         foreach ($rows as $row) {
             $desc = json_decode(base64_decode($row['description']),1);
@@ -121,7 +121,7 @@ class SchemaDataPatcher {
     private function updateDataPatch($data) {
         
         $db = lib_mysqli::getInstance();
-        $entity = Entity::getInstance();
+        $entity = lib_entity::getInstance();
         foreach($data as $table => $rows) {
             
             $sql = "select * from ".$table." where deleted=0";
@@ -141,7 +141,7 @@ class SchemaDataPatcher {
     }
     
    public function processSchemaAndDataPatch($data) {
-        $entity = Entity::getInstance();
+        $entity = lib_entity::getInstance();
         $rows = $data['tableinfo'];
         $this->repairTableSchema($rows);
         $this->updateDataPatch($data);

@@ -38,7 +38,7 @@ class tableinfoBackendController extends BackendResourceController {
 
 		}
 
-		redirect("tableinfo");
+		lib_util::redirect("tableinfo");
 	}
 
 
@@ -167,7 +167,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 	$app_list_strings[$list] = $array;
 	$filepath = 'include/language/lang.php';
 	file_put_contents($filepath, '<?php $app_list_strings = ' . var_export($app_list_strings, true) . ';');
-	redirect('tableinfo','dropdowneditor');
+	lib_util::redirect('tableinfo','dropdowneditor');
 
 
 	}
@@ -176,7 +176,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 
 		$db = lib_mysqli::getInstance();
-		$entity  = Entity::getInstance();
+		$entity  = lib_entity::getInstance();
 
 		$fieldType = $_REQUEST['field-type'];
 
@@ -254,7 +254,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 		$descstring = base64_encode(json_encode($desc));
 		$tbinfo['description'] = $descstring;
 		$entity->save('tableinfo',$tbinfo);
-		redirect('tableinfo','detailview',array('record'=>$_REQUEST['tableinfo-id']));
+		lib_util::redirect('tableinfo','detailview',array('record'=>$_REQUEST['tableinfo-id']));
 
 	}
 
@@ -267,13 +267,13 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 		$label = $_REQUEST['lhs_module_rname'];
 		$secondlabel = $_REQUEST['rhs_module_rname'];
 		$entity->createRelationship($primarymod,$secondaryinfo['name'],$type,$label,$secondlabel);
-		redirect('tableinfo','detailview',array('record'=>$_REQUEST['record']));
+		lib_util::redirect('tableinfo','detailview',array('record'=>$_REQUEST['record']));
 	}
 
 	function action_ajaxSaveListViewLayout() {
 	    $entity = lib_entity::getInstance();
-$db = lib_mysqli::getInstance();
-$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+        $db = lib_mysqli::getInstance();
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 		$id= $_REQUEST['id'];
 		$colorder = $_REQUEST['colorder'];
@@ -469,7 +469,7 @@ $db = lib_mysqli::getInstance();
 	    }
 	    $data['description'] = base64_encode(json_encode($desc));
 	    $entity->save("tableinfo",$data);
-	    redirect("tableinfo","detailview",array("record"=>$id));
+	    lib_util::redirect("tableinfo","detailview",array("record"=>$id));
 	}
 
 	function action_deleteRelationship() {
@@ -501,7 +501,7 @@ $db = lib_mysqli::getInstance();
 
 
 
-	    redirect("tableinfo","detailview",array("record"=>$id));
+	    lib_util::redirect("tableinfo","detailview",array("record"=>$id));
 	}
 
 	function action_dowloadschema() {

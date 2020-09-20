@@ -15,7 +15,7 @@ return $db->getrows($sql,'id');
 		$db = lib_mysqli::getInstance();
 	    $entity = lib_entity::getInstance();
 
-	    $app_list_strings=lib_datawrapper::getInstance()->get("app_list_string_list");
+	    $app_list_strings=lib_datawrapper::getInstance()->get("app_list_strings_list");
 
 
 	    $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
@@ -363,7 +363,7 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 		$smarty->assign("relationshipmodal",$vjconfig['fwbasepath']."resources/backend/modules/tableinfo/tpls/relationshipmodel.tpl");
 		$path = $vjconfig['fwbasepath']."resources/backend/modules/tableinfo/tpls/layoutmanager.tpl";
 		$html = $smarty->fetch($path);
-		$script = lib_util::getelement('script','',array("src"=>$vjconfig['fwurlbasepath'].'resources/backend/modules/tableinfo/assets/layoutmanager.js'));
+		$script = lib_util::getelement('script','',array("src"=>$vjconfig['fwbaseurl'].'resources/backend/modules/tableinfo/assets/layoutmanager.js'));
 		echo $html.$script;
 
 
