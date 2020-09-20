@@ -5,7 +5,7 @@ class lib_config {
 
     function __construct($configPath) {
         $dir = __DIR__;
-        $fwbasepath = substr($dir,0,strrpos($dir,"/"))."/";
+        $fwbasepath = str_replace("libs", "", $dir);
         if(isset($_SERVER['argv'])) {
             if(substr($_SERVER['SCRIPT_FILENAME'],0,1)=="/") {
                 $dir = substr($_SERVER['SCRIPT_FILENAME'],0,strrpos($_SERVER['SCRIPT_FILENAME'],"/")).'/';
