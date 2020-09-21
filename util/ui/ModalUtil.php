@@ -21,7 +21,7 @@ class ModalUtil {
 
 
     static function getBlockModalWithoutHeaderAndFooter($id,$body) {
-       return self::getModal($id,false,false,false,false,$body,false,false ,true);
+       return self::getModal($id,"",false,false,false,false,$body,false,false ,true);
     }
 
     static function getBlockModalWithoutFooter($id,$class,$title,$body,$isFullScreen=false) {
