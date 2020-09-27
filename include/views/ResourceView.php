@@ -65,23 +65,32 @@ abstract class ResourceView
         echo "<script>var fwbaseurl = '" . $vjconfig['fwbaseurl'] . "';</script>";
         echo "<script>var fwurlbasepath = '" . $vjconfig['resource_alias']['backend'] . "';</script>";
         $this->loadHeader();
-        echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
+        $this->displayHeader();
+    }
 
+    function displayHeader() {
+        $smarty = lib_smarty::getSmartyInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
+        echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
     }
 
     function _loadFooter() {
         $smarty = lib_smarty::getSmartyInstance();
-        $vjconfig = lib_config::getInstance()->getConfig();
         $smarty->assign("params", $this->params);
         $smarty->assign("footerparams", $this->footerparams);
         $this->loadFooter();
+        $this->displayFooter();
+    }
 
+    function displayFooter() {
+        $smarty = lib_smarty::getSmartyInstance();
+        $vjconfig = lib_config::getInstance()->getConfig();
         echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');
     }
 
 
     function show($path) {
-        global $smarty;
+        $smarty = lib_smarty::getSmartyInstance();
         foreach($this->params as $key=>$val) {
             $smarty->assign($key,$val);
         }
@@ -89,7 +98,8 @@ abstract class ResourceView
     }
 
     function loadTpl($tpl,$params=array()) {
-        global $smarty,$vjconfig;
+        $smarty = lib_smarty::getSmartyInstance();
+        $vjconfig= lib_config::getInstance()->getConfig();
 
         $module = $this->module;
 
@@ -99,6 +109,7 @@ abstract class ResourceView
 
         $path = $vjconfig['basepath'].'custom/modules/'.$module.'/tpls/'.$tpl;
         $content = "";
+
         if(file_exists($path)) {
             $content =  $smarty->fetch($path);
         }
@@ -116,7 +127,11 @@ abstract class ResourceView
         $this->params += $params;
         $smarty->assign('params',$this->params);
         $smarty->assign('app_list_strings',$app_list_strings);
-        echo $smarty->fetch($this->pagetplpath.$tpl);
+        if(file_exists($this->pagetplpath.$tpl)) {
+            echo $smarty->fetch($this->pagetplpath.$tpl);
+        } else {
+            echo $this->pagetplpath.$tpl.' not exist ';die;
+        }
     }
 
 
