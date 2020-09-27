@@ -46,6 +46,20 @@ class lib_framework {
         if(isset($_GET['resource'])) {
             $resource = $_GET['resource'];
         }
+        if(isset($_SERVER['argv'])) {
+            $resource = 'cli';
+            if(isset($_SERVER['argv'][1])) {
+                $_GET['module'] = $_SERVER['argv'][1];
+            }
+
+            if(isset($_SERVER['argv'][2])) {
+                $_GET['action'] = $_SERVER['argv'][2];
+            } else {
+                $_GET['action'] = 'index';
+            }
+
+
+        }
         $this->resourcePath = $this->getResourcePath($resource);
         $_GET['resource'] = $resource;
         $this->resource = $resource;

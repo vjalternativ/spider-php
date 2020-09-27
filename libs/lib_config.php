@@ -22,6 +22,12 @@ class lib_config {
         }
         global $config;
         if(file_exists($dir.'config.php')) {
+                if(isset($_SERVER['argv']) && file_exists($dir."cliconfig.php")) {
+                    global $cliconfig;
+                    require_once $dir.'cliconfig.php';
+                    $clipath = substr($dir,0,-1);
+                    $_SERVER['HTTP_HOST'] = isset($cliconfig[$clipath]['host']) ? $cliconfig[$clipath]['host'] : "localhost";
+                }
                 require_once $dir.'config.php';
                 $this->config = $config;
                 $this->config['display_errors'] = isset($this->config['display_errors']) ? $this->config['display_errors'] : false;
