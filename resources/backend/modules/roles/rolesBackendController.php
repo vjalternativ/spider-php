@@ -1,6 +1,6 @@
 <?php
 class rolesBackendController extends BackendResourceController {
-    
+
     function action_saveAccess() {
         $db = lib_mysqli::getInstance();
 	    $entity = lib_entity::getInstance();
@@ -16,7 +16,7 @@ class rolesBackendController extends BackendResourceController {
         }
         $params  =array();
         $params['record'] = $record;
-        redirect("roles","detailview",$params);
-        
+        lib_util::redirect("roles","detailview",$params);
+
     }
 }
