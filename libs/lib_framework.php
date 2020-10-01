@@ -46,7 +46,7 @@ class lib_framework {
         if(isset($_GET['resource'])) {
             $resource = $_GET['resource'];
         }
-        if(isset($_SERVER['argv']) && $_SERVER['argv']) {
+        if(php_sapi_name() == "cli" && isset($_SERVER['argv']) && $_SERVER['argv']) {
             $resource = 'cli';
             if(isset($_SERVER['argv'][1])) {
                 $_GET['module'] = $_SERVER['argv'][1];
