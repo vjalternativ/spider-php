@@ -46,7 +46,7 @@ class lib_framework {
         if(isset($_GET['resource'])) {
             $resource = $_GET['resource'];
         }
-        if(isset($_SERVER['argv'])) {
+        if(isset($_SERVER['argv']) && $_SERVER['argv']) {
             $resource = 'cli';
             if(isset($_SERVER['argv'][1])) {
                 $_GET['module'] = $_SERVER['argv'][1];
@@ -133,7 +133,7 @@ class lib_framework {
         if(isset($defaultResourceModules[$resource])) {
            return $defaultResourceModules[$resource];
         } else {
-            die("default resource module not specified");
+            die("default resource module not specified for ".$resource);
         }
     }
 
