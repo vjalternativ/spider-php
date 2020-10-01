@@ -142,7 +142,7 @@ function setParams(elem) {
 	
 	var dropdown = $(elem).parent().find(".select_fields_field").html();
 	if(value !="") {
-		$.post(fwbaseurl+"index.php?module=tableinfo&action=ajaxAddlayoutrow",{rmodule:rmodule,rowtype:value,viewtype:viewtype},function(html){
+		$.post(baseurl+"index.php?resource=backend&module=tableinfo&action=ajaxAddlayoutrow",{rmodule:rmodule,rowtype:value,viewtype:viewtype},function(html){
 			$("#"+viewtype+"-layout-form").append(html);
 			$(".fields").html(dropdown);
 				
