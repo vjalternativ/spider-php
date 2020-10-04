@@ -1,0 +1,41 @@
+{
+    "name": "tableinfo_relationships_1_m",
+    "type": "relationship",
+    "label": "Module",
+    "fields": {
+        "id": {
+            "name": "id",
+            "type": "id",
+            "notnull": true,
+            "label": "LBL_ID"
+        },
+        "date_modified": {
+            "name": "date_modified",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_MODIFIED"
+        },
+        "deleted": {
+            "name": "deleted",
+            "type": "int",
+            "default": 0,
+            "label": "LBL_DELETED"
+        },
+        "tableinfo_id": {
+            "name": "tableinfo_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        },
+        "relationships_id": {
+            "name": "relationships_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        }
+    },
+    "listviewdef": [],
+    "editviewdef": [],
+    "detailviewdef": [],
+    "searchviewdef": []
+}

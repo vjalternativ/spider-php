@@ -1,0 +1,234 @@
+{
+    "name": "relationships",
+    "type": "basic_wod",
+    "label": "Relationships",
+    "fields": {
+        "id": {
+            "name": "id",
+            "type": "id",
+            "notnull": true,
+            "label": "LBL_ID"
+        },
+        "name": {
+            "name": "name",
+            "type": "varchar",
+            "len": 255,
+            "link": true,
+            "label": "LBL_NAME"
+        },
+        "date_entered": {
+            "name": "date_entered",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_ENTERED"
+        },
+        "date_modified": {
+            "name": "date_modified",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_MODIFIED"
+        },
+        "deleted": {
+            "name": "deleted",
+            "type": "int",
+            "default": 0,
+            "label": "LBL_DELETED"
+        },
+        "modified_user_id": {
+            "name": "modified_user_id",
+            "type": "relate",
+            "rmodule": "user",
+            "notnull": true,
+            "label": "LBL_MODIFIED_USER_ID"
+        },
+        "created_by": {
+            "name": "created_by",
+            "type": "relate",
+            "rmodule": "user",
+            "notnull": true,
+            "label": "LBL_CREATED_BY"
+        },
+        "primarytable": {
+            "name": "primarytable",
+            "type": "relate",
+            "rmodule": "tableinfo",
+            "notnull": true,
+            "label": "Primary Module"
+        },
+        "secondarytable": {
+            "name": "secondarytable",
+            "type": "relate",
+            "rmodule": "tableinfo",
+            "notnull": true,
+            "label": "Secondary Module"
+        },
+        "primarytable_name": {
+            "name": "primarytable_name",
+            "type": "varchar",
+            "len": "255",
+            "label": "Primary Relationship Name"
+        },
+        "secondarytable_name": {
+            "name": "secondarytable_name",
+            "type": "varchar",
+            "len": "255",
+            "label": "Secondary Relationship Name"
+        },
+        "parent_relationship": {
+            "name": "parent_relationship",
+            "type": "relate",
+            "rmodule": "relationships",
+            "label": "Parent Relationship"
+        },
+        "target_relationship": {
+            "name": "target_relationship",
+            "type": "relate",
+            "rmodule": "relationships",
+            "label": "Target Relationship"
+        },
+        "rtype": {
+            "name": "rtype",
+            "type": "enum",
+            "notnull": true,
+            "label": "Relationship Type",
+            "options": "relationship_type_list"
+        },
+        "primary_table_text": {
+            "name": "primary_table_text",
+            "type": "varchar",
+            "table": "primary",
+            "len": "255"
+        },
+        "secondary_table_text": {
+            "name": "secondary_table_text",
+            "type": "varchar",
+            "table": "primary",
+            "len": "255"
+        }
+    },
+    "listviewdef": {
+        "name": "name",
+        "date_entered": "date_entered",
+        "primarytable": "primarytable",
+        "secondarytable": "secondarytable",
+        "rtype": "rtype"
+    },
+    "editviewdef": [
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "name",
+                    "gridsize": 6
+                }
+            ]
+        },
+        {
+            "type": "hr",
+            "label": "Other Fields"
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "primarytable",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "secondarytable",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "parent_relationship",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "target_relationship",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "rtype",
+                    "gridsize": 12
+                }
+            ]
+        }
+    ],
+    "detailviewdef": [
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "name",
+                    "gridsize": 6
+                },
+                {
+                    "field": "date_entered",
+                    "gridsize": 6
+                }
+            ]
+        },
+        {
+            "type": "hr",
+            "label": "Other Fields"
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "primarytable",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "secondarytable",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "parent_relationship",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "rtype",
+                    "gridsize": 12
+                }
+            ]
+        }
+    ],
+    "searchviewdef": {
+        "name": "name"
+    }
+}

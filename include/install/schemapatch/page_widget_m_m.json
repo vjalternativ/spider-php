@@ -1,0 +1,41 @@
+{
+    "name": "page_widget_m_m",
+    "type": "relationship",
+    "label": "Pages",
+    "fields": {
+        "id": {
+            "name": "id",
+            "type": "id",
+            "notnull": true,
+            "label": "LBL_ID"
+        },
+        "date_modified": {
+            "name": "date_modified",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_MODIFIED"
+        },
+        "deleted": {
+            "name": "deleted",
+            "type": "int",
+            "default": 0,
+            "label": "LBL_DELETED"
+        },
+        "page_id": {
+            "name": "page_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        },
+        "widget_id": {
+            "name": "widget_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        }
+    },
+    "listviewdef": [],
+    "editviewdef": [],
+    "detailviewdef": [],
+    "searchviewdef": []
+}

@@ -1,0 +1,311 @@
+{
+    "name": "outbound_email_accounts",
+    "type": "basic",
+    "label": "outbound_email_accounts",
+    "fields": {
+        "id": {
+            "name": "id",
+            "type": "id",
+            "notnull": true,
+            "label": "LBL_ID"
+        },
+        "name": {
+            "name": "name",
+            "type": "varchar",
+            "len": 255,
+            "link": true,
+            "label": "LBL_NAME"
+        },
+        "description": {
+            "name": "description",
+            "type": "text",
+            "label": "LBL_DESCRIPTION"
+        },
+        "date_entered": {
+            "name": "date_entered",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_ENTERED"
+        },
+        "date_modified": {
+            "name": "date_modified",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_MODIFIED"
+        },
+        "deleted": {
+            "name": "deleted",
+            "type": "int",
+            "default": 0,
+            "label": "LBL_DELETED"
+        },
+        "modified_user_id": {
+            "name": "modified_user_id",
+            "type": "relate",
+            "rmodule": "user",
+            "notnull": true,
+            "label": "LBL_MODIFIED_USER_ID"
+        },
+        "created_by": {
+            "name": "created_by",
+            "type": "relate",
+            "rmodule": "user",
+            "notnull": true,
+            "label": "LBL_CREATED_BY"
+        },
+        "assigned_user_id": {
+            "name": "assigned_user_id",
+            "type": "relate",
+            "rmodule": "user",
+            "notnull": true,
+            "label": "LBL_ASSIGNED_USER_ID"
+        },
+        "user_name": {
+            "name": "user_name",
+            "type": "varchar",
+            "len": "255"
+        },
+        "mail_password": {
+            "name": "mail_password",
+            "type": "varchar",
+            "len": "255"
+        },
+        "mail_server": {
+            "name": "mail_server",
+            "type": "varchar",
+            "len": "255"
+        },
+        "mail_port": {
+            "name": "mail_port",
+            "type": "int"
+        },
+        "mail_ssl": {
+            "name": "mail_ssl",
+            "type": "checkbox"
+        },
+        "from_name": {
+            "name": "from_name",
+            "type": "varchar",
+            "len": "255"
+        },
+        "from_address": {
+            "name": "from_address",
+            "type": "varchar",
+            "len": "255"
+        },
+        "reply_to_name": {
+            "name": "reply_to_name",
+            "type": "varchar",
+            "len": "255"
+        },
+        "reply_to_address": {
+            "name": "reply_to_address",
+            "type": "varchar",
+            "len": "255"
+        },
+        "used_today": {
+            "name": "used_today",
+            "type": "int"
+        },
+        "date_last_used": {
+            "name": "date_last_used",
+            "type": "date"
+        },
+        "maxlimit": {
+            "name": "maxlimit",
+            "type": "int"
+        }
+    },
+    "listviewdef": {
+        "name": "name",
+        "date_entered": "date_entered",
+        "user_name": "user_name",
+        "mail_server": "mail_server"
+    },
+    "editviewdef": [
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "name",
+                    "gridsize": 6
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "description",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "user_name",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "mail_password",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "mail_server",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "mail_port",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "from_name",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "from_address",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "reply_to_name",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "reply_to_address",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "maxlimit",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "mail_ssl",
+                    "gridsize": "6"
+                }
+            ]
+        }
+    ],
+    "detailviewdef": [
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "name",
+                    "gridsize": 6
+                },
+                {
+                    "field": "date_entered",
+                    "gridsize": 6
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "description",
+                    "gridsize": 12
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "user_name",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "mail_server",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "mail_port",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "from_name",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "from_address",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "reply_to_name",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "reply_to_address",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "used_today",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "date_last_used",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "mail_ssl",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "maxlimit",
+                    "gridsize": "6"
+                }
+            ]
+        }
+    ],
+    "searchviewdef": {
+        "name": "name"
+    }
+}

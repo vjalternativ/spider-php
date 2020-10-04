@@ -1,0 +1,41 @@
+{
+    "name": "tableinfo_language_m_m",
+    "type": "relationship",
+    "label": "Modules",
+    "fields": {
+        "id": {
+            "name": "id",
+            "type": "id",
+            "notnull": true,
+            "label": "LBL_ID"
+        },
+        "date_modified": {
+            "name": "date_modified",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_MODIFIED"
+        },
+        "deleted": {
+            "name": "deleted",
+            "type": "int",
+            "default": 0,
+            "label": "LBL_DELETED"
+        },
+        "tableinfo_id": {
+            "name": "tableinfo_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        },
+        "language_id": {
+            "name": "language_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        }
+    },
+    "listviewdef": [],
+    "editviewdef": [],
+    "detailviewdef": [],
+    "searchviewdef": []
+}

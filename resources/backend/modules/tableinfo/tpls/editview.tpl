@@ -45,7 +45,7 @@ Add
 
 
 
-{assign var="path" value=$fwbasepath|cat:"modules/tableinfo/tpls/layoutrow.tpl"}
+{assign var="path" value=$fwbasepath|cat:"resources/backend/modules/tableinfo/tpls/layoutrow.tpl"}
 {include file=$path}
 
 

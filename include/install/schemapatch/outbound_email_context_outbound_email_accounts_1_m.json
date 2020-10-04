@@ -1,0 +1,41 @@
+{
+    "name": "outbound_email_context_outbound_email_accounts_1_m",
+    "type": "relationship",
+    "label": "",
+    "fields": {
+        "id": {
+            "name": "id",
+            "type": "id",
+            "notnull": true,
+            "label": "LBL_ID"
+        },
+        "date_modified": {
+            "name": "date_modified",
+            "type": "datetime",
+            "notnull": true,
+            "label": "LBL_DATE_MODIFIED"
+        },
+        "deleted": {
+            "name": "deleted",
+            "type": "int",
+            "default": 0,
+            "label": "LBL_DELETED"
+        },
+        "outbound_email_context_id": {
+            "name": "outbound_email_context_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        },
+        "outbound_email_accounts_id": {
+            "name": "outbound_email_accounts_id",
+            "type": "char",
+            "len": "36",
+            "notnull": true
+        }
+    },
+    "listviewdef": [],
+    "editviewdef": [],
+    "detailviewdef": [],
+    "searchviewdef": []
+}
