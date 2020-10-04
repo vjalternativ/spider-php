@@ -68,10 +68,18 @@ abstract class ResourceView
         $this->displayHeader();
     }
 
-    function displayHeader() {
-        $smarty = lib_smarty::getSmartyInstance();
+    private function displayTemplate($file) {
         $vjconfig = lib_config::getInstance()->getConfig();
-        echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/header.tpl');
+        $dir = $this->sitebasePath . 'include/tpls/';
+        $pagedata = lib_datawrapper::getInstance()->get("pagedata");
+        $sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ? (file_exists($dir .$pagedata['template'].'/'. $file) ? $pagedata['template'] : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
+        $smarty = lib_smarty::getSmartyInstance();
+        echo $smarty->fetch($dir.$sitetpl.'/'. $file);
+
+    }
+
+    function displayHeader() {
+        $this->displayTemplate("header.tpl");
     }
 
     function _loadFooter() {
@@ -83,9 +91,7 @@ abstract class ResourceView
     }
 
     function displayFooter() {
-        $smarty = lib_smarty::getSmartyInstance();
-        $vjconfig = lib_config::getInstance()->getConfig();
-        echo $smarty->fetch($this->sitebasePath . 'include/tpls/' . $vjconfig['sitetpl'] . '/footer.tpl');
+        $this->displayTemplate("footer.tpl");
     }
 
 
