@@ -22,6 +22,7 @@ class ViewEdit  extends BackendResourceView {
 		$datatypes['date'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control  datepicker')));
 		$datatypes['md5'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control')));
 		$datatypes['datetime'] = array('isdualtag'=>false,'element'=>array('input',array('id'=>'name','name'=>'name','type'=>'text','value'=>'name','class'=>'form-control  datetimepicker')));
+		$datatypes['editor'] = array('element'=>array('textarea',array('id'=>'name','name'=>'name','class'=>'form-control editor')));
 
 		$this->datatypeFields = $datatypes;
 		$vjconfig = lib_config::getInstance()->getConfig();

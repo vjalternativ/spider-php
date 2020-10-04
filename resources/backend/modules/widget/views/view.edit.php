@@ -104,9 +104,13 @@ class widgetViewEdit extends ViewEdit
 
     function display()
     {
-        $vjconfig = lib_config::getInstance()->getConfig();
         parent::display();
+        $vjconfig = lib_config::getInstance()->getConfig();
+        echo '<script src="'.$vjconfig['fwbaseurl'].'resources/backend/assets/ckeditor/ckeditor.js"></script>';
         echo '<script src="' . $vjconfig['fwbaseurl'] . 'resources/backend/modules/widget/assets/js/widget.js"></script>';
+
     }
+
+
 }
 ?>
