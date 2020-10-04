@@ -55,7 +55,11 @@ abstract class ResourceView
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
         $this->sitebasePath = $vjconfig['basepath'].'resources/'.$_GET['resource'].'/';
-        $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$vjconfig['sitetpl'].'/';
+
+        $pagedata = lib_datawrapper::getInstance()->get("pagedata");
+        $this->sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ?  $pagedata['template']   : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
+
+        $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$this->sitetpl.'/';
         $smarty->assign("baseurl", $vjconfig['baseurl']);
 
         $smarty->assign("params", $this->params);
@@ -69,12 +73,9 @@ abstract class ResourceView
     }
 
     private function displayTemplate($file) {
-        $vjconfig = lib_config::getInstance()->getConfig();
         $dir = $this->sitebasePath . 'include/tpls/';
-        $pagedata = lib_datawrapper::getInstance()->get("pagedata");
-        $sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ? (file_exists($dir .$pagedata['template'].'/'. $file) ? $pagedata['template'] : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
         $smarty = lib_smarty::getSmartyInstance();
-        echo $smarty->fetch($dir.$sitetpl.'/'. $file);
+        echo $smarty->fetch($dir.$this->sitetpl.'/'. $file);
 
     }
 
