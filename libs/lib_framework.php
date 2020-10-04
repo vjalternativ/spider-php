@@ -32,7 +32,17 @@ class lib_framework {
         $config = lib_config::getInstance($this->configpath)->getConfig();
         $resource = lib_config::getInstance()->get("default_resource");
 
-        if(isset($params[0])) {
+        if(php_sapi_name() == "cli" && isset($_SERVER['argv']) && $_SERVER['argv']) {
+            $resource = 'cli';
+            if(isset($_SERVER['argv'][1])) {
+                $_GET['module'] = $_SERVER['argv'][1];
+            }
+            if(isset($_SERVER['argv'][2])) {
+                $_GET['action'] = $_SERVER['argv'][2];
+            } else {
+                $_GET['action'] = 'index';
+            }
+        } else if(isset($params[0])) {
             $aliasVsResource = array_flip($config['resource_alias']);
             if(isset($aliasVsResource[$params[0]])) {
                 $resource  = $aliasVsResource[$params[0]];
@@ -45,20 +55,6 @@ class lib_framework {
 
         if(isset($_GET['resource'])) {
             $resource = $_GET['resource'];
-        }
-        if(php_sapi_name() == "cli" && isset($_SERVER['argv']) && $_SERVER['argv']) {
-            $resource = 'cli';
-            if(isset($_SERVER['argv'][1])) {
-                $_GET['module'] = $_SERVER['argv'][1];
-            }
-
-            if(isset($_SERVER['argv'][2])) {
-                $_GET['action'] = $_SERVER['argv'][2];
-            } else {
-                $_GET['action'] = 'index';
-            }
-
-
         }
         $this->resourcePath = $this->getResourcePath($resource);
         $_GET['resource'] = $resource;
