@@ -1,10 +1,10 @@
 window.onload = function() {
 	var chatutil = document.createElement("script");
 	chatutil.type="text/javascript";
-	chatutil.src=fwbaseurl+"modules/chat/assets/js/alternativlabslivechatutil.js";
+	chatutil.src=fwbaseurl+"resources/backend/modules/chat/assets/js/frontend/chat-frame-sdk.js";
 	document.head.appendChild(chatutil);
 	chatutil.onload = function(event){
-		createIframe("FRONTEND");	
+		ChatFrame.createIFrame("FRONTEND");	
 	};
 }
 

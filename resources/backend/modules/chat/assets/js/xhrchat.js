@@ -17,32 +17,7 @@ function preUpdateUI(event) {
 	}
 } 
 
-function openchat() {
-	
-	if($("#chat-panel-body").hasClass("hide")) {
-		$("#chat-panel-body").removeClass("hide");
-		$("#alternativlabs-chatform-panelfooter").removeClass("hide");
-		$("#chatmaximize").removeClass("glyphicon-plus");
-		$("#chatmaximize").addClass("glyphicon-minus");
-		if($("#alternativlabs-chatform-panelbody").hasClass("hide")) {
-			window.parent.connectChatWindow();
-				
-		} else {
-			window.parent.openchat();
-			
-		}
-		
-			
-	} else {
-		$("#chat-panel-body").addClass("hide");
-		$("#alternativlabs-chatform-panelfooter").addClass("hide");
-		$("#chatmaximize").removeClass("glyphicon-minus");
-		$("#chatmaximize").addClass("glyphicon-plus");
-		window.parent.minimizechat();
-		
-	}
-	
-}
+
 
 function updatePresetUI() {
 	$("#chat-panel-body").removeClass("hide");
@@ -54,16 +29,6 @@ function updatePresetUI() {
 
 
 
-function updateUI() {
-	
-	$("#stconnectbtn").attr("disabled",chat.disableConnectButton);
-	show("stconnectbtn",chat.showConnect);
-	show("stsendbtn",chat.showSendBtn);
-	show("stdisconnectbtn",chat.showSendBtn);
-	$("#stconnectbtn").html(chat.connectBtnText);
-	$("#stmsgbox").attr("disabled",chat.disableMessage);
-	
-}
 
 function onSend() {
 	chat.message = $("#stmsgbox").val();
@@ -98,11 +63,11 @@ function chatDisconnect(callback) {
 	    
 	  var chatob = chat;
 
-	  $.post(fwbaseurl+"index.php?module=chat&action=ajaxDisconnectChat&fw_sess_mode="+fw_sess_mode,{},function(response) {
+	  $.post(baseurl+"index.php?resource=backend&module=chat&action=ajaxDisconnectChat&fw_sess_mode="+fw_sess_mode,{},function(response) {
 		  	
 			$("#stchathistory").html("");
-		  	window.parent.minimizechat();
-		  		if(callback) {
+			ChatUIHandler.setState(INITIAL);
+				if(callback) {
 		  			callback();
 		  		}
 			  
@@ -234,7 +199,7 @@ class LiveChat {
 	  if(!isAgentLiveChat) {
 		  this.data.formdata = $("#chat_connnect_form").serializeArray();
 	  }
-			$.post(baseurl+"index.php?module=chat&action=ajaxStrangerChatConnect",this.data,function(response) {
+			$.post(baseurl+"index.php?resource=backend&module=chat&action=ajaxStrangerChatConnect",this.data,function(response) {
 	  			console.log("Response ");
 	  			console.log(response);
 	  			var data = JSON.parse(response);
@@ -256,19 +221,18 @@ class LiveChat {
   
   onConnect() {
 	  if(!isAgentLiveChat) {
-		  window.parent.connectChatWindow();  
+		  ChatUIHandler.setState(CONNECTING);  
 		    
 	  }
 	var now = new Date();
-  	this.disableConnectButton = true;
   	this.connectAttempt++;
   	this.chatHistory = [];
   	this.chatHistory.push(this.connectMessage);
   	document.body.dispatchEvent(new CustomEvent('chatMessage', {detail: this.connectMessage  }));
   	this.connectMessage.timestamp = now;
-  	this.connectBtnText = 'Loading...';
-  	updateUI();
-		
+  	
+  	
+  	
   	this.connect();
   	
   }
@@ -409,7 +373,7 @@ function onConnect() {
 
 
 function reloadFrame() {
-	window.parent.resetchat();
+	ChatUIHandler.setState(INITIAL);
 	window.location.reload();
 }
 
@@ -436,8 +400,7 @@ function chat_message_window() {
 	 updateUI();
 }
 
-function frameMessage(evt) {
-		chat_message_window();
+function handleFrameMessage(evt) {
 		if(evt.data.event=="startChatWithUser") {
 			/* var info = {};
 			 info.name = "message";
@@ -467,6 +430,8 @@ $(document).ready(function(){
 	} 
 	
 	
-	window.addEventListener("message", frameMessage, false);
-	window.parent.setChatFrameLoaded(true);
+	window.addEventListener("message", handleFrameMessage, false);
+	
+	window.parent.postMessage({event:"frameLoaded"});
+	
 });

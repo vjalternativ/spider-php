@@ -2,10 +2,10 @@
 <head>
 
 <link rel="stylesheet"
-	href="{$baseurl}include/vjlib/assets/bootstrap/css/bootstrap.min.css" />
-<link rel="stylesheet" href="{$baseurl}modules/chat/assets/css/chat.css" />
-<script src="{$baseurl}include/vjlib/assets/js/jquery-3.1.1.min.js"></script>
-<script src="{$baseurl}include/lib/js/jquery/jquery.validate.min.js"></script>
+	href="{$fwbaseurl}resources/backend/assets/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="{$fwbaseurl}resources/backend/modules/chat/assets/css/chat.css" />
+<script src="{$fwbaseurl}resources/backend/assets/js/jquery-3.1.1.min.js"></script>
+<script src="{$fwbaseurl}resources/backend/include/lib/js/jquery/jquery.validate.min.js"></script>
 
 <script>
 	var baseurl = '{$baseurl}';
@@ -113,9 +113,9 @@
 
 				<button class="btn btn-primary pull-right" id="stconnectbtn"
 					onclick="onUserConnect()" type="button">Connect</button>
-				<button class="btn btn-success" id="stsendbtn" onclick="onSend()"
-					style="display: none" type="button">Send</button>
-				<button class="btn btn-danger" id="stdisconnectbtn"
+				<button class="btn btn-success hide" id="stsendbtn" onclick="onSend()"
+					 type="button">Send</button>
+				<button class="btn btn-danger hide" id="stdisconnectbtn"
 					onclick="onDisconnect()" style="display: none" type="button">Disconnect</button>
 				<div class="clearfix"></div>
 			</div>
@@ -132,7 +132,8 @@
 
 
 	</div>
-	<script src="{$fwbaseurl}modules/chat/assets/js/xhrchat.js?v=61"></script>
+	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
+	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=61"></script>
  
 </body>
 </html>

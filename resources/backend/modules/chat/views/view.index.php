@@ -1,5 +1,5 @@
 <?php
-class chatViewIndex extends ViewBasic {
+class chatViewIndex extends ResourceView {
 
 
     function display() {
@@ -21,10 +21,7 @@ class chatViewIndex extends ViewBasic {
     }
 
 
-    function loadHeader() {
-        $vjconfig = lib_config::getInstance()->getConfig();
-        echo "<script> var baseurl ='".$vjconfig['baseurl']."' </script>";
-        echo "<script> var fwbaseurl ='".$vjconfig['fwbaseurl']."' </script>";
+    function displayHeader() {
         if(isset($_REQUEST['fw_sess_mode'])) {
             echo "<script> var fw_sess_mode ='".$_REQUEST['fw_sess_mode']."' </script>";
         }
@@ -36,9 +33,16 @@ class chatViewIndex extends ViewBasic {
         }
     }
 
+    function displayFooter() {
+
+    }
+
     function loadFooter() {
 
     }
+    public function loadHeader()
+    {}
+
 }
 
 ?>
