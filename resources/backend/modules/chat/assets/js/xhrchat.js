@@ -199,7 +199,7 @@ class LiveChat {
 	  if(!isAgentLiveChat) {
 		  this.data.formdata = $("#chat_connnect_form").serializeArray();
 	  }
-			$.post(baseurl+"index.php?resource=backend&module=chat&action=ajaxStrangerChatConnect",this.data,function(response) {
+			$.post(baseurl+"index.php?resource=backend&module=chat&action=createRoom",this.data,function(response) {
 	  			console.log("Response ");
 	  			console.log(response);
 	  			var data = JSON.parse(response);
@@ -356,15 +356,7 @@ document.body.addEventListener("dataChannelEvents",function(data){
 });
 
 
-function onUserConnect() {
-	$("#chat_connnect_form").validate();
-	var isvalid = $("#chat_connnect_form").valid();
-	if(isvalid) {
-		updatePresetUI();
-		onConnect();
-	}
-	
-}
+
 
 function onConnect() {
 	chat.onConnect();

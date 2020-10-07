@@ -115,3 +115,13 @@ function openchat() {
 	}
 	
 }
+
+
+function onUserConnect() {
+	$("#chat_connnect_form").validate();
+	var isvalid = $("#chat_connnect_form").valid();
+	if(isvalid) {
+		onConnect();
+	}
+	
+}

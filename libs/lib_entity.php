@@ -419,7 +419,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		}
 
 		$logicHook = lib_datawrapper::getInstance()->get("logichook_list");
-		$logicHook = $logicHook ? $logicHook :array($table => array("before_save"=>array(),"after_save"=>array()));
+		$logicHook = $logicHook ? $logicHook :array();
+
+		$logicHook = isset($logicHook[$table]) ? $logicHook :array($table => array("before_save"=>array(),"after_save"=>array()));
 
 
 

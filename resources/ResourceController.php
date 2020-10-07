@@ -87,5 +87,16 @@ class ResourceController {
     function getParams() {
         return $this->params;
     }
+
+
+    function sendResponse($responseCode,$payload) {
+
+        $result = array("status"=>"failed","data"=>$payload);
+        if($responseCode==200) {
+               $result['status'] = "success";
+        }
+        echo json_encode($result);
+
+    }
 }
 ?>

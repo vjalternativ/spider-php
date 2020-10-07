@@ -12,10 +12,39 @@ class chatBackendController extends BackendResourceController {
         $this->nonauth['ajaxhandlesignal'] = 1;
         $this->nonauth['ajaxPostMessage'] = 1;
         $this->nonauth['ajaxDisconnectChat'] =1;
+        $this->nonauth['createRoom'] = 1;
         $userTypeVsChatUserTypeMap = array();
         $userTypeVsChatUserTypeMap['user'] = "agent";
 
         $this->userTypeVsChatUserTypeMap = array_merge($userTypeVsChatUserTypeMap,array_flip($userTypeVsChatUserTypeMap));
+
+    }
+
+
+    function action_createRoom(){
+
+        if(isset($_POST['formdata'])) {
+            $entity = lib_entity::getInstance();
+            $data = array();
+            $data['name'] = uniqid();
+            $desc = "";
+            foreach($_POST['formdata'] as $row) {
+                $desc = $row['name'].' : '.$row['value'].'<br />';
+            }
+            $data['description']  = $desc;
+
+            $roomId = $entity->save("chatroom",$data);
+            $data['name'] = session_id();
+            $data['desc'] = "";
+            $roomId = $entity->save("room_member",$data);
+            $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$data['name'];
+            shell_exec($cmd);
+            $this->sendResponse(200, $roomId);
+
+        } else {
+            $this->sendResponse("401", "Invalid Request");
+        }
+
 
     }
 
