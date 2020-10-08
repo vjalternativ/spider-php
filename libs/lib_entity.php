@@ -78,8 +78,7 @@ class lib_entity {
 	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 	    //$this->generateCache();
-
-	    if(isset($this->instanceType['db']) && !isset($globalModuleList[$entityName])) {
+        if(isset($this->instanceType['db']) && (!isset($globalModuleList[$entityName]) || $repair)) {
 
 
 	        if(!isset($params['rtype']) || $params['rtype'] != "cstm") {

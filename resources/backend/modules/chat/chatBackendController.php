@@ -29,16 +29,23 @@ class chatBackendController extends BackendResourceController {
             $data['name'] = uniqid();
             $desc = "";
             foreach($_POST['formdata'] as $row) {
-                $desc = $row['name'].' : '.$row['value'].'<br />';
+                $desc .= $row['name'].' : '.$row['value'].'<br />';
             }
             $data['description']  = $desc;
 
             $roomId = $entity->save("chatroom",$data);
-            $data['name'] = session_id();
+            $sessionId = session_id();
+            $data['name']  = $sessionId;
             $data['desc'] = "";
             $roomId = $entity->save("room_member",$data);
             $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$data['name'];
             shell_exec($cmd);
+
+
+            $data = array();
+            $data["chatroom_id"] = $roomId;
+            $data["room_member_id"] = $sessionId;
+            $entity->save("chatroom_room_member_m_m",$data);
             $this->sendResponse(200, $roomId);
 
         } else {

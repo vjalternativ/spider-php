@@ -202,7 +202,7 @@ class LiveChat {
 			$.post(baseurl+"index.php?resource=backend&module=chat&action=createRoom",this.data,function(response) {
 	  			console.log("Response ");
 	  			console.log(response);
-	  			var data = JSON.parse(response);
+	  			var data = parseJson(response);
 	  			chatob.connectResponse = data;
 	  			chatob.processConnectResponse();
 	  			
