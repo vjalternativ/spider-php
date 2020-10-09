@@ -37,16 +37,18 @@ class chatBackendController extends BackendResourceController {
             $sessionId = session_id();
             $data['name']  = $sessionId;
             $data['desc'] = "";
-            $roomId = $entity->save("room_member",$data);
+            $memberId = $entity->save("room_member",$data);
             $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$data['name'];
             shell_exec($cmd);
 
 
             $data = array();
             $data["chatroom_id"] = $roomId;
-            $data["room_member_id"] = $sessionId;
+            $data["room_member_id"] = $memberId;
+            $data["max_member"] = "2";
+
             $entity->save("chatroom_room_member_m_m",$data);
-            $this->sendResponse(200, $roomId);
+            $this->sendResponse(200, array("room_id"=>$roomId,"member_id"=>$memberId));
 
         } else {
             $this->sendResponse("401", "Invalid Request");
