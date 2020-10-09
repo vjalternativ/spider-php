@@ -452,70 +452,6 @@ class chatBackendController extends BackendResourceController {
 
     }
 
-    function action_ajaxStrangerChatConnectOld() {
-        $servercache = lib_server_cache::getInstance();
-$log = lib_logger::getInstance();
-
-
-        $result = array('status'=>'no_user_avail','chatId'=>'');
-        $availUserInfo = $servercache->get("availUsersJson");
-        $engagedUserInfo = $servercache->get("engagedUserJson");
-        $stragerChatInfo = $servercache->get("strangerChatJson");
-        if(!$availUserInfo) {
-            $availUserInfo = array();
-        }
-
-        $sessionId = session_id();
-        $log->log("GOT CONNECT REQUEST FOR SESION Id ".$sessionId);
-        if(isset($_SESSION['availUsersJson']) || isset($engagedUserInfo['data'][$sessionId])) {
-            $result['status'] = 'connected';
-            $result['chatId'] = $engagedUserInfo['data'][$sessionId]['chatId'];
-            $log->log("SESSION IS SET FOR SESION Id ".$sessionId);
-        }  else {
-            $availUserInfo["data"][$sessionId] = $sessionId;
-
-            $partnerSessionId = '';
-            $connected = false;
-            foreach($availUserInfo['data'] as $tempSessionId) {
-                if ($tempSessionId != $sessionId) {
-                    $partnerSessionId  = $tempSessionId;
-                    $result['status'] = 'connected';
-                    $id = uniqid();
-                    $result['chatId'] = $id;
-                    $_SESSION['availUsersJson']['chatId'] = $id;
-
-                    $engagedUserInfo['data'][$sessionId] = array("chatId"=>$id,"partnerSessionId"=>$partnerSessionId);
-                    $engagedUserInfo['data'][$tempSessionId] = array("chatId"=>$id,"partnerSessionId"=>$sessionId);
-                    $stragerChatInfo['data'][$id]=array();
-                    $stragerChatInfo['data'][$id][$sessionId] = array();
-                    $stragerChatInfo['data'][$id][$tempSessionId] = array();
-                    $log->log("REMOVING SESSION FROM AVAIL LIST " . $tempSessionId);
-                    $log->log("REMOVING SESSION FROM AVAIL LIST " . $sessionId);
-                    $connected = true;
-                    unset($availUserInfo['data'][$tempSessionId]);
-                    unset($availUserInfo['data'][$sessionId]);
-                    break;
-                }
-            }
-            if($partnerSessionId=='' && isset($engagedUserInfo['data'][$sessionId])) {
-                $result['status'] = 'connected';
-                $result['chatId'] = $engagedUserInfo['data'][$sessionId]['chatId'];
-            }
-            if($connected) {
-                $log->log(" AVAIL LIST " . print_r($availUserInfo,1));
-            }
-            $data = $servercache->set("availUsersJson",$availUserInfo);
-            if($data) {
-                $log->log(" AVAIL USER JSON " . print_r($data,1));
-
-            }
-            $servercache->set("engagedUserJson",$engagedUserInfo);
-            $servercache->set("strangerChatJson",$stragerChatInfo);
-
-        }
-        echo json_encode($result);
-        die;
-    }
 
     function action_ajaxSendMessage() {
         $servercache = lib_server_cache::getInstance();
@@ -596,52 +532,6 @@ $log = lib_logger::getInstance();
 
     }
 
-    function action_ajaxDisconnectChatOld() {
-        $servercache = lib_server_cache::getInstance();
-
-
-        $stragerChatInfo = $servercache->get("strangerChatJson");
-        $engagedUserInfo = $servercache->get("engagedUserJson");
-        $availUserInfo = $servercache->get("availUsersJson");
-        $sessionId = session_id();
-        unset($_SESSION['availUsersJson']);
-        if(isset($engagedUserInfo['data']['req.body.sessionId'])) {
-
-            $partnerId = $engagedUserInfo['data'][$sessionId]['partnerSessionId'];
-
-            $chatId = $engagedUserInfo['data'][$sessionId]['chatId'];
-
-            unset($stragerChatInfo['data'][$chatId]);
-            unset($engagedUserInfo['data'][$sessionId]);
-            unset($engagedUserInfo['data'][$partnerId]);
-
-            if(isset($availUserInfo['data'][$sessionId])) {
-                unset($availUserInfo['data'][$sessionId]);
-            }
-            if(isset($availUserInfo['data'][$partnerId])) {
-                unset($availUserInfo['data'][$partnerId]);
-            }
-
-            $servercache->set("availUsersJson",$availUserInfo);
-            $servercache->set("strangerChatJson",$stragerChatInfo);
-            $servercache->set("engagedUserJson",$engagedUserInfo);
-        }
-        echo '{"status":"success"}';
-
-
-    }
-
-    function action_test() {
-        $servercache = lib_server_cache::getInstance();
-
-        $stragerChatInfo = $servercache->get("strangerChatJson");
-        $engagedUserInfo = $servercache->get("engagedUserJson");
-        $availUserInfo = $servercache->get("availUsersJson");
-        echo "Stranger chat info : <pre>";print_r($stragerChatInfo);echo "</pre>";
-        echo "Engage chat info : <pre>";print_r($engagedUserInfo);echo "</pre>";
-        echo "Avail chat info : <pre>";print_r($availUserInfo);echo "</pre>";
-        die;
-    }
 
     function action_storeSDP() {
         $db = lib_mysqli::getInstance();
