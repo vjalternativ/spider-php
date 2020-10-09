@@ -41,14 +41,11 @@ class chatBackendController extends BackendResourceController {
             $memberId = $entity->save("room_member",$data);
             $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
             shell_exec($cmd);
-
-
             $data = array();
             $data["chatroom_id"] = $roomId;
             $data["room_member_id"] = $memberId;
-
-
             $entity->save("chatroom_room_member_m_m",$data);
+            $_SESSION['joinedroom_member_id'][$roomId] = $memberId;
             $this->sendResponse(200, array("room_id"=>$roomId,"member_id"=>$memberId));
 
         } else {
@@ -173,73 +170,6 @@ class chatBackendController extends BackendResourceController {
 
 
 
-
-    function processPackets($rows,$reorder=false) {
-        $entity = lib_entity::getInstance();
-        $packets = array();
-        $opackets = array();
-        foreach($rows as $row) {
-            $packets[$row['name']][] = $row;
-            $row['deleted'] = 1;
-            $entity->save("webrtcsignal",$row);
-        }
-
-        return $rows;
-
-        $candidates= $packets['candidate'];
-        unset($packets['candidate']);
-
-
-        foreach($packets as $ps) {
-            foreach($ps as $p) {
-                $opackets[] = $p;
-            }
-        }
-
-        foreach ($candidates as $p) {
-
-
-
-            $opackets[] = $p;
-
-
-        }
-
-
-        if($reorder) {
-            $opackets = $rows;
-        }
-        return $opackets;
-    }
-
-    function action_ajaxReadPackets(){
-        $db = lib_mysqli::getInstance();
-        $sessionId = session_id();
-        $sql = "select * from strangerchat where st_session_id='".$sessionId."' and deleted=0";
-        $row = $db->getrow($sql);
-        $result = array("packets"=>array(),"name"=>"Friend","status"=>"");
-        if($row) {
-
-            if($row['usertype']=="agent") {
-
-                $sql = "select name  from user where id = '".$row['created_by']."'";
-                $uinfo = $db->getrow($sql);
-                if($uinfo) {
-                    $result['name'] = $uinfo['name'];
-
-                }
-            }
-            $sql = "select * from webrtcsignal where  deleted=0 and session_id='".$row['name']."' order by date_entered asc";
-            $rows = $db->fetchRows($sql);
-            if($rows) {
-                $result['packets'] = $this->processPackets($rows);
-            } else {
-              //  $result['status'] = 'invalid.state';
-            }
-        }
-        echo json_encode($result);
-
-    }
 
     function action_getInitMessage() {
         $db = lib_mysqli::getInstance();
@@ -404,98 +334,6 @@ class chatBackendController extends BackendResourceController {
 
     }
 
-
-
-    function action_ajaxStrangerChatConnectVideo(){
-        $db = lib_mysqli::getInstance();
-	    $entity = lib_entity::getInstance();
-        $result = array('status'=>'no_user_avail','chatId'=>'');
-        $sessionId = session_id();
-
-        $partnerId = $_REQUEST['partnerChatId'];
-        $sql = "select * from strangerchat where status in ('offer','available')  and name !='".$sessionId."' and deleted=0 limit 1";
-        if($partnerId!="NA") {
-            $sql = "select * from strangerchat where id ='".$partnerId."' and deleted=0 ";
-
-        }
-        $result['packets'] = array();
-        $row = $db->getrow($sql);
-        if($row) {
-
-            if($row['status']=='available') {
-
-
-                $result['status'] = "answer";
-                $_SESSION['strangersessionid'] = $row['name'];
-                $_SESSION['strangerchatstatus'] = "engaged";
-
-                $result['sessionId'] = $sessionId;
-                $result['strangersessionid'] = $row['name'];
-
-
-
-                $data =array();
-                $sql = "select * from strangerchat where  name ='".$sessionId."' and deleted=0 ";
-                $data = $db->getrow($sql);
-                $data['st_session_id'] = $row['name'];
-                $data['name'] = $sessionId;
-                $data['status'] = "engaged";
-                $entity->save("strangerchat",$data);
-
-                $row['status'] = "engaged";
-                $row['st_session_id'] = $sessionId;
-                $entity->save("strangerchat",$row);
-
-
-                $result['status'] = "answer";
-
-
-                $_SESSION['strangerchatstatus'] = "engaged";
-            } else {
-
-                $result['sessionId'] = $sessionId;
-
-                $result['status'] = "wait";
-
-            }
-
-        } else {
-            $result['sessionId'] = $sessionId;
-            $result['strangersessionid'] = "";
-
-            $sql = "select * from strangerchat where  name ='".$sessionId."' and deleted=0 ";
-            $result['sql'] = $sql;
-            $row = $db->getrow($sql,array("name"));
-            $result['status'] = "offer";
-
-            if($row) {
-
-                $result['status'] = $row['status'];
-                $result['strangersessionid'] = $row['st_session_id'];
-                $result['id'] = $row['id'];
-                $sql = "delete from Calls where callNo = '".$sessionId."'";
-                $db->query($sql);
-                $sql = "delete from strangerchat where id='".$row['id']."'";
-                $db->query($sql);
-
-            } else {
-                $data =array();
-                $data['name'] = $sessionId;
-                $data['status'] = "offer";
-
-                $id = $entity->save("strangerchat",$data);
-                $result['id'] = $id;
-            }
-
-
-            $_SESSION['strangerchatstatus'] = "offer";
-
-        }
-
-        echo json_encode($result);
-
-    }
-
     function action_ajaxPostMessage() {
 
 
@@ -513,201 +351,35 @@ class chatBackendController extends BackendResourceController {
 
     }
 
-    function action_ajaxhandlesignal() {
-
-        $resp = array("status"=>"success");
-
-        $entity = lib_entity::getInstance();
-
-        $sessionId =  session_id();
-        $jsonString = $_POST['data'];
-        $json = json_decode($jsonString,1);
-
-        $data = array();
-        $data['name'] = $json['action'];
-        $data['description'] = json_encode($json['data']);
-        $data['session_id'] = $sessionId;
-
-        $entity->save("webrtcsignal",$data);
-
-        echo json_encode($resp);
 
 
-    }
-    function action_ajaxhandlesignalv1() {
-
-        $resp = array("status"=>"success");
-
-        $entity = lib_entity::getInstance();
-
-        $sessionId =  session_id();
-        $jsonString = $_POST['data'];
-        $json = json_decode($jsonString,1);
-
-        $data = array();
-        $data['name'] = $json['type'];
-        $data['description'] = $jsonString;
-        $data['session_id'] = $sessionId;
-
-        $entity->save("webrtcsignal",$data);
-
-        echo json_encode($resp);
-
-    }
 
 
-    function action_ajaxSendMessage() {
-        $servercache = lib_server_cache::getInstance();
-        $log = lib_logger::getInstance();
 
-        $sessionId = session_id();
-        $stragerChatInfo = $servercache->get("strangerChatJson");
-        //$engagedUserInfo = $servercache->get("engagedUserJson");
-        //$partnerId = $engagedUserInfo['data'][$sessionId]['partnerSessionId'];
-        $chatId = $_REQUEST['chatId'];
-        $msg = $_REQUEST['message'];
-        $mid = uniqid();
-        $stragerChatInfo['data'][$chatId][$sessionId][]= array("id"=>$mid,"message"=>$msg,"timestamp" => date("Y-m-d H:i:s"));
-        // $log->log("SAVING MESSAGE ".$chatId." OF ".$sessionId." DATA".print_r($stragerChatInfo['data'][$chatId][$sessionId],1));
-        $servercache->set("strangerChatJson",$stragerChatInfo);
-        echo '{"status":"success"}';
-
-    }
-
-    function action_ajaxGetChatData() {
-        $servercache = lib_server_cache::getInstance();
-
-        $stragerChatInfo = $servercache->get("strangerChatJson");
-        $engagedUserInfo = $servercache->get("engagedUserJson");
-
-        $response = array("chatlog" => array(),"status" => "disconnected");
-        $chatId = $_REQUEST['chatId'];
-        $sessionId = session_id();
-        if(isset($stragerChatInfo['data'][$chatId])) {
-            $partnerId = $engagedUserInfo['data'][$sessionId]['partnerSessionId'];
-            $result = $stragerChatInfo['data'][$chatId][$partnerId];
-            $stragerChatInfo['data'][$chatId][$partnerId] = array();
-            $servercache->set("strangerChatJson",$stragerChatInfo);
-            $response['chatlog'] = $result;
-            $response['status'] = "connected";
-        }
-        echo json_encode($response);
-    }
-
-
-    function deleteSignaling($sessionId) {
-        $db = lib_mysqli::getInstance();
-        $sql = "delete from webrtcsignal where session_id='".$sessionId."' ";
-        $db->query($sql);
-    }
 
     function action_ajaxDisconnectChat() {
-        $entity = lib_entity::getInstance();
-        $sessionId = session_id();
+        if(isset($_REQUEST['room_id']) && $_REQUEST['member_id']) {
+                $roomId = $_REQUEST['room_id'];
+                $memberId = $_REQUEST['member_id'];
+                //if(isset($_SESSION[$roomId][$memberId])) {
+                    $sql = "delete from chatroom_room_member_m_m where room_member_id ='".$memberId."' and chatroom_id='".$roomId."'";
+                    lib_mysqli::getInstance()->query($sql);
+                    $path = lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
+                    $cmd = "rm -rf ".$path;
+                    shell_exec($cmd);
 
-        $data = $entity->getwhere("strangerchat","name = '".$sessionId."' ");
-        if($data) {
-            $data['status'] = "disconnected";
-            $entity->save("strangerchat",$data);
-
-
-            $mdata = array();
-            $mdata['name'] = "disconnect";
-            $mdata['session_id'] = $sessionId;
-            $entity->save("webrtcsignal",$mdata);
-            //$this->deleteSignaling($sessionId);
+                    $member = lib_entity::getInstance()->get("room_member", $memberId);
+                    $this->broadcastMessageToRoom($roomId, $memberId,array("type"=>"disconnected","message"=>$member['name']." left the chat."));
+                    unset($_SESSION[$roomId][$memberId]);
+                    $this->sendResponse(200, "");
+                //}
+        } else {
+            $this->sendResponse(401, "");
         }
-
-        $data = $entity->getwhere("strangerchat","st_session_id = '".$sessionId."' ");
-        if($data) {
-            $data['status'] = "disconnected";
-            $entity->save("strangerchat",$data);
-
-
-            //$this->deleteSignaling($data['name']);
-        }
-
-        $resp = array();
-        $resp['status'] = "success";
-        echo json_encode($resp);
-
-
-
     }
 
 
-    function action_storeSDP() {
-        $db = lib_mysqli::getInstance();
-        $type = $_POST['type'];
-        $sdp = $_POST['sdp'];
-        $callNo = session_id();
-        if ($type=="answer") { //only the responder will have a valid callNo
-            $callNo = $_POST['stsessionId'];
-            $db->query("UPDATE Calls SET responderSdp='".$sdp."' WHERE callNo='".$callNo."'");
-        }
-        else {
-            $db->query("INSERT IGNORE INTO Calls VALUES('".$callNo."', '".$sdp."', '')");
 
-        }
-        echo $callNo;
-
-    }
-
-    function action_fetchSDP() {
-        ini_set("display_errors",1);
-        $db = lib_mysqli::getInstance();
-        $callNo = $_GET["callNo"];
-        $type = $_GET['calltype'];
-        $sdp = "";
-        if ($type == "offer") // caller has +ve callNo
-        {
-            $row = $db->getrow("SELECT responderSdp FROM Calls WHERE callNo='".$callNo."'");
-            $sdp  =$row['responderSdp'];
-        }
-        else
-        {
-            $row = $db->getrow("SELECT callerSdp FROM Calls WHERE callNo='".$callNo."'");
-            $sdp  = $row['callerSdp'];
-        }
-        echo $sdp;
-    }
-
-    function action_poll() {
-        $db = lib_mysqli::getInstance();
-	    $entity = lib_entity::getInstance();
-        $sessionId = session_id();
-
-
-
-        $data =array();
-        $sql = "select * from strangerchat where  name ='".$sessionId."' and deleted=0 and status='offer' ";
-        $data = $db->getrow($sql);
-        if($data) {
-            $data['st_session_id'] = "";
-            $data['name'] = $sessionId;
-            $data['status'] = "available";
-            $entity->save("strangerchat",$data);
-        }
-
-        $sql = "select * from strangerchat where  name ='".$sessionId."' and deleted=0 and status='engaged' ";
-
-        $row = $db->getrow($sql);
-        $resp = array('status'=>"wait");
-
-        if($row) {
-            $sql ="SELECT responderSdp FROM Calls WHERE callNo='".$sessionId."'";
-            $row = $db->getrow($sql);
-            if($row && !empty($row['responderSdp'])) {
-                $resp['sdp'] = $row['responderSdp'];
-                $resp['status'] = "done";
-
-            }
-        }
-
-        echo json_encode($resp);
-
-
-    }
 }
 
 ?>

@@ -43,7 +43,7 @@ ChatFrame.createIFrame = function(sessmode,autoconnect) {
 	ChatFrame.element.setAttribute("seamless","seamless");
 	ChatFrame.element.setAttribute("scrolling","no");
 	ChatFrame.element.setAttribute("allowtransparency","true");
-	ChatFrame.element.setAttribute("allow","*");
+	ChatFrame.element.setAttribute("allow","autoplay");
 	var chaturl = baseurl+"index.php?resource=backend&module=chat&fw_sess_mode="+sessmode;
 	
 	if(autoconnect) {

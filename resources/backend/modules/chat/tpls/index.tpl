@@ -126,7 +126,7 @@
 				<button class="btn btn-success {if !$params.is_agent_livechat}hide{/if}" id="stsendbtn" onclick="onSend()"
 					 type="button">Send</button>
 				<button class="btn btn-danger {if !$params.is_agent_livechat}hide{/if}" id="stdisconnectbtn"
-					onclick="onDisconnect()" style="display: none" type="button">Disconnect</button>
+					onclick="onDisconnect()"  type="button">Disconnect</button>
 				<div class="clearfix"></div>
 			</div>
 			<div class="clearfix"></div>
@@ -142,6 +142,11 @@
 
 
 	</div>
+	<audio  id="notificationelement" style="display:none">
+	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.ogg" type="audio/ogg">
+	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.mp3" type="audio/mpeg">
+	  Your browser does not support the audio element.
+	</audio>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=61"></script>
  {if !$params.showheaderfooter}

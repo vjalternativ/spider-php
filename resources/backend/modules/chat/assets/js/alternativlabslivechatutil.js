@@ -27,7 +27,7 @@ function createIframe(sessmode,autoconnect) {
 	iframe.setAttribute("seamless","seamless");
 	iframe.setAttribute("scrolling","no");
 	iframe.setAttribute("allowtransparency","true");
-	iframe.setAttribute("allow","*");
+	iframe.setAttribute("allow","autoplay");
 	var chaturl = fwbaseurl+"index.php?module=chat&fw_sess_mode="+sessmode;
 	
 	if(autoconnect) {

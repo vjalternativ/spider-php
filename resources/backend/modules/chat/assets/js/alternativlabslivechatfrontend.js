@@ -6,6 +6,11 @@ window.onload = function() {
 	chatutil.onload = function(event){
 		ChatFrame.createIFrame("FRONTEND");	
 	};
+	
+	
+	
+	
+	
 }
 
 
