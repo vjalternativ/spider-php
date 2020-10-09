@@ -13,6 +13,7 @@ class chatBackendController extends BackendResourceController {
         $this->nonauth['ajaxPostMessage'] = 1;
         $this->nonauth['ajaxDisconnectChat'] =1;
         $this->nonauth['createRoom'] = 1;
+        $this->nonauth['ajaxGetMyMessages'] = 1;
         $userTypeVsChatUserTypeMap = array();
         $userTypeVsChatUserTypeMap['user'] = "agent";
 
@@ -32,20 +33,20 @@ class chatBackendController extends BackendResourceController {
                 $desc .= $row['name'].' : '.$row['value'].'<br />';
             }
             $data['description']  = $desc;
-
+            $data["max_member"] = "2";
             $roomId = $entity->save("chatroom",$data);
             $sessionId = session_id();
             $data['name']  = $sessionId;
             $data['desc'] = "";
             $memberId = $entity->save("room_member",$data);
-            $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$data['name'];
+            $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
             shell_exec($cmd);
 
 
             $data = array();
             $data["chatroom_id"] = $roomId;
             $data["room_member_id"] = $memberId;
-            $data["max_member"] = "2";
+
 
             $entity->save("chatroom_room_member_m_m",$data);
             $this->sendResponse(200, array("room_id"=>$roomId,"member_id"=>$memberId));
@@ -57,7 +58,114 @@ class chatBackendController extends BackendResourceController {
 
     }
 
+
+    function broadcastMessageToRoom($roomId,$memberId,$message=array()) {
+        $path =lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId;
+        $files = scandir($path);
+        if($files) {
+            unset($files[0]);
+            unset($files[1]);
+            $msgId =uniqid();
+            foreach($files as $directory) {
+                $participantPath = $path.'/'.$directory.'/';
+                if(is_dir($participantPath) && $directory !=$memberId) {
+                    file_put_contents($participantPath.$msgId, json_encode($message));
+                }
+            }
+        }
+    }
+
+    function action_ajaxGetMyMessages() {
+        if(isset($_REQUEST['room_id']) && isset($_REQUEST['member_id'])) {
+            $roomId = $_REQUEST['room_id'];
+            $memberId = $_REQUEST['member_id'];
+            $path =lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
+            $files = scandir($path);
+            $messages = array();
+            if($files) {
+                unset($files[0]);
+                unset($files[1]);
+                foreach($files as $file) {
+                    $messages[] =  file_get_contents($path.'/'.$file);
+                    unlink($path.'/'.$file);
+                }
+            }
+            $this->sendResponse(200, array("messages"=>$messages));
+        } else {
+            $this->sendResponse(401, "you are not qualityfiled");
+        }
+    }
+
+    function action_join() {
+        if(isset($_GET['room_id'])) {
+            $roomId = $_GET['room_id'];
+
+            $currentUser = lib_current_user::getEntityInstance();
+            $memberId = "";
+
+            if(isset($_SESSION['joinedroom_member_id'][$roomId])) {
+                $memberId = $_SESSION['joinedroom_member_id'][$roomId];
+                $sql = "select * from chatroom_room_member_m_m where deleted=0 and room_member_id='".$memberId."' ";
+                $qry= lib_mysqli::getInstance()->query($sql);
+                if($qry->num_rows > 5) {
+                    die("Access denied for join room with more than 5 users");
+                }
+            }
+
+
+            if($currentUser->isDeveloper) {
+                $this->params['is_agent_livechat'] =true;
+                $room = lib_entity::getInstance()->get("chatroom", $roomId);
+                if($room) {
+                    unset($_SESSION['joinedroom_member_id'][$roomId]);
+                    if(isset($_SESSION['joinedroom_member_id'][$roomId])) {
+                        $memberId = $_SESSION['joinedroom_member_id'][$roomId];
+                    } else {
+                        $sql = "select * from chatroom_room_member_m_m where deleted=0 and chatroom_id='".$roomId."' ";
+                        $qry= lib_mysqli::getInstance()->query($sql);
+                        if($qry->num_rows < $room['max_member']) {
+                            $this->params['showheaderfooter'] =true;
+                            $this->params['room_id'] = $roomId;
+                            $data = array();
+                            $data['name'] = $currentUser->user_name;
+                            $data['description'] = "";
+                            $memberId = lib_entity::getInstance()->save("room_member", $data);
+                            $mypath = lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
+                            $cmd = 'mkdir -p '.$mypath;
+                            shell_exec($cmd);
+
+                            $data = array();
+                            $data["chatroom_id"] = $roomId;
+                            $data["room_member_id"] = $memberId;
+                            lib_entity::getInstance()->save("chatroom_room_member_m_m", $data);
+                            $_SESSION['joinedroom_member_id'][$roomId] = $memberId;
+
+
+                            $message = array("type"=>"connected","message"=>$currentUser->user_name." joined.");
+                            $this->broadcastMessageToRoom($roomId, $memberId, $message);
+
+                        } else {
+                            die("Chatroom is full with ".$qry->num_rows."members");
+                        }
+                    }
+                    $this->params['room_id'] = $roomId;
+                    $this->params['member_id'] = $memberId;
+                    $this->params['showheaderfooter'] =true;
+                    $this->view = "index";
+                }
+
+            }
+
+
+        }
+
+
+
+    }
+
     function action_index() {
+        $this->params['showheaderfooter'] =false;
+        $this->params['is_agent_livechat'] =false;
         $this->view = "index";
 
     }
@@ -390,23 +498,18 @@ class chatBackendController extends BackendResourceController {
 
     function action_ajaxPostMessage() {
 
-        $resp = array("status"=>"success");
 
-        $entity = lib_entity::getInstance();
+        if(isset($_GET['room_id']) && isset($_GET['member_id'])) {
+            $jsonString = $_POST['data'];
+            $json = json_decode($jsonString,1);
 
-        $sessionId =  session_id();
-        $jsonString = $_POST['data'];
-        $json = json_decode($jsonString,1);
-
-        $data = array();
-        $data['name'] = $json['action'];
-        $data['description'] = $json['data'];
-        $data['session_id'] = $sessionId;
-
-        $entity->save("webrtcsignal",$data);
-
-        echo json_encode($resp);
-
+            $data = array();
+            $data['type'] = $json['action'];
+            $data['message'] = $json['data'];
+            $roomId = $_GET['room_id'];
+            $memberId=  $_GET['member_id'];
+            $this->broadcastMessageToRoom($roomId, $memberId,$data);
+        }
 
     }
 
@@ -455,7 +558,7 @@ class chatBackendController extends BackendResourceController {
 
     function action_ajaxSendMessage() {
         $servercache = lib_server_cache::getInstance();
-$log = lib_logger::getInstance();
+        $log = lib_logger::getInstance();
 
         $sessionId = session_id();
         $stragerChatInfo = $servercache->get("strangerChatJson");

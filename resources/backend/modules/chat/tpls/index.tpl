@@ -1,3 +1,9 @@
+{if $params.showheaderfooter}
+<input type="hidden" id="room_id" value="{$params.room_id}" />
+<input type="hidden" id="member_id" value="{$params.member_id}" />
+<link rel="stylesheet" href="{$fwbaseurl}resources/backend/modules/chat/assets/css/chat.css" />
+
+{else}
 <html>
 <head>
 
@@ -7,12 +13,22 @@
 <script src="{$fwbaseurl}resources/backend/assets/js/jquery-3.1.1.min.js"></script>
 <script src="{$fwbaseurl}resources/backend/include/lib/js/jquery/jquery.validate.min.js"></script>
 
+
+
+
+</head>
+
+<body>
+
+
+{/if}
+
 <script>
 	var baseurl = '{$baseurl}';
 </script>
 
-{if $is_agent_livechat}
-
+{if $params.is_agent_livechat}
+ 
 <script>
 	var isAgentLiveChat = true;
 </script>
@@ -22,21 +38,14 @@
 </script>
 {/if}
 
-
-
-</head>
-
-<body>
-
-
-	<div class="panel panel-danger {if $is_agent_livechat} hide {/if}"
+	<div class="panel panel-danger "
 		id="alternativlabs-chatpanel">
-		<div class="panel-heading" {if $is_agent_livechat} {else}onclick="openchat()"{/if}>
+		<div class="panel-heading" {if $params.is_agent_livechat} {else}onclick="openchat()"{/if}>
 			<div class="row">
 				<div class="col-xs-12">
 					<b class="h4 heading"> {$heading} </b> 
 					
-					{if $is_agent_livechat} {else}
+					{if $params.is_agent_livechat} {else}
 					<span
 						id="chatmaximize" class="glyphicon glyphicon-plus pull-right"></span>
 					{/if}
@@ -49,9 +58,9 @@
 			</div>
 
 		</div>
-		<div class="panel-body hide" id="chat-panel-body">
+		<div class="panel-body {if !$params.is_agent_livechat}hide{/if}" id="chat-panel-body">
 
-			<div id="alternativlabs-chatform-panelbody" class="row">
+			<div id="alternativlabs-chatform-panelbody" class="row {if $params.is_agent_livechat}hide{/if}">
 				<form action="#"  id="chat_connnect_form">
 			
 				<div class="col-md-12">
@@ -74,11 +83,11 @@
 				</form>
 			</div>
 
-			<div class="row hide" id="alternativlabs-chatbody">
+			<div class="row {if !$params.is_agent_livechat}hide{/if}" id="alternativlabs-chatbody">
 				<div class="col-md-12">
 					<div class="well well-sm chathistory" id="stchathistory"></div>
 					<hr />
-					<textarea class="form-control" id="stmsgbox" disabled="disabled"
+					<textarea class="form-control" id="stmsgbox" {if !$params.is_agent_livechat}disabled="disabled"{/if}
 						value=""></textarea>
 
 
@@ -94,7 +103,7 @@
 
 
 		<div id="alternativlabs-chatform-panelfooter"
-			class="panel-footer hide">
+			class="panel-footer {if !$params.is_agent_livechat}hide{/if}">
 		
 		
 			<div  class="row">
@@ -111,11 +120,12 @@
 			<div class="col-xs-8">
 			<div class="form-group pull-right">
 
-				<button class="btn btn-primary pull-right" id="stconnectbtn"
+
+				<button class="btn btn-primary pull-right {if $params.is_agent_livechat}hide{/if}" id="stconnectbtn"
 					onclick="onUserConnect()" type="button">Connect</button>
-				<button class="btn btn-success hide" id="stsendbtn" onclick="onSend()"
+				<button class="btn btn-success {if !$params.is_agent_livechat}hide{/if}" id="stsendbtn" onclick="onSend()"
 					 type="button">Send</button>
-				<button class="btn btn-danger hide" id="stdisconnectbtn"
+				<button class="btn btn-danger {if !$params.is_agent_livechat}hide{/if}" id="stdisconnectbtn"
 					onclick="onDisconnect()" style="display: none" type="button">Disconnect</button>
 				<div class="clearfix"></div>
 			</div>
@@ -134,7 +144,10 @@
 	</div>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=61"></script>
+ {if !$params.showheaderfooter}
  
 </body>
 </html>
+
+{/if}
 

@@ -287,6 +287,8 @@ class lib_framework {
                     $params  = $controller->getParams();
                     if($params) {
                         $view->mergeParams($params);
+
+                        $smarty->assign("params",$view->params);
                         if(isset($params['data'])) {
                             $view->data = $params['data'];
                         }

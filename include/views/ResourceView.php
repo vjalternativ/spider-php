@@ -54,7 +54,7 @@ abstract class ResourceView
 
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
-        $this->sitebasePath = $vjconfig['basepath'].'resources/'.$_GET['resource'].'/';
+        $this->sitebasePath = 'resources/'.$_GET['resource'].'/';
 
         $pagedata = lib_datawrapper::getInstance()->get("pagedata");
         $this->sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ?  $pagedata['template']   : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
@@ -73,9 +73,24 @@ abstract class ResourceView
     }
 
     private function displayTemplate($file) {
-        $dir = $this->sitebasePath . 'include/tpls/';
+        $vjconfig = lib_config::getInstance()->getConfig();
+
+        $dir = $vjconfig['basepath'].$this->sitebasePath . 'include/tpls/';
         $smarty = lib_smarty::getSmartyInstance();
-        echo $smarty->fetch($dir.$this->sitetpl.'/'. $file);
+        if(file_exists($dir.$this->sitetpl.'/'. $file)) {
+            echo $smarty->fetch($dir.$this->sitetpl.'/'. $file);
+        } else if(file_exists($dir. $file)) {
+            echo $smarty->fetch($dir. $file);
+        } else {
+            $dir = $vjconfig['fwbasepath'].$this->sitebasePath . 'include/tpls/';
+            if(file_exists($dir.$this->sitetpl.'/'. $file)) {
+                echo $smarty->fetch($dir.$this->sitetpl.'/'. $file);
+            } else if(file_exists($dir. $file)) {
+                echo $smarty->fetch($dir. $file);
+            } else {
+                die("file not found ".$dir.$file);
+            }
+        }
 
     }
 

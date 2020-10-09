@@ -209,7 +209,6 @@ class View {
 		  $this->showChatContainer = true;
 		}
 		$smarty->assign("showchatContainer",$this->showChatContainer);
-		$smarty->assign("relatemodal",$path."include/vjlib/libs/tpls/relatemodal.tpl");
 
 		echo $smarty->fetch($path.'include/vjlib/libs/tpls/footer.tpl');
 

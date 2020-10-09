@@ -54,20 +54,29 @@ ChatUIHandler.state.CONNECTING = function() {
 	$("#chatmaximize").removeClass("glyphicon-plus");
 	$("#chatmaximize").addClass("glyphicon-minus");
 	
+	$("#stsendbtn").addClass("hide");
 	$("#stconnectbtn").attr("disabled",true);
 	$("#stconnectbtn").removeClass("hide");
-	$("#stdisconnectbtn").addClass("hide");
 	$("#stconnectbtn").html("Connecting..");
+	$("#stdisconnectbtn").addClass("hide");
 	$("#stmsgbox").attr("disabled",true);
 };
 
 ChatUIHandler.state.CONVERSATION = function() {
-	$("#alternativlabs-chatbody").addClass("hide");
-	$("#alternativlabs-chatform-panelbody").removeClass("hide");
+	$("#alternativlabs-chatbody").removeClass("hide");
+	$("#alternativlabs-chatform-panelbody").addClass("hide");
 	$("#chat-panel-body").removeClass("hide");
 	$("#alternativlabs-chatform-panelfooter").removeClass("hide");
 	$("#chatmaximize").removeClass("glyphicon-plus");
 	$("#chatmaximize").addClass("glyphicon-minus");
+	
+	$("#stconnectbtn").attr("disabled",false);
+	$("#stsendbtn").removeClass("hide");
+	
+	$("#stconnectbtn").addClass("hide");
+	$("#stconnectbtn").html("Connect");
+	$("#stdisconnectbtn").removeClass("hide");
+	$("#stmsgbox").attr("disabled",false);
 };
 
 ChatUIHandler.state.MINIMIZE = function() {

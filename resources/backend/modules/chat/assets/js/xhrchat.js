@@ -1,31 +1,4 @@
 var usertypes= {success:"System",warning:"System",primary : "You",danger : "User"};
-var isChannelOpen = false;
-
-
-function setIsChannelOpen(b) {
-	isChannelOpen = b;
-}
-function getIsChannelOpen() {
-	return isChannelOpen;
-}
-
-function preUpdateUI(event) {
-	if(event == "connected" && isAgentLiveChat) {
-		$("#alternativlabs-chatpanel").removeClass("hide");
-		updatePresetUI();
-		window.parent.connectChatWindow();
-	}
-} 
-
-
-
-function updatePresetUI() {
-	$("#chat-panel-body").removeClass("hide");
-	$("#alternativlabs-chatform-panelbody").addClass("hide");
-	$("#alternativlabs-chatform-panelfooter").removeClass("hide");
-	$("#alternativlabs-chatbody").removeClass("hide");
-	$("#entertosend").removeClass("hide");
-}
 
 
 
@@ -107,7 +80,7 @@ function looprequest(url,data,interval,callback)   {
 
 
 
-
+var chatob = null;
 
 class LiveChat {
   
@@ -130,12 +103,12 @@ class LiveChat {
 		  this.entercheckbox  = true;
 		  this.data = {};
 		  this.connectResponse = {};
+		  this.roomId = "";
+		  this.memberId = "";
+		  chatob  = this;
 	}
 
-   initChat() {
-  	//this.getOnlineUserNum();
-  }
-
+  
 
    onSendEnter() {
 	if(this.entercheckbox) {
@@ -148,63 +121,47 @@ class LiveChat {
 
 
   
-  readMessages() {
-	  var url = fwbaseurl+"index.php?module=chat&action=ajaxReadPackets&fw_sess_mode="+fw_sess_mode;
-	  var chatob = this;
+  readMessages(room_id,member_id) {
+	  chatob.roomId = room_id;
+	  chatob.memberId = member_id;
+	  var url = baseurl+"index.php?resource=backend&module=chat&action=ajaxGetMyMessages&room_id="+room_id+"&member_id="+member_id;
+	  
 	  looprequest(url,{},2000,function(result){
 			  var data = parseJson(result);
-			  if(data) {
-				  var list = data.packets;
+			  if(data.status=="success") {
+				  var list = data.data.messages;
 				  var listLength = list.length;
-				  if(listLength && !getIsChannelOpen()) {
-					  setIsChannelOpen(true);
-					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
-				  }
 				  for(var i=0;i<listLength;i++) {
 					  var data = list[i];
-					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : data}  }));
+					  data = parseJson(data);
+					  console.log("dispatch message event",data);
+					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : data.type,data : data.message}  }));
 				  }
 			  }
 	  });
   }
   
-  processConnectResponse() {
-	  var data = this.connectResponse;
-	  
-	  var chatob = this;
-	  
-			if(data.status == "offer" || data.status == "answer") {
-				
-				if(data.status=="answer") {
-					setIsChannelOpen(true);
-					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "connected"}  }));
-				}
-				chatob.readMessages();
-				
-			} else if(data.status == "no_user_avail") {
-				
-				
-				chatob.pushdata(chatob.noUserAvailableMessage);
-				
-				setTimeout(function() {
-					resetChatBoxForm();	
-				},2000);
-				
-				
-			} 
-  }
+
   
   connect() {
-	  var chatob = this;
+	 
 	  if(!isAgentLiveChat) {
 		  this.data.formdata = $("#chat_connnect_form").serializeArray();
 	  }
 			$.post(baseurl+"index.php?resource=backend&module=chat&action=createRoom",this.data,function(response) {
 	  			console.log("Response ");
 	  			console.log(response);
+	  			
 	  			var data = parseJson(response);
-	  			chatob.connectResponse = data;
-	  			chatob.processConnectResponse();
+	  			
+	  			if(data.status=="success") {
+	  				chatob.roomId = data.data.room_id;
+	  				chatob.memberId = data.data.member_id;
+	  				chatob.readMessages(data.data.room_id,data.data.member_id);
+	  			} else {
+	  				chatob.connect();
+	  			} 
+	  			
 	  			
 	  			
 	  		}).fail (function(error) {
@@ -239,14 +196,12 @@ class LiveChat {
   
   
   sendMessage(json) {
-	  var chatob  = this;
+	  
 	  var param = JSON.stringify(json);
-	  var url = fwbaseurl+ "index.php?module=chat&action=ajaxPostMessage&fw_sess_mode="+fw_sess_mode;
-
+	  var url = baseurl+ "index.php?resource=backend&module=chat&action=ajaxPostMessage&room_id="+chatob.roomId+"&member_id="+chatob.memberId;
   			$.post(url,{data:param},function(resp) {}).fail(function(error) {
 				chatob.sendMessge(json);
 			});
-
   }
   
   onSend() {
@@ -291,7 +246,6 @@ class LiveChat {
 
 
 var chat = new LiveChat();
-chat.initChat();
 
 document.body.addEventListener("chatMessage",function(data){
 	var datetext = data.detail.timestamp.toTimeString();
@@ -305,8 +259,7 @@ document.body.addEventListener("chatMessage",function(data){
 
 
 document.body.addEventListener("dataChannelEvents",function(data){ 
-	console.log("CHANNEL DATA EVENT");
-	console.log(data);
+	
 	
 		if(data.detail.event == "connected") {
 			 	 chat.disableConnectButton =false; 
@@ -322,28 +275,20 @@ document.body.addEventListener("dataChannelEvents",function(data){
 					 document.body.dispatchEvent(new CustomEvent('chatMessage', { type: 'success', detail:chat.connectedMessage })); 
 					 	 
 				 }
-				 preUpdateUI(data.detail.event);
-				 updateUI();
+				 ChatUIHandler.setState(CONVERSATION);
 				 
 				 
-		} else if(data.detail.event == "i_message") {
+		} else if(data.detail.event == "message") {
+			
 			var now = new Date();
 			var pushData = {};
 			pushData.mtype = "danger";
 			pushData.user = "Stranger";
 			pushData.timestamp = now;
 			pushData.class = 'text-success';	
+			pushData.message = data.detail.data;
+			chat.pushdata(pushData);
 			
-			var info = data.detail.data;
-			
-			
-			if(info.name == "message") {
-				pushData.message = info.description;
-				chat.pushdata(pushData);
-			} else if(info.name == "disconnect") {
-					reloadFrame();
-				
-			}
 			
 		} else if(data.detail.event == "disconnected") {
 			var chatdatachannel = dataChannel;  
@@ -378,38 +323,8 @@ function onDisconnect() {
 
 
 
-function chat_message_window() {
-	 chat.disableConnectButton =false; 
-	 chat.showConnect = false; 
-	 chat.showSendBtn = true;
-	 chat.connectBtnText = 'Connect'; 
-	 chat.disableMessage = false;
-	 chat.chatId = "aaa"; 
-	 chat.isChatStarted = true;
-	 
-	 $("#alternativlabs-chatpanel").removeClass("hide");
-	 updatePresetUI();
-	 updateUI();
-}
-
 function handleFrameMessage(evt) {
-		if(evt.data.event=="startChatWithUser") {
-			/* var info = {};
-			 info.name = "message";
-			 info.description = "Please input the fist message";
-			 document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
-			 chat.readMessages();
-			*/
-			
-			
-			
-		} else if(evt.data.event=="connectIncomingChat") {
-			 var info = {};
-			 info.name = "message";
-			 info.description = evt.data.message;
-			 //document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : "i_message",data : info}  }));
-			 chat.readMessages();
-		}
+		
 }
 
 
@@ -418,7 +333,11 @@ $(document).ready(function(){
 	
 	
 	if(isAgentLiveChat) {
-		onConnect();
+		
+		var roomId = document.getElementById("room_id").value;
+		var memberId = document.getElementById("member_id").value;
+		
+		chat.readMessages(roomId,memberId);
 	} 
 	
 	

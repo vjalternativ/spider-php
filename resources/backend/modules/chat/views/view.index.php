@@ -1,5 +1,5 @@
 <?php
-class chatViewIndex extends ResourceView {
+class chatViewIndex extends BackendResourceView {
 
 
     function display() {
@@ -21,7 +21,7 @@ class chatViewIndex extends ResourceView {
     }
 
 
-    function displayHeader() {
+    function _loadHeader() {
         if(isset($_REQUEST['fw_sess_mode'])) {
             echo "<script> var fw_sess_mode ='".$_REQUEST['fw_sess_mode']."' </script>";
         }
@@ -31,17 +31,19 @@ class chatViewIndex extends ResourceView {
             echo "<script> var autoconnect = false; </script>";
 
         }
+
+        if($this->params['showheaderfooter']) {
+            parent::_loadHeader();
+        }
     }
 
-    function displayFooter() {
-
+    function _loadFooter() {
+        if($this->params['showheaderfooter']) {
+            parent::_loadFooter();
+        }
     }
 
-    function loadFooter() {
 
-    }
-    public function loadHeader()
-    {}
 
 }
 
