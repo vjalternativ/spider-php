@@ -60,8 +60,7 @@ class BackendResourceView extends ResourceView {
 
         $module = $this->module;
 
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $moduleTableId = isset($globalModuleList[$module]['id']) ? $globalModuleList[$module]['id'] : false;
+        $moduleTableId = $module;
         $menuData = array();
         foreach($submenumodules as $mid=>$menus) {
             foreach($menus['items'] as $smid=>$modules) {
@@ -87,6 +86,7 @@ class BackendResourceView extends ResourceView {
                 }
             }
         }
+
         foreach($menumodules as $mid=>$menu) {
             foreach($menu['items'] as $mdid=>$module) {
                 if($current_user->isDeveloper || isset($roleModules[$mdid])) {
@@ -158,7 +158,6 @@ class BackendResourceView extends ResourceView {
         $smarty->assign("activeSubmenuId",$this->activeSubmenuId);
         $smarty->assign("activeModuleId",$this->activeModuleId);
         $smarty->assign("current_user",$current_user);
-
         echo $smarty->fetch($vjconfig['fwbasepath'].'resources/backend/include/tpls/header.tpl');
 
 
