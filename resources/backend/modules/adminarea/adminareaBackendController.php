@@ -202,6 +202,9 @@ class adminareaBackendController extends BackendResourceController
                if(!$isNew) {
                         $sql .= " WHERE id = '".$row['id']."'";
                }
+               if($table=="roles_item") {
+                   echo $sql."<br/ >";
+               }
                $db->query($sql);
                 //$row['hook_skip'] = true;
                 //$entity->save($table,$row);
