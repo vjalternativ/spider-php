@@ -47,7 +47,7 @@ class BackendResourceView extends ResourceView {
         $sql = "select m.id as menu_id,m.name as menu_name,t.* from menu_tableinfo_1_m mt
                 INNER JOIN menu m on mt.menu_id=m.id and m.deleted=0 and mt.deleted=0
                 INNER JOIN tableinfo t on mt.tableinfo_id = t.id and t.deleted=0 ";
-        $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"id"));
+        $menumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"name"));
         $sql = "select m.id as menu_id,sm.id as submenu_id,m.name as menu_name,sm.name as submenu_name,t.* from
                 menu_submenu_1_m ms
                 INNER JOIN menu m on ms.menu_id=m.id and m.deleted=0 and ms.deleted=0
@@ -55,7 +55,7 @@ class BackendResourceView extends ResourceView {
                 INNER JOIN submenu_tableinfo_1_m st on sm.id=st.submenu_id and st.deleted=0
                 INNER JOIN tableinfo t on st.tableinfo_id = t.id and t.deleted=0 order by ms.date_modified,st.date_modified";
 
-        $submenumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"submenu_id"=>array("submenu_name"),"id"));
+        $submenumodules = $db->fetchRows($sql,array("menu_id"=>array("menu_name"),"submenu_id"=>array("submenu_name"),"name"));
 
 
         $module = $this->module;
