@@ -86,19 +86,30 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 		$bs = lib_bootstrap::getInstance();
 
-		//$tableinfo = $entity->getwhere('tableinfo',"name='".$this->module."'");
-		//$vardef = json_decode(base64_decode($tableinfo['description']),1);
 
 
+		$tableinfo = lib_entity::getInstance()->getwhere('tableinfo',"name='".$this->module."'");
+		$vardef = json_decode(base64_decode($tableinfo['description']),1);
 
-		//$this->def = $vardef;
+
+		if (isset($tableinfo['editviewdef'])) {
+		    $ddef = json_decode($tableinfo['editviewdef'], 1);
+		    if (is_array($ddef)) {
+		        $vardef['metadata']['editview'] = $ddef;
+		    }
+		}
+
+		$this->def = $vardef;
+
+
 
 
 		$vardef =$this->def;
 
 
-
 		$metadata = $vardef['metadata'];
+
+		$this->data['id'] = isset($this->data['id']) ? $this->data['id'] : "";
 
 		$html = $this->parseEditViewDef($metadata['editview']);
 		$html .= $bs->getelement('input','',array('name'=>'id','id'=>'id','value'=>$this->data['id'],'type'=>'hidden'));
