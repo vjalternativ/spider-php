@@ -279,15 +279,16 @@ class SendMail implements CronJob
                 }
                 $mailer->AddReplyTo($account_details['reply_to_address'], $account_details['reply_to_name']);
                 if (! empty($info['attachments'])) {
-                    $attachments = unserialize(base64_decode($info['attachments']));
+                    $attachments = json_decode($info['attachments'],1);
                     $attachmentsFilePath = "";
                     $attachmentsFileName = "";
-                    foreach ($attachments as $key => $value) {
-                        if (isset($value['fileDir']) && ! empty($value['fileDir'])) {
-                            $attachmentsFilePath = $value['fileDir'] . $key;
-                            $attachmentsFileName = $value['filename'];
+                    foreach ($attachments as  $value) {
+                        if (isset($value['path']) && ! empty($value['path'])) {
+                            $attachmentsFilePath = $value['path'] ;
+                            $attachmentsFileName = $value['name'];
+                            $mailer->AddAttachment($attachmentsFilePath, $attachmentsFileName);
                         }
-                        $mailer->AddAttachment($attachmentsFilePath, $attachmentsFileName);
+
                     }
                 } else {
                     $attachments = array();
