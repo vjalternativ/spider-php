@@ -59,8 +59,15 @@
 
 		</div>
 		<div class="panel-body {if !$params.is_agent_livechat}hide{/if}" id="chat-panel-body">
-
+			
+			{if $params.is_agent_livechat}
+				{$params.chatroom.description}
+				<hr />
+			{/if}
 			<div id="alternativlabs-chatform-panelbody" class="row {if $params.is_agent_livechat}hide{/if}">
+			
+			
+			
 				<form action="#"  id="chat_connnect_form">
 			
 				<div class="col-md-12">
@@ -142,15 +149,21 @@
 
 
 	</div>
-	<audio  id="notificationelement" style="display:none">
+	
+	 	 
+	
+ {if !$params.showheaderfooter}
+	 <audio  id="notificationelement" style="display:none">
 	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.ogg" type="audio/ogg">
 	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.mp3" type="audio/mpeg">
 	  Your browser does not support the audio element.
-	</audio>
+	 </audio>
+	 <script src="{$fwbaseurl}libs/assets/js/notification.js?v=1"></script>
+	
+ {/if}	
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=61"></script>
  {if !$params.showheaderfooter}
- 
 </body>
 </html>
 

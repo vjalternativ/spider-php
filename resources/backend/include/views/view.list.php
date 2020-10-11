@@ -2,6 +2,8 @@
 class ViewList  extends BackendResourceView {
 	public $datatypeFields = array();
 	public $metadata =array();
+	protected $additionalActions ='';
+	protected $additionalContent ='';
 	function __construct() {
 	   $datatypes = array();
 
@@ -52,7 +54,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
  		$detailbutton = $bs->getelement('a','Detail',array('href'=>$url ,'class'=>'btn btn-primary'));
  		$deletebutton = $bs->getelement('button','X',array('class'=>'btn btn-danger','onclick'=>"deleteRecord('ROWID','".$this->module."','RID')"));
 
-		$extrafields['action'] = $editbutton.' '.$detailbutton.' '.$deletebutton;
+		$extrafields['action'] = $editbutton.' '.$detailbutton.' '.$deletebutton.' '.$this->additionalActions;
 
 		$params = array();
 		$params['tbid'] = $this->module.'-tb';
@@ -65,6 +67,8 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 		$params = $this->params;
 		$this->tpl = $tpl;
+
+		$addnew .= $this->additionalContent;
 		$this->params = array('table'=>$table,'module'=>$module,'addnew'=>$addnew,'filters'=>$filters,'mod_string'=>$mod_string,'params'=>$params,"pagingHtml"=>$pagingHtml);
 		if(isset($this->listview['tpls'])) {
 		    $this->params['tpls'] = $this->listview['tpls'];

@@ -178,7 +178,7 @@ class BackendResourceView extends ResourceView {
         $smarty->assign("showchatContainer",$this->showChatContainer);
         $smarty->assign("relatemodal",$path."include/vjlib/libs/tpls/relatemodal.tpl");
 
-        echo $smarty->fetch($path.'include/vjlib/libs/tpls/footer.tpl');
+        echo $smarty->fetch($path.'resources/backend/include/tpls/footer.tpl');
 
     }
 

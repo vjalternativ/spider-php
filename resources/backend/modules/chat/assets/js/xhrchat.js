@@ -320,48 +320,6 @@ function handleFrameMessage(evt) {
 		
 }
 
-
-
-function notifyMe(message,body) {
-    if (!window.Notification) {
-        console.log('Browser does not support notifications.');
-    } else {
-        // check if permission is already granted
-        if (Notification.permission === 'granted') {
-            // show notification here
-            var notify = new Notification(message, {
-                body: body,
-                icon: 'https://bit.ly/2DYqRrh',
-            });
-            notify.onclick = function () {
-            	parent.focus();
-                window.focus();
-                this.close();
-              };
-        } else {
-            // request permission from user
-            Notification.requestPermission().then(function (p) {
-                if (p === 'granted') {
-                    // show notification here
-                    var notify = new Notification(message, {
-                        body: message,
-                        icon: 'https://bit.ly/2DYqRrh',
-                    });
-                    notify.onclick = function () {
-                    	parent.focus();
-                        window.focus();
-                        this.close();
-                      };
-                } else {
-                    console.log('User blocked notifications.');
-                }
-            }).catch(function (err) {
-                console.error(err);
-            });
-        }
-    }
-}
-
 var tabFocused = true;
 
 document.addEventListener("visibilitychange", function() {
@@ -373,19 +331,10 @@ document.addEventListener("visibilitychange", function() {
 });
 
 
-var notificationElement = null;
+
 
 $(document).ready(function(){
-	notificationElement  = document.getElementById("notificationelement");
-	
-	if (!Notification) {
-		  alert('Desktop notifications not available in your browser. Try Chromium.');
-		  return;
-		 }
 
-		 if (Notification.permission !== 'granted') {
-			  Notification.requestPermission();
-		 } 
 		 
 	if(isAgentLiveChat) {
 		var roomId = document.getElementById("room_id").value;

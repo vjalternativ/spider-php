@@ -45,6 +45,10 @@ class chatBackendController extends BackendResourceController {
             $data["room_member_id"] = $memberId;
             $entity->save("chatroom_room_member_m_m",$data);
             $_SESSION['joinedroom_member_id'][$roomId] = $memberId;
+
+            $path =lib_config::getInstance()->get("basepath").'cache/workbench/';
+
+            $this->broadcastMessage($path, $roomId,array("room_id"=>$roomId));
             $this->sendResponse(200, array("room_id"=>$roomId,"member_id"=>$memberId));
 
         } else {
@@ -55,8 +59,7 @@ class chatBackendController extends BackendResourceController {
     }
 
 
-    function broadcastMessageToRoom($roomId,$memberId,$message=array()) {
-        $path =lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId;
+    function broadcastMessage($path,$id,$message=array()) {
         $files = scandir($path);
         if($files) {
             unset($files[0]);
@@ -64,11 +67,17 @@ class chatBackendController extends BackendResourceController {
             $msgId =uniqid();
             foreach($files as $directory) {
                 $participantPath = $path.'/'.$directory.'/';
-                if(is_dir($participantPath) && $directory !=$memberId) {
+                if(is_dir($participantPath) && $directory !=$id) {
                     file_put_contents($participantPath.$msgId, json_encode($message));
                 }
             }
         }
+    }
+
+
+    function broadcastMessageToRoom($roomId,$memberId,$message=array()) {
+        $path =lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId;
+        $this->broadcastMessage($path, $memberId, $message);
     }
 
     function action_ajaxGetMyMessages() {
@@ -111,10 +120,10 @@ class chatBackendController extends BackendResourceController {
             }
 
 
-            if($currentUser->isDeveloper) {
                 $this->params['is_agent_livechat'] =true;
                 $room = lib_entity::getInstance()->get("chatroom", $roomId);
                 if($room) {
+                    $this->params['chatroom'] = $room;
                     //unset($_SESSION['joinedroom_member_id'][$roomId]);
                     if(isset($_SESSION['joinedroom_member_id'][$roomId])) {
                         $memberId = $_SESSION['joinedroom_member_id'][$roomId];
@@ -152,7 +161,7 @@ class chatBackendController extends BackendResourceController {
                     $this->view = "index";
                 }
 
-            }
+
 
 
         }
