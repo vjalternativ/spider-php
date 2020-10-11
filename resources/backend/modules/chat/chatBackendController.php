@@ -144,7 +144,7 @@ class chatBackendController extends BackendResourceController {
                             $this->broadcastMessageToRoom($roomId, $memberId, $message);
 
                         } else {
-                            die("Chatroom is full with ".$qry->num_rows."members");
+                            die("Chatroom is full with ".$qry->num_rows." members");
                         }
                     }
                     $this->params['room_id'] = $roomId;
