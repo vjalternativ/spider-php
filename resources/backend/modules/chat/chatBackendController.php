@@ -44,7 +44,7 @@ class chatBackendController extends BackendResourceController {
             $data["chatroom_id"] = $roomId;
             $data["room_member_id"] = $memberId;
             $entity->save("chatroom_room_member_m_m",$data);
-            $_SESSION['joinedroom_member_id'][$roomId] = $memberId;
+            $_SESSION['room_member_id'][$roomId] = $memberId;
 
             $path =lib_config::getInstance()->get("basepath").'cache/workbench/';
 

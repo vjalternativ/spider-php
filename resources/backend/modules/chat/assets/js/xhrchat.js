@@ -339,6 +339,7 @@ $(document).ready(function(){
 	if(isAgentLiveChat) {
 		var roomId = document.getElementById("room_id").value;
 		var memberId = document.getElementById("member_id").value;
+		chatob.roomActive = true;
 		chat.readMessages(roomId,memberId);
 	} 
 	
