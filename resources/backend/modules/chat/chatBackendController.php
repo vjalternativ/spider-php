@@ -94,10 +94,12 @@ class chatBackendController extends BackendResourceController {
     }
 
     function action_join() {
+        $currentUser = lib_current_user::getEntityInstance();
+        if(!($currentUser && (isset($currentUser->privileges['agent.live.chat']) || $currentUser->user_type=="developer"))) {
+            die("access denied");
+        }
         if(isset($_GET['room_id'])) {
             $roomId = $_GET['room_id'];
-
-            $currentUser = lib_current_user::getEntityInstance();
             $memberId = "";
 
             if(isset($_SESSION['joinedroom_member_id'][$roomId])) {
