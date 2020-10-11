@@ -329,7 +329,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function getupdateByIdString($keyvalue,$isnew=true,$cols=array(),$where=false) {
-		global $current_user;
+	    $current_user = lib_current_user::getEntityInstance();
 
 		$sql = " SET ";
 		$strings = array();
@@ -346,6 +346,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 		if(!$isnew) {
 			if(empty($current_user->id)) {
 				$keyvalue['modified_user_id'] = $keyvalue['id'];
+			} else {
+			    $keyvalue['modified_user_id'] = $current_user->id;
 			}
 			unset($keyvalue['id']);
 
