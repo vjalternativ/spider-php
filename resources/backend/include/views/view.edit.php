@@ -33,7 +33,7 @@ class ViewEdit  extends BackendResourceView {
 	function preDisplay() {
 
 	    $entity = lib_entity::getInstance();
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 	    $entity = new lib_entity();
 
@@ -85,24 +85,6 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 		$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 		$bs = lib_bootstrap::getInstance();
-
-
-
-		$tableinfo = lib_entity::getInstance()->getwhere('tableinfo',"name='".$this->module."'");
-		$vardef = json_decode(base64_decode($tableinfo['description']),1);
-
-
-		if (isset($tableinfo['editviewdef'])) {
-		    $ddef = json_decode($tableinfo['editviewdef'], 1);
-		    if (is_array($ddef)) {
-		        $vardef['metadata']['editview'] = $ddef;
-		    }
-		}
-
-		$this->def = $vardef;
-
-
-
 
 		$vardef =$this->def;
 
