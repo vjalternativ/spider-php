@@ -241,10 +241,9 @@ document.body.addEventListener("chatMessage",function(data){
 
 document.body.addEventListener("dataChannelEvents",function(data){ 
 	
-	console.log("got event",data);
 	
 	
-	 if (document.visibilityState != 'visible') {
+	 if (document.visibilityState != 'visible' ||  !tabFocused || document.hidden) {
 			notifyMe("Message Recvied : "+data.detail.event,data.detail.data);
 			
 			try {
