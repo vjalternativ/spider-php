@@ -195,11 +195,13 @@ class BackendResourceController  extends ResourceController {
 
         foreach($editviewdef as $row) {
             if(isset($row['fields'])) {
-                foreach($row as $col) {
+                foreach($row['fields'] as  $col) {
                     if(isset($col['field'])) {
-                        $fkey = $col['field'];
+                        $fkey = $col['field']['name'];
                         $field = $tableinfo['tableinfo']['fields'][$fkey];
                         if($field['type'] == "checkbox") {
+                            echo "processing field is checkbox ".$field['name']."<br />";
+
                             if(!isset($_REQUEST[$field['name']])) {
                                 $keyvalue[$field['name']] = 0;
                             }
@@ -209,6 +211,7 @@ class BackendResourceController  extends ResourceController {
                 }
             }
         }
+
 
         if(isset($globalModuleList[$table]['metadata_info']['editview']['fields'])) {
             foreach($globalModuleList[$table]['metadata_info']['editview']['fields'] as $fkey=>$fval) {
