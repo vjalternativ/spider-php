@@ -88,7 +88,7 @@ abstract class ResourceView
             } else if(file_exists($dir. $file)) {
                 echo $smarty->fetch($dir. $file);
             } else {
-                die("file not found ".$dir.$file);
+                die("file not found ".$dir.$this->sitetpl.'/'. $file);
             }
         }
 
