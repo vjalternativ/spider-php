@@ -35,8 +35,7 @@ class chatBackendController extends BackendResourceController {
             $data['description']  = $desc;
             $data["max_member"] = "2";
             $roomId = $entity->save("chatroom",$data);
-            $sessionId = session_id();
-            $data['name']  = $sessionId;
+            $data['name']  = $_SERVER['REMOTE_ADDR'];
             $data['desc'] = "";
             $memberId = $entity->save("room_member",$data);
             $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
