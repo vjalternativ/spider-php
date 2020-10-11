@@ -347,7 +347,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			if(empty($current_user->id)) {
 				$keyvalue['modified_user_id'] = $keyvalue['id'];
 			} else {
-			    $keyvalue['modified_user_id'] = $current_user->id;
+			    if($current_user && $current_user->id) {
+			        $keyvalue['modified_user_id'] = $current_user->id;
+			    }
 			}
 			unset($keyvalue['id']);
 
