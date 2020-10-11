@@ -115,7 +115,7 @@ class chatBackendController extends BackendResourceController {
                 $this->params['is_agent_livechat'] =true;
                 $room = lib_entity::getInstance()->get("chatroom", $roomId);
                 if($room) {
-                    unset($_SESSION['joinedroom_member_id'][$roomId]);
+                    //unset($_SESSION['joinedroom_member_id'][$roomId]);
                     if(isset($_SESSION['joinedroom_member_id'][$roomId])) {
                         $memberId = $_SESSION['joinedroom_member_id'][$roomId];
                     } else {
