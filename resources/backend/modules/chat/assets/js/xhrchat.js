@@ -244,7 +244,7 @@ document.body.addEventListener("dataChannelEvents",function(data){
 	console.log("got event",data);
 	
 	
-		if(!tabFocused) {
+	 if (document.visibilityState != 'visible') {
 			notifyMe("Message Recvied : "+data.detail.event,data.detail.data);
 			
 			try {
@@ -322,13 +322,7 @@ function handleFrameMessage(evt) {
 
 var tabFocused = true;
 
-document.addEventListener("visibilitychange", function() {
-	  if (document.visibilityState === 'visible') {
-		  tabFocused=true;
-	  } else {
-		  tabFocused=false;
-	  }
-});
+
 
 
 
@@ -348,4 +342,11 @@ $(document).ready(function(){
 	
 	window.parent.postMessage({event:"frameLoaded"});
 	
+	document.addEventListener("visibilitychange", function() {
+		  if (document.visibilityState === 'visible') {
+			  tabFocused=true;
+		  } else {
+			  tabFocused=false;
+		  }
+	},false);
 });

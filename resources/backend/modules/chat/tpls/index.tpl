@@ -162,7 +162,7 @@
 	
  {/if}	
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
-	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=61"></script>
+	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=62"></script>
  {if !$params.showheaderfooter}
 </body>
 </html>
