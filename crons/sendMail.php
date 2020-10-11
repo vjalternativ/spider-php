@@ -53,9 +53,7 @@ class SendMail implements CronJob
         $contexts = array();
         $contexts['overallLimit'] = 0;
         $today = date('Y-m-d');
-        $sqlGetContext = "SELECT oea.*,oec.name as context FROM outbound_email_accounts oea
-            INNER JOIN outbound_email_context_outbound_email_accounts_1_m oeac on oea.id= oeac.outbound_email_accounts_id and oeac.deleted=0
-            INNER JOIN outbound_email_context oec on  oeac.outbound_email_context_id = oec.id	and oec.deleted=0
+        $sqlGetContext = "SELECT oea.* FROM outbound_email_accounts oea
             WHERE oea.used_today is null or oea.used_today < oea.maxlimit or oea.date_last_used != '$today'  order by oea.used_today ASC";
         $resultGetContext = $db->query($sqlGetContext);
 
