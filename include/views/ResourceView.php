@@ -57,6 +57,7 @@ abstract class ResourceView
         $this->sitebasePath = 'resources/'.$_GET['resource'].'/';
 
         $pagedata = lib_datawrapper::getInstance()->get("pagedata");
+        $pagedata['template'] = trim($pagedata['template']);
         $this->sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ?  $pagedata['template']   : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
 
         $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$this->sitetpl.'/';
