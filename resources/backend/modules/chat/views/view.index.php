@@ -15,8 +15,6 @@ class chatViewIndex extends BackendResourceView {
            if(isset($current_user->privileges['agent.live.chat'])) {
                $isAgentForLiveChat = true;
                $heading ="Live Chat Box";
-           } else {
-               die("Access denied");
            }
        }
        $smarty->assign("heading",$heading);
