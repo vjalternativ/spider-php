@@ -58,7 +58,7 @@ abstract class ResourceView
 
         $pagedata = lib_datawrapper::getInstance()->get("pagedata");
         if($pagedata) {
-            $pagedata['template'] = trim($pagedata['template']);
+            $pagedata['template'] =isset($pagedata['template']) ? trim($pagedata['template']) : '';
         }
         $this->sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ?  $pagedata['template']   : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
 
