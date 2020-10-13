@@ -159,9 +159,6 @@ class LiveChat {
 	  				chatob.roomActive = true;
 	  				chatob.room_id = data.data.room_id;
 	  				chatob.member_id = data.data.member_id;
-	  				setTimeout(function(){
-	  					chatob.readMessages(data.data.room_id,data.data.member_id);
-	  			  	},2000);
 	  			} else {
 	  				chatob.connect();
 	  			} 
@@ -316,7 +313,7 @@ function onDisconnect() {
 
 
 function handleFrameMessage(evt) {
-		
+		console.log("handing frame message",evt);
 }
 
 var tabFocused = true;
@@ -324,11 +321,14 @@ var tabFocused = true;
 
 
 
-
+function checkNotificatonStorage(e) {
+	
+	var notificationData = localStorage.getItem("notificationData");
+	console.log("notification data",notificationData);
+}
 
 $(document).ready(function(){
 
-		 
 	if(isAgentLiveChat) {
 		var roomId = document.getElementById("room_id").value;
 		var memberId = document.getElementById("member_id").value;
@@ -336,6 +336,8 @@ $(document).ready(function(){
 		chat.readMessages(roomId,memberId);
 	} 
 	
+	
+	window.addEventListener("storage", checkNotificatonStorage,false);
 	
 	window.addEventListener("message", handleFrameMessage, false);
 	

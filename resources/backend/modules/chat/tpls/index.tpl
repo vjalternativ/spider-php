@@ -158,8 +158,7 @@
 	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.mp3" type="audio/mpeg">
 	  Your browser does not support the audio element.
 	 </audio>
-	 <script src="{$fwbaseurl}libs/assets/js/notification.js?v=1"></script>
-	
+	 
  {/if}	
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=62"></script>

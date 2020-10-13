@@ -35,6 +35,9 @@ class chatViewIndex extends BackendResourceView {
 
         }
 
+        echo '<script> var sessionId = "'.session_id().'"; </script>';
+
+
         if($this->params['showheaderfooter']) {
             parent::_loadHeader();
         }

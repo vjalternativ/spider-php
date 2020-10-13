@@ -96,7 +96,7 @@ class ResourceController {
                $result['status'] = "success";
         }
         echo json_encode($result);
-
+        exit();
     }
 }
 ?>

@@ -1,4 +1,6 @@
 <?php
+require_once lib_config::getInstance()->get("fwbasepath").'resources/backend/modules/notification/notificationService.php';
+
 class chatBackendController extends BackendResourceController {
 
     public $userTypeVsChatUserTypeMap = array();
@@ -38,17 +40,18 @@ class chatBackendController extends BackendResourceController {
             $data['name']  = $_SERVER['REMOTE_ADDR'];
             $data['desc'] = "";
             $memberId = $entity->save("room_member",$data);
-            $cmd = "mkdir -p ".lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
-            shell_exec($cmd);
+
+            notificationService::getInstance()->registerNotificationPath("chatroom",'rooms/'.$roomId.'/'.$memberId);
+
+
             $data = array();
             $data["chatroom_id"] = $roomId;
             $data["room_member_id"] = $memberId;
             $entity->save("chatroom_room_member_m_m",$data);
             $_SESSION['room_member_id'][$roomId] = $memberId;
 
-            $path =lib_config::getInstance()->get("basepath").'cache/workbench/';
-
-            $this->broadcastMessage($path, $roomId,array("room_id"=>$roomId));
+            $path ='workbench';
+            notificationService::getInstance()->broadcastMessage($path, $roomId,array("room_id"=>$roomId));
             $this->sendResponse(200, array("room_id"=>$roomId,"member_id"=>$memberId));
 
         } else {
@@ -59,25 +62,12 @@ class chatBackendController extends BackendResourceController {
     }
 
 
-    function broadcastMessage($path,$id,$message=array()) {
-        $files = scandir($path);
-        if($files) {
-            unset($files[0]);
-            unset($files[1]);
-            $msgId =uniqid();
-            foreach($files as $directory) {
-                $participantPath = $path.'/'.$directory.'/';
-                if(is_dir($participantPath) && $directory !=$id) {
-                    file_put_contents($participantPath.$msgId, json_encode($message));
-                }
-            }
-        }
-    }
+
 
 
     function broadcastMessageToRoom($roomId,$memberId,$message=array()) {
-        $path =lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId;
-        $this->broadcastMessage($path, $memberId, $message);
+        $path ='rooms/'.$roomId;
+        notificationService::getInstance()->broadcastMessage($path, $memberId, $message);
     }
 
     function action_ajaxGetMyMessages() {
@@ -137,9 +127,8 @@ class chatBackendController extends BackendResourceController {
                             $data['name'] = $currentUser->user_name;
                             $data['description'] = "";
                             $memberId = lib_entity::getInstance()->save("room_member", $data);
-                            $mypath = lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
-                            $cmd = 'mkdir -p '.$mypath;
-                            shell_exec($cmd);
+
+                            notificationService::getInstance()->registerNotificationPath("chatroom",'rooms/'.$roomId.'/'.$memberId);
 
                             $data = array();
                             $data["chatroom_id"] = $roomId;
@@ -149,7 +138,7 @@ class chatBackendController extends BackendResourceController {
 
 
                             $message = array("type"=>"connected","message"=>$currentUser->user_name." joined.");
-                            $this->broadcastMessageToRoom($roomId, $memberId, $message);
+                            notificationService::getInstance()->broadcastMessageToRoom($roomId, $memberId, $message);
 
                         } else {
                             die("Chatroom is full with ".$qry->num_rows." members");
