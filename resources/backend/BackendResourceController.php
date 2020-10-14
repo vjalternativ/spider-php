@@ -442,7 +442,7 @@ class BackendResourceController  extends ResourceController {
 
     function action_getAjaxSubPanelData() {
         $entity = lib_entity::getInstance();
-        $smarty = lib_mysqli::getInstance();
+        $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $ptable = $_REQUEST['ptable'];
@@ -468,7 +468,7 @@ class BackendResourceController  extends ResourceController {
         $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$relname.'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
         $extraPostFields['id']['header']['html'] = '';
         $smarty->assign("extraPostFields",$extraPostFields);
-        $table =  $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/table.tpl");
+        $table =  $smarty->fetch($vjconfig['fwbasepath']."resources/backend/include/tpls/table.tpl");
 
         $pageinfo['url'] = "./index.php?module=".$ptable."&action=getAjaxSubPanelData";
 
