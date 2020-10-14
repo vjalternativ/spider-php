@@ -33,7 +33,7 @@ class BackendResourceController  extends ResourceController {
         $this->entity = isset($_GET['module'])  ? $_GET['module'] : false;
         $this->module = $this->entity;
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
-        $this->record = isset($_GET['record']) ? $_GET['record'] : false;
+        $this->record = isset($_REQUEST['record']) ? $_REQUEST['record'] : false;
 
         $current_user = lib_current_user::sessionCheck('current_user');
 
@@ -55,6 +55,7 @@ class BackendResourceController  extends ResourceController {
 
 
         if($this->entity) {
+
             $entity = lib_entity::getInstance();
             $entity->module = $this->entity;
             $tableinfo = $entity->getwhere("tableinfo","name='".$this->entity."'");
@@ -65,6 +66,7 @@ class BackendResourceController  extends ResourceController {
                 $data = $entity->get($this->entity,$this->record);
                 $this->params['data'] = $data;
             }
+
         }
 
     }
@@ -444,7 +446,6 @@ class BackendResourceController  extends ResourceController {
         $entity = lib_entity::getInstance();
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
-
         $ptable = $_REQUEST['ptable'];
         $relname = $_REQUEST['relname'];
 
@@ -468,7 +469,7 @@ class BackendResourceController  extends ResourceController {
         $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$relname.'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
         $extraPostFields['id']['header']['html'] = '';
         $smarty->assign("extraPostFields",$extraPostFields);
-        $table =  $smarty->fetch($vjconfig['fwbasepath']."resources/backend/include/tpls/table.tpl");
+        $table =  $smarty->fetch($vjconfig['fwbasepath']."include/vjlib/libs/tpls/table.tpl");
 
         $pageinfo['url'] = "./index.php?module=".$ptable."&action=getAjaxSubPanelData";
 

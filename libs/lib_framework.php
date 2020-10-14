@@ -233,6 +233,9 @@ class lib_framework {
            if(!method_exists($controller, $action)) {
                $action = 'action_index';
            }
+           if($this->record) {
+               $entity->record = $this->record;
+           }
 
                $controller->{$action}();
 
@@ -244,7 +247,7 @@ class lib_framework {
                     $smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
                     $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
 
-                    $entity->record = $this->record;
+
                     require_once $vjconfig['fwbasepath'].'include/views/View.php';
                     require_once $vjconfig['fwbasepath'].'include/views/ResourceView.php';
                     require_once $vjconfig['fwbasepath'].'include/views/view.basic.php';
