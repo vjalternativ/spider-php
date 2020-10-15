@@ -155,10 +155,10 @@
 	 	 
 	
  {if !$params.showheaderfooter} 
- 	<script src="{$fwbaseurl}libs/assets/js/lib_desktopnotification.js?v=1"></script>	
- 	<script src="{$fwbaseurl}resources/backend/modules/notification/assets/js/notificationdispatcher.js?v=1"></script>	 
+ 	<script src="{$fwbaseurl}libs/assets/js/lib_desktopnotification.js?v=2"></script>	
+ 	<script src="{$fwbaseurl}resources/backend/modules/notification/assets/js/notificationdispatcher.js?v=2"></script>	 
  {/if}	
-	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
+	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=62"></script>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=62"></script>
  {if !$params.showheaderfooter}
 </body>

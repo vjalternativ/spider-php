@@ -24,6 +24,14 @@ class chatBackendController extends BackendResourceController {
     }
 
 
+    function action_getActiveRoom() {
+        if(isset($_SESSION['frontend_active_room_id'])) {
+            $this->sendResponse(200, array("room_id"=>$_SESSION['frontend_active_room_id'],"member_id" => $_SESSION['frontend_active_member_id']));
+        } else {
+            $this->sendResponse(401, "");
+        }
+    }
+
     function action_createRoom(){
 
         if(isset($_POST['formdata'])) {
@@ -36,7 +44,11 @@ class chatBackendController extends BackendResourceController {
             }
             $data['description']  = $desc;
             $data["max_member"] = "2";
+
+
             $roomId = $entity->save("chatroom",$data);
+
+
             $data['name']  = $_SERVER['REMOTE_ADDR'];
             $data['desc'] = "";
             $memberId = $entity->save("room_member",$data);
@@ -48,6 +60,10 @@ class chatBackendController extends BackendResourceController {
             $data["room_member_id"] = $memberId;
             $entity->save("chatroom_room_member_m_m",$data);
             $_SESSION['room_member_id'][$roomId] = $memberId;
+
+
+            $_SESSION['frontend_active_room_id'] = $roomId;
+            $_SESSION['frontend_active_member_id'] = $memberId;
 
             $path ='workbench';
             notificationService::getInstance()->broadcastNotification($path, $roomId,"New chatroom request.");
@@ -78,6 +94,9 @@ class chatBackendController extends BackendResourceController {
             die("access denied");
         }
         if(isset($_GET['room_id'])) {
+
+            $this->params["clientResource"] = "backend";
+
             $roomId = $_GET['room_id'];
             $memberId = "";
 
@@ -143,6 +162,9 @@ class chatBackendController extends BackendResourceController {
     function action_index() {
         $this->params['showheaderfooter'] =false;
         $this->params['is_agent_livechat'] =false;
+
+        $this->params["active_room"] = false;
+        $this->params["clientResource"] = "frontend";
         $this->view = "index";
 
     }
@@ -351,6 +373,12 @@ class chatBackendController extends BackendResourceController {
                     $member = lib_entity::getInstance()->get("room_member", $memberId);
                     $this->broadcastMessageToRoom($roomId, $memberId,array("event"=>"disconnected","message"=>$member['name']." left the chat."));
                     unset($_SESSION[$roomId][$memberId]);
+
+                    if(isset($_SESSION['frontend_active_room_id'])) {
+                        unset($_SESSION['frontend_active_room_id']);
+                        unset($_SESSION['frontend_active_member_id']);
+                    }
+
                     $this->sendResponse(200, "");
                 //}
         } else {

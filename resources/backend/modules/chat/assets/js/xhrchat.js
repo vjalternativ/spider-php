@@ -256,7 +256,14 @@ $(document).ready(function(){
 		chatob.roomActive = true;
 		chatob.room_id = roomId;
 		chatob.member_id = memberId;
-	} 
+	} else {
+		if(isFrontendRoomActive) {
+			chatob.room_id = frontendActiveRoomId;
+			chatob.member_id = frontendActiveMemberId;
+			ChatUIHandler.setState(CONVERSATION);
+		}
+	}
+
 	
 	
 	window.addEventListener("chatroomEvent",handleChatRoomEvents,false);

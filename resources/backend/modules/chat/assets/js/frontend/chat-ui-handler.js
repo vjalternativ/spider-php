@@ -34,7 +34,7 @@ ChatUIHandler.state.INITIAL = function() {
 	$("#chatmaximize").addClass("glyphicon-plus");
 	
 	$("#stsendbtn").addClass("hide");
-	$("#stconnectbtn").attr("disabled",true);
+	$("#stconnectbtn").attr("disabled",false);
 	$("#stconnectbtn").removeClass("hide");
 	$("#stconnectbtn").html("Connect");
 	$("#stdisconnectbtn").addClass("hide");

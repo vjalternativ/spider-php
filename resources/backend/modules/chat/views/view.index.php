@@ -10,7 +10,7 @@ class chatViewIndex extends BackendResourceView {
 
        $isAgentForLiveChat = false;
        $heading = "Live Chat With Us";
-       if($current_user ) {
+       if($current_user && $this->params['clientResource']=="backend" ) {
 
            if(isset($current_user->privileges['agent.live.chat'])) {
                $isAgentForLiveChat = true;
@@ -33,6 +33,20 @@ class chatViewIndex extends BackendResourceView {
         } else {
             echo "<script> var autoconnect = false; </script>";
 
+        }
+
+
+
+
+        if( $this->params['clientResource']=="frontend") {
+
+             if(isset($_SESSION['frontend_active_room_id'])) {
+                echo "<script> var isFrontendRoomActive = true; </script>";
+                echo '<script> var frontendActiveRoomId = "'.$_SESSION['frontend_active_room_id'].'"; </script>';
+                echo '<script> var frontendActiveMemberId = "'.$_SESSION['frontend_active_member_id'].'"; </script>';
+            } else {
+                echo "<script> var isFrontendRoomActive = false; </script>";
+            }
         }
 
         echo '<script> var sessionId = "'.session_id().'"; </script>';
