@@ -16,7 +16,7 @@
 
 <script src="{$fwbaseurl}resources/backend/assets/editor/editor.js?v=1"></script>
 <script src="{$fwbaseurl}libs/assets/js/lib_desktopnotification.js?v=1"></script>
-<iframe src="{$baseurl}index.php?resource=backend&module=notification&clientResource=backend"></iframe>
+<iframe style="display:none" src="{$baseurl}index.php?resource=backend&module=notification&clientResource=backend"></iframe>
 
 </body>
 </html>
