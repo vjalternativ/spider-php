@@ -170,6 +170,25 @@
         "secondary_table_text": "user",
         "isfirstrow": false
     },
+    "bc6c62de-6019-fe4d-cf4e-5f7dd69358df": {
+        "id": "bc6c62de-6019-fe4d-cf4e-5f7dd69358df",
+        "name": "chatroom_room_member_m_m",
+        "date_entered": "2020-10-07 20:23:32",
+        "date_modified": "2020-10-07 20:23:32",
+        "deleted": "0",
+        "modified_user_id": "bc6c62de-6019-fe4d-cf4e-5f7dd69358df",
+        "created_by": "bc6c62de-6019-fe4d-cf4e-5f7dd69358df",
+        "primarytable": "52696979-f603-844d-5d45-5f7dd5267353",
+        "secondarytable": "86835a1f-dc02-8732-005f-5f7dd6555ca7",
+        "primarytable_name": "chatroom",
+        "secondarytable_name": "members",
+        "parent_relationship": null,
+        "target_relationship": null,
+        "rtype": "M_M",
+        "primary_table_text": null,
+        "secondary_table_text": null,
+        "isfirstrow": false
+    },
     "c8dfdabe-4c99-bbc5-9597-5eca702ed99c": {
         "id": "c8dfdabe-4c99-bbc5-9597-5eca702ed99c",
         "name": "tableinfo_language_m_m",
