@@ -22,53 +22,7 @@ function looprequest(url,data,interval,callback,validateCallback)   {
 }
 
 
-var notificationElement = null;
-
-function notifyMe(message,body) {
-    if (!window.Notification) {
-        console.log('Browser does not support notifications.');
-    } else {
-        // check if permission is already granted
-        if (Notification.permission === 'granted') {
-            // show notification here
-            var notify = new Notification(message, {
-                body: body,
-                icon: 'https://bit.ly/2DYqRrh',
-            });
-            notify.onclick = function () {
-            	parent.focus();
-                window.focus();
-                this.close();
-              };
-        } else {
-            // request permission from user
-            Notification.requestPermission().then(function (p) {
-                if (p === 'granted') {
-                    // show notification here
-                    var notify = new Notification(message, {
-                        body: message,
-                        icon: 'https://bit.ly/2DYqRrh',
-                    });
-                    notify.onclick = function () {
-                    	parent.focus();
-                        window.focus();
-                        this.close();
-                      };
-                } else {
-                    console.log('User blocked notifications.');
-                }
-            }).catch(function (err) {
-                console.error(err);
-            });
-        }
-    }
-}
-
-
-
 function getRequestId(callback) {
-	
-	
 	var request = $.ajax({
 		  url: baseurl+"index.php?resource=backend&module=notification&action=getRequestId",
 		  method: "POST",
@@ -88,27 +42,22 @@ function getRequestId(callback) {
 		});
 		 
 		request.fail(function( jqXHR, textStatus ) {
-			
 			setTimeout(function(){
 				getRequestId(callback);
 			},3000);
 		});
 		
-		
-		
-	
-	
 }
 
 function pullNotifications(requestId) {
 	
 	var stop = false;
 		
-		looprequest(baseurl+'index.php?resource=backend&module=notification&action=pullNotifications&requestId='+requestId,{},3000,function(resp){
+		looprequest(baseurl+'index.php?resource=backend&module=notification&action=pullNotifications&requestId='+requestId+"&clientResource="+resource,{},3000,function(resp){
 			try {
 				var res = JSON.parse(resp);
 				if(res.data.status=="accepted") {
-					emitNotification(res.data.payload);
+					emitNotification(res.data);
 							
 				} else if(res.data.status=="rejected") {
 					stop = true;
@@ -134,11 +83,25 @@ function pullNotifications(requestId) {
 
 
 
-function emitNotification(payload) {
-	localStorage.setItem("notificationData",JSON.stringify({payload:payload}));
+function emitNotification(data) {
+	if(data.payload.length > 0) {
+		var messages = [];
+		for(var i=0;i<data.payload.length;i++) {
+			var notification = data.payload[i];
+			if(notification.type=="notification") {
+				notifyMe(notification.data);
+			} else {
+				messages.push(notification);		
+			}
+		}
+		
+		if(messages.length > 0) {
+			localStorage.setItem("notificationData_"+resource,JSON.stringify({payload:messages,id:data.id}));
+		}
+		
+		
+	}
 }
-
-
 
 
 $(document).ready(function(){
@@ -157,8 +120,6 @@ $(document).ready(function(){
 		pullNotifications(requestId);
 	});
 	
-	
-		 
 });
 
 

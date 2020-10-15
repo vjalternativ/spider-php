@@ -32,6 +32,13 @@ ChatUIHandler.state.INITIAL = function() {
 	$("#alternativlabs-chatform-panelfooter").addClass("hide");
 	$("#chatmaximize").removeClass("glyphicon-minus");
 	$("#chatmaximize").addClass("glyphicon-plus");
+	
+	$("#stsendbtn").addClass("hide");
+	$("#stconnectbtn").attr("disabled",true);
+	$("#stconnectbtn").removeClass("hide");
+	$("#stconnectbtn").html("Connect");
+	$("#stdisconnectbtn").addClass("hide");
+	$("#stmsgbox").attr("disabled",true);
 };
 
 

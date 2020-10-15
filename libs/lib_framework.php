@@ -134,7 +134,7 @@ class lib_framework {
     }
 
     private function initSession($sessionName=false) {
-        session_name($this->sessionName);
+        //session_name($this->sessionName);
         ini_set('session.gc_maxlifetime', 28800);
         session_set_cookie_params(28800);
         session_start();

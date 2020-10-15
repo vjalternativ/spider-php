@@ -16,7 +16,9 @@
 <script src="{$fwbaseurl}resources/backend/assets/js/jquery-3.1.1.min.js"></script>
 
 
-
+<script>
+var resource = "backend";
+</script>
 
 </head>
 <body>

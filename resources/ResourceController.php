@@ -6,6 +6,7 @@ class ResourceController {
     protected $resource;
     protected $module;
     protected $params = array();
+    private $lock = null;
 
     function __construct() {
         $reflector = new ReflectionObject($this);
@@ -89,14 +90,34 @@ class ResourceController {
     }
 
 
+    function lockRequest($file) {
+        $lockfile = lib_config::getInstance()->get("basepath").'locks/pullnotification.lock';
+
+
+        $this->lock = fopen ( $lockfile, 'w' );
+        if ($this->lock === false) {
+            $this->sendResponse(501, "Unable to create lock file" );
+        }
+
+        if (! flock ( $this->lock, LOCK_EX | LOCK_NB )) {
+            $this->sendResponse(501, "Lock already in use by another process\n" );
+        }
+    }
+
     function sendResponse($responseCode,$payload) {
 
         $result = array("status"=>"failed","data"=>$payload);
         if($responseCode==200) {
                $result['status'] = "success";
         }
+
         echo json_encode($result);
+
+        if($this->lock) {
+            fclose ( $this->lock );
+        }
         exit();
+
     }
 }
 ?>

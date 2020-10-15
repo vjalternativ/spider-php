@@ -2,7 +2,6 @@
 <input type="hidden" id="room_id" value="{$params.room_id}" />
 <input type="hidden" id="member_id" value="{$params.member_id}" />
 <link rel="stylesheet" href="{$fwbaseurl}resources/backend/modules/chat/assets/css/chat.css" />
-
 {else}
 <html>
 <head>
@@ -12,7 +11,9 @@
 <link rel="stylesheet" href="{$fwbaseurl}resources/backend/modules/chat/assets/css/chat.css" />
 <script src="{$fwbaseurl}resources/backend/assets/js/jquery-3.1.1.min.js"></script>
 <script src="{$fwbaseurl}resources/backend/include/lib/js/jquery/jquery.validate.min.js"></script>
-
+<script>var resource="frontend";</script>
+	 
+ 
 
 
 
@@ -25,6 +26,7 @@
 
 <script>
 	var baseurl = '{$baseurl}';
+	var fwbaseurl = '{$fwbaseurl}';
 </script>
 
 {if $params.is_agent_livechat}
@@ -152,13 +154,9 @@
 	
 	 	 
 	
- {if !$params.showheaderfooter}
-	 <audio  id="notificationelement" style="display:none">
-	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.ogg" type="audio/ogg">
-	  <source src="{$fwbaseurl}resources/backend/modules/chat/assets/sounds/juntos-607.mp3" type="audio/mpeg">
-	  Your browser does not support the audio element.
-	 </audio>
-	 
+ {if !$params.showheaderfooter} 
+ 	<script src="{$fwbaseurl}libs/assets/js/lib_desktopnotification.js?v=1"></script>	
+ 	<script src="{$fwbaseurl}resources/backend/modules/notification/assets/js/notificationdispatcher.js?v=1"></script>	 
  {/if}	
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/frontend/chat-ui-handler.js?v=61"></script>
 	<script src="{$fwbaseurl}resources/backend/modules/chat/assets/js/xhrchat.js?v=62"></script>

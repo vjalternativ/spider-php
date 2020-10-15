@@ -1,13 +1,4 @@
-$(document).ready(function(){
 
-  $('.datepicker').datetimepicker({
-        format: 'YYYY-MM-DD'
-    });
-  
-  $('.datetimepicker').datetimepicker({
-      format: 'YYYY-MM-DD H:m'
-  });
-});
 
 
 
@@ -151,25 +142,14 @@ function ajaxGetPagination(url,id,record,page) {
 	
 }
 
+$(document).ready(function(){
 
-function looprequest(url,data,interval,callback)   {
-	
-	var request = $.ajax({
-		  url: url,
-		  method: "POST",
-		  data: data
-		});
-		request.done(function( result ) {
-			callback(result);
-			setTimeout(function(){
-				looprequest(url,data,interval,callback);
-			},interval);
-		});
-		 
-		request.fail(function( jqXHR, textStatus ) {
-			setTimeout(function(){
-				looprequest(url,data,interval,callback);
-			},interval);
-		});
-	
-}
+	  $('.datepicker').datetimepicker({
+	        format: 'YYYY-MM-DD'
+	    });
+	  
+	  $('.datetimepicker').datetimepicker({
+	      format: 'YYYY-MM-DD H:m'
+	  });
+
+});

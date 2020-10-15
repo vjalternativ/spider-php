@@ -31,7 +31,7 @@ function parseJson(res)  {
 
 function chatDisconnect(callback) {
 	$('#chat_connnect_form').trigger("reset");
-	  $.post(baseurl+"index.php?resource=backend&module=chat&action=ajaxDisconnectChat&room_id="+chatob.room_id+"&member_id="+chatob.member_id,{},function(response) {
+	  $.post(baseurl+"index.php?resource=backend&module=chat&action=ajaxDisconnectChat&room_id="+chatob.room_id+"&member_id="+chatob.member_id+"clientResource="+resource,{},function(response) {
 			chatob.roomActive = false;
 		  	if(!isAgentLiveChat) {
 				$("#stchathistory").html("");
@@ -51,32 +51,7 @@ function chatDisconnect(callback) {
 }
 
 
-function looprequest(url,data,interval,callback,validateCallback)   {
-	
-	var request = $.ajax({
-		  url: url,
-		  method: "POST",
-		  data: data
-		});
-		request.done(function( result ) {
-			if(validateCallback()) {
-				callback(result);
-				setTimeout(function(){
-					looprequest(url,data,interval,callback,validateCallback);
-				},interval);	
-			}
-			
-		});
-		 
-		request.fail(function( jqXHR, textStatus ) {
-			if(validateCallback()) {
-				setTimeout(function(){
-					looprequest(url,data,interval,callback,validateCallback);
-				},interval);
-			}
-		});
-	
-}
+
 
 
 
@@ -118,33 +93,6 @@ class LiveChat {
 }
 
   getOnlineUserNum() {}
-
-
-  
-  readMessages(room_id,member_id) {
-	  chatob.room_id = room_id;
-	  chatob.member_id = member_id;
-	  var url = baseurl+"index.php?resource=backend&module=chat&action=ajaxGetMyMessages&room_id="+room_id+"&member_id="+member_id;
-	  
-	  looprequest(url,{},2000,function(result){
-			  var data = parseJson(result);
-			  if(data.status=="success") {
-				  var list = data.data.messages;
-				  var listLength = list.length;
-				  for(var i=0;i<listLength;i++) {
-					  var data = list[i];
-					  data = parseJson(data);
-					  console.log("dispatch message event",data);
-					  document.body.dispatchEvent(new CustomEvent('dataChannelEvents', {detail:{event : data.type,data : data.message}  }));
-				  }
-			  }
-	  },function(){
-		  if(chatob.roomActive) {
-			  return true;
-		  }
-		  return false;
-	  });
-  }
   
 
   
@@ -235,32 +183,20 @@ document.body.addEventListener("chatMessage",function(data){
 
 
 
-
-document.body.addEventListener("dataChannelEvents",function(data){ 
+function handleChatRoomEvents(data) {
 	
 	
-	
-	 if (document.visibilityState != 'visible' ||  !tabFocused || document.hidden) {
-			notifyMe("Message Recvied : "+data.detail.event,data.detail.data);
-			
-			try {
-				notificationElement.play(); 	
-			} catch(e) {
-				console.log("not able to play");
-			}
+	if(chatob.room_id == data.detail.room_id) {
+		if (document.visibilityState != 'visible' ||  !tabFocused || document.hidden) {
+			notifyMe("Message Recvied : "+data.detail.event,data.detail.message);
 		}
-	
 		if(data.detail.event == "connected") {
-			 	 
 				 if(isAgentLiveChat) {
 					 document.body.dispatchEvent(new CustomEvent('chatMessage', { type: 'success', detail:chat.connectedMessageUser })); 
 				 } else {
 					 document.body.dispatchEvent(new CustomEvent('chatMessage', { type: 'success', detail:chat.connectedMessage })); 
-					 	 
 				 }
 				 ChatUIHandler.setState(CONVERSATION);
-				 
-				 
 		} else if(data.detail.event == "message") {
 			
 			var now = new Date();
@@ -269,7 +205,7 @@ document.body.addEventListener("dataChannelEvents",function(data){
 			pushData.user = "Stranger";
 			pushData.timestamp = now;
 			pushData.class = 'text-success';	
-			pushData.message = data.detail.data;
+			pushData.message = data.detail.message;
 			chat.pushdata(pushData);
 			
 			
@@ -280,7 +216,7 @@ document.body.addEventListener("dataChannelEvents",function(data){
 			pushData.user = "Stranger";
 			pushData.timestamp = now;
 			pushData.class = 'text-warning';	
-			pushData.message = data.detail.data;
+			pushData.message = data.detail.message;
 			chat.pushdata(pushData);
 			if(!isAgentLiveChat) {
 				setTimeout(function(){
@@ -288,16 +224,12 @@ document.body.addEventListener("dataChannelEvents",function(data){
 				},2000); 
 			}
 		}
-});
-
-
-
+	}	 
+}
 
 function onConnect() {
 	chat.onConnect();
 }
-
-
 
 function reloadFrame() {
 	ChatUIHandler.setState(INITIAL);
@@ -307,7 +239,6 @@ function reloadFrame() {
 function onDisconnect() {
 	chatDisconnect(function(){
 	});
-
 }
 
 
@@ -318,28 +249,18 @@ function handleFrameMessage(evt) {
 
 var tabFocused = true;
 
-
-
-
-function checkNotificatonStorage(e) {
-	
-	var notificationData = localStorage.getItem("notificationData");
-	console.log("notification data",notificationData);
-}
-
 $(document).ready(function(){
-
 	if(isAgentLiveChat) {
 		var roomId = document.getElementById("room_id").value;
 		var memberId = document.getElementById("member_id").value;
 		chatob.roomActive = true;
-		chat.readMessages(roomId,memberId);
+		chatob.room_id = roomId;
+		chatob.member_id = memberId;
 	} 
 	
 	
-	window.addEventListener("storage", checkNotificatonStorage,false);
-	
-	window.addEventListener("message", handleFrameMessage, false);
+	window.addEventListener("chatroomEvent",handleChatRoomEvents,false);
+	//window.addEventListener("message", handleFrameMessage, false);
 	
 	window.parent.postMessage({event:"frameLoaded"});
 	
