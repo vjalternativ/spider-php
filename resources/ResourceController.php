@@ -5,6 +5,7 @@ class ResourceController {
 
     protected $resource;
     protected $module;
+    protected $action;
     protected $params = array();
     private $lock = null;
 
@@ -16,6 +17,12 @@ class ResourceController {
         $this->module = substr($str,(strrpos($str,"/")+1));
         $str = substr($str,0,strrpos($str,"/"));
         $this->resource = substr($str,(strrpos($str,"/")+1));
+
+        $action = $_GET['action'];
+        if(!method_exists($this, "action_".$action)) {
+            $action = "index";
+        }
+        $this->action = $action;
     }
 
 

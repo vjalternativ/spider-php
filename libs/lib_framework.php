@@ -226,7 +226,6 @@ class lib_framework {
            $this->initModules();
            $controller = new $class;
 
-
            $vjconfig = lib_config::getInstance()->getConfig();
            $entity = lib_entity::getInstance();
 
@@ -236,7 +235,6 @@ class lib_framework {
            if($this->record) {
                $entity->record = $this->record;
            }
-
                $controller->{$action}();
 
 

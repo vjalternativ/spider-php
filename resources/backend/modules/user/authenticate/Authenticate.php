@@ -13,9 +13,7 @@ class Authenticate {
 	}
 
 
-	function processSession($row) {
-	    $db = lib_current_user::getEntityInstance();
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+	function processSession($row , $resource) {
 
 	    $db = lib_mysqli::getInstance();
 	    $sql = "select r.id,r.name from  roles_user_1_m ru
@@ -49,11 +47,11 @@ class Authenticate {
 	        } */
 	    }
 
-	    $current_user = $this->setsession("current_user", $row);
+	    $this->setsession($resource."_current_user", $row);
 
 	}
 
-	function login($username,$password) {
+	function login($username,$password,$resource="backend") {
 
 
 	    $db = lib_mysqli::getInstance();
@@ -65,7 +63,7 @@ class Authenticate {
 			return false;
 		} else {
 		    $row = $db->fetch($qry);
-		    $this->processSession($row);
+		    $this->processSession($row,$resource);
 		}
 
 		return true;

@@ -35,7 +35,7 @@ class BackendResourceController  extends ResourceController {
         $this->action = isset($_GET['action'])  ? $_GET['action'] : false;
         $this->record = isset($_REQUEST['record']) ? $_REQUEST['record'] : false;
 
-        $current_user = lib_current_user::sessionCheck('current_user');
+        $current_user = lib_current_user::sessionCheck();
 
         if(!isset($this->nonauth[$this->action]) && !$current_user) {
             die("Invalid Session");
@@ -194,21 +194,22 @@ class BackendResourceController  extends ResourceController {
         $tableinfo = $globalModuleList[$table];
 
         $editviewdef = json_decode($globalModuleList[$table]['editviewdef'],1);
+        if($editviewdef) {
+            foreach($editviewdef as $row) {
+                if(isset($row['fields'])) {
+                    foreach($row['fields'] as  $col) {
+                        if(isset($col['field'])) {
+                            $fkey = $col['field']['name'];
+                            $field = $tableinfo['tableinfo']['fields'][$fkey];
+                            if($field['type'] == "checkbox") {
+                                echo "processing field is checkbox ".$field['name']."<br />";
 
-        foreach($editviewdef as $row) {
-            if(isset($row['fields'])) {
-                foreach($row['fields'] as  $col) {
-                    if(isset($col['field'])) {
-                        $fkey = $col['field']['name'];
-                        $field = $tableinfo['tableinfo']['fields'][$fkey];
-                        if($field['type'] == "checkbox") {
-                            echo "processing field is checkbox ".$field['name']."<br />";
-
-                            if(!isset($_REQUEST[$field['name']])) {
-                                $keyvalue[$field['name']] = 0;
+                                if(!isset($_REQUEST[$field['name']])) {
+                                    $keyvalue[$field['name']] = 0;
+                                }
                             }
-                        }
 
+                        }
                     }
                 }
             }
