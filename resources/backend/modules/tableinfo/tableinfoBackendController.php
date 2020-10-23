@@ -53,9 +53,9 @@ class tableinfoBackendController extends BackendResourceController {
 
 
 	function action_ajaxrelatemodal() {
-	   $db = lib_mysqli::getInstance();
+	    $db = lib_mysqli::getInstance();
 	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 		$module = $_REQUEST['rmodule'];
 		$value = $_REQUEST['value'];
@@ -129,22 +129,21 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	function action_ajaxnewoptionrow() {
 
-			$row = array();
 			$count = $_REQUEST['count'];
 			$keyelem = lib_util::getelement('input','',array('value'=>'','type'=>'text','class'=>'form-control','name'=>'key[]'),false);
 			$valelem = lib_util::getelement('input','',array('value'=>'','type'=>'text','class'=>'form-control','name'=>'val[]'),false);
 
 			$action = lib_util::getelement('button','+',array('type'=>'button','class'=>'btn btn-primary btn-sm','onclick'=>"newoptionrow()")).'&nbsp;'.getelement('button','x',array('type'=>'button','class'=>'btn btn-danger btn-sm','onclick'=>"deleteoptionrow(".$count.")"));
 
-	$td = lib_util::getelement('td',$keyelem);
-	$td .= lib_util::getelement('td',$valelem);
-	$td .= lib_util::getelement('td',$action);
+        	$td = lib_util::getelement('td',$keyelem);
+        	$td .= lib_util::getelement('td',$valelem);
+        	$td .= lib_util::getelement('td',$action);
 
 
-	$tr = lib_util::getelement('tr',$td,array("class"=>'opt-row','id'=>'opt-'+$count));
+        	$tr = lib_util::getelement('tr',$td,array("class"=>'opt-row','id'=>'opt-'+$count));
 
-	echo $tr;
-	die;
+        	echo $tr;
+        	die;
 	}
 
 	function action_saveoption() {
@@ -234,20 +233,10 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 
 		$table = $_REQUEST['tableinfo-name'];
-		/* if(isset($_REQUEST['field-table']) && !empty($_REQUEST['field-table'])) {
-		    $temp['table'] = $_REQUEST['field-table'];
-		    $table .= "_".$temp['table'];
-		}
 
-		$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-
-		if(!isset($globalModuleList[$table])) {
-		   $entity->createEntity($table,array("type"=>"cstm"));
-		} */
 		$sql = "ALTER TABLE ".$table." ADD COLUMN ".$_REQUEST['field-name']." ".$fieldType." ";
 		$sql .= " ".$postSql;
 		$db->query($sql);
-
 		$tbinfo = $entity->get('tableinfo',$_REQUEST['tableinfo-id']);
 		$desc  = json_decode(base64_decode($tbinfo['description']),1);
 		$desc['fields'][$_REQUEST['field-name']] = $temp;
@@ -298,6 +287,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 		foreach($colorder as $key=> $col) {
 			//$listviewlayout[$_REQUEST['field'][$key]] = $layout['fields'][$_REQUEST['field'][$key]];
 		    $listviewlayout[$_REQUEST['field'][$key]]  =$_REQUEST['field'][$key];
+		    $colorder[$key]  = $col;
 		}
 
 		$layout['metadata'][$view] = $listviewlayout;
@@ -451,7 +441,7 @@ $db = lib_mysqli::getInstance();
 
 	    $desc = json_decode(base64_decode($data['description']),1);
 
-	    foreach($desc['fields'] as $field=>$fieldInfo) {
+	    foreach(array_keys($desc['fields']) as $field) {
 	        if(in_array($field,$entity->defaultFields)) {
 	            continue;
 	        }
@@ -540,9 +530,8 @@ $db = lib_mysqli::getInstance();
 
 	    $sql = "select * from tableinfo where deleted=0" ;
 	    $tableinfo = $db->fetchRows($sql,array("name"));
-	    foreach($tableinfo as $id=>$table) {
+	    foreach(array_keys($tableinfo) as $id) {
 	       unset($data['tableinfo'][$id]);
-
 	    }
 
 
@@ -551,7 +540,7 @@ $db = lib_mysqli::getInstance();
 	    $relationships = $db->fetchRows($sql,array("name"));
 
 
-	    foreach($relationships as $id=>$table) {
+	    foreach(array_keys($relationships) as $id) {
 	        unset($data['relationships'][$id]);
 
 	    }
@@ -721,7 +710,6 @@ $db = lib_mysqli::getInstance();
 
 	        $file = fopen($tmp,"r");
 	        $counter = 0;
-	        $rcounter =0;
 	        while(! feof($file))
 	        {
 	            $data = fgetcsv($file);
@@ -788,16 +776,16 @@ $db = lib_mysqli::getInstance();
 
 
 	function action_migratetable() {
-
+         return;
 	     $db = lib_mysqli::getInstance();
-	    $entity = lib_entity::getInstance();
+	     $entity = lib_entity::getInstance();
 	     $sql = "select ss.name,c.id as country_id from states ss
                 INNER JOIN countries cs on ss.country_id=cs.id
                 INNER JOIN country c on cs.sortname = c.iso_code
              ";
 	     $rows = $db->fetchRows($sql);
 	     foreach($rows as $row) {
-	     //    $entity->save("state",$row);
+	         $entity->save("state",$row);
 	     }
 
 

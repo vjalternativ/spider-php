@@ -12,6 +12,7 @@ return $db->getrows($sql,'id');
 	function display() {
 		parent::display();
 
+
 		$db = lib_mysqli::getInstance();
 	    $entity = lib_entity::getInstance();
 
@@ -19,7 +20,7 @@ return $db->getrows($sql,'id');
 
 
 	    $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
+        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
 
 
 
