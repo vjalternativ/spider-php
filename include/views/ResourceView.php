@@ -64,13 +64,15 @@ abstract class ResourceView
 
         $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$this->sitetpl.'/';
         $smarty->assign("baseurl", $vjconfig['baseurl']);
-
         $smarty->assign("params", $this->params);
         $smarty->assign("headerparams", $this->headerparams);
         echo "<script>var baseurl = '" . $vjconfig['baseurl'] . "';</script>";
         echo "<script>var urlbasepath = '" . $vjconfig['urlbasepath'] . "';</script>";
         echo "<script>var fwbaseurl = '" . $vjconfig['fwbaseurl'] . "';</script>";
         echo "<script>var fwurlbasepath = '" . $vjconfig['resource_alias']['backend'] . "';</script>";
+
+
+
         $this->loadHeader();
         $this->displayHeader();
     }
@@ -80,6 +82,7 @@ abstract class ResourceView
 
         $dir = $vjconfig['basepath'].$this->sitebasePath . 'include/tpls/';
         $smarty = lib_smarty::getSmartyInstance();
+        $smarty->assign("params", $this->params);
         if(file_exists($dir.$this->sitetpl.'/'. $file)) {
             echo $smarty->fetch($dir.$this->sitetpl.'/'. $file);
         } else if(file_exists($dir. $file)) {

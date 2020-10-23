@@ -9,7 +9,8 @@
     'basic' => 'Basic',
     'relationship' => 'Relationship',
     'user' => 'User',
-    'cstm' => 'Custom'
+    'cstm' => 'Custom',
+    'page' => 'Page'
 
   ),
   'user_type_list' =>

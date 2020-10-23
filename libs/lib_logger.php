@@ -32,8 +32,9 @@ class lib_logger {
             shell_exec($cmd);
         }
         $path .= $this->logFile;
-
-
+        if(php_sapi_name() == "cli") {
+            echo $logmessage.PHP_EOL;
+        }
         error_log($logmessage,3,$path);
     }
 

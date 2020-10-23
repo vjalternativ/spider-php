@@ -39,6 +39,14 @@ class lib_current_user {
 
     }
 
+    static function destroySession($resource="default") {
+        if($resource=="default") {
+            $resource = $_GET['resource'];
+        }
+        $var= $resource."_current_user";
+        unset($_SESSION[$var]);
+    }
+
 
 
 }

@@ -11,6 +11,9 @@ class FrontendResourceController extends ResourceController  {
 
     protected $sitetpl;
 
+    private $backendPageModel = null;
+
+
 
     function __construct() {
 
@@ -56,7 +59,13 @@ class FrontendResourceController extends ResourceController  {
                 if($row) {
                     lib_datawrapper::getInstance()->set("pagedata", $row);
                 }
-
+                if($this->backendPageModel) {
+                    $sql = "select * from " . $this->page . " where alias='" . $seoParams[1] . "' and deleted=0 ";
+                    $row = $db->getrow($sql);
+                    if($row) {
+                        lib_datawrapper::getInstance()->set("pagedata", $row);
+                    }
+                }
             }
 
             $pageData = lib_datawrapper::getInstance()->get("pagedata");
@@ -87,6 +96,8 @@ class FrontendResourceController extends ResourceController  {
         $dataWrapper->set("breadcrumb", $breadcrumb);
     }
 
-
+    protected function setBackendPageModule($module) {
+        $this->backendPageModel = $module;
+    }
 }
 ?>

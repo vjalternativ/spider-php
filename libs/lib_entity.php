@@ -10,9 +10,20 @@ class lib_entity {
 	public $created_by = array('name'=>'created_by','type'=>'relate','rmodule'=>'user','notnull'=>true,'label'=>'LBL_CREATED_BY');
 	public $instanceType  = array('db'=>array('type'=>'Mysqli','engine'=>'InnoDB'));
 	public $assigned_user_id = array('name'=>'assigned_user_id','type'=>'relate','rmodule'=>'user','notnull'=>true,'label'=>'LBL_ASSIGNED_USER_ID');
-	public $basicExcludeFields = array();
-	public $basic_wodExcludeFields = array('assigned_user_id','description');
-	public $relationshipExcludeFields = array('name','assigned_user_id','description','date_entered','modified_user_id','created_by');
+
+
+
+
+	public $sitemap = array('name'=>'sitemap','type'=>'int','link'=>false,'label'=>'sitemap');
+	public $alias = array('name'=>'alias','type'=>'varchar','len'=>255,'link'=>true,'label'=>'Alias');
+	public $meta_title = array('name'=>'meta_title','type'=>'varchar','len'=>255,'link'=>false,'label'=>'Meta Title');
+	public $meta_desc = array('name'=>'meta_desc','type'=>'text','label'=>'Meta Description');
+	public $meta_key = array('name'=>'meta_key','type'=>'text','label'=>'Meta Keywords');
+
+	public $pageExcludeFields = array();
+	public $basicExcludeFields = array('meta_title','meta_desc','meta_key','alias','sitemap');
+	public $basic_wodExcludeFields = array('assigned_user_id','description','meta_title','meta_desc','meta_key','alias','sitemap');
+	public $relationshipExcludeFields = array('name','assigned_user_id','description','date_entered','modified_user_id','created_by','meta_title','meta_desc','meta_key','alias','sitemap');
 	public $cstmExcludeFields = array();
 
 
@@ -36,7 +47,7 @@ class lib_entity {
 	private static $instance = null;
 
 	function __construct() {
-		$this->defaultFields = array('id','name','description','date_entered','date_modified','deleted','modified_user_id','created_by','assigned_user_id');
+	    $this->defaultFields = array('id','name','description','date_entered','date_modified','deleted','modified_user_id','created_by','assigned_user_id','meta_title','meta_desc','meta_key','alias','sitemap');
 		$fields = array();
 		foreach($this->defaultFields as $field) {
 			$fields[$field]= $this->$field;
@@ -160,8 +171,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	//$metafields['listview']['id']= $fields['id'];
 	if(isset($fields['name'])) {
 		$metafields['listview']['name']= $fields['name'];
-		$metafields['editview']['name']=  array("fields" => array(   array( 'field'=> $fields['name'],'gridsize'=>6) ),'type'=>'row');
-		$metafields['detailview']['name']=  array("fields" => array(array('field'=>$fields['name'],'gridsize'=>6)),'type'=>'row');
+		$metafields['editview']['name']=  array("fields" => array(   array( 'field'=> 'name','gridsize'=>6) ),'type'=>'row');
+		$metafields['detailview']['name']=  array("fields" => array(array('field'=>'name','gridsize'=>6)),'type'=>'row');
 		$metafields['searchview']['name']= $fields['name'];
 
 
@@ -169,27 +180,39 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	}
 	if(isset($fields['username'])) {
 	    $metafields['listview']['username']= $fields['username'];
-	    $metafields['editview']['username']=  array("fields" => array(   array( 'field'=> $fields['username'],'gridsize'=>6) ),'type'=>'row');
-	    $metafields['detailview']['username']=  array("fields" => array(array('field'=>$fields['username'],'gridsize'=>6)),'type'=>'row');
+	    $metafields['editview']['username']=  array("fields" => array(   array( 'field'=> 'username','gridsize'=>6) ),'type'=>'row');
+	    $metafields['detailview']['username']=  array("fields" => array(array('field'=>'username','gridsize'=>6)),'type'=>'row');
 	    $metafields['searchview']['username']= $fields['username'];
 
 	}
 
 	if(isset($fields['password'])) {
-	    $metafields['editview']['password']=  array("fields" => array(   array( 'field'=> $fields['password'],'gridsize'=>6) ),'type'=>'row');
+	    $metafields['editview']['password']=  array("fields" => array(   array( 'field'=> 'password','gridsize'=>6) ),'type'=>'row');
 	}
 	if(isset($fields['ownership_id']) ) {
-	    $metafields['detailview']['ownership_id']=  array("fields" => array(   array( 'field'=> $fields['ownership_id'],'gridsize'=>6) ),'type'=>'row');
+	    $metafields['detailview']['ownership_id']=  array("fields" => array(   array( 'field'=> 'ownership_id','gridsize'=>6) ),'type'=>'row');
 	}
 
 	if(isset($fields['description'])) {
-	$metafields['editview']['description']=  array("fields" => array(array('field'=>$fields['description'],'gridsize'=>12)),'type'=>'row');
-	$metafields['detailview']['description']=  array("fields" => array(array('field'=>$fields['description'],'gridsize'=>12)),'type'=>'row');
+	$metafields['editview']['description']=  array("fields" => array(array('field'=>'description','gridsize'=>12)),'type'=>'row');
+	$metafields['detailview']['description']=  array("fields" => array(array('field'=>'description','gridsize'=>12)),'type'=>'row');
 	}
 
 	if(isset($fields['date_entered'])) {
 		$metafields['listview']['date_entered']= $fields['date_entered'];
-		$metafields['detailview']['name']["fields"][1] = array('field'=>$fields['date_entered'],'gridsize'=>6);
+		$metafields['detailview']['name']["fields"][1] = array('field'=>'date_entered','gridsize'=>6);
+	}
+
+	if(isset($fields['meta_title'])) {
+	    $metafields['editview']['alias']['fields']= array('field'=>"alias",'gridsize'=>12);
+	    $metafields['editview']['meta_title']['fields']= array('field'=>"meta_title",'gridsize'=>12);
+	    $metafields['editview']['meta_desc']['fields']= array('field'=>"meta_desc",'gridsize'=>12);
+	    $metafields['editview']['meta_key']['fields']= array('field'=>"meta_key",'gridsize'=>12);
+	    $metafields['detailview']['alias']['fields']= array('field'=>"alias",'gridsize'=>12);
+	    $metafields['detailview']['meta_title']['fields']= array('field'=>"meta_title",'gridsize'=>12);
+	    $metafields['detailview']['meta_desc']['fields']= array('field'=>"meta_desc",'gridsize'=>12);
+	    $metafields['detailview']['meta_key']['fields']= array('field'=>"meta_key",'gridsize'=>12);
+
 	}
 
 
@@ -221,19 +244,15 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 
-
 	$tbinfo['metadata'] = $metafields;
 
 	$keyvalue = array();
 	$keyvalue['name'] = $table;
-	$type =  'basic';
-
-	if(isset($params['type']) && $params['type']=='relationship') {
-		$type = $params['type'];
-	}
+	$keyvalue['editviewdef'] = $metafields['editview'];
+	$keyvalue['detailviewdef'] = $metafields['detailview'];
+	$keyvalue['listviewdef'] = $metafields['listview'];
     $keyvalue['tabletype'] = $params['type'];
-
-	$keyvalue['description'] = base64_encode(json_encode($tbinfo));
+	$keyvalue['description'] = base64_encode(json_encode(array("fields"=>$tbinfo['fields'])));
 
 
 	if(isset($params['label'])) {
@@ -1078,6 +1097,93 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 	    require_once $vjconfig['basepath'].'cache/relationship_list.php';
 	    require_once $vjconfig['basepath'].'cache/entity_list.php';
 	    require_once $vjconfig['basepath'].'cache/module_list.php';
+
+	}
+
+
+	function fixGridDef($defArray) {
+	    foreach($defArray as $rowindex=>$row) {
+	        if(isset($row['fields'])) {
+	            foreach($row['fields'] as $colindex => $field) {
+	                if(is_array($field['field'])) {
+	                    if(isset($field['field']['name'])) {
+	                       $defArray[$rowindex]['fields'][$colindex]['field'] = $field['field']['name'];
+	                    }
+	                }
+	            }
+	        }
+	    }
+
+	    return $defArray;
+	}
+
+	function fixListDef($defArray) {
+
+	    foreach($defArray as $key => $field) {
+	        if(is_array($field)) {
+	            $defArray[$key] = $key;
+	        }
+	    }
+
+	    return $defArray;
+	}
+
+	function fixDef($keyvalue) {
+
+	    $listview = is_array($keyvalue['listviewdef']) ? $keyvalue['listviewdef'] : json_decode($keyvalue['listviewdef'],1);
+	    $editview = is_array($keyvalue['editviewdef']) ? $keyvalue['editviewdef'] : json_decode($keyvalue['editviewdef'],1);
+	    $detailview = is_array($keyvalue['detailviewdef']) ? $keyvalue['detailviewdef'] : json_decode($keyvalue['detailviewdef'],1);
+	    $searchview = is_array($keyvalue['searchviewdef']) ? $keyvalue['searchviewdef'] : json_decode($keyvalue['searchviewdef'],1);
+        $keyvalue['listviewdef'] = json_encode($this->fixListDef($listview));
+        $keyvalue['editviewdef'] = json_encode($this->fixGridDef($editview));
+        $keyvalue['detailviewdef'] = json_encode($this->fixGridDef($detailview));
+        $keyvalue['searchviewdef'] = json_encode($this->fixListDef($searchview));
+
+        return  $keyvalue;
+
+
+
+	}
+
+	function updateTableinfoEntity($keyvalue) {
+	    $table = $keyvalue['name'];
+
+	    $fields = $this->getDefaultFields($keyvalue['tabletype']);
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        if(isset($globalModuleList[$table])) {
+            $module = $globalModuleList[$table];
+            $dbFields = $module['tableinfo']['fields'];
+            foreach($fields as $field) {
+                if(isset($dbFields[$field['name']])) {
+                    continue;
+                }
+                $dbFields[$field['name']] =$field;
+                $sql = "ALTER TABLE ".$table." ADD COLUMN ".$this->convertFieldArrayToString($field);
+                lib_mysqli::getInstance()->query($sql,true);
+            }
+            $meta = json_decode(base64_decode($keyvalue['description']),1);
+            $metadata = isset($meta['metadata']) ? $meta['metadata'] : array();
+
+            $keyvalue['editviewdef'] = (empty($keyvalue['editviewdef']) && isset($metadata['editview'])) ? $metadata['editview'] : $keyvalue['editviewdef'];
+            $keyvalue['detailviewdef'] = (empty($keyvalue['detailviewdef']) && isset($metadata['detailview'])) ? $metadata['detailview'] : $keyvalue['detailviewdef'];
+            $keyvalue['listviewdef'] = (empty($keyvalue['listviewdef']) && isset($metadata['editview'])) ? $metadata['editview'] : $keyvalue['listviewdef'];
+            $keyvalue['searchviewdef'] = (empty($keyvalue['searchviewdef']) && isset($metadata['searchview'])) ? $metadata['editview'] : $keyvalue['listviewdef'];
+
+
+
+            $metadata['fields'] = $dbFields;
+            $keyvalue = $this->fixDef($keyvalue);
+
+
+            $keyvalue['description'] = base64_encode(json_encode(array("fields"=>$metadata['fields'])));
+
+
+        }
+
+
+        return $keyvalue;
+
+
 
 	}
 }
