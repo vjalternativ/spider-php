@@ -110,7 +110,7 @@ class BackendResourceView extends ResourceView {
 
     }
 
-    function _loadHeader() {
+    function displayHeader() {
         $current_user = lib_current_user::getEntityInstance();
 
         $vjconfig = lib_config::getInstance()->getConfig();
@@ -165,7 +165,7 @@ class BackendResourceView extends ResourceView {
 
 
     }
-    function _loadFooter() {
+    function displayFooter() {
         $current_user = lib_current_user::getEntityInstance();
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();

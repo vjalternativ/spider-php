@@ -5,6 +5,18 @@ class SystemLogicHook
 
     function beforeSave(&$keyvalue)
     {
+
+        if(isset($keyvalue['alias'])) {
+            $db = lib_mysqli::getInstance();
+            $alias=$this->slugify($keyvalue['name']);
+            $keyvalue['alias']=$alias;
+            if($keyvalue['isnew']) {
+                $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$keyvalue['alias']."' ");
+                if($isExist) {
+                    die($keyvalue['hook_table']." record already exist with alias ".$alias);
+                }
+            }
+        }
         $entity = lib_entity::getInstance();
         if ($keyvalue['hook_tabletype'] == "user") {
             $keyval = array();
@@ -31,6 +43,8 @@ class SystemLogicHook
                 }
             }
         }
+
+
     }
 
     function afterSave(&$keyvalue)
@@ -162,8 +176,37 @@ class SystemLogicHook
         $emailBuffer['name'] = $flow['subject'];
         $emailBuffer['description'] = $flow['description'];
         $emailBuffer['email_to'] = $flow['email_to'];
-        $emailBuffer['context'] = "68b0d354-4517-0b95-2543-5bf59756d353";
+        $emailBuffer['context'] = "default";
         $entity->save("email_buffer", $emailBuffer);
     }
+
+    private function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+
+        // lowercase
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
+    }
+
+
 }
 ?>

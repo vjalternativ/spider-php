@@ -23,6 +23,7 @@ abstract class ResourceView
     public $bootparams = array();
     public $sitetpl;
     public $pagetplpath;
+    protected $defaultTplPath;
     public $headerparams = array();
     public $footerparams = array();
     public $pageurlpath;
@@ -63,6 +64,8 @@ abstract class ResourceView
         $this->sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ?  $pagedata['template']   : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
 
         $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$this->sitetpl.'/';
+        $this->defaultTplPath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/default/';
+
         $smarty->assign("baseurl", $vjconfig['baseurl']);
         $smarty->assign("params", $this->params);
         $smarty->assign("headerparams", $this->headerparams);
@@ -157,6 +160,8 @@ abstract class ResourceView
         $smarty->assign('app_list_strings',$app_list_strings);
         if(file_exists($this->pagetplpath.$tpl)) {
             echo $smarty->fetch($this->pagetplpath.$tpl);
+        } else if(file_exists($this->defaultTplPath.$tpl)){
+            echo $smarty->fetch($this->defaultTplPath.$tpl);
         } else {
             echo $this->pagetplpath.$tpl.' not exist ';die;
         }

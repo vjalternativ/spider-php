@@ -111,7 +111,7 @@ class ResourceController {
         }
     }
 
-    function sendResponse($responseCode,$payload) {
+    function sendResponse($responseCode,$payload=null) {
 
         $result = array("status"=>"failed","data"=>$payload);
         if($responseCode==200) {
