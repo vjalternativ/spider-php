@@ -228,7 +228,6 @@ class BackendResourceController  extends ResourceController {
             }
         }
 
-
         foreach($tableinfo['tableinfo']['fields'] as $field) {
 
             if($field['type']=="file"  && isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error']==0) {
@@ -242,7 +241,7 @@ class BackendResourceController  extends ResourceController {
                         unlink($mediaKeyValue['file_path']);
                     }
                 }
-                $fileId = create_guid();
+                $fileId = lib_util::create_guid();
                 $dir = $vjconfig['basepath']."media_files/".date("Y").'/'.date("m").'/'.date("d").'/'.$_FILES[$field['name']]['type'];
                 if(!is_dir($dir)) {
                     mkdir($dir, 0755, true);
@@ -253,6 +252,7 @@ class BackendResourceController  extends ResourceController {
                 $mediaKeyValue['name'] =$_FILES[$field['name']]['name'];
                 $mediaKeyValue['file_path'] = $target;
                 $mediaKeyValue['file_type'] = $_FILES[$field['name']]['type'];
+
                 $mediaId  = $entity->save("media_files",$mediaKeyValue);
 
                 $keyvalue[$field['name']] = $mediaId;

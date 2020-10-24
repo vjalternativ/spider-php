@@ -21,7 +21,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
                     unlink($mediaKeyValue['file_path']);
                 }
             }
-            $fileId = create_guid();
+            $fileId = lib_util::create_guid();
             $dir = $vjconfig['basepath']."media_files/".date("Y").'/'.date("m").'/'.date("d").'/'.$_FILES[$field['name']]['type'];
             if(!is_dir($dir)) {
                 mkdir($dir, 0755, true);
