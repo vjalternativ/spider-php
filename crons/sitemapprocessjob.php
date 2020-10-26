@@ -14,6 +14,7 @@ class SiteMapProcessJob implements CronJob
     public $targetPath ='';
     public $sitemapbasepath = '';
     private $logger;
+    private $updateval = 0;
     public function execute()
     {
         $this->logger = new lib_logger("sitemap_proces.log");
@@ -22,7 +23,7 @@ class SiteMapProcessJob implements CronJob
         $vjconfig = lib_config::getInstance()->getConfig();
 
 
-        $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' limit 1";
+        $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' or jobstatus='inprogress' limit 1";
         $row = $db->getRow($sql);
         if ($row) {
             if($row['updateval']=="") {
@@ -66,9 +67,7 @@ class SiteMapProcessJob implements CronJob
     function updateXml($data,$counter,$index) {
 
         $entity = lib_entity::getInstance();
-        $vjconfig = lib_config::getInstance()->getConfig();
         $file = $this->path.'sitemap-'.$index.'.xml';
-
         $xmlDoc = new DOMDocument();
         $xmlDoc->preserveWhiteSpace = false;
         $xmlDoc->formatOutput = true;
@@ -86,12 +85,42 @@ class SiteMapProcessJob implements CronJob
 
     }
 
+    private function getPageSqlQuery($module) {
+            $qry = $this->getPageSql($module);
+            if($qry->num_rows==0) {
+
+                if($this->job['status']=="pending") {
+                    if($this->job['updateval']=="0") {
+                        $this->job['updateval'] = 1;
+                    } else {
+                        $this->job['updateval'] = 0;
+                    }
+                    $qry = $this->getPageSql($module);
+                }
+            }
+
+            return $qry;
+
+    }
+
+    private function getPageSql($module) {
+        $sql = "select id,name,alias from ".$module." where   alias is not null  and ( sitemap = ".$this->job['updateval'];
+        $this->updateval = 0;
+        if($this->job['updateval']=="0") {
+            $sql.= " or sitemap is null";
+            $this->updateval = 1;
+        }
+        $sql .=")   limit " .$this->processpages;
+
+        $qry = lib_mysqli::getInstance()->query($sql);
+        return $qry;
+    }
+
     function processXmlData($index,$isNew,$module)
     {
         $db = lib_mysqli::getInstance();
         $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
-        $log = lib_logger::getInstance();
         $data = array();
         $data['childs'] = array();
         $havePages = false;
@@ -99,15 +128,8 @@ class SiteMapProcessJob implements CronJob
         $date = date("Y-m-d");
         $timestamp = $date . 'T00:00:00+00:00';
 
-        $sql = "select id,name,alias from ".$module." where   alias is not null  and ( sitemap = ".$this->job['updateval'];
-        $updateval = 0;
-        if($this->job['updateval']=="0") {
-            $sql.= " or sitemap is null";
-            $updateval = 1;
-        }
-        $sql .=")   limit " .$this->processpages;
-        $log->fatal("process sitemap query ".$sql);
-        $qry = $db->query($sql);
+
+        $qry = $this->getPageSqlQuery($module);
         $counter = 0;
 
         if(!$isNew) {
@@ -142,7 +164,7 @@ class SiteMapProcessJob implements CronJob
             $urlNode['childs'][] = $priorty;
             $data['childs'][] = $urlNode;
 
-            $sql = "update ".$module." set sitemap = ".$updateval." where id='".$row['id']."'";
+            $sql = "update ".$module." set sitemap = ".$this->updateval." where id='".$row['id']."'";
             $db->query($sql);
             $counter ++;
         }
@@ -150,6 +172,7 @@ class SiteMapProcessJob implements CronJob
 
 
         if($havePages) {
+            $this->job['jobstatus'] = "inprogress";
             if($isNew) {
                 $this->createXML($data,$counter,$index);
             } else {
@@ -168,7 +191,6 @@ class SiteMapProcessJob implements CronJob
 
 
     function cleanupSiteMaps() {
-        $vjconfig = lib_config::getInstance()->getConfig();
         $dir = $this->targetPath;
         $cmd = 'rm -rf '.$dir;
         shell_exec($cmd);
@@ -209,7 +231,6 @@ class SiteMapProcessJob implements CronJob
 
     function createXML ($childdata,$counter,$index) {
         $entity = lib_entity::getInstance();
-        $vjconfig = lib_config::getInstance()->getConfig();
         $xmlDoc = new DOMDocument("1.0","UTF-8");
 
         $data = array();
