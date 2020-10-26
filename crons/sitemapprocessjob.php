@@ -89,7 +89,7 @@ class SiteMapProcessJob implements CronJob
             $qry = $this->getPageSql($module);
             if($qry->num_rows==0) {
 
-                if($this->job['status']=="pending") {
+                if($this->job['jobstatus']=="pending") {
                     if($this->job['updateval']=="0") {
                         $this->job['updateval'] = 1;
                     } else {
