@@ -145,6 +145,9 @@ class SiteMapProcessJob implements CronJob
             if (empty($row['alias'])) {
                 continue;
             }
+            if($row['alias'] == "page") {
+                $row['alias'] = '';
+            }
             $urlNode = array();
             $urlNode['element'] = "url";
             $urlNode['childs'] = array();
