@@ -23,7 +23,7 @@ class SiteMapProcessJob implements CronJob
         $vjconfig = lib_config::getInstance()->getConfig();
 
 
-        $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' or jobstatus='inprogress' limit 1";
+        $sql = "select * from sitemapjob where deleted=0 and  (jobstatus='pending' or jobstatus='inprogress') limit 1";
         $row = $db->getRow($sql);
         if ($row) {
             if($row['updateval']=="") {
