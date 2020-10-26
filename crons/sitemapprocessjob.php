@@ -19,7 +19,7 @@ class SiteMapProcessJob implements CronJob
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $vjconfig = lib_config::getInstance()->getConfig();
 
-        
+
         $sql = "select * from sitemapjob where deleted=0 and  jobstatus='pending' limit 1";
         $row = $db->getRow($sql);
         if ($row) {
@@ -28,16 +28,16 @@ class SiteMapProcessJob implements CronJob
             }
             $this->job = $row;
             $this->offset = $row['offsetval'];
-            
+
             $index = floor($this->offset / $this->linksperfile) + 1;
-            
+
             $this->targetPath = $vjconfig['basepath'].'sitemaps/'.$row['page_module'];
             $this->path = $this->targetPath.'_tmp/';
             $this->sitemapbasepath = $vjconfig['baseurl'].'sitemaps/'.$row['page_module'].'/';
             $file_name = $this->path.'sitemap-'.$index.'.xml';
-            
+
             $isnew = true;
-            
+
             if(file_exists($file_name)) {
                 $isnew = false;
                 $sql = "select * from sitemap where id='".$row['lastsitemap']."'";
@@ -46,45 +46,45 @@ class SiteMapProcessJob implements CronJob
                 $command= 'mkdir -p '.$this->path;
                 shell_exec($command);
             }
-            
-            
+
+
             $module = $row['page_module'];
             if($module && isset($globalModuleList[$module])) {
                 $this->processXmlData($index,$isnew,$module);
             }
-                        
+
         }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     function updateXml($data,$counter,$index) {
-        
+
         $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
         $file = $this->path.'sitemap-'.$index.'.xml';
-        
+
         $xmlDoc = new DOMDocument();
         $xmlDoc->preserveWhiteSpace = false;
         $xmlDoc->formatOutput = true;
         $xmlDoc->load($file);
         $cnodes = $xmlDoc->getElementsByTagName("urlset");
         $cnode = $cnodes->item(0);
-        
+
         $this->processNode($xmlDoc, $cnode, $data);
-        
+
         $xmlDoc->save($file);
         $this->sitemap['links'] = $counter;
         $this->sitemap['page_module'] = $this->job['page_module'];
         $entity->save("sitemap",$this->sitemap);
-        
-        
+
+
     }
 
     function processXmlData($index,$isNew,$module)
-    {   
+    {
         $db = lib_mysqli::getInstance();
         $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
@@ -106,16 +106,16 @@ class SiteMapProcessJob implements CronJob
         $log->fatal("process sitemap query ".$sql);
         $qry = $db->query($sql);
         $counter = 0;
-        
+
         if(!$isNew) {
             $counter = $this->sitemap['links'];
         }
         while ($row = $db->fetch($qry)) {
-            
+
             $this->offset++;
-            
-            
-            
+
+
+
             $row['alias'] = trim($row['alias']);
             if (empty($row['alias'])) {
                 continue;
@@ -126,7 +126,7 @@ class SiteMapProcessJob implements CronJob
             $havePages = true;
             $loc = array();
             $loc['element'] = "loc";
-            $loc['val'] = $vjconfig['baseurl'] . $row['alias'];
+            $loc['val'] = $vjconfig['baseurl'] .$this->job['page_prefix']. $row['alias'];
             $urlNode['childs'][] = $loc;
             $lastmod = array();
             $lastmod['element'] = "lastmod";
@@ -138,14 +138,14 @@ class SiteMapProcessJob implements CronJob
             $priorty['val'] = "1";
             $urlNode['childs'][] = $priorty;
             $data['childs'][] = $urlNode;
-            
+
             $sql = "update ".$module." set sitemap = ".$updateval." where id='".$row['id']."'";
             $db->query($sql);
             $counter ++;
         }
         $this->job['offsetval'] = $this->offset;
-        
-        
+
+
         if($havePages) {
             if($isNew) {
                 $this->createXML($data,$counter,$index);
@@ -158,12 +158,12 @@ class SiteMapProcessJob implements CronJob
             $this->cleanupSiteMaps();
         }
         $entity->save("sitemapjob",$this->job);
-        
-        
-        
+
+
+
     }
-    
-    
+
+
     function cleanupSiteMaps() {
         $vjconfig = lib_config::getInstance()->getConfig();
         $dir = $this->targetPath;
@@ -172,15 +172,15 @@ class SiteMapProcessJob implements CronJob
         $cmd = 'mv '.$this->path.' '.$this->targetPath;
         shell_exec($cmd);
     }
-    
-    
+
+
     function processNode($xmlDoc,&$node,$data) {
         $cnode = false;
         if(isset($data['val'])) {
             $cnode = $node->appendChild($xmlDoc->createElement($data['element'],$data['val']));
-            
+
         } else {
-            
+
             if(isset($data['element'])) {
                 $cnode = $node->appendChild($xmlDoc->createElement($data['element']));
             } else {
@@ -192,7 +192,7 @@ class SiteMapProcessJob implements CronJob
                 $cnode->setAttribute($key, $val);
             }
         }
-        
+
         if(isset($data['childs'])) {
             foreach($data['childs'] as $cdata) {
                 if(isset($cdata['element'])) {
@@ -200,15 +200,15 @@ class SiteMapProcessJob implements CronJob
                 }
             }
         }
-        
-        
+
+
     }
-    
+
     function createXML ($childdata,$counter,$index) {
         $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
         $xmlDoc = new DOMDocument("1.0","UTF-8");
-        
+
         $data = array();
         $data['element'] = "urlset";
         $data['attributes'] = array();
@@ -216,20 +216,20 @@ class SiteMapProcessJob implements CronJob
         $data['attributes']['xmlns:xsi'] = "http://www.w3.org/2001/XMLSchema-instance";
         $data['attributes']['xsi:schemaLocation'] = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd";
         $data['childs'] = $childdata['childs'];
-        
-        
+
+
         if(isset($data['element'])) {
             $this->processNode($xmlDoc,$xmlDoc,$data);
         }
-        
+
         //make the output pretty
         $xmlDoc->formatOutput = true;
-        
+
         //save xml file
         $file_name = 'sitemap-'.$index.'.xml';
         $xmlDoc->save($this->path . $file_name);
-        
-        
+
+
         $data = array();
         $data['name']  = $file_name;
         $data['filepath'] =  $this->sitemapbasepath.$file_name;
