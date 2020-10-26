@@ -13,8 +13,10 @@ class SiteMapProcessJob implements CronJob
     public $path ='';
     public $targetPath ='';
     public $sitemapbasepath = '';
+    private $logger;
     public function execute()
     {
+        $this->logger = new lib_logger("sitemap_proces.log");
         $db = lib_mysqli::getInstance();
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $vjconfig = lib_config::getInstance()->getConfig();
@@ -50,6 +52,7 @@ class SiteMapProcessJob implements CronJob
 
             $module = $row['page_module'];
             if($module && isset($globalModuleList[$module])) {
+                $this->logger->debug("processing job ".json_encode($this->job));
                 $this->processXmlData($index,$isnew,$module);
             }
 
