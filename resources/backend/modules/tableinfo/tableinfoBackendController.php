@@ -1,4 +1,5 @@
 <?php
+require_once lib_config::getInstance()->get('fwbasepath').'libs/lib_bootstrap.php';
 class tableinfoBackendController extends BackendResourceController {
 
     function __construct() {
