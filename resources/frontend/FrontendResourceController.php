@@ -86,13 +86,14 @@ class FrontendResourceController extends ResourceController  {
         return lib_datawrapper::getInstance()->get("breadcrumb");
     }
 
-    function registerBreadcrumb($id, $title, $alias, $params = array())
-    {
+
+    function registerBreadcrumb($title,$items=array()) {
         $dataWrapper = lib_datawrapper::getInstance();
         $breadcrumb = $dataWrapper->get("breadcrumb");
-        $breadcrumb[$id]['title'] = $title;
-        $breadcrumb[$id]['alias'] = $alias;
-        $breadcrumb[$id]['params'] = $params;
+        $breadcrumb['title'] = $title;
+        foreach($items as $id=>$item) {
+            $breadcrumb['items'][$id]= $item;
+        }
         $dataWrapper->set("breadcrumb", $breadcrumb);
     }
 
