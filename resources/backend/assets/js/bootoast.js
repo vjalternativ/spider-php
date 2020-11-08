@@ -194,7 +194,7 @@
 class BSToast  {	
 	toastOption =  {
 			  message:"Toast message",
-			  timeout:40,
+			  timeout:4,
 			  position: 'bottom-right',
 			  dismissable: false,
 			  type : 'success',
