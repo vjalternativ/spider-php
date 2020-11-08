@@ -133,6 +133,12 @@
                 danger: 'times-circle',
                 info: 'info-circle'
         		
+        	},
+        	"ti" : {
+        		warning : 'alert',
+        		success : 'ti-check-box',
+        		danger : 'ti-na',
+        		info : 'ti-pin2'
         	}
         	
         },
@@ -188,7 +194,7 @@
 class BSToast  {	
 	toastOption =  {
 			  message:"Toast message",
-			  timeout:4,
+			  timeout:40,
 			  position: 'bottom-right',
 			  dismissable: false,
 			  type : 'success',
@@ -196,9 +202,9 @@ class BSToast  {
 	}
 	
 	static instance = null;
-	constructor(version){
-		if(version==4) {
-			this.toastOption.iconsource = "fa";
+	constructor(iconsource){
+		if(iconsource) {
+			this.toastOption.iconsource = iconsource;
 		}
 	}
 	toast = (type,message) => {
@@ -207,22 +213,13 @@ class BSToast  {
 		option.type=type;
 		bootoast(option);	
 	}
-	static getInstance(version) {
+	static getInstance(iconsource) {
 		if(this.instance==null) {
-			this.instance = new BSToast(version);
+			this.instance = new BSToast(iconsource);
 		}
 		return this.instance;
 	}
-}
-
-
-class BS4Toast extends BSToast {
-	static bsVersion = 4;
 	
-	static toast = (type,message) => {
-		var toast = this.getInstance(this.bsVersion);
-		toast.toast(type,message);
-	}
 	
 	static success = message => {
 		this.toast("success",message);
@@ -237,8 +234,22 @@ class BS4Toast extends BSToast {
 	}
 	
 	static info = message => {
-		this.toast("nfo",message);
+		this.toast("info",message);
+	}
+}
+
+
+class BS4Toast extends BSToast {
+	static toast = (type,message) => {
+		var toast = this.getInstance("fa");
+		toast.toast(type,message);
 	}
 	
-	
+}
+
+class TyBSToast extends BSToast {
+	static toast = (type,message) => {
+		var toast = this.getInstance("ti");
+		toast.toast(type,message);
+	}
 }

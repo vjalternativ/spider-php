@@ -63,6 +63,14 @@
             transform: translateX(-50%)
 }
 
-.bootoast .fa {
+.bootoast .fa,.bootoast .ti {
 	margin-top:3px;
+}
+
+.pull-left {
+	float:left;
+}
+
+.clearfix {
+	clear:both;
 }
