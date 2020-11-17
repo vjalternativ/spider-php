@@ -203,7 +203,7 @@ class BackendResourceController  extends ResourceController {
                                 $fkey = $col['field']['name'];
                                 $field = $tableinfo['tableinfo']['fields'][$fkey];
                                 if($field['type'] == "checkbox") {
-                                    echo "processing field is checkbox ".$field['name']."<br />";
+                                    //echo "processing field is checkbox ".$field['name']."<br />";
 
                                     if(!isset($_REQUEST[$field['name']])) {
                                         $keyvalue[$field['name']] = 0;

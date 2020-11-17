@@ -48,7 +48,7 @@ class ResourceController {
         return false;
     }
 
-    function rendorTpl($tpl, $params = array(),$sitetpl=false)
+    function rendorTpl($tpl, $params = array(),$sitetpl=false,$module=false)
     {
         $smarty =  lib_smarty::getSmartyInstance();
         $vjconfig= lib_config::getInstance()->getConfig();
@@ -61,12 +61,12 @@ class ResourceController {
         $smarty->assign("urlbasepath", $vjconfig['urlbasepath']);
         $siteTpl = $sitetpl ? $sitetpl : $vjconfig['sitetpl'];
 
-
-        $this->params['controller_path'] = $this->getRealPath('resources/'.$this->resource.'/modules/' . $this->module . '/');
+        $mod = $module? $module : $this->module;
+        $this->params['controller_path'] = $this->getRealPath('resources/'.$this->resource.'/modules/' . $mod . '/');
 
         if($this->params['controller_path']) {
 
-            $tplPath = 'resources/'.$this->resource.'/modules/' . $this->module . '/'. 'tpls/' ;
+            $tplPath = 'resources/'.$this->resource.'/modules/' . $mod . '/'. 'tpls/' ;
             $this->params['controller_tpl_path'] = $this->getRealPath($tplPath. $siteTpl . '/');
             if(!$this->params['controller_tpl_path']) {
                 $this->params['controller_tpl_path'] = $this->getRealPath($tplPath . 'default/');
