@@ -77,9 +77,12 @@ class ResourceController {
             if($this->params['controller_tpl_path']) {
                 return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
             }
+        } else {
+            echo "controller path not found";
+            throw new Exception("tpl not configured ".$tpl);
+
         }
 
-        throw new Exception("tpl not configured ".$tpl);
 
 
 
