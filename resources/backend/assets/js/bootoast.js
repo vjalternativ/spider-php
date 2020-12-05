@@ -221,19 +221,19 @@ class BSToast  {
 	}
 	
 	
-	static success = message => {
+	success = message => {
 		this.toast("success",message);
 	}
 	
-	static warning = message => {
+	warning = message => {
 		this.toast("warning",message);
 	}
 	
-	static danger = message => {
+	danger = message => {
 		this.toast("danger",message);
 	}
 	
-	static info = message => {
+	info = message => {
 		this.toast("info",message);
 	}
 }

@@ -126,5 +126,39 @@ class ResourceController {
         exit();
 
     }
+
+    protected function validateFormFields($fields, $data)
+    {
+        $isValid = true;
+        foreach ($fields as $field => $label) {
+            if (isset($data[$field])) {
+                $data[$field] = trim($data[$field]);
+                if ($data[$field]) {
+                    continue;
+                } else {
+                    $isValid = false;
+                    $this->setResponse("warning", "Field " . $label . " is mandatory.");
+                    break;
+                }
+            } else {
+                $isValid = false;
+                $this->setResponse("warning", "Field " . $label . " is not set.");
+                break;
+            }
+        }
+
+        if ($isValid) {
+            return $data;
+        }
+        return false;
+    }
+
+    protected function validateSession()
+    {
+        $isAuthorized =  lib_current_user::sessionCheck();
+        if (! $isAuthorized) {
+            die("access denied.");
+        }
+    }
 }
 ?>

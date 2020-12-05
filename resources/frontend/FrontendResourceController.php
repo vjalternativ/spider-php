@@ -92,7 +92,10 @@ class FrontendResourceController extends ResourceController  {
         $breadcrumb = $dataWrapper->get("breadcrumb");
         $breadcrumb['title'] = $title;
         foreach($items as $id=>$item) {
-            $breadcrumb['items'][$id]= $item;
+
+            $breadcrumb['items'][$id]['name']= $item['name'];
+            $breadcrumb['items'][$id]['link']= $item['link'];
+
         }
         $dataWrapper->set("breadcrumb", $breadcrumb);
     }
