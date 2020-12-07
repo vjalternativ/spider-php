@@ -98,6 +98,7 @@ class FrontendResourceController extends ResourceController  {
 
         }
         $dataWrapper->set("breadcrumb", $breadcrumb);
+        lib_smarty::getSmartyInstance()->assign("breadcrumb",$breadcrumb);
     }
 
     protected function setBackendPageModule($module) {
