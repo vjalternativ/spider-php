@@ -129,28 +129,6 @@ abstract class ResourceView
     }
 
     function loadTpl($tpl,$params=array()) {
-        $smarty = lib_smarty::getSmartyInstance();
-        $vjconfig= lib_config::getInstance()->getConfig();
-
-        $module = $this->module;
-
-        // $smarty->assign('bootparams',$this->bootparams);
-        $this->params += $params;
-        $smarty->assign('params',$this->params);
-
-        $path = $vjconfig['basepath'].'custom/modules/'.$module.'/tpls/'.$tpl;
-        $content = "";
-
-        if(file_exists($path)) {
-            $content =  $smarty->fetch($path);
-        }
-
-        return $content;
-
-    }
-
-
-    function displayTpl($tpl,$params=array()) {
         $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
         $smarty = lib_smarty::getSmartyInstance();
 
@@ -159,12 +137,18 @@ abstract class ResourceView
         $smarty->assign('params',$this->params);
         $smarty->assign('app_list_strings',$app_list_strings);
         if(file_exists($this->pagetplpath.$tpl)) {
-            echo $smarty->fetch($this->pagetplpath.$tpl);
+            return $smarty->fetch($this->pagetplpath.$tpl);
         } else if(file_exists($this->defaultTplPath.$tpl)){
-            echo $smarty->fetch($this->defaultTplPath.$tpl);
+            return $smarty->fetch($this->defaultTplPath.$tpl);
         } else {
             echo $this->pagetplpath.$tpl.' not exist ';die;
         }
+
+    }
+
+
+    function displayTpl($tpl,$params=array()) {
+        echo $this->loadTpl($tpl,$params);
     }
 
 

@@ -49,6 +49,7 @@ class cardrowWidgetController extends WidgetResourceController {
         $this->maxrows = $maxrow;
         $this->maxcards = $maxcards;
         $this->checkMaxRows = $maxrow;
+        parent::__construct();
     }
 
 
