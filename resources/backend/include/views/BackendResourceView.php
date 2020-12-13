@@ -205,40 +205,43 @@ class BackendResourceView extends ResourceView {
 
         }
 
-        $newDef = $vardef['metadata'][$deftype];
+        $newDef  =array();
 
-        foreach($vardef['metadata'][$deftype] as $row) {
+        if(isset($vardef['metadata'][$deftype])) {
+            $newDef =    $vardef['metadata'][$deftype];
+            foreach($vardef['metadata'][$deftype] as $row) {
 
-            $addTempRow = false;
-            $temprow = $row;
+                $addTempRow = false;
+                $temprow = $row;
 
-            if($row['type']=="row" && isset($row['fields'])) {
+                if($row['type']=="row" && isset($row['fields'])) {
 
-                foreach($row['fields'] as $colkey => $col) {
-                    if(isset($col['field']) && ($col['field']['type']=="varchar" || $col['field']['type']=="text")) {
-                        $addTempRow = true;
+                    foreach($row['fields'] as $colkey => $col) {
+                        if(isset($col['field']) && ($col['field']['type']=="varchar" || $col['field']['type']=="text")) {
+                            $addTempRow = true;
 
-                        if(isset($vardef['fields'][$col['field']['name']])) {
-                            $tempCol = $vardef['fields'][$col['field']['name']];
-                            $tempCol['name'] .= "_".$suffix;
-                            $tempCol['extraclass'] = " language_".$suffix;
-                            $tempCol['label'] = $tempCol['name'];
-                            $vardef['fields'][$tempCol['name']] = $tempCol;
-                            $temprow['fields'][$colkey]['field'] = $tempCol;
+                            if(isset($vardef['fields'][$col['field']['name']])) {
+                                $tempCol = $vardef['fields'][$col['field']['name']];
+                                $tempCol['name'] .= "_".$suffix;
+                                $tempCol['extraclass'] = " language_".$suffix;
+                                $tempCol['label'] = $tempCol['name'];
+                                $vardef['fields'][$tempCol['name']] = $tempCol;
+                                $temprow['fields'][$colkey]['field'] = $tempCol;
 
+                            }
+
+
+
+                        } else {
+                            unset($temprow['fields'][$colkey]);
                         }
 
-
-
-                    } else {
-                        unset($temprow['fields'][$colkey]);
                     }
-
                 }
-            }
 
-            if($addTempRow) {
-                $newDef[] = $temprow;
+                if($addTempRow) {
+                    $newDef[] = $temprow;
+                }
             }
         }
 
