@@ -1,6 +1,6 @@
 <?php
 
-class ViewBasic extends View
+/* class ViewBasic extends View
 {
 
     public $html = false;
@@ -12,19 +12,19 @@ class ViewBasic extends View
     function display()
     {
         global $vjconfig, $vjlib;
-        
+
         // $tpl = $vjconfig['basepath'].$this->tpl;
-        
+
         if (! $this->heading) {
             $this->heading = $this->module;
         }
-        
+
         $bs = $vjlib->BootStrap;
         if (! $this->html) {
-            
+
             $this->html = $this->module;
         }
-        
+
         $panelheading = $bs->getelement('div', ucfirst($this->heading) . ' | Basic View', array(
             'class' => array(
                 'value' => 'panel-heading'
@@ -51,6 +51,6 @@ class ViewBasic extends View
         );
         parent::display();
     }
-}
+} */
 
 ?>

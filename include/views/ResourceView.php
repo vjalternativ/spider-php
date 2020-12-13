@@ -28,6 +28,7 @@ abstract class ResourceView
     public $footerparams = array();
     public $pageurlpath;
     protected $sitebasePath;
+    protected $tplPath;
 
 
     function setLoadHeaderFooter($b=true) {
@@ -65,6 +66,7 @@ abstract class ResourceView
 
         $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$this->sitetpl.'/';
         $this->defaultTplPath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/default/';
+        $this->tplPath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/';
 
         $smarty->assign("baseurl", $vjconfig['baseurl']);
         $smarty->assign("params", $this->params);
@@ -140,6 +142,8 @@ abstract class ResourceView
             return $smarty->fetch($this->pagetplpath.$tpl);
         } else if(file_exists($this->defaultTplPath.$tpl)){
             return $smarty->fetch($this->defaultTplPath.$tpl);
+        }  else if(file_exists($this->tplPath.$tpl)){
+            return $smarty->fetch($this->tplPath.$tpl);
         } else {
             echo $this->pagetplpath.$tpl.' not exist ';die;
         }
