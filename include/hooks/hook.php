@@ -112,6 +112,14 @@ class SystemLogicHook
         }
     }
 
+
+    private function replaceAnnotationForWorkFlow($flow,$key,$val) {
+        $flow['description'] = str_replace("@" . $key, $val, $flow['description']);
+        $flow['subject'] = str_replace("@" . $key, $val, $flow['subject']);
+        $flow['email_to'] = str_replace("@" . $key, $val, $flow['email_to']);
+        return $flow;
+    }
+
     function executeWorkFlowMail($flow, $keyval)
     {
         $entity = lib_entity::getInstance();
@@ -136,15 +144,11 @@ class SystemLogicHook
         $rowcounter = 0;
         $counter = 0;
 
+        $data['name_detailview_link'] = '<a href="' . $vjconfig['baseurl'] . 'backend/index.php?module=' . $keyval['hook_table'] . '&action=detailview&record=' . $id . '">' . $data['name'] . '</a>';
+
+
         foreach ($data as $key => $val) {
-
-            if ($key == "name") {
-                $val = '<a href="' . $vjconfig['baseurl'] . 'index.php?module=' . $keyval['hook_table'] . '&action=detailview&record=' . $id . '">' . $val . '</a>';
-            }
-
-            $flow['description'] = str_replace("@" . $key, $val, $flow['description']);
-            $flow['subject'] = str_replace("@" . $key, $val, $flow['subject']);
-
+            $flow  = $this->replaceAnnotationForWorkFlow($flow, $key, $val);
             $cell = array();
             $cell['heading'] = strtoupper($key);
             $cell['value'] = $val;
