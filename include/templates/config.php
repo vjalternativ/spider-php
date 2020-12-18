@@ -47,8 +47,10 @@ $config['resource_alias']['backend'] = 'controlarea';
 
 if($_SERVER['HTTP_HOST']=="localhost") {
 
-    $config['baseurl'] = 'http://localhost/spider-php/';
-    $config['fwbaseurl'] = $config['baseurl'] . 'spider-php' ;
+    $config['urlbasepath'] = "/sampleproject/";
+    $config['baseurl'] = 'http://localhost'.$config['urlbasepath'];
+
+    $config['fwbaseurl'] = $config['baseurl'] . 'spider-php/' ;
 
     $config['mysql']['user'] = "root";
     $config['mysql']['password'] = "root";
