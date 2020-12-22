@@ -26,7 +26,8 @@ abstract class ResourceView
     protected $defaultTplPath;
     public $headerparams = array();
     public $footerparams = array();
-    public $pageurlpath;
+    public $moduleUrlPath;
+    public $moduleBasePath;
     protected $sitebasePath;
     protected $tplPath;
 
@@ -63,11 +64,11 @@ abstract class ResourceView
             $pagedata['template'] =isset($pagedata['template']) ? trim($pagedata['template']) : '';
         }
         $this->sitetpl = $pagedata ? (isset($pagedata["template"]) ?  (!empty($pagedata['template']) ?  $pagedata['template']   : $vjconfig['sitetpl']) : $vjconfig['sitetpl'] ) : $vjconfig['sitetpl'];
-
-        $this->pagetplpath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/'.$this->sitetpl.'/';
+        $this->moduleBasePath = $vjconfig['basepath'].$this->sitebasePath.'modules/'.$_GET['module'].'/';
+        $this->moduleUrlPath = $vjconfig['baseurl'].$this->sitebasePath.'modules/'.$_GET['module'].'/';
+        $this->pagetplpath = $this->moduleBasePath.'tpls/'.$this->sitetpl.'/';
         $this->defaultTplPath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/default/';
         $this->tplPath = $this->sitebasePath.'modules/'.$_GET['module'].'/tpls/';
-
         $smarty->assign("baseurl", $vjconfig['baseurl']);
         $smarty->assign("params", $this->params);
         $smarty->assign("headerparams", $this->headerparams);
@@ -165,7 +166,7 @@ abstract class ResourceView
     }
 
     function loadJs($filename) {
-        echo '<script src="'.$this->pageurlpath."assets/js/".$filename.'"></script>';
+        echo '<script src="'.$this->moduleUrlPath."assets/js/".$filename.'"></script>';
     }
 
     function mergeParams($params) {
