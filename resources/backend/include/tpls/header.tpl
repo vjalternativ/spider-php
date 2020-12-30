@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="{$fwbaseurl}resources/backend/assets/css/bootstrap-datetimepicker.css" />
 
 <script src="{$fwbaseurl}resources/backend/assets/js/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="{$fwbaseurl}resources/backend/include/lib/js/abc/transliteration-input.bundle.js"></script>
+<script type="text/javascript" src="{$fwbaseurl}resources/backend/include/lib/js/transliteration-input-tools/transliteration-input.bundle.js"></script>
 
 
 <script>
