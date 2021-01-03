@@ -66,7 +66,7 @@ class widgetViewEdit extends ViewEdit
                 require_once $vjconfig['basepath'] . "include/entrypoints/site/pages/" . $page . "/layout/" . $vjconfig['sitetpl'] . "/" . $page . "Positions.php";
             }
         }
-        $posList = APosition::getPositions();
+        $posList = array(); //todo : pos list support
         $posList[''] = "select";
 
         $GLOBALS['app_list_strings']['position_list'] = $posList;
