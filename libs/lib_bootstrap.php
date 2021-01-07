@@ -292,9 +292,9 @@ class lib_bootstrap
 
         $trclass = '';
         $tbId = '';
-        if (! empty($params['id'])) {
-            $trclass = $params['id'];
-            $tbId = 'id="' . $params['id'] . '"';
+        if (! empty($params['tbid'])) {
+            $trclass = $params['tbid'];
+            $tbId = 'id="' . $params['tbid'] . '"';
         }
 
         $html = '<table ' . $tbId . ' class="table ' . $class . '">
