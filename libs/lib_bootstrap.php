@@ -282,8 +282,8 @@ class lib_bootstrap
     // params -> headers,extra,class
     function generateTable($rows, $params = array(), $log = 0)
     {
-        $headers = array();
-        $extra = array();
+        $headers = isset($params['header']) ? $params['header'] : array();
+        $extra = isset($params['extra']) ? $params['extra'] : array();
         $class = "table-striped";
 
         foreach ($params as $key => $val) {
@@ -292,9 +292,9 @@ class lib_bootstrap
 
         $trclass = '';
         $tbId = '';
-        if (! empty($tbid)) {
-            $trclass = $tbid;
-            $tbId = 'id="' . $tbid . '"';
+        if (! empty($params['id'])) {
+            $trclass = $params['id'];
+            $tbId = 'id="' . $params['id'] . '"';
         }
 
         $html = '<table ' . $tbId . ' class="table ' . $class . '">
@@ -333,13 +333,22 @@ class lib_bootstrap
         foreach ($rows as $row) {
             $html .= '<tr id="' . $trclass . '-' . $counter . '" class="' . $trclass . '-row">';
 
-            foreach ($headers as $cell => $label) {
 
-                if (! isset($row[$label])) {
-                    $row[$label] = '';
+            if($headers ){
+                foreach ($headers as $cell => $label) {
+
+                    if (! isset($row[$label])) {
+                        $row[$label] = '';
+                    }
+                    $html .= '<td>' . $row[$label] . '</td>';
                 }
-                $html .= '<td>' . $row[$label] . '</td>';
+            } else {
+                foreach($row as $col) {
+                    $html .= '<td>' . $col . '</td>';
+
+                }
             }
+
 
             foreach ($extra as $cell => $label) {
 
