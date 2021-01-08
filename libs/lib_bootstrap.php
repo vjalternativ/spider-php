@@ -292,6 +292,9 @@ class lib_bootstrap
 
         $trclass = '';
         $tbId = '';
+
+        $tdwidth = isset($params['tdwidth']) ? $params['tdwidth'] : false;
+
         if (! empty($params['tbid'])) {
             $trclass = $params['tbid'];
             $tbId = 'id="' . $params['tbid'] . '"';
@@ -344,8 +347,13 @@ class lib_bootstrap
                 }
             } else {
                 foreach($row as $col) {
-                    $html .= '<td>' . $col . '</td>';
+                    if($tdwidth) {
+                        $html .= '<td width="'.$tdwidth.'"> ' . $col . '</td>';
 
+                    } else {
+                        $html .= '<td > ' . $col . '</td>';
+
+                    }
                 }
             }
 

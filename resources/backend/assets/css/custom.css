@@ -54,3 +54,8 @@
 .hr {
 	margin-top:5px;
 }
+
+.table td{
+	word-break:break-all !important;
+	align: justify !important;
+}
