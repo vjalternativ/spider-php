@@ -259,7 +259,10 @@ class lib_mysqli {
 	}
 
 
-
+	private $isFirstRow = true;
+	function setIsFirstRow($b) {
+        $this->isFirstRow = $b;
+	}
 
 
 	function fetchRows($sql = "",$dim=false,$val=false,$die=true) {
@@ -282,12 +285,15 @@ class lib_mysqli {
 
 	    while($row = mysqli_fetch_assoc($qry)) {
 
-	        if($checkFirst) {
-	            $row['isfirstrow'] = true;
-	            $checkFirst = false;
-	        } else {
-	            $row['isfirstrow'] = false;
 
+	        if($this->isFirstRow) {
+    	        if($checkFirst) {
+    	            $row['isfirstrow'] = true;
+    	            $checkFirst = false;
+    	        } else {
+    	            $row['isfirstrow'] = false;
+
+    	        }
 	        }
 
 
@@ -371,6 +377,7 @@ class lib_mysqli {
 
 	function resetHook() {
 	    $this->processHook = array();
+	    $this->isFirstRow=true;
 	}
 
 
