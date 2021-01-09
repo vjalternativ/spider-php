@@ -7,7 +7,7 @@ class ViewBasic extends BackendResourceView
 
     public $heading = false;
 
-    public $tpl = 'include/tpls/basicview.tpl';
+    public $tpl = 'spider-php/resources/backend/include/tpls/basicview.tpl';
 
     function display()
     {

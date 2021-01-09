@@ -1,8 +1,11 @@
 <?php
-class input_toolsViewInput extends BackendResourceView {
+require_once 'spider-php/resources/backend/include/views/view.basic.php';
+
+class input_toolsViewInput extends ViewBasic {
 
     function display() {
-        $this->displayTpl("input.tpl");
+        $this->html = $this->loadTpl("input.tpl");
+        parent::display();
     }
 }
 ?>
