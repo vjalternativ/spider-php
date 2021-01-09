@@ -29,7 +29,7 @@ class lib_util
             $array = json_decode($_SESSION[$var], 1);
 
             global $current_user;
-            $obj = new Entity();
+            $obj = new lib_entity();
             foreach ($array as $key => $val) {
                 $obj->$key = $val;
             }

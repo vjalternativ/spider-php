@@ -161,7 +161,6 @@ class lib_entity {
 	}
 
 function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
-	$db = lib_mysqli::getInstance();
 
 	$metafields = array();
 
@@ -608,10 +607,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	function getquery($entity,$where = array()) {
 
 		//need to complete
-		$sql = "select * from $entity ";
+		$string = "select * from $entity ";
 		if($where) {
-			$sql .= " where ";
-			$strings = array();
+		    $string .= " where ";
 			foreach ($where as $key=>$field) {
 
 				$string = $key;
@@ -622,6 +620,8 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 			}
 		}
+
+		return $string;
 	}
 
 
@@ -768,8 +768,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 	}
 
     function createRelationship($primary =false,$secondary=false,$type=false,$label=false,$secondlabel=false) {
-		$entity = lib_entity::getInstance();
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
     	if(!$primary || !$secondary || !$type) {
 			die("Incorrect parameters for create relationship ".$primary." ".$secondary." ".$type);
@@ -813,7 +812,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 			$fields[$secondaryid]['len']  =  '36';
 			$fields[$secondaryid]['notnull'] =  true;
 
-			$id = $this->createEntity($alias,array('label'=>$label,'secondlabel'=>$secondlabel,'fields'=>$fields,'rtype'=>$type,'type'=>'relationship','values'=>array($primaryinfo['id'],$secondaryinfo['id'])));
+		    return $this->createEntity($alias,array('label'=>$label,'secondlabel'=>$secondlabel,'fields'=>$fields,'rtype'=>$type,'type'=>'relationship','values'=>array($primaryinfo['id'],$secondaryinfo['id'])));
 
 		} else {
 			die("primary module ".$primary." not found");
@@ -981,11 +980,9 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	    if(isset($globalRelationshipList[$table])) {
 	        $coltable = substr($col, 0,strrpos($col,"_id"));
-	        $isSecondary = false;
 	        if(isset($globalEntityList[$globalRelationshipList[$table]['primarytable']])) {
     	        $rtable = $globalEntityList[$globalRelationshipList[$table]['primarytable']]['name'];
     	        if($rtable == substr($table,0,strlen($coltable))) {
-    	            $isSecondary = true;
     	            if(isset($globalEntityList[$globalRelationshipList[$table]['secondarytable']]['name'])) {
     	                $rtable = $globalEntityList[$globalRelationshipList[$table]['secondarytable']]['name'];
     	            } else {
