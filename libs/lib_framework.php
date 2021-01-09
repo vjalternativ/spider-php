@@ -246,16 +246,18 @@ class lib_framework {
                     $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
 
 
-                    require_once $vjconfig['fwbasepath'].'include/views/View.php';
                     require_once $vjconfig['fwbasepath'].'include/views/ResourceView.php';
-                    require_once $vjconfig['fwbasepath'].'include/views/view.basic.php';
-
 
                     if(file_exists($vjconfig['basepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php')) {
                         require_once $vjconfig['basepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php';
                     } else {
                         require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php';
                     }
+
+                    require_once $vjconfig['fwbasepath'].'resources/backend/include/views/View.php';
+                    require_once $vjconfig['fwbasepath'].'resources/backend/include/views/view.basic.php';
+
+
 
                     if(file_exists($vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php')) {
                         require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php';
