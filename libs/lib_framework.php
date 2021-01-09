@@ -254,9 +254,11 @@ class lib_framework {
                         require_once $vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/'.ucfirst($this->resource).'ResourceView'.'.php';
                     }
 
-                    require_once $vjconfig['fwbasepath'].'resources/backend/include/views/View.php';
-                    require_once $vjconfig['fwbasepath'].'resources/backend/include/views/view.basic.php';
 
+                    if($this->resource=="backend") {
+                        require_once $vjconfig['fwbasepath'].'resources/backend/include/views/View.php';
+                        require_once $vjconfig['fwbasepath'].'resources/backend/include/views/view.basic.php';
+                    }
 
 
                     if(file_exists($vjconfig['fwbasepath'].'resources/'.$this->resource.'/include/views/view.'.$controller->view.'.php')) {

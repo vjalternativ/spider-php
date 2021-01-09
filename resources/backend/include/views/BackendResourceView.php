@@ -1,6 +1,5 @@
 <?php
-$dir = __DIR__.'/';
-require_once $dir.'../../../../libs/lib_bootstrap.php';
+require_once 'spider-php/libs/lib_bootstrap.php';
 
 class BackendResourceView extends ResourceView {
 
