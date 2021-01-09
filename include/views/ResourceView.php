@@ -145,8 +145,18 @@ abstract class ResourceView
             return $smarty->fetch($this->defaultTplPath.$tpl);
         }  else if(file_exists($this->tplPath.$tpl)){
             return $smarty->fetch($this->tplPath.$tpl);
+        } else if(file_exists('spider-php/'.$this->defaultTplPath.$tpl)) {
+            return $smarty->fetch('spider-php/'.$this->defaultTplPath.$tpl);
+        } else if(file_exists('spider-php/'.$this->tplPath.$tpl)) {
+            return $smarty->fetch('spider-php/'.$this->tplPath.$tpl);
         } else {
-            echo $this->pagetplpath.$tpl.' not exist ';die;
+            echo $this->pagetplpath.$tpl.' not exist <br />';
+            echo $this->defaultTplPath.$tpl.' not exist <br />';
+            echo $this->tplPath.$tpl.' not exist <br />';
+            echo 'spider-php/'.$this->defaultTplPath.$tpl.' not exist <br />';
+            echo 'spider-php/'.$this->tplPath.$tpl.' not exist <br />';
+
+            die;
         }
 
     }
