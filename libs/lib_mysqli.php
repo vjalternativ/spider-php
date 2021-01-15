@@ -401,11 +401,11 @@ class lib_mysqli {
 	    return  " ".$table. " SET " .implode(",",$fieldSet);
 	}
 
-	function insert($table,$row) {
+	function insert($table,$row,$suffixKeyValue=array(),$return = false) {
 
-	    $sql= "INSERT INTO ".$this->getTabelFieldSetSql($table, $row,array('date_added = now()'));
+	    $sql= "INSERT INTO ".$this->getTabelFieldSetSql($table, $row,$suffixKeyValue);
 
-	    return $this->query($sql,true);
+	    return $this->query($sql,$return);
 	}
 
 	function update($table,$row,$idcolumn) {
@@ -425,6 +425,55 @@ class lib_mysqli {
 	function get($table,$col,$value) {
 	    $sql = "select * from ".$table." where ".$col."='".$value."' ";
 	    return $this->getrow($sql);
+	}
+
+	function insertRows($table,$rows,$caselower=false) {
+
+	    if($rows) {
+    	    $sql = "INSERT INTO ".$table;
+    	    $fields = $this->getfields($table);
+            $firstRow = reset($rows);
+
+
+
+
+
+            $cols = array();
+
+            if($caselower) {
+                foreach($firstRow as $col=>$value) {
+                    $cols[] = strtolower($col);
+                    $firstRow[$col]  = $value;
+                }
+            } else {
+                $cols = array_keys($firstRow);
+            }
+
+    	    $targetFields = array_intersect($fields, $cols);
+    	    $valueArray = array();
+    	    foreach($rows as $row) {
+    	        $values = array();
+
+
+    	        $newrow = array();
+    	        foreach($row as $col=>$value) {
+    	            if($caselower) {
+    	                $newrow[strtolower($col)] = $value;
+    	            } else {
+    	                $newrow[$col] = $value;
+    	            }
+    	        }
+
+    	        foreach($targetFields as $field) {
+
+    	            $values[] = "'".addslashes($newrow[$field])."'";
+    	        }
+    	        $valueArray[] = "(".implode(",",$values).")";
+    	    }
+    	    $sql .= "(".implode(",",$targetFields).") values ".implode(",",$valueArray);
+            $this->query($sql);
+	    }
+
 	}
 
 }

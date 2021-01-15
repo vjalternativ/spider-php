@@ -4,6 +4,11 @@
 class lib_curl
 {
 
+
+    function __construct() {
+
+    }
+
 	/**
 	 * This function will sync project module data with dcs with base 64 encode form
 	 * @param String $method
