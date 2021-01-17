@@ -202,7 +202,7 @@ class BSToast  {
 	}
 	
 	static instance = null;
-	constructor(iconsource){
+	constructor(iconsource=false){
 		if(iconsource) {
 			this.toastOption.iconsource = iconsource;
 		}

@@ -427,7 +427,7 @@ class lib_mysqli {
 	    return $this->getrow($sql);
 	}
 
-	function insertRows($table,$rows,$caselower=false) {
+	function insertRows($table,$rows,$caselower=false,$return=true) {
 
 	    if($rows) {
     	    $sql = "INSERT INTO ".$table;
@@ -471,7 +471,7 @@ class lib_mysqli {
     	        $valueArray[] = "(".implode(",",$values).")";
     	    }
     	    $sql .= "(".implode(",",$targetFields).") values ".implode(",",$valueArray);
-            $this->query($sql);
+            return $this->query($sql,$return);
 	    }
 
 	}

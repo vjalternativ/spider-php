@@ -119,6 +119,10 @@ class ResourceController {
         $result = array("status"=>"failed","data"=>$payload);
         if($responseCode==200) {
                $result['status'] = "success";
+        } else if($responseCode >=400 && $responseCode < 500) {
+            $result['status'] = "warning";
+        } else if($responseCode >=500 && $responseCode < 600) {
+            $result['status'] = "danger";
         }
 
         echo json_encode($result);
