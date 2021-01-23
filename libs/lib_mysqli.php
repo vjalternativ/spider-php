@@ -259,7 +259,7 @@ class lib_mysqli {
 	}
 
 
-	private $isFirstRow = true;
+	private $isFirstRow = false;
 	function setIsFirstRow($b) {
         $this->isFirstRow = $b;
 	}

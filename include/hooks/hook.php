@@ -12,7 +12,7 @@ class SystemLogicHook
             $db = lib_mysqli::getInstance();
             $alias=(isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
             $keyvalue['alias']=$alias;
-            if($keyvalue['isnew']) {
+            if(isset($keyvalue['isnew']) && $keyvalue['isnew']) {
                 $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$keyvalue['alias']."' ");
                 if($isExist) {
                     die($keyvalue['hook_table']." record already exist with alias ".$alias);
