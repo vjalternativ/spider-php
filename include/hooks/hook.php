@@ -6,9 +6,11 @@ class SystemLogicHook
     function beforeSave(&$keyvalue)
     {
 
-        if(isset($keyvalue['alias'])) {
+
+        $moduleList = lib_datawrapper::getInstance()->get("module_list");
+        if(isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
             $db = lib_mysqli::getInstance();
-            $alias=$this->slugify($keyvalue['name']);
+            $alias=(isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
             $keyvalue['alias']=$alias;
             if($keyvalue['isnew']) {
                 $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$keyvalue['alias']."' ");
