@@ -1,8 +1,7 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
-require_once $vjconfig['fwbasepath'].'include/vjlib/interface/CronJob.php';
 
-class SiteMapProcessJob implements CronJob
+class SiteMapProcessJob
 {
 
     public $job;

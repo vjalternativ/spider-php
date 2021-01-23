@@ -1,10 +1,9 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
-require_once $vjconfig['fwbasepath'] . 'include/vjlib/interface/CronJob.php';
 require_once $vjconfig['fwbasepath'] . 'include/lib/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'] . 'include/lib/PHPMailer-master/src/PHPMailer.php';
 
-class SendMail implements CronJob
+class SendMail
 {
 
     /**
