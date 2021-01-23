@@ -237,6 +237,11 @@ class ViewDetail extends BackendResourceView
             $headers = array();
             $headers['name']['name'] = "name";
             $headers['name']['label'] = "Name";
+            if(isset($subpanels['extracols'])) {
+                foreach($subpanels['extracols'] as $col=>$label) {
+                    $headers[$col]['name'] = $label;
+                }
+            }
             $headers['date_entered']['name'] = "date_entered";
             $headers['date_entered']['label'] = "Created";
 
