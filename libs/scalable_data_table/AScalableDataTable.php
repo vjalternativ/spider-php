@@ -1,7 +1,7 @@
 <?php
 $path = __DIR__.'/';
 require $path.'IScalableDataTable.php';
-require $path.'DBField.php';
+
 abstract class AScalableDataTable implements IScalableDataTable {
 
     private $fieldList = array();
