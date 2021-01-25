@@ -2,7 +2,7 @@
 class rolesBackendController extends BackendResourceController {
 
     function action_saveAccess() {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
         $record = $_POST['record'];
         $sql = "delete from roles_item where role_id='".$record."'";

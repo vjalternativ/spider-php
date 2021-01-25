@@ -47,7 +47,7 @@ class SendMail
      */
     function getAllContexts()
     {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
         $contexts = array();
         $contexts['overallLimit'] = 0;
@@ -96,7 +96,7 @@ class SendMail
      */
     function getAllNotSentEmails($contexts, $last_used)
     {
-        $db=  lib_mysqli::getInstance();
+        $db=  lib_database::getInstance();
         $emails = array();
         $sqlGetEmailContextMatrix = "SELECT * FROM email_buffer WHERE (is_sent_successfully=0 or is_sent_successfully is null) AND (last_attempt < DATE_SUB(NOW(), INTERVAL " . $last_used . " HOUR) or last_attempt is null) AND (send_attempts < 3 or send_attempts is null) ORDER BY date_entered desc";
         $resultGetEmailContextMatrix = $db->query($sqlGetEmailContextMatrix);
@@ -153,7 +153,7 @@ class SendMail
 
         echo "Lock file acquired -> Running\n";
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         // $mails_one_run = 25; // number of mails to send in one run of cron job
         $mail_delete_after = 10; // days, after which successfully sent mails will be deleted from email_buffer table
 
@@ -386,7 +386,7 @@ class SendMail
 
     function updateEmailWiseCounter($toArray = array(), $ccArray = array(), $bccArray = array(), $mailSubject)
     {
-        $db =  lib_mysqli::getInstance();
+        $db =  lib_database::getInstance();
 
         $start = "[CASE:";
         $end = "]";
@@ -469,7 +469,7 @@ class SendMail
 
     function sendErrorMails($info, $error, $senderAccount)
     {
-        $db =  lib_mysqli::getInstance();
+        $db =  lib_database::getInstance();
         $id = $info['id'];
         $subject = html_entity_decode($info['email_subject'], ENT_QUOTES);
         // SELECTING AN ACCOUNT TO SEND MAIL

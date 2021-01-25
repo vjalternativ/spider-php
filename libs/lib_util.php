@@ -179,7 +179,7 @@ class lib_util
 
     static function getvardef($table)
     {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select * from tableinfo where name='" . $table . "' and deleted=0";
         $row = $db->getrow($sql);
 

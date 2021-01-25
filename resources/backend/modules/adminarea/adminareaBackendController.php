@@ -36,7 +36,7 @@ class adminareaBackendController extends BackendResourceController
 
     private function repairTableSchema($rows) {
         $entity = lib_entity::getInstance();
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         foreach ($rows as $row) {
             $desc = json_decode(base64_decode($row['description']),1);
             $sql = "select 1 from ".$row['name']." limit 1";
@@ -155,7 +155,7 @@ class adminareaBackendController extends BackendResourceController
 
     private function updateDataPatch($data) {
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         foreach($data as $table => $rows) {
 
             $sql = "select * from ".$table." where deleted=0";
@@ -214,7 +214,7 @@ class adminareaBackendController extends BackendResourceController
     }
 
     function action_updateschema() {
-            $db = lib_mysqli::getInstance();
+            $db = lib_database::getInstance();
 	    $vjconfig = lib_config::getInstance()->getConfig();
             $data = array();
             foreach($this->repairTables as $table=>$val) {
@@ -308,7 +308,7 @@ class adminareaBackendController extends BackendResourceController
 
         $repairTables = $this->repairTables;
         unset($repairTables["tableinfo"]);
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         foreach($repairTables as $key=>$data) {
             $sql ="select * from ".$key." where deleted=0";
             $data = $db->fetchRows($sql,array("id"));
@@ -322,7 +322,7 @@ class adminareaBackendController extends BackendResourceController
         $vjconfig = lib_config::getInstance()->getConfig();
         $data = array();
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
         $sql ="delete from tableinfo where deleted=1";
         $db->query($sql);
@@ -369,7 +369,7 @@ class adminareaBackendController extends BackendResourceController
     }
 
     function action_cleanupmodules() {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select name,group_concat(t.id) ids from tableinfo t group by t.name having count(*)>1";
         $rows = $db->fetchRows($sql);
         $data = array();

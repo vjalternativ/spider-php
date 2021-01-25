@@ -103,7 +103,7 @@ class BackendResourceController  extends ResourceController {
 
 
     function defaultPaginate($sql) {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
 
@@ -171,7 +171,7 @@ class BackendResourceController  extends ResourceController {
 
     function action_save() {
         $entity = lib_entity::getInstance();
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $vjconfig = lib_config::getInstance()->getConfig();

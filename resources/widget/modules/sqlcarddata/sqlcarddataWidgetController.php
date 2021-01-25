@@ -12,7 +12,7 @@ class sqlcarddataWidgetController extends WidgetResourceController {
     {
         
         
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
         $seoParams = lib_seo::getInstance()->getParams();
         $sql = $params['attrs']['sql'];

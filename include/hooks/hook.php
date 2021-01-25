@@ -9,7 +9,7 @@ class SystemLogicHook
 
         $moduleList = lib_datawrapper::getInstance()->get("module_list");
         if(isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
-            $db = lib_mysqli::getInstance();
+            $db = lib_database::getInstance();
             $alias=(isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
             $keyvalue['alias']=$alias;
             if(isset($keyvalue['isnew']) && $keyvalue['isnew']) {
@@ -90,7 +90,7 @@ class SystemLogicHook
 
     function workflowAfterSave(&$keyvalue)
     {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
         if (isset($app_list_strings['module_list']['workflow'])) {
 

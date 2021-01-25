@@ -17,7 +17,7 @@ class SiteMapProcessJob
     public function execute()
     {
         $this->logger = new lib_logger("sitemap_proces.log");
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $vjconfig = lib_config::getInstance()->getConfig();
 
@@ -111,13 +111,13 @@ class SiteMapProcessJob
         }
         $sql .=")   limit " .$this->processpages;
 
-        $qry = lib_mysqli::getInstance()->query($sql);
+        $qry = lib_database::getInstance()->query($sql);
         return $qry;
     }
 
     function processXmlData($index,$isNew,$module)
     {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
         $data = array();

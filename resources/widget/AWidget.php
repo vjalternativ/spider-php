@@ -172,7 +172,7 @@ abstract class AWidget {
 
     static function loadWidgetAtPositionByPage($pos) {
         $seoParams = lib_seo::getInstance()->getParams();
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
 
         $pageData = $seoParams['pagedata'];
@@ -190,7 +190,7 @@ abstract class AWidget {
     }
 
     static function loadWidgetByPage($widget,$addtionalSqlForAttr=false,$additionalSqlForWidget=false) {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $pageData = lib_datawrapper::getInstance()->get("pagedata");
         if($pageData) {
             $id = $pageData['id'];
@@ -211,7 +211,7 @@ abstract class AWidget {
 
     static function loadWidgetAtPosition($pos) {
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select * from widget where deleted=0 and status='Active' and position = '".$pos."' ";
         $rows = $db->fetchRows($sql);
         $html = '';
@@ -224,7 +224,7 @@ abstract class AWidget {
 
 
     private static function rendorForPage($row,$additionalSql) {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select widget_attr.* from widget_widget_attr_1_m  inner join widget_attr  on widget_widget_attr_1_m.widget_attr_id=widget_attr.id and widget_attr.deleted=0 and widget_widget_attr_1_m.deleted=0 and widget_widget_attr_1_m.widget_id='".$row['id']."' ";
         if($additionalSql) {
             $sql .= $additionalSql;

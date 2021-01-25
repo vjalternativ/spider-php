@@ -7,7 +7,7 @@ class widgetViewEdit extends ViewEdit
     {
         parent::preDisplay();
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");

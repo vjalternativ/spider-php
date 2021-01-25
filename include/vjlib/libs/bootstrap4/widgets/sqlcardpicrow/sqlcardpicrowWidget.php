@@ -15,7 +15,7 @@ class sqlcardpicrowWidget extends AWidget {
     {
 
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $seoParams = lib_seo::getInstance()->getParams();
         $vjconfig  = lib_config::getInstance()->getConfig();
         $sql = $params['attrs']['sql'];

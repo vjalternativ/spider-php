@@ -103,7 +103,7 @@ class chatBackendController extends BackendResourceController {
             if(isset($_SESSION['joinedroom_member_id'][$roomId])) {
                 $memberId = $_SESSION['joinedroom_member_id'][$roomId];
                 $sql = "select * from chatroom_room_member_m_m where deleted=0 and room_member_id='".$memberId."' ";
-                $qry= lib_mysqli::getInstance()->query($sql);
+                $qry= lib_database::getInstance()->query($sql);
                 if($qry->num_rows > 5) {
                     die("Access denied for join room with more than 5 users");
                 }
@@ -119,7 +119,7 @@ class chatBackendController extends BackendResourceController {
                         $memberId = $_SESSION['joinedroom_member_id'][$roomId];
                     } else {
                         $sql = "select * from chatroom_room_member_m_m where deleted=0 and chatroom_id='".$roomId."' ";
-                        $qry= lib_mysqli::getInstance()->query($sql);
+                        $qry= lib_database::getInstance()->query($sql);
                         if($qry->num_rows < $room['max_member']) {
                             $this->params['showheaderfooter'] =true;
                             $this->params['room_id'] = $roomId;
@@ -174,7 +174,7 @@ class chatBackendController extends BackendResourceController {
 
 
     function action_getInitMessage() {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 	    $current_user = lib_current_user::getEntityInstance();
 
 
@@ -206,7 +206,7 @@ class chatBackendController extends BackendResourceController {
     }
 
     function action_ajaxStrangerChatConnect(){
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
         $current_user =lib_current_user::getEntityInstance();
 
@@ -365,7 +365,7 @@ class chatBackendController extends BackendResourceController {
                 $memberId = $_REQUEST['member_id'];
                 //if(isset($_SESSION[$roomId][$memberId])) {
                     $sql = "delete from chatroom_room_member_m_m where room_member_id ='".$memberId."' and chatroom_id='".$roomId."'";
-                    lib_mysqli::getInstance()->query($sql);
+                    lib_database::getInstance()->query($sql);
                     $path = lib_config::getInstance()->get("basepath").'cache/rooms/'.$roomId.'/'.$memberId;
                     $cmd = "rm -rf ".$path;
                     shell_exec($cmd);

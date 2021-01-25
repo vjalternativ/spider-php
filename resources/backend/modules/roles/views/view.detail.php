@@ -24,7 +24,7 @@ class rolesViewDetail  extends ViewDetail {
 
     function afterDisplay() {
         parent::afterDisplay();
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 	    $smarty = lib_smarty::getSmartyInstance();
 $vjconfig = lib_config::getInstance()->getConfig();
 

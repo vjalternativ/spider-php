@@ -4,7 +4,7 @@ class cronCliController extends CliResourceController {
     var $jobs = array();
     function action_index() {
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select now() as nowdate,scheduler.* from scheduler where deleted=0 and status='Active'   order by date_modified asc";
         $rows = $db->fetchRows($sql,array("id"));
         $this->jobs = $rows;

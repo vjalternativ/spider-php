@@ -18,7 +18,7 @@ class Bootstrap4  {
 
 
     static function loadWidgetAtPositionByPage($pos) {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
 
         $pageData = lib_datawrapper::getInstance()->get('pagedata');
@@ -38,7 +38,7 @@ class Bootstrap4  {
 
     static function rendorWidget($row) {
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select wa.* from widget_widget_attr_1_m wwa inner join widget_attr wa on wwa.widget_attr_id=wa.id and wa.deleted=0 and wwa.deleted=0 and wwa.widget_id='".$row['id']."' order by wa.date_entered asc";
         $rows = $db->fetchRows($sql,array("id"));
 
@@ -66,7 +66,7 @@ class Bootstrap4  {
 
     static function loadWidgetAtPosition($pos) {
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select * from widget where deleted=0 and status='Active' and position = '".$pos."' order by date_entered asc";
         $rows = $db->fetchRows($sql);
         $html = '';

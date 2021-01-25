@@ -15,7 +15,7 @@ class Authenticate {
 
 	function processSession($row , $resource) {
 
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 	    $sql = "select r.id,r.name from  roles_user_1_m ru
                     INNER JOIN roles r on ru.roles_id = r.id and ru.deleted=0 and r.deleted=0 and ru.user_id = '".$row['id']."'
                     ";
@@ -54,7 +54,7 @@ class Authenticate {
 	function login($username,$password,$resource="backend") {
 
 
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 		$password = md5($password);
 		$sql = "SELECT * FROM user WHERE user_name ='".$username."' AND user_hash ='".$password."' and deleted=0";
 

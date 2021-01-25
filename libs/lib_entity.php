@@ -247,9 +247,9 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 	$keyvalue = array();
 	$keyvalue['name'] = $table;
-	$keyvalue['editviewdef'] = $metafields['editview'];
-	$keyvalue['detailviewdef'] = $metafields['detailview'];
-	$keyvalue['listviewdef'] = $metafields['listview'];
+	$keyvalue['editviewdef'] = is_array($metafields['editview']) ?  json_encode($metafields['editview'] ): $metafields['editview'];
+	$keyvalue['detailviewdef'] = is_array($metafields['detailview']) ?  json_encode($metafields['detailview'] ): $metafields['detailview'];
+	$keyvalue['listviewdef'] = is_array($metafields['listview']) ?  json_encode($metafields['listview'] ): $metafields['listview'];
     $keyvalue['tabletype'] = $params['type'];
 	$keyvalue['description'] = base64_encode(json_encode(array("fields"=>$tbinfo['fields'])));
 
@@ -294,7 +294,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 }
 
 	function createSQLModule($name,$params=array(),$repair=false,$engine="InnoDB") {
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 
 		$type = false;
 		$fields = array();
@@ -390,6 +390,10 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 			if($key=='nondb' || !isset($cols[$key])) {
 				continue;
 			}
+			if(is_array($val)) {
+			    debug_print_backtrace();
+			    echo "<pre>";print_r($val);die;
+			}
 			$strings[] = $key."='".addslashes($val)."'";
 		}
 		$sql .= implode(',',$strings);
@@ -421,7 +425,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 
 	function saveIntoDB($table,$keyvalue,$where=false,$return = false) {
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
         $vjconfig = lib_config::getInstance()->getConfig();
         $isnew = false;
@@ -579,7 +583,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 	function removeRelationshpRows($table,$id) {
 
 	    $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
 
 	    if(isset($globalModuleList[$table]['relationships'])) {
@@ -630,7 +634,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 
-	    $db= lib_mysqli::getInstance();
+	    $db= lib_database::getInstance();
 	    $this->module = $table;
 
 		$tableinfo = $globalModuleList[$table];
@@ -694,7 +698,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 		return $data;
 	}
 	function getwhere($table,$wherestring=false) {
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 		$sql = "select * from ".$table." where deleted=0 ";
 		if($wherestring)
 		{
@@ -707,7 +711,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 	}
 
 	function gets($table,$wherestring=false,$index=false) {
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 		$sql = "select * from ".$table." where deleted=0 ";
 		if($wherestring)
 		{
@@ -717,7 +721,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 		return $db->getrows($sql,$index);
 	}
 	function createAlias($table=false,$name=false) {
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 		if(!$table || !$name) {
 			die("create alias param is incorrect for ".$table." ".$name);
 		}
@@ -732,7 +736,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 
 	function repairTable($primary,$fields=array(),$secondary) {
-	$db = lib_mysqli::getInstance();
+	$db = lib_database::getInstance();
 		if(empty($primary) || !$fields || !$secondary) {
 			return false;
 		}
@@ -820,7 +824,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 	}
 
 	function load_relationships() {
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 
 		$sql ="select rel.*,tb.name as rtable  from relationships rel left join tableinfo tb on rel.secondarytable=tb.id  where rel.primarytable='".$this->tableinfo['id']."' and (rel.rtype='1_M' or rel.rtype='M_M') and rel.deleted=0";
 		$this->relationships = $db->getrows($sql,'name');
@@ -922,7 +926,7 @@ $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
 $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$db = lib_mysqli::getInstance();
+$db = lib_database::getInstance();
 
 
 	    if(isset($globalRelationshipList[$relationship])) {
@@ -973,10 +977,8 @@ $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list
 
 	function getRelatedData($table,$col,$value) {
 	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-$globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-
-
-	    $db = lib_mysqli::getInstance();
+        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
+	    $db = lib_database::getInstance();
 
 	    if(isset($globalRelationshipList[$table])) {
 	        $coltable = substr($col, 0,strrpos($col,"_id"));
@@ -1005,7 +1007,7 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 	public function generateCache() {
 	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
         $vjconfig = lib_config::getInstance()->getConfig();
 
@@ -1097,6 +1099,21 @@ $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 	}
 
+
+	public function addField($table,DBField $field) {
+	    $tbinfo = $this->getwhere('tableinfo',"name='".$table."'");
+	    $desc  = json_decode(base64_decode($tbinfo['description']),1);
+	    $sql = "ALTER TABLE ".$table." ADD COLUMN ".$field->getName()." ".$field->getDataType();
+	    if($field->getLength()) {
+	        $sql .= " (".$field->getLength().") ";
+	    }
+	    lib_database::getInstance()->query($sql);
+	    $temp = array("name" => $field->getName(),'type'=> $field->getDataType(),"table"=>"primary");
+	    $desc['fields'][$field->getName()] = $temp;
+	    $descstring = base64_encode(json_encode($desc));
+	    $tbinfo['description'] = $descstring;
+	    $this->save('tableinfo',$tbinfo);
+	}
 
 
 }

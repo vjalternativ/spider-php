@@ -9,12 +9,12 @@ class lib_common {
         require_once $dir.'lib_logger.php';
         require_once $dir.'lib_config.php';
         require_once $dir.'lib_datawrapper.php';
-        require_once $dir.'lib_mysqli.php';
+        require_once $dir.'lib_database.php';
         require_once $dir.'lib_entity.php';
 
-        $mysqli = lib_mysqli::getInstance();
-        $config = lib_config::getInstance($configPath)->get("mysql");
-        $mysqli->connect($config['host'],$config['user'],$config['password'],$config['database']);
+        $database = lib_database::getInstance();
+        $config = lib_config::getInstance($configPath)->get("database");
+        $database->connect($config['host'],$config['user'],$config['password'],$config['database']);
 
     }
 

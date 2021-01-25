@@ -18,7 +18,7 @@ class lib_paginate {
 	private static $instance = null;
 
 	function __construct() {
-	    $this->db = lib_mysqli::getInstance();
+	    $this->db = lib_database::getInstance();
 	}
 
 	static function getInstance() {

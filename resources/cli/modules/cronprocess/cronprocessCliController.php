@@ -3,7 +3,7 @@ global $jobdata;
 
 class cronprocessCliController extends CliResourceController {
     function action_index() {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select * from scheduler where deleted=0  and status='Active'  and ";
         global $jobdata;
         $jobdata=array();

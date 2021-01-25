@@ -3,7 +3,7 @@
 class CleanUp {
     function execute() {
         $vjconfig = lib_config::getInstance()->getConfig();
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
         $sql = "select * from csvimporter where deleted = 1 ";
 

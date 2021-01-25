@@ -4,7 +4,7 @@ class tableinfoViewDetail  extends ViewDetail {
 
 function getalltables() {
 
-$db = lib_mysqli::getInstance();
+$db = lib_database::getInstance();
 $sql ="select * from tableinfo where deleted=0 and tabletype='basic' or tabletype='user' or tabletype='cstm' or tabletype='basic_wod' or tabletype='page'";
 return $db->getrows($sql,'id');
 }
@@ -13,7 +13,7 @@ return $db->getrows($sql,'id');
 		parent::display();
 
 
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
 
 	    $app_list_strings=lib_datawrapper::getInstance()->get("app_list_strings_list");
@@ -211,7 +211,7 @@ return $db->getrows($sql,'id');
 		$addnewrelationship = $bs->getelement("button","New Relationship",array("class"=>'btn btn-primary margin-top-10',"data-toggle"=>"modal", "data-target"=>"#newrelationshipmodal"));
 		$relationshiptabcontent = $bs->getelement('div',$addnewrelationship.$relationshiptable,array("id"=>'relationships-tab',"class"=>"tab-pane fade"));
 
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 		$smarty = lib_smarty::getSmartyInstance();
 
 

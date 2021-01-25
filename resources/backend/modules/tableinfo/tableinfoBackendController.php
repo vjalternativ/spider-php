@@ -54,7 +54,7 @@ class tableinfoBackendController extends BackendResourceController {
 
 
 	function action_ajaxrelatemodal() {
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 	    $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
@@ -175,7 +175,7 @@ class tableinfoBackendController extends BackendResourceController {
 	function action_addfield() {
 
 
-		$db = lib_mysqli::getInstance();
+		$db = lib_database::getInstance();
 		$entity  = lib_entity::getInstance();
 
 		$fieldType = $_REQUEST['field-type'];
@@ -262,7 +262,7 @@ class tableinfoBackendController extends BackendResourceController {
 
 	function action_ajaxSaveListViewLayout() {
 	    $entity = lib_entity::getInstance();
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
 		$id= $_REQUEST['id'];
@@ -373,7 +373,7 @@ class tableinfoBackendController extends BackendResourceController {
 
     	            $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
 
-    	            $db=lib_mysqli::getInstance();
+    	            $db=lib_database::getInstance();
     	            $sql = "select * from ".$parentRelationship['name']." where deleted=0 and ".$globalEntityList[$parentRelationship['secondarytable']]['name']."_id='".$parentRecord."'";
     	            $primaryField = $globalEntityList[$parentRelationship['primarytable']]['name']."_id";
 
@@ -432,7 +432,7 @@ class tableinfoBackendController extends BackendResourceController {
 
 	function action_deleteFields() {
 	    $entity = lib_entity::getInstance();
-$db = lib_mysqli::getInstance();
+$db = lib_database::getInstance();
 
 
 	    $id = $_REQUEST['module_id'];
@@ -464,7 +464,7 @@ $db = lib_mysqli::getInstance();
 	}
 
 	function action_deleteRelationship() {
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 
 	    $id = $_REQUEST['module_id'];
 	    $relationshipIds = isset($_REQUEST['relationship_ids']) ? $_REQUEST['relationship_ids'] : array();
@@ -496,7 +496,7 @@ $db = lib_mysqli::getInstance();
 	}
 
 	function action_dowloadschema() {
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 
 	    $sql = "select * from tableinfo where deleted=0" ;
 	    $tableinfo = $db->fetchRows($sql,array("name"));
@@ -522,7 +522,7 @@ $db = lib_mysqli::getInstance();
 	}
 
 	function action_updateschema() {
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
 	    $json  = file_get_contents("schemajson/schema.json");
 
@@ -582,7 +582,7 @@ $db = lib_mysqli::getInstance();
 
 	function  action_importdata() {
 	    ini_set("display_errors",1);
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
 	    $module = $_POST['importmodule'];
 	    $_SESSION['reqresp']['status'] ="success";
@@ -668,7 +668,7 @@ $db = lib_mysqli::getInstance();
 
 	function  action_import() {
 	    ini_set("display_errors",1);
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
@@ -754,7 +754,7 @@ $db = lib_mysqli::getInstance();
 
 
 
-    	    $db = lib_mysqli::getInstance();
+    	    $db = lib_database::getInstance();
 	    $entity = lib_entity::getInstance();
     	    $mod = $_REQUEST['mod'];
 
@@ -778,7 +778,7 @@ $db = lib_mysqli::getInstance();
 
 	function action_migratetable() {
          return;
-	     $db = lib_mysqli::getInstance();
+	     $db = lib_database::getInstance();
 	     $entity = lib_entity::getInstance();
 	     $sql = "select ss.name,c.id as country_id from states ss
                 INNER JOIN countries cs on ss.country_id=cs.id

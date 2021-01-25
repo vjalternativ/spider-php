@@ -57,7 +57,7 @@ class View {
 
 
 	function getAllMenu() {
-	    $db = lib_mysqli::getInstance();
+	    $db = lib_database::getInstance();
 	    $current_user = lib_current_user::getEntityInstance();
 
 	    if(!$current_user) {

@@ -36,7 +36,7 @@ class tableinfoLogicHook {
                 }
                 $dbFields[$field['name']] =$field;
                 $sql = "ALTER TABLE ".$table." ADD COLUMN ".$lib_entity->convertFieldArrayToString($field);
-                lib_mysqli::getInstance()->query($sql,true);
+                lib_database::getInstance()->query($sql,true);
             }
             $meta = json_decode(base64_decode($keyvalue['description']),1);
             $metadata = isset($meta['metadata']) ? $meta['metadata'] : array();

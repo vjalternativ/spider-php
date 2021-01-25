@@ -28,7 +28,7 @@ class FrontendResourceController extends ResourceController  {
 
         $seoParams = lib_seo::getInstance()->getParams();
 
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
 
 
         $controller  = $this->sitebasePath  . $this->page . '/' . $this->page .ucfirst($_GET['resource']). 'Controller.php';

@@ -7,7 +7,7 @@ class SitemapJob   {
     public $row = array();
     public function execute()
     {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select * from sitemapjob where deleted=0";
         $rows = $db->fetchRows($sql,array('id'));
         foreach($rows as $row) {
@@ -35,7 +35,7 @@ class SitemapJob   {
     }
 
     function cleanupSiteMaps($row) {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql= "delete from sitemap where page_module='".$row['page_module']."'";
         $db->query($sql);
     }

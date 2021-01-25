@@ -21,7 +21,7 @@ class LogicHook {
     function afterSave(&$keyvalue) {
         $entity = lib_entity::getInstance();
 $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-$db = lib_mysqli::getInstance();
+$db = lib_database::getInstance();
 
         
         if($keyvalue['date_entered']==$keyvalue['date_modified']) {
@@ -60,7 +60,7 @@ $db = lib_mysqli::getInstance();
     
     
     function getEmailGroupEmails() {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         
         
     }

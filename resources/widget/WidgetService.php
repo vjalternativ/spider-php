@@ -7,7 +7,7 @@ class WidgetService implements IWidgetService {
 
     public function getWidget($widgetType,$row=false)
     {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $sql = "select * from widget where deleted=0 and status='Active' and widget_type='".$widgetType."'  ";
         $rows = $db->fetchRows($sql);
         $html = '';
@@ -50,7 +50,7 @@ class WidgetService implements IWidgetService {
     }
 
     public function getWidgetForRecord($row,$orderByName=false) {
-        $db = lib_mysqli::getInstance();
+        $db = lib_database::getInstance();
         $additionalSql= "";
         if($orderByName) {
             $additionalSql = " order by widget_attr.name ".$orderByName;
@@ -122,7 +122,7 @@ class WidgetService implements IWidgetService {
 
 
     private function _getWidgetForSql($sql,$orderByName=false) {
-            $db = lib_mysqli::getInstance();
+            $db = lib_database::getInstance();
             $widgets = $db->fetchRows($sql);
             $html = "";
             foreach($widgets as $widget) {
