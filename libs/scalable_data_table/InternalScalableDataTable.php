@@ -1,5 +1,7 @@
 <?php
-require_once 'libs/scalable_data_table/AScalableDataTable.php';
+$path = __DIR__.'/';
+
+require_once $path.'AScalableDataTable.php';
 
  class InternalScalableDataTable extends AScalableDataTable {
     public function isFieldExistInTable($field, $table)

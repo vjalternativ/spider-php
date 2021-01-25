@@ -1,6 +1,7 @@
 <?php
-require_once 'libs/scalable_data_table/AScalableDataTable.php';
 
+$path = __DIR__.'/';
+require_once $path.'AScalableDataTable.php';
 abstract class SpiderScalableDataTable extends AScalableDataTable
 {
 
