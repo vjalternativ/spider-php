@@ -479,7 +479,7 @@ class lib_mysqli extends lib_database
 
     public function addColumn(DBField $field, $table)
     {
-        $sql = "ALTER TABLE ADD COLUMN ".$field->getName() . " ".$field->getDataType()." ";
+        $sql = "ALTER TABLE ".$table." ADD COLUMN ".$field->getName() . " ".$field->getDataType()." ";
         if($field->getLength()) {
             $sql .= " ( ".$field->getLength() ." ) ";
         }

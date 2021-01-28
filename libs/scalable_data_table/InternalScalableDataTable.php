@@ -11,7 +11,7 @@ require_once $path.'AScalableDataTable.php';
 
     public function generateTable($table)
     {
-        return lib_database::getInstance()->createTable($table);
+        return lib_database::getInstance()->createTableByOneCol($table,$this->getDefaultField());
     }
 
     public function isTableExistInDatabase($table)

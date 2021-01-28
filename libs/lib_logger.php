@@ -22,11 +22,9 @@ class lib_logger {
             $logmessage .= $this->threadId." ";
         }
         $logmessage .= $type.' : '.$message.PHP_EOL;
-        $dir = lib_config::getInstance()->get("basepath");
-
+        $dir = lib_config::getInstance()->get("storage_basepath");
+        $dir = $dir ?  $dir : lib_config::getInstance()->get("basepath");
         $path = $dir."logs/".$date.'/';
-
-
         if(!is_dir($path)) {
             $cmd ='mkdir -p '.$path;
             shell_exec($cmd);

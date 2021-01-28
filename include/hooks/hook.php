@@ -5,21 +5,20 @@ class SystemLogicHook
 
     function beforeSave(&$keyvalue)
     {
-
-
         $moduleList = lib_datawrapper::getInstance()->get("module_list");
         if(isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
             $db = lib_database::getInstance();
             $alias=(isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
-            $keyvalue['alias']=$alias;
             if(isset($keyvalue['isnew']) && $keyvalue['isnew']) {
-                $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$keyvalue['alias']."' ");
+                $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$alias."' ");
                 if($isExist) {
-                    die($keyvalue['hook_table']." record already exist with alias ".$alias);
+                    $alias = $alias.'-'.uniqid();
                 }
             }
+            $keyvalue['alias']=$alias;
         }
         $entity = lib_entity::getInstance();
+
         if ($keyvalue['hook_tabletype'] == "user") {
             $keyval = array();
 
@@ -188,6 +187,10 @@ class SystemLogicHook
 
     private function slugify($text)
     {
+
+        $text= str_replace("(", "", $text);
+        $text= str_replace(")", "", $text);
+
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 
