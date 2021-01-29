@@ -245,6 +245,8 @@ class lib_framework {
                     $smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
                     $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
 
+                    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+                    $smarty->assign("urlscheme",$scheme);
 
                     require_once $vjconfig['fwbasepath'].'include/views/ResourceView.php';
 
