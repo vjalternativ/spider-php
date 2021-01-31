@@ -631,7 +631,7 @@ function tableInfoEntry($table,$tbinfo=array(),$params=array()) {
 
 	function get($table,$id) {
 	    $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-$globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
 
 	    $db= lib_database::getInstance();
