@@ -4,7 +4,6 @@ class lib_common {
 
 
     function init($configPath) {
-
         $dir = __DIR__.'/';
         require_once $dir.'lib_logger.php';
         require_once $dir.'lib_config.php';
@@ -14,7 +13,7 @@ class lib_common {
 
         $database = lib_database::getInstance();
         $config = lib_config::getInstance($configPath)->get("database");
-        $database->connect($config['host'],$config['user'],$config['password'],$config['database']);
+        $database->connect($config['host'],$config['user'],$config['password'],$config['name']);
 
     }
 

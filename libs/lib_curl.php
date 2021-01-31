@@ -17,7 +17,7 @@ class lib_curl
 	 * @return mixed
 	 */
 
-	function call($url,$method = "GET", $data= array(),$header=array())
+	function call($url,$method = "GET", $data= "",$headerList=array())
 	{
 	    $curl = curl_init();
 
@@ -30,7 +30,7 @@ class lib_curl
 	        CURLOPT_TIMEOUT => 300,
 	        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	        CURLOPT_CUSTOMREQUEST => $method,
-	        CURLOPT_HTTPHEADER =>$header
+	        CURLOPT_HTTPHEADER =>$headerList
 	    );
 
 	    if($method=="POST") {
@@ -51,8 +51,18 @@ class lib_curl
 	    return $response;
 	}
 
-	function get($url) {
-	   return $this->call($url);
+	function get($url,$header=array()) {
+	    $headerList = array();
+	    if($header) {
+	        foreach($header as $key=>$val) {
+	            $headerList[] = $key.':'.$val;
+	        }
+	    }
+	   return $this->call($url,"GET","",$headerList);
+	}
+
+	function post($url,$payload) {
+        return $this->call($url,"POST",$payload);
 	}
 
 }

@@ -223,10 +223,14 @@ class lib_framework {
            $action = 'action_'.$_GET['action'];
 
 
-           $this->initModules();
            $controller = new $class;
 
            $vjconfig = lib_config::getInstance()->getConfig();
+
+           if($vjconfig['init_default_modules']) {
+            $this->initModules();
+           }
+
            $entity = lib_entity::getInstance();
 
            if(!method_exists($controller, $action)) {
