@@ -4,6 +4,23 @@
 class lib_curl
 {
 
+    private $responseCode;
+
+    /**
+     * @return mixed
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    /**
+     * @param mixed $responseCode
+     */
+    public function setResponseCode($responseCode)
+    {
+        $this->responseCode = $responseCode;
+    }
 
     function __construct() {
 
@@ -39,14 +56,15 @@ class lib_curl
 	    curl_setopt_array($curl, $options);
 
 	    $response = curl_exec($curl);
-
-
+	    $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+       
 	    $err = curl_error($curl);
 	    if($err) {
 	        print_r($err);die;
 	    }
 	    curl_close($curl);
 
+        $this->setResponseCode($responseCode);
 
 	    return $response;
 	}

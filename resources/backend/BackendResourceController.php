@@ -465,9 +465,11 @@ class BackendResourceController  extends ResourceController {
         $headers['date_entered']['name'] = "date_entered";
         $headers['date_entered']['label'] = "Created";
 
-        $smarty->assign("headers",$headers);
+          $smarty->assign("headers",$headers);
         $smarty->assign("rows",$rows);
 
+        $moduleList = lib_datawrapper::getInstance()->get("moduleList");
+        $tableinfo = $moduleList[$ptable]['tableinfo'];
         $extraPostFields  = array();
         $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$relname.'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
         $extraPostFields['id']['header']['html'] = '';
