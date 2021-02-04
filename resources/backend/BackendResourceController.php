@@ -454,7 +454,7 @@ class BackendResourceController  extends ResourceController {
 
         $index = $_REQUEST['page'];
         $entity->load_relationships();
-
+        $table = $entity->relationships[$relname]['rtable'];
         $pageinfo = $entity->get_relationships($relname,$index);
         $rows = $pageinfo['data'];
         $rows = array_slice($rows, 0,$pageinfo['resultperpage'],true);
@@ -465,11 +465,23 @@ class BackendResourceController  extends ResourceController {
         $headers['date_entered']['name'] = "date_entered";
         $headers['date_entered']['label'] = "Created";
 
-          $smarty->assign("headers",$headers);
+        $moduleList = lib_datawrapper::getInstance()->get("module_list");
+        $listviewdef = $moduleList[$table]['listviewdef'];
+
+        $json = json_decode($listviewdef,1);
+        if($json) {
+            $headers =array();
+            foreach($json as $key=>$val)  {
+                $headers[$key]['name'] = $key;
+                $headers[$key]['label'] = $val;
+            }
+        }
+        $smarty->assign("headers",$headers);
         $smarty->assign("rows",$rows);
 
-        $moduleList = lib_datawrapper::getInstance()->get("moduleList");
-        $tableinfo = $moduleList[$ptable]['tableinfo'];
+
+
+
         $extraPostFields  = array();
         $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\''.$entity->record.'\',\''.$relname.'\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
         $extraPostFields['id']['header']['html'] = '';
