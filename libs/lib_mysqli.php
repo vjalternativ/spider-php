@@ -55,6 +55,7 @@ class lib_mysqli extends lib_database
         if (mysqli_connect_errno()) {
             die(mysqli_connect_error());
         }
+        mysqli_set_charset($this->con, "utf8mb4");
         $this->query("SET SESSION sql_mode=''");
         $this->query("SET SESSION wait_timeout = 600");
         $this->query("set SESSION innodb_lock_wait_timeout=200");
