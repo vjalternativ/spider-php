@@ -9,6 +9,6 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 	config.extraPlugins = 'ckeditor_wiris';
 	
-	config.specialChars = config.specialChars.concat([  [ '₹', 'Rupees' ]]);
+	config.specialChars = config.specialChars.concat([  [ '\u20b9', 'Rupees' ]]);
 	
 };
