@@ -1,5 +1,6 @@
 <?php
-require_once 'spider-php/beans/DBField.php';
+$dir = __DIR__.'/';
+require_once $dir.'../beans/DBField.php';
 abstract class lib_database {
     private static $instance  = null;
     public $processHook = array("instance"=>"","method"=>"","enumList"=>array());

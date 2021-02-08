@@ -134,6 +134,10 @@ class ResourceController {
 
     }
 
+    function sendJSONResponse($responseCode,$data=array()) {
+         echo json_encode($data);
+    }
+
     protected function validateFormFields($fields, $data)
     {
         $isValid = true;
