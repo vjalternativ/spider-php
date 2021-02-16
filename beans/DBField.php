@@ -5,6 +5,23 @@ class DBField {
     private $default;
     private $length;
     private $index;
+    private $table;
+    /**
+     * @return mixed
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
+
+    /**
+     * @param mixed $table
+     */
+    public function setTable($table)
+    {
+        $this->table = $table;
+    }
+
     /**
      * @return mixed
      */
@@ -100,6 +117,10 @@ class DBField {
     public function setLength($length)
     {
         $this->length = $length;
+    }
+
+    static function as(DBField $field) {
+        return $field;
     }
 
 

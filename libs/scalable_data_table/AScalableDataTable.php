@@ -133,9 +133,14 @@ abstract class AScalableDataTable implements IScalableDataTable {
         $this->_processDataTablesInDatabase($tables);
         foreach($tableVsFields as $table=>$fields) {
             foreach($fields as $field) {
+                $field = DBField::as($field);
+                $field->setTable($table);
                 $this->_processDataTableField($field, $table);
             }
         }
+        return $tableVsFields;
+
+
     }
 
 

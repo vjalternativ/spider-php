@@ -399,19 +399,6 @@ class lib_mysqli extends lib_database
         return $this->query($sql, $return);
     }
 
-    function update($table, $row, $idcolumn)
-    {
-        if (isset($row[$idcolumn])) {
-            $sql = "UPDATE " . $this->getTabelFieldSetSql($table, $row, array(
-                'date_updated = now()'
-            ));
-            $sql .= " WHERE " . $idcolumn . "= '" . $row[$idcolumn] . "'";
-            return $this->query($sql, true);
-        } else {
-            return false;
-        }
-    }
-
     function get($table, $col, $value)
     {
         $sql = "select * from " . $table . " where " . $col . "='" . $value . "' ";

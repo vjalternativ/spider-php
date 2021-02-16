@@ -270,11 +270,14 @@ abstract class lib_database {
         return $this->query($sql,true);
     }
 
-    function update($table,$row,$idcolumn) {
+    function update($table,$row,$idcolumn,$where=false) {
 
         if(isset($row[$idcolumn])) {
             $sql= "UPDATE ".$this->getTabelFieldSetSql($table, $row,array('date_updated = now()'));
-            $sql .= " WHERE ".$idcolumn ."= '".$row[$idcolumn]."'";
+            $sql .= " WHERE ".$idcolumn ."= '".$row[$idcolumn]."' ";
+            if($where) {
+                $sql .= " AND ". $where;
+            }
             return $this->query($sql,true);
 
         } else {
