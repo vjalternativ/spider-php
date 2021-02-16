@@ -7,21 +7,21 @@ abstract class AScalableDataTable implements IScalableDataTable {
     private $fieldList = array();
     private $dataTablePrefix = "";
     private $fieldsPerTable = 20;
-    private $defaultField = null;
+    private $defaultFields = null;
     /**
      * @return mixed
      */
-    public function getDefaultField()
+    public function getDefaultFields()
     {
-        return $this->defaultField;
+        return $this->defaultFields;
     }
 
     /**
      * @param mixed $defaultField
      */
-    public function setDefaultField($defaultField)
+    public function setDefaultFields($cols)
     {
-        $this->defaultField = $defaultField;
+        $this->defaultFields = $cols;
     }
 
     /**
@@ -124,8 +124,8 @@ abstract class AScalableDataTable implements IScalableDataTable {
         if($this->getDataTablePrefix() == null) {
             throw new Exception("data table prefix should not be null");
         }
-        if($this->getDefaultField() == null) {
-            throw new Exception("defaul field should not be null");
+        if($this->getDefaultFields() == null) {
+            throw new Exception("defaul fields should not be null");
         }
 
         $tableVsFields = $this->_getDataTables();

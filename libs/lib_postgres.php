@@ -48,7 +48,7 @@ class lib_postgres extends  lib_database {
 
         return $meta;
     }
-    public function createTableByOneCol($table, DBField $id)
+    public function createTable($table, $cols)
     {}
 
     public function addColumn(DBField $field, $table)

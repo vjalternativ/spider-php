@@ -22,13 +22,11 @@ class lib_mysqli extends lib_database
     private $db_name;
 
     function __construct()
-    {
-
-    }
+    {}
 
     static function getInstance()
     {
-       parent::getInstance();
+        parent::getInstance();
     }
 
     function setProcessSequence($b)
@@ -467,28 +465,40 @@ class lib_mysqli extends lib_database
 
     public function addColumn(DBField $field, $table)
     {
-        $sql = "ALTER TABLE ".$table." ADD COLUMN ".$field->getName() . " ".$field->getDataType()." ";
-        if($field->getLength()) {
-            $sql .= " ( ".$field->getLength() ." ) ";
+        $sql = "ALTER TABLE " . $table . " ADD COLUMN " . $field->getName() . " " . $field->getDataType() . " ";
+        if ($field->getLength()) {
+            $sql .= " ( " . $field->getLength() . " ) ";
         }
-        if($field->getIndex()) {
-            $sql .= "  ".$field->getIndex() ." ";
+        if ($field->getIndex()) {
+            $sql .= "  " . $field->getIndex() . " ";
         }
         $this->query($sql);
-
-
     }
 
-    public function createTableByOneCol($table,DBField $col)
+    public function createTable($table, $cols)
     {
-        $sql = "CREATE TABLE ".$table." ( ".$col->getName()."  ".$col->getDataType();
-        if($col->getLength()) {
-            $sql .= " ( ".$col->getLength() ." ) ";
+        if (! $cols) {
+            throw new Exception("can not create table without cols");
         }
-        if($col->getIndex()) {
-            $sql .= " ( ".$col->getIndex() ." ) ";
+
+        $sql = "CREATE TABLE " . $table . " ( ";
+
+        $colarray = array();
+        foreach ($cols as $col) {
+            $col = DBField::as($col);
+            $colsql = $col->getName() . "  " . $col->getDataType();
+            if ($col->getLength()) {
+                $colsql .= " ( " . $col->getLength() . " ) ";
+            }
+            if ($col->getIndex()) {
+                $colsql .= " ( " . $col->getIndex() . " ) ";
+            }
+            $colarray[] = $colsql;
         }
-        $sql.=  " )";
+
+        $sql .= implode(",",$colarray);
+
+        $sql .= " )";
 
         $this->query($sql);
     }

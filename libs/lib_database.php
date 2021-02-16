@@ -401,7 +401,7 @@ abstract class lib_database {
 
     abstract function fieldExist($field,$table);
     abstract function tableExist($table);
-    abstract function createTableByOneCol($table, DBField $id);
+    abstract function createTable($table, $cols);
     abstract function addColumn(DBField $field,$table);
 
 }
