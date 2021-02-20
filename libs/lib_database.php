@@ -1,4 +1,5 @@
 <?php
+namespace spider\libs;
 $dir = __DIR__.'/';
 require_once $dir.'../beans/DBField.php';
 abstract class lib_database {

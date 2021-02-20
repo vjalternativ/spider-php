@@ -1,4 +1,5 @@
 <?php
+namespace spider\libs;
 class lib_config {
     private static $instance = null;
     private $config;
