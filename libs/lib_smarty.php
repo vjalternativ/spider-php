@@ -1,5 +1,7 @@
 <?php
 namespace spider\libs;
+
+
 $dir = __DIR__.'/';
 require_once $dir.'../thirdparty/server/Smarty/Smarty.class.php';
 class lib_smarty {
