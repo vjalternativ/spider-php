@@ -16,17 +16,10 @@
 	"license" : "MIT",
 	"autoload" : {
 		"psr-4" : {
-			"spider\\" : [
-				"beans",
-				"libs",
-				"libs/scalable_data_table",
-				"resources",
-				"resources/backend",
-				"resources/cli",
-				"resources/frontend",
-				"resources/rest",
-				"resources/widget"
-			]
+			"spider\\beans\\" : "beans",
+			"spider\\libs\\" : "libs",
+			"spider\\resources\\" : "resources",
+			"spider\\resources\\widget\\" : "resources/widget"
 		}
 	}
 }
