@@ -1,16 +1,21 @@
 {
-    "name": "vizzy/spider-php",
-    "description": "PHP MVC Framework For Web,Rest,CLI applications",
-    "type": "library",
-    "require": {
-        "mpdf/mpdf": "^8.0",
-        "phpmailer/phpmailer": "^6.3"
-    },
-    "authors": [
-        {
-            "name": "Vijay Kumar",
-            "email": "rkt.vijaykumar@gmail.com"
-        }
-    ],
-    "minimum-stability": "stable"
+	"name" : "vizzy/spider-php",
+	"description" : "PHP MVC Framework For Web,Rest,CLI applications",
+	"type" : "library",
+	"require" : {
+		"mpdf/mpdf" : "^8.0",
+		"phpmailer/phpmailer" : "^6.3"
+	},
+	"authors" : [{
+			"name" : "Vijay Kumar",
+			"email" : "rkt.vijaykumar@gmail.com"
+		}
+	],
+	"minimum-stability" : "stable",
+	"license" : "MIT",
+	"autoload" : {
+		"psr-4" : {
+			"vizzy/libs" : "libs"
+		}
+	}
 }
