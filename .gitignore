@@ -1,9 +1,7 @@
 templates_c/*
 vendor/*
-composer*
 cache/*
 framework.log
-controlarea
 org.*
 .project
 .buildpath
