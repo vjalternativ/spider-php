@@ -1,4 +1,5 @@
 <?php
+namespace spider\beans;
 class DBField {
     private $name;
     private $dataType;
