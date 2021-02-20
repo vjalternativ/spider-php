@@ -1,4 +1,9 @@
 <?php
+use spider\libs\lib_config;
+use spider\libs\lib_smarty;
+use spider\libs\lib_datawrapper;
+use spider\libs\lib_database;
+use spider\libs\lib_seo;
 require_once __DIR__.'/../../include/vjlib/libs/bootstrap4/IBootstrapWidgetConstant.php';
 
 abstract class AWidget {

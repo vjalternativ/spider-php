@@ -1,8 +1,10 @@
 <?php
+namespace spider\resources\widget;
 
+use spider\libs\lib_config;
+use spider\libs\lib_database;
+use spider\libs\lib_datawrapper;
 class WidgetService implements IWidgetService {
-
-
 
 
     public function getWidget($widgetType,$row=false)

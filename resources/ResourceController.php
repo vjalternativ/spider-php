@@ -1,4 +1,10 @@
 <?php
+namespace spider\resources;
+
+use spider\libs\lib_config;
+use spider\libs\lib_current_user;
+use spider\libs\lib_smarty;
+
 class ResourceController {
 
 
@@ -10,7 +16,7 @@ class ResourceController {
     private $lock = null;
 
     function __construct() {
-        $reflector = new ReflectionObject($this);
+        $reflector = new \ReflectionObject($this);
         $str = $reflector->getFileName();
         $str = str_replace("modules/","",$str);
         $str = substr($str,0,strrpos($str,"/"));
@@ -79,7 +85,7 @@ class ResourceController {
             }
         } else {
             echo "controller path not found";
-            throw new Exception("tpl not configured ".$tpl);
+            throw new \Exception("tpl not configured ".$tpl);
 
         }
 

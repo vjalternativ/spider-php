@@ -1,4 +1,6 @@
 <?php
+namespace spider\resources\widget;
+
 interface IWidgetService {
     function getWidget($widgetType);
     function getWidgetForParams($widgetType,$params);

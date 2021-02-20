@@ -16,8 +16,16 @@
 	"license" : "MIT",
 	"autoload" : {
 		"psr-4" : {
-			"spider\\libs\\" : "libs",
-			"spider\\beans\\" : "beans"
+			"spider\\" : [
+				"beans",
+				"libs",
+				"resources",
+				"resources/backend",
+				"resources/cli",
+				"resources/frontend",
+				"resources/rest",
+				"resources/widget"
+			]
 		}
 	}
 }
