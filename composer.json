@@ -12,10 +12,5 @@
 		}
 	],
 	"minimum-stability" : "stable",
-	"license" : "MIT",
-	"autoload" : {
-		"psr-4" : {
-			"vizzy\\spider\\libs\\" : "libs"
-		}
-	}
+	"license" : "MIT"
 }
