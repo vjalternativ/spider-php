@@ -1,4 +1,11 @@
 <?php
+use spider\libs\lib_config;
+use spider\libs\lib_database;
+use spider\libs\lib_datawrapper;
+use spider\libs\lib_seo;
+use spider\libs\lib_smarty;
+use spider\resources\ResourceController;
+
 $dir = __DIR__.'/';
 require_once $dir.'../widget/WidgetServiceRegistrar.php';
 require_once $dir.'../../libs/lib_current_user.php';
