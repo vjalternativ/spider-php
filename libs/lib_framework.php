@@ -1,4 +1,5 @@
 <?php
+namespace spider\libs\lib_framework;
 $dir = __DIR__.'/';
 
 require_once $dir.'lib_common.php';
