@@ -42,7 +42,7 @@ class lib_config {
         } else {
                 $server = $_SERVER;
                 $err = print_r($server,1);
-                throw new ErrorException($err);
+                throw new \ErrorException($err);
         }
 
     }
