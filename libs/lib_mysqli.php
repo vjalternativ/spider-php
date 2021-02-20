@@ -1,5 +1,6 @@
 <?php
 namespace spider\libs;
+use spider\beans\DBField;
 class lib_mysqli extends lib_database
 {
 
@@ -478,7 +479,7 @@ class lib_mysqli extends lib_database
     public function createTable($table, $cols)
     {
         if (! $cols) {
-            throw new Exception("can not create table without cols");
+            throw new \Exception("can not create table without cols");
         }
 
         $sql = "CREATE TABLE " . $table . " ( ";

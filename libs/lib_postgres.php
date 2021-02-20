@@ -1,8 +1,10 @@
 <?php
+namespace spider\libs;
+use spider\beans\DBField;
 class lib_postgres extends  lib_database {
     private $con;
     private function throwConnectionError() {
-        throw new Exception("postgres connection failed");
+        throw new \Exception("postgres connection failed");
     }
     public function connect($host, $user, $pwd, $name)
     {

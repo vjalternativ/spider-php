@@ -1,5 +1,6 @@
 <?php
 namespace spider\libs;
+use spider\beans\DBField;
 class lib_entity {
 	public $id =array('name'=>'id','type'=>'id','notnull'=>true,'label'=>'LBL_ID');
 	public $name = array('name'=>'name','type'=>'varchar','len'=>255,'link'=>true,'label'=>'LBL_NAME');

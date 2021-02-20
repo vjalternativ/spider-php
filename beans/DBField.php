@@ -1,5 +1,6 @@
 <?php
 namespace spider\beans;
+
 class DBField {
     private $name;
     private $dataType;
@@ -55,7 +56,7 @@ class DBField {
             $this->default = $default;
             $this->index = $index;
         } else {
-            throw new Exception("Invalid.DBField name or dataType");
+            throw new \Exception("Invalid.DBField name or dataType");
         }
     }
 

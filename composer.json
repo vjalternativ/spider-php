@@ -4,7 +4,8 @@
 	"type" : "library",
 	"require" : {
 		"mpdf/mpdf" : "^8.0",
-		"phpmailer/phpmailer" : "^6.3"
+		"phpmailer/phpmailer" : "^6.3",
+		"smarty/smarty" : "~3.1"
 	},
 	"authors" : [{
 			"name" : "Vijay Kumar",
@@ -15,7 +16,8 @@
 	"license" : "MIT",
 	"autoload" : {
 		"psr-4" : {
-			"spider\\libs\\" : "libs"
+			"spider\\libs\\" : "libs",
+			"spider\\beans\\" : "beans"
 		}
 	}
 }

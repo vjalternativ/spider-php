@@ -1,8 +1,10 @@
-templates_c/*
-vendor/*
-cache/*
+templates_c
+vendor
+cache
 framework.log
-org.*
+composer.lock
+composer.phar
+php_errors.log
 .project
 .buildpath
-php_errors.log
+org.*
