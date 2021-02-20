@@ -19,6 +19,7 @@
 			"spider\\" : [
 				"beans",
 				"libs",
+				"libs/scalable_data_table",
 				"resources",
 				"resources/backend",
 				"resources/cli",
