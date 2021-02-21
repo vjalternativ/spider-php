@@ -1,7 +1,7 @@
 {
 	"name" : "vizzy/spider-php",
 	"description" : "PHP MVC Framework For Web,Rest,CLI applications",
-	"type" : "library",
+	"type" : "project",
 	"require" : {
 		"mpdf/mpdf" : "^8.0",
 		"phpmailer/phpmailer" : "^6.3",
