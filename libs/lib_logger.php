@@ -1,9 +1,10 @@
 <?php
-
 class lib_logger {
     private $logFile;
     private $threadId=false;
     private static $instance = null;
+    private static $fileVsLogger =array();
+
     function __construct($logfile=false) {
             $this->logFile = $logfile ? $logfile : "logger.log";
             $this->threadId = uniqid();
@@ -14,6 +15,17 @@ class lib_logger {
             self::$instance = new lib_logger();
         }
         return self::$instance;
+    }
+
+
+    private static function as(lib_logger $logger) {
+        return $logger;
+    }
+    static function getLogger($file) {
+        if(!isset(self::$fileVsLogger[$file])) {
+            self::$fileVsLogger[$file] = new lib_logger($file);
+        }
+        return self::as(self::$fileVsLogger[$file]);
     }
 
     private function log($type,$message) {
