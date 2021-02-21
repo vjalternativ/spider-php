@@ -1,5 +1,4 @@
 <?php
-namespace spider\beans;
 abstract class RuntimeBean {
 
 
