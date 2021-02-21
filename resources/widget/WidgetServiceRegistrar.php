@@ -1,6 +1,4 @@
 <?php
-namespace spider\resources\widget;
-use spider\libs\lib_config;
 $vjconfig= lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'].'resources/widget/IWidgetService.php';
 require_once $vjconfig['fwbasepath'].'resources/widget/WidgetService.php';

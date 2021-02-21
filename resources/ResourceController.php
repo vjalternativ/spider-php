@@ -1,10 +1,4 @@
 <?php
-namespace spider\resources;
-
-use spider\libs\lib_config;
-use spider\libs\lib_current_user;
-use spider\libs\lib_smarty;
-
 class ResourceController {
 
 

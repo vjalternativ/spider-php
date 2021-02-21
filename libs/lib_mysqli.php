@@ -1,6 +1,4 @@
 <?php
-
-use spider\beans\DBField;
 class lib_mysqli extends lib_database
 {
 

@@ -1,6 +1,4 @@
 <?php
-
-use spider\beans\DBField;
 class lib_postgres extends  lib_database {
     private $con;
     private function throwConnectionError() {

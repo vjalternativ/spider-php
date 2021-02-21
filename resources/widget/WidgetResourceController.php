@@ -1,11 +1,4 @@
 <?php
-namespace spider\resources\widget;
-use spider\libs\lib_config;
-use spider\libs\lib_database;
-use spider\libs\lib_datawrapper;
-use spider\libs\lib_seo;
-use spider\libs\lib_smarty;
-use spider\resources\ResourceController;
 class WidgetResourceController extends ResourceController {
 
 
