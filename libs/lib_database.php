@@ -366,7 +366,7 @@ abstract class lib_database {
         $dbProfile = isset($dbProfiles[$dbProfile]) ? $dbProfile : "mysqli";
         $dir = __DIR__.'/';
         require_once $dir .'lib_'.$dbProfile.'.php';
-        $class = 'spider\libs\lib_'.$dbProfile;
+        $class = 'lib_'.$dbProfile;
         return new $class();
     }
     static function getInstance() {
