@@ -1,5 +1,5 @@
 <?php
-namespace spider\libs;
+
 class lib_modal {
     public $id = "modal";
     public $formaction = false;

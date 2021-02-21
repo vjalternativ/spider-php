@@ -1,5 +1,4 @@
 <?php
-namespace spider\libs;
 class lib_datawrapper {
 
 

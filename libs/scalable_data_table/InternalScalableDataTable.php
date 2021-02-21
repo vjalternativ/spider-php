@@ -1,5 +1,4 @@
 <?php
-use spider\libs\lib_database;
 
 $path = __DIR__.'/';
 

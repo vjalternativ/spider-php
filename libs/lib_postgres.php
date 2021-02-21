@@ -1,5 +1,5 @@
 <?php
-namespace spider\libs;
+
 use spider\beans\DBField;
 class lib_postgres extends  lib_database {
     private $con;

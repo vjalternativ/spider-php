@@ -1,5 +1,5 @@
 <?php
-namespace spider\libs;
+
 class lib_current_user {
     private static $instances = array();
     static function getEntityInstance($resource="default") {

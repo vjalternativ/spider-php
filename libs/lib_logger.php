@@ -1,5 +1,5 @@
 <?php
-namespace spider\libs;
+
 class lib_logger {
     private $logFile;
     private $threadId=false;

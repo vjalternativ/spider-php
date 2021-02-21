@@ -1,6 +1,5 @@
 <?php
-namespace spider\libs;
-use spider\beans\DBField;
+
 abstract class lib_database {
     private static $instance  = null;
     public $processHook = array("instance"=>"","method"=>"","enumList"=>array());

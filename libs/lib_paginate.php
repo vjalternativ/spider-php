@@ -1,5 +1,5 @@
 <?php
-namespace spider\libs;
+
 class lib_paginate {
 
 	public $url='';

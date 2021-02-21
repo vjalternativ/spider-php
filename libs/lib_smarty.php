@@ -1,5 +1,5 @@
 <?php
-namespace spider\libs;
+
 
 
 $dir = __DIR__.'/';
