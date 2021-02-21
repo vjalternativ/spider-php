@@ -1,5 +1,5 @@
 <?php
-require_once 'spider-php/libs/lib_bootstrap.php';
+require_once lib_config::getInstance()->get("fwbasepath").'libs/lib_bootstrap.php';
 
 class BackendResourceView extends ResourceView {
 
