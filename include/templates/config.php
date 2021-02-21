@@ -8,13 +8,13 @@ $config['fwbaseurl'] = $config['baseurl'] .'spider-php/';
 $config['sitename'] = "Spider-PHP Control Panel";
 $config['timezone'] = "Asia/Kolkata";
 
-$config['mysql']['host'] = "localhost";
+$config['database']['host'] = "localhost";
 
-$config['mysql']['user'] = "boomerangdemo";
+$config['database']['user'] = "boomerangdemo";
 
-$config['mysql']['password'] = "boomerangtrip";
+$config['database']['password'] = "boomerangtrip";
 
-$config['mysql']['database'] = "boomerangtripdemo";
+$config['database']['name'] = "boomerangtripdemo";
 
 
 $config['framework']['default_module'] = "user";
@@ -52,9 +52,9 @@ if($_SERVER['HTTP_HOST']=="localhost") {
 
     $config['fwbaseurl'] = $config['baseurl'] . 'spider-php/' ;
 
-    $config['mysql']['user'] = "root";
-    $config['mysql']['password'] = "root";
-    $config['mysql']['database'] = "spiderphp";
+    $config['database']['name'] = "root";
+    $config['database']['name'] = "root";
+    $config['database']['name'] = "spiderphp";
     $config['display_errors'] = true;
 
 }
