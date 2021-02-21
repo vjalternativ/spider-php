@@ -1,5 +1,5 @@
 <?php
-
+namespace spider\libs;
 $dir = __DIR__.'/';
 
 require_once $dir.'lib_common.php';
@@ -26,12 +26,12 @@ class lib_framework {
 
     function init($sessionName = false) {
 
-        $common = new lib_common();
+        $common = new \lib_common();
         $common->init($this->configpath);
 
-        $params = lib_seo::getInstance()->getParams();
-        $config = lib_config::getInstance($this->configpath)->getConfig();
-        $resource = lib_config::getInstance()->get("default_resource");
+        $params = \lib_seo::getInstance()->getParams();
+        $config = \lib_config::getInstance($this->configpath)->getConfig();
+        $resource = \lib_config::getInstance()->get("default_resource");
 
         if(php_sapi_name() == "cli" && isset($_SERVER['argv']) && $_SERVER['argv']) {
             $resource = 'cli';
@@ -81,7 +81,7 @@ class lib_framework {
 
 
     function getResourceBasePath($relativePath) {
-        $libConfig = lib_config::getInstance();
+        $libConfig = \lib_config::getInstance();
         $path = $libConfig->get("basepath").'resources/'.$this->resource.'/'.$relativePath;
         $fwpath= $libConfig->get("fwbasepath").'resources/'.$this->resource.'/'.$relativePath;
         if(is_dir($path)) {
@@ -95,7 +95,7 @@ class lib_framework {
 
     function _getResourceAbsoluteFilePath($relativePath,$isMandatory=false) {
 
-        $libConfig = lib_config::getInstance();
+        $libConfig = \lib_config::getInstance();
         $path = $libConfig->get("basepath").'resources/'.$relativePath;
         $fwpath= $libConfig->get("fwbasepath").'resources/'.$relativePath;
 
@@ -126,7 +126,7 @@ class lib_framework {
 
 
     private function getResourceDefaultModule($resource) {
-        $defaultResourceModules = lib_config::getInstance()->get("default_resource_module");
+        $defaultResourceModules = \lib_config::getInstance()->get("default_resource_module");
         if(isset($defaultResourceModules[$resource])) {
            return $defaultResourceModules[$resource];
         } else {
@@ -150,8 +150,8 @@ class lib_framework {
     function execute() {
 
 
-        $params = lib_seo::getInstance()->getParams();
-        $vjconfig = lib_config::getInstance()->getConfig();
+        $params = \lib_seo::getInstance()->getParams();
+        $vjconfig = \lib_config::getInstance()->getConfig();
         $resource = $this->resource;
         $resourcePath = $this->resourcePath;
 
@@ -181,7 +181,7 @@ class lib_framework {
             if(isset($params[2])) {
                 $_GET['action'] = $params[2];
             } else {
-                $defaultResourceActions = lib_config::getInstance()->get("default_resource_action");
+                $defaultResourceActions = \lib_config::getInstance()->get("default_resource_action");
                 if(isset($defaultResourceActions[$resource])) {
                     $_GET['action'] = $defaultResourceActions[$resource];
                 } else {
@@ -223,7 +223,7 @@ class lib_framework {
 
            $action = 'action_'.$_GET['action'];
 
-           $vjconfig = lib_config::getInstance()->getConfig();
+           $vjconfig = \lib_config::getInstance()->getConfig();
            if($vjconfig['init_default_modules']) {
                $this->initModules();
            }
@@ -231,7 +231,7 @@ class lib_framework {
 
 
 
-           $entity = lib_entity::getInstance();
+           $entity = \lib_entity::getInstance();
 
            if(!method_exists($controller, $action)) {
                $action = 'action_index';
@@ -245,7 +245,7 @@ class lib_framework {
                 if(!empty($controller->view)) {
 
 
-                    $smarty  = lib_smarty::getSmartyInstance();
+                    $smarty  = \lib_smarty::getSmartyInstance();
                     $smarty->assign("fwbaseurl",$vjconfig['fwbaseurl']);
                     $smarty->assign("fwbasepath",$vjconfig['fwbasepath']);
 
@@ -323,13 +323,13 @@ class lib_framework {
 
     function initModules() {
 
-        $dataWrapper = lib_datawrapper::getInstance();
-        $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-        $vjconfig = lib_config::getInstance()->getConfig();
-        $entity = lib_entity::getInstance();
-        $globalServerPreferenceStoreList = lib_datawrapper::getInstance()->get("server_preference_store_list");
+        $dataWrapper = \lib_datawrapper::getInstance();
+        $globalRelationshipList = \lib_datawrapper::getInstance()->get("relationship_list");
+        $globalModuleList = \lib_datawrapper::getInstance()->get("module_list");
+        $globalEntityList = \lib_datawrapper::getInstance()->get("entity_list");
+        $vjconfig = \lib_config::getInstance()->getConfig();
+        $entity = \lib_entity::getInstance();
+        $globalServerPreferenceStoreList = \lib_datawrapper::getInstance()->get("server_preference_store_list");
         require_once $vjconfig['fwbasepath'].'resources/backend/include/language/lang.php';
         $langpath = $vjconfig['basepath'].'resources/backend/include/language/lang.php';
         if(file_exists($langpath)) {
