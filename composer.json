@@ -13,13 +13,5 @@
 		}
 	],
 	"minimum-stability" : "stable",
-	"license" : "MIT",
-	"autoload" : {
-		"psr-4" : {
-			"spider\\beans\\" : "beans",
-			"spider\\libs\\" : "libs",
-			"spider\\resources\\" : "resources",
-			"spider\\resources\\widget\\" : "resources/widget"
-		}
-	}
+	"license" : "MIT"
 }

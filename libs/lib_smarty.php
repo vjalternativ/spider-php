@@ -1,7 +1,4 @@
 <?php
-
-
-
 $dir = __DIR__.'/';
 require_once $dir.'../thirdparty/server/Smarty/Smarty.class.php';
 class lib_smarty {
@@ -11,7 +8,7 @@ class lib_smarty {
 
     static function getSmartyInstance() {
         if(self::$instance==null) {
-            self::$instance = new \Smarty();
+            self::$instance = new Smarty();
         }
         return self::$instance;
     }
