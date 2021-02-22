@@ -11,7 +11,7 @@
 <script src="{$fwbaseurl}include/vjlib/assets/js/moment-with-locales.js"></script>
 <script src="{$fwbaseurl}include/vjlib/assets/js/bootstrap-datetimepicker.js"></script>
 
-<script src="{$fwbaseurl}include/vjlib/assets/js/custom.js?v=1"></script>
+<script src="{$fwbaseurl}include/vjlib/assets/js/custom.js?v=2"></script>
 
 <script src="{$fwbaseurl}include/vjlib/assets/editor/editor.js?v=1"></script>
 {if $showchatContainer}

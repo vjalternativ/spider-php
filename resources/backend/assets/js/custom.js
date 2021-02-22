@@ -138,6 +138,7 @@ function ajaxGetPagination(url,id,record,page) {
 	var data = {"ptable":ptable,"relname":relname,"record":record,"page":page,"container_id":id};
 	$.post(url,data,function(result){
 			$("#subpanel_"+id+ " .panel-body").html(result);
+			if(typeof MathJax !== 'undefined') {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);}
 	});
 	
 }
