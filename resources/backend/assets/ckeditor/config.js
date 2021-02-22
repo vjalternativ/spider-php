@@ -7,7 +7,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-	config.extraPlugins = 'ckeditor_wiris';
+	config.extraPlugins = 'ckeditor_wiris,tabletools';
 	
 	config.specialChars = config.specialChars.concat([  [ '\u20b9', 'Rupees' ]]);
 	
