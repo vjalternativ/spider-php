@@ -3,6 +3,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/PHPMailer.php';
+
 class SendMail
 {
 
@@ -96,7 +97,7 @@ class SendMail
      */
     function getAllNotSentEmails($contexts, $last_used)
     {
-        $db=  lib_database::getInstance();
+        $db = lib_database::getInstance();
         $emails = array();
         $sqlGetEmailContextMatrix = "SELECT * FROM email_buffer WHERE (is_sent_successfully=0 or is_sent_successfully is null) AND (last_attempt < DATE_SUB(NOW(), INTERVAL " . $last_used . " HOUR) or last_attempt is null) AND (send_attempts < 3 or send_attempts is null) ORDER BY date_entered desc";
         $resultGetEmailContextMatrix = $db->query($sqlGetEmailContextMatrix);
@@ -276,16 +277,15 @@ class SendMail
                 }
                 $mailer->AddReplyTo($account_details['reply_to_address'], $account_details['reply_to_name']);
                 if (! empty($info['attachments'])) {
-                    $attachments = json_decode($info['attachments'],1);
+                    $attachments = json_decode($info['attachments'], 1);
                     $attachmentsFilePath = "";
                     $attachmentsFileName = "";
-                    foreach ($attachments as  $value) {
+                    foreach ($attachments as $value) {
                         if (isset($value['path']) && ! empty($value['path'])) {
-                            $attachmentsFilePath = $value['path'] ;
+                            $attachmentsFilePath = $value['path'];
                             $attachmentsFileName = $value['name'];
                             $mailer->AddAttachment($attachmentsFilePath, $attachmentsFileName);
                         }
-
                     }
                 } else {
                     $attachments = array();
@@ -386,7 +386,7 @@ class SendMail
 
     function updateEmailWiseCounter($toArray = array(), $ccArray = array(), $bccArray = array(), $mailSubject)
     {
-        $db =  lib_database::getInstance();
+        $db = lib_database::getInstance();
 
         $start = "[CASE:";
         $end = "]";
@@ -469,7 +469,7 @@ class SendMail
 
     function sendErrorMails($info, $error, $senderAccount)
     {
-        $db =  lib_database::getInstance();
+        $db = lib_database::getInstance();
         $id = $info['id'];
         $subject = html_entity_decode($info['email_subject'], ENT_QUOTES);
         // SELECTING AN ACCOUNT TO SEND MAIL
