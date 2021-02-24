@@ -142,7 +142,7 @@ class SendMail
     function execute()
     {
         // making sure only a single instance of this script is running at a time
-        $lockfile = 'locks/sendmail.txt';
+        $lockfile = lib_config::getInstance()->get("basepath") . 'locks/sendmail.txt';
         $file = fopen($lockfile, 'w');
         if ($file === false) {
             exit("Unable to create/open lock file\n");
