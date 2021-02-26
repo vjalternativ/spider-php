@@ -123,10 +123,14 @@ function selectSubpanelItems(id) {
 
 
 function  removeRelationship(record,relName,relId) {
-	var url = "./index.php?module=tableinfo&action=ajaxRemoveRelationship&record="+record+"&relname="+relName+"&relid="+relId;
-	$.post(url,{},function(result) {
-			$("#trow-"+relId).remove();
-	});
+	var x  = confirm("Are you sure to delete this record ?");
+	if(x) {
+		var url = "./index.php?module=tableinfo&action=ajaxRemoveRelationship&record="+record+"&relname="+relName+"&relid="+relId;
+		$.post(url,{},function(result) {
+				$("#trow-"+relId).remove();
+		});	
+	}
+	
 }
 
 
