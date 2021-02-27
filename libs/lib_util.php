@@ -3,11 +3,10 @@
 class lib_util
 {
 
-   static function redirect($module, $action = false, $params = array())
+    static function redirect($module, $action = false, $params = array())
     {
-
-        $basepath = lib_config::getInstance()->get("baseurl").$_GET['resource'].'/';
-        $string = $basepath."index.php?module=" . $module;
+        $basepath = lib_config::getInstance()->get("baseurl") . $_GET['resource'] . '/';
+        $string = $basepath . "index.php?module=" . $module;
         if ($action) {
             $string .= "&action=" . $action;
         }
@@ -18,7 +17,7 @@ class lib_util
         exit();
     }
 
-   static function sessioncheck($var)
+    static function sessioncheck($var)
     {
         if (! isset($_SESSION[$var])) {
             return false;
@@ -102,17 +101,16 @@ class lib_util
 
     static function processSeoUrl()
     {
-        //$vjconfig = lib_config::getInstance()->getConfig();
+        // $vjconfig = lib_config::getInstance()->getConfig();
 
         // use either global or by object property
-        //$seoparams = getParams();
+        // $seoparams = getParams();
 
-            //todo
+        // todo
     }
 
-   static function getParams()
+    static function getParams()
     {
-
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $params = array();
@@ -245,17 +243,46 @@ class lib_util
         return false;
     }
 
-    static function isset($array,...$args) {
-
+    static function isset($array, ...$args)
+    {
         $isValid = true;
-        foreach($args as $index) {
-            if(!isset($array[$index])) {
+        foreach ($args as $index) {
+            if (! isset($array[$index])) {
                 $isValid = false;
                 break;
             }
         }
         return $isValid;
+    }
 
+    static function slugify($text)
+    {
+        $text = str_replace("(", "", $text);
+        $text = str_replace(")", "", $text);
+
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+
+        // lowercase
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
     }
 }
 ?>
