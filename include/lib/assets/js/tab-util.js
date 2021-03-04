@@ -1,5 +1,7 @@
-function nextTab(id) {
+function nextTab(suffix) {
 
+	
+	var id = "tab-pane-"+suffix;
 	
 	if($("#"+id).next().length==1) {
 	
@@ -9,12 +11,16 @@ function nextTab(id) {
 		$("#"+id).next().addClass("active");
 		$("#"+id+"-link").children().removeClass("active");
 		$("#"+id+"-link").next().children().addClass("active");
+		var navlink = "nav-item-"+suffix;
+		$("#"+navlink+ " > a").removeClass("active");
+		$("#"+navlink).next().children().addClass("active");
 		
 	}
 }
 
-function prevTab(id) {
+function prevTab(suffix) {
 
+	var id = "tab-pane-"+suffix;
 	
 	if($("#"+id).prev().length==1) {
 	
@@ -25,6 +31,10 @@ function prevTab(id) {
 		
 		$("#"+id+"-link").children().removeClass("active");
 		$("#"+id+"-link").prev().children().addClass("active");
+		
+		var navlink = "nav-item-"+suffix;
+		$("#"+navlink +" > a").removeClass("active");
+		$("#"+navlink).prev().children().addClass("active");
 	
 	}
 }
