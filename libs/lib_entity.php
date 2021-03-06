@@ -781,24 +781,26 @@ class lib_entity
             $this->hookTable = $table;
             $hookobj->{$hook[3]}($keyvalue);
         }
-        foreach ($logicHook[$table]['after_save'] as $hook) {
+        if (isset($logicHook[$table]['after_save'])) {
+            foreach ($logicHook[$table]['after_save'] as $hook) {
 
-            $found = false;
+                $found = false;
 
-            if (file_exists($vjconfig['basepath'] . $hook[1])) {
-                $found = true;
-                require_once $vjconfig['basepath'] . $hook[1];
-            }
-
-            if (! $found) {
-
-                if (file_exists($vjconfig['fwbasepath'] . $hook[1])) {
-                    require_once $vjconfig['fwbasepath'] . $hook[1];
+                if (file_exists($vjconfig['basepath'] . $hook[1])) {
+                    $found = true;
+                    require_once $vjconfig['basepath'] . $hook[1];
                 }
+
+                if (! $found) {
+
+                    if (file_exists($vjconfig['fwbasepath'] . $hook[1])) {
+                        require_once $vjconfig['fwbasepath'] . $hook[1];
+                    }
+                }
+                $hookobj = new $hook[2]();
+                $this->hookTable = $table;
+                $hookobj->{$hook[3]}($keyvalue);
             }
-            $hookobj = new $hook[2]();
-            $this->hookTable = $table;
-            $hookobj->{$hook[3]}($keyvalue);
         }
 
         lib_datawrapper::getInstance()->set("logichook_list", $logicHook);
