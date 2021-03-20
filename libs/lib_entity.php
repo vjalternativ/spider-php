@@ -339,6 +339,8 @@ class lib_entity
         // $metafields['listview']['id']= $fields['id'];
         if (isset($fields['name'])) {
             $metafields['listview']['name'] = $fields['name'];
+            $metafields['searchview']['name'] = $fields['name'];
+
             $metafields['editview']['name'] = array(
                 "fields" => array(
                     array(
@@ -486,6 +488,10 @@ class lib_entity
             $metafields['editview'] = array_merge_recursive($metafields['editview'], $emetafields['editview']);
         }
 
+        if (isset($emetafields['searchview'])) {
+            $metafields['searchview'] = array_merge_recursive($metafields['searchview'], $emetafields['searchview']);
+        }
+
         $tbinfo['metadata'] = $metafields;
 
         $keyvalue = array();
@@ -493,6 +499,7 @@ class lib_entity
         $keyvalue['editviewdef'] = is_array($metafields['editview']) ? json_encode($metafields['editview']) : $metafields['editview'];
         $keyvalue['detailviewdef'] = is_array($metafields['detailview']) ? json_encode($metafields['detailview']) : $metafields['detailview'];
         $keyvalue['listviewdef'] = is_array($metafields['listview']) ? json_encode($metafields['listview']) : $metafields['listview'];
+        $keyvalue['searchviewdef'] = is_array($metafields['searchview']) ? json_encode($metafields['searchview']) : $metafields['searchview'];
         $keyvalue['tabletype'] = $params['type'];
         $keyvalue['description'] = base64_encode(json_encode(array(
             "fields" => $tbinfo['fields']

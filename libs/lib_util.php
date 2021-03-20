@@ -5,7 +5,13 @@ class lib_util
 
     static function redirect($module, $action = false, $params = array())
     {
-        $basepath = lib_config::getInstance()->get("baseurl") . $_GET['resource'] . '/';
+        $defaultResource = lib_config::getInstance()->get("default_resource");
+        $resource = $_GET['resource'];
+        $prefix = $resource . "/";
+        if ($defaultResource == $resource) {
+            $prefix = "";
+        }
+        $basepath = lib_config::getInstance()->get("baseurl") . $prefix;
         $string = $basepath . "index.php?module=" . $module;
         if ($action) {
             $string .= "&action=" . $action;
