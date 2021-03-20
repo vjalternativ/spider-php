@@ -144,19 +144,17 @@ class ResourceController
     protected function validateFormFields($fields, $data)
     {
         $isValid = true;
-        foreach ($fields as $field => $label) {
+        foreach ($fields as $field) {
             if (isset($data[$field])) {
                 $data[$field] = trim($data[$field]);
                 if ($data[$field]) {
                     continue;
                 } else {
                     $isValid = false;
-                    $this->setResponse("warning", "Field " . $label . " is mandatory.");
                     break;
                 }
             } else {
                 $isValid = false;
-                $this->setResponse("warning", "Field " . $label . " is not set.");
                 break;
             }
         }
