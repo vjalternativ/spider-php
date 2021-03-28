@@ -177,6 +177,10 @@
                 }, plugin.settings.animationDuration, function() {
                     plugin.$el.remove();
                 });
+
+				if(plugin.settings.callback) {
+					plugin.settings.callback();
+				}
             }, timeout || 0);
         }
     });
@@ -207,10 +211,11 @@ class BSToast  {
 			this.toastOption.iconsource = iconsource;
 		}
 	}
-	toast = (type,message) => {
+	toast = (type,message,callback=false) => {
 		var option = this.toastOption;
 		option.message = message;
 		option.type=type;
+		option.callback = callback;
 		bootoast(option);	
 	}
 	static getInstance(iconsource) {
@@ -240,9 +245,9 @@ class BSToast  {
 
 
 class BS4Toast extends BSToast {
-	static toast = (type,message) => {
+	static toast = (type,message,callback=false) => {
 		var toast = this.getInstance("fa");
-		toast.toast(type,message);
+		toast.toast(type,message,callback);
 	}
 	
 }

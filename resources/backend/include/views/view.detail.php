@@ -237,8 +237,8 @@ class ViewDetail extends BackendResourceView
             $headers = array();
             $headers['name']['name'] = "name";
             $headers['name']['label'] = "Name";
-            if(isset($subpanels['extracols'])) {
-                foreach($subpanels['extracols'] as $col=>$label) {
+            if (isset($subpanels['extracols'])) {
+                foreach ($subpanels['extracols'] as $col => $label) {
                     $headers[$col]['name'] = $label;
                 }
             }
@@ -270,17 +270,16 @@ class ViewDetail extends BackendResourceView
             $heading .= '<input type="hidden" id="subpanel_rtable-' . $subpanels['id'] . '"   value="' . $subpanels['rtable'] . '" />';
             $heading .= '<input type="hidden" id="subpanel_relname-' . $subpanels['id'] . '"   value="' . $subpanels['name'] . '" />';
 
-
             $parentModule = "";
             $parentId = "";
             $parentRecord = $_REQUEST['record'];
-            if(isset($_REQUEST['parent_module']) && isset($_REQUEST["parent_id"])) {
+            if (isset($_REQUEST['parent_module']) && isset($_REQUEST["parent_id"])) {
                 $parentModule = $_REQUEST['parent_module'];
                 $parentId = $_REQUEST['parent_id'];
             }
-            $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_module"   value="' . $parentModule . '" />';
-            $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_id"   value="' . $parentId . '" />';
-            $heading .= '<input type="hidden" id="subpanel_'.$subpanels['id'].'_parent_record"   value="' . $parentRecord . '" />';
+            $heading .= '<input type="hidden" id="subpanel_' . $subpanels['id'] . '_parent_module"   value="' . $parentModule . '" />';
+            $heading .= '<input type="hidden" id="subpanel_' . $subpanels['id'] . '_parent_id"   value="' . $parentId . '" />';
+            $heading .= '<input type="hidden" id="subpanel_' . $subpanels['id'] . '_parent_record"   value="' . $parentRecord . '" />';
 
             $heading .= '<a href="index.php?module=' . $subpanels['rtable'] . '&action=editview&parent_module=' . $this->module . '&parent_record=' . $this->record . '&rel=' . $subpanels['name'] . '"><button class="btn btn-primary pull-right">Add New</button></a>';
             $heading .= '<button class="btn btn-success pull-right margin-right-10" onclick="selectSubpanelItems(\'' . $subpanels['id'] . '\')">Select</button>';
@@ -306,7 +305,7 @@ class ViewDetail extends BackendResourceView
     {
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
-        $entity  = lib_entity::getInstance();
+        $entity = lib_entity::getInstance();
         $bs = lib_bootstrap::getInstance();
         $tableinfo = $entity->getwhere("tableinfo", "name ='" . $this->module . "'");
         $vardef = json_decode(base64_decode($tableinfo['description']), 1);
@@ -448,7 +447,8 @@ class ViewDetail extends BackendResourceView
         $bs = lib_bootstrap::getInstance();
         $formgroup = '';
         foreach ($def as $item) {
-            if ($item['type'] == 'row') {
+
+            if (isset($item['type']) && $item['type'] == 'row') {
                 if (isset($item['fields'])) {
                     $col = "";
                     foreach ($item['fields'] as $fieldinfo) {
@@ -526,7 +526,7 @@ class ViewDetail extends BackendResourceView
                     )
                 ));
             } else {
-                if ($item['type'] == "hr") {
+                if (isset($item['type']) && $item['type'] == "hr") {
                     $formgroup .= $bs->getelement("span", $item['label'], array(
                         "class" => "h4 heading text-primary"
                     ));
