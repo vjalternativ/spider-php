@@ -1,4 +1,6 @@
 <?php
+use function lib_bootstrap\getelement;
+
 require_once lib_config::getInstance()->get("fwbasepath") . 'beans/DBField.php';
 
 abstract class lib_database
@@ -139,22 +141,22 @@ abstract class lib_database
     {
         $rows = array();
         $temp = &$rows;
-        $qry = $this->query($sql, true);
+        echo $sql . PHP_EOL;
+        $qry = mysqli_query($this->con, $sql);
         if (! $qry) {
             if ($die) {
                 echo "<pre>";
                 print_r(debug_print_backtrace());
 
-                die("wrong query " . $sql);
+                die("wrong query " . $sql . " " . mysqli_error($this->con));
             } else {
                 return false;
             }
         }
-
         $checkFirst = true;
         $this->dimindexer = array();
 
-        while ($row = $this->fetch($qry)) {
+        while ($row = mysqli_fetch_assoc($qry)) {
             if ($this->isFirstRow) {
                 if ($checkFirst) {
                     $row['isfirstrow'] = true;
@@ -236,12 +238,13 @@ abstract class lib_database
         }
 
         $this->resetHook();
-        $this->processSeq = false;
+
         return $rows;
     }
 
     function resetHook()
     {
+        $this->processSeq = false;
         $this->processHook = array();
         $this->isFirstRow = false;
     }

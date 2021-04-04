@@ -1,4 +1,5 @@
 <?php
+
 class lib_mysqli extends lib_database
 {
 
@@ -258,112 +259,6 @@ class lib_mysqli extends lib_database
         $this->isFirstRow = $b;
     }
 
-    function fetchRows($sql = "", $dim = false, $val = false, $die = true)
-    {
-        $rows = array();
-        $temp = &$rows;
-        $qry = mysqli_query($this->con, $sql);
-        if (! $qry) {
-            if ($die) {
-                echo "<pre>";
-                print_r(debug_print_backtrace());
-
-                die("wrong query " . $sql . " " . mysqli_error($this->con));
-            } else {
-                return false;
-            }
-        }
-
-        $checkFirst = true;
-        $this->dimindexer = array();
-
-        while ($row = mysqli_fetch_assoc($qry)) {
-
-            if ($this->isFirstRow) {
-                if ($checkFirst) {
-                    $row['isfirstrow'] = true;
-                    $checkFirst = false;
-                } else {
-                    $row['isfirstrow'] = false;
-                }
-            }
-
-            if (isset($this->processHook['enumList']) && $this->processHook['enumList']) {
-                foreach ($this->processHook['enumList'] as $col => $enumkey) {
-                    $row[$col] = $this->getEnumValue($enumkey, $row[$col]);
-                }
-            }
-            if (isset($this->processHook['method']) && $this->processHook['method']) {
-                if (isset($this->processHook['instance']) && $this->processHook['instance']) {
-                    $row = call_user_func(array(
-                        $this->processHook['instance'],
-                        $this->processHook['method']
-                    ), $row);
-                } else {
-                    $row = call_user_func($this->processHook['method'], $row);
-                }
-            }
-            if ($dim) {
-
-                if ($this->processSeq) {
-                    $row = $this->processDimIndexer($row, $dim);
-                }
-                foreach ($dim as $dimkey => $index) {
-                    $cols = false;
-
-                    if (is_array($index)) {
-                        if (isset($index['cols'])) {
-                            $cols = $index['cols'];
-                            $index = $index['key'];
-                        } else {
-                            $cols = $index;
-                            $index = $dimkey;
-                        }
-                    }
-
-                    if ($cols) {
-                        if (! isset($temp[$row[$index]])) {
-                            foreach ($cols as $col) {
-                                if (isset($row[$col])) {
-                                    $temp[$row[$index]][$col] = $row[$col];
-                                }
-                            }
-                            $temp[$row[$index]]['items'] = false;
-                        }
-                    } else {
-                        if (! isset($temp[$row[$index]])) {
-                            $temp[$row[$index]] = false;
-                        }
-                    }
-
-                    if ($cols) {
-                        $temp = &$temp[$row[$index]]['items'];
-                    } else {
-                        $temp = &$temp[$row[$index]];
-                    }
-                }
-
-                if ($val) {
-                    $temp = $row[$val];
-                } else {
-
-                    $temp = $row;
-                }
-            } else {
-                if ($val) {
-                    $rows[$row[$val]] = $row[$val];
-                } else {
-                    $rows[] = $row;
-                }
-            }
-            $temp = &$rows;
-        }
-
-        $this->resetHook();
-        $this->processSeq = false;
-        return $rows;
-    }
-
     function resetHook()
     {
         $this->processHook = array();
@@ -464,7 +359,7 @@ class lib_mysqli extends lib_database
 
     public function addColumn(DBField $field, $table)
     {
-        $sql = "ALTER TABLE " . $table . " ADD COLUMN " . $field->getName() . " " . $field->getDataType() . " ";
+        $sql = "ALTER TABLE " . $table . " ADD COLUMN `" . $field->getName() . "` " . $field->getDataType() . " ";
         if ($field->getLength()) {
             $sql .= " ( " . $field->getLength() . " ) ";
         }
@@ -495,7 +390,7 @@ class lib_mysqli extends lib_database
             $colarray[] = $colsql;
         }
 
-        $sql .= implode(",",$colarray);
+        $sql .= implode(",", $colarray);
 
         $sql .= " )";
 
