@@ -7,7 +7,7 @@ class LockUtil
 
     private $logger;
 
-    public function LockUtil($lockFile)
+    public function __construct($lockFile)
     {
         $this->lockFile = $lockFile;
         $this->logger = lib_logger::getLogger("filelock.log");
