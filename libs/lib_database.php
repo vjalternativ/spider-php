@@ -141,7 +141,6 @@ abstract class lib_database
     {
         $rows = array();
         $temp = &$rows;
-        echo $sql . PHP_EOL;
         $qry = mysqli_query($this->con, $sql);
         if (! $qry) {
             if ($die) {
