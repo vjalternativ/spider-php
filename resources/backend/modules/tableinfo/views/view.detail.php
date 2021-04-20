@@ -1,4 +1,5 @@
 <?php
+require_once 'spider-php/resources/backend/modules/tableinfo/TableinfoService.php';
 
 class tableinfoViewDetail extends ViewDetail
 {
@@ -381,7 +382,14 @@ class tableinfoViewDetail extends ViewDetail
 
         $smarty->assign("rmodule", $this->data['name']);
         $smarty->assign('viewtype', 'editview');
-        $smarty->assign("metadata", isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array());
+
+        $meta = isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array();
+
+        $meta = TableinfoService::getInstance()->fixGridDef($meta);
+
+        $meta = TableinfoService::getInstance()->processGridWithFieldInfo($meta, $fieldParamData);
+
+        $smarty->assign("metadata", $meta);
         $smarty->assign("layout_param_list", $app_list_strings["layout_param_list"]);
         $editviewhtml = $smarty->fetch($vjconfig['fwbasepath'] . 'resources/backend/modules/tableinfo/tpls/editview.tpl');
         $editviewtabcontent = $bs->getelement('div', $editviewhtml, array(
@@ -391,7 +399,13 @@ class tableinfoViewDetail extends ViewDetail
 
         $smarty->assign('viewtype', 'detailview');
 
-        $smarty->assign("metadata", isset($tableinfo['metadata']['detailview']) ? $tableinfo['metadata']['detailview'] : array());
+        $meta = isset($tableinfo['metadata']['detailview']) ? $tableinfo['metadata']['detailview'] : array();
+
+        $meta = TableinfoService::getInstance()->fixGridDef($meta);
+
+        $meta = TableinfoService::getInstance()->processGridWithFieldInfo($meta, $fieldParamData);
+
+        $smarty->assign("metadata", $meta);
         $smarty->assign("layout_param_list", $app_list_strings["layout_param_list"]);
 
         $smarty->assign("version", rand(1000, 9999));

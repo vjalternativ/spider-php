@@ -1,7 +1,6 @@
 <div class="form-group {$viewtype}layout-formlayoutrow" >
 
 <div class="row">
-
 {if $meta.type=='row'}
 
 <div class="col-md-4">
