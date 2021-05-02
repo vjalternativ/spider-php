@@ -406,12 +406,7 @@ abstract class lib_database
         return " " . $table . " (" . implode(",", $cols) . ") values (" . implode(",", $vals) . ") ";
     }
 
-    abstract function _getConnectionObject();
-
-    function getConnectionObject()
-    {
-        return $this->_getConnectionObject();
-    }
+    abstract function getConnectionObject();
 
     abstract function fieldExist($field, $table);
 

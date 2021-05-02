@@ -397,7 +397,7 @@ class lib_mysqli extends lib_database
         $this->query($sql);
     }
 
-    public function _getConnectionObject()
+    public function getConnectionObject()
     {
         return $this->con;
     }
