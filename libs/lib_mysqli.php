@@ -13,8 +13,6 @@ class lib_mysqli extends lib_database
 
     public $dimindexer = array();
 
-    private $processSeq = false;
-
     private $debug = false;
 
     private static $instance = null;
@@ -27,11 +25,6 @@ class lib_mysqli extends lib_database
     static function getInstance()
     {
         parent::getInstance();
-    }
-
-    function setProcessSequence($b)
-    {
-        $this->processSeq = $b;
     }
 
     function setDebugMode($b)
@@ -250,13 +243,6 @@ class lib_mysqli extends lib_database
             }
         }
         return $row;
-    }
-
-    private $isFirstRow = false;
-
-    function setIsFirstRow($b)
-    {
-        $this->isFirstRow = $b;
     }
 
     function resetHook()

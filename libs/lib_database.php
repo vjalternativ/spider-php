@@ -141,7 +141,7 @@ abstract class lib_database
     {
         $rows = array();
         $temp = &$rows;
-        $qry = mysqli_query($this->con, $sql);
+        $qry = $this->query($sql);
         if (! $qry) {
             if ($die) {
                 echo "<pre>";
@@ -155,7 +155,7 @@ abstract class lib_database
         $checkFirst = true;
         $this->dimindexer = array();
 
-        while ($row = mysqli_fetch_assoc($qry)) {
+        while ($row = $this->fetch($qry)) {
             if ($this->isFirstRow) {
                 if ($checkFirst) {
                     $row['isfirstrow'] = true;
