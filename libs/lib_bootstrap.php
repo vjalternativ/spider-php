@@ -336,8 +336,7 @@ class lib_bootstrap
         foreach ($rows as $row) {
             $html .= '<tr id="' . $trclass . '-' . $counter . '" class="' . $trclass . '-row">';
 
-
-            if($headers ){
+            if ($headers) {
                 foreach ($headers as $cell => $label) {
 
                     if (! isset($row[$label])) {
@@ -346,17 +345,14 @@ class lib_bootstrap
                     $html .= '<td>' . $row[$label] . '</td>';
                 }
             } else {
-                foreach($row as $col) {
-                    if($tdwidth) {
-                        $html .= '<td width="'.$tdwidth.'"> ' . $col . '</td>';
-
+                foreach ($row as $col) {
+                    if ($tdwidth) {
+                        $html .= '<td width="' . $tdwidth . '"> ' . $col . '</td>';
                     } else {
                         $html .= '<td > ' . $col . '</td>';
-
                     }
                 }
             }
-
 
             foreach ($extra as $cell => $label) {
 
@@ -441,7 +437,8 @@ class lib_bootstrap
         }
     }
 
-    function getVars(){
+    function getVars()
+    {
         return $this->vars;
     }
 }
