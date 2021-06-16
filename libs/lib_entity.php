@@ -1064,7 +1064,7 @@ class lib_entity
         $table = $this->relationships[$rtable]['rtable'];
 
         $_REQUEST['get_relationship_name'] = $rtable;
-        $sql = "select " . $table . ".* from $rtable  inner join " . $table . " on " . $rtable . "." . $table . "_id = " . $table . ".id where " . $rtable . "." . $this->module . "_id='" . $this->record . "' and " . $rtable . ".deleted=0 order by " . $rtable . ".date_modified desc";
+        $sql = "select " . $table . ".* from $rtable  inner join " . $table . " on " . $rtable . "." . $table . "_id = " . $table . ".id and " . $table . ".deleted=0 where " . $rtable . "." . $this->module . "_id='" . $this->record . "' and " . $rtable . ".deleted=0 order by " . $rtable . ".date_modified desc";
         $rows = $this->results($table, $sql, true, false, $index);
         return $rows;
     }
