@@ -21,7 +21,7 @@
 <script src="{$fwbaseurl}resources/backend/assets/js/bootoast.js" ></script>
 
 <script type="text/javascript" src="{$urlscheme}://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wirs/integration/WIRISplugins.js?viewer=image"></script>
+<script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/integration/WIRISplugins.js?viewer=image"></script>
 
 <script>
 var resource = "backend";
