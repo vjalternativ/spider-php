@@ -20,9 +20,8 @@
 
 <script src="{$fwbaseurl}resources/backend/assets/js/bootoast.js" ></script>
 
-<script type="text/javascript" src="{$urlscheme}://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/integration/WIRISplugins.js?viewer=image"></script>
-
+<script type="text/javascript" src="http://www.wiris.net/demo/editor/editor?lang=en&amp;stats-editor=CKEditor4&amp;stats-mode=xml&amp;stats-version=7.26.0.1439"></script>
 <script>
 var resource = "backend";
 </script>
