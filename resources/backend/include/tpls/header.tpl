@@ -27,8 +27,8 @@
  
 <script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/integration/WIRISplugins.js?viewer=image"></script>
 <script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/plugin.js"></script>
- <!-- <script type="text/javascript" src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/editor.js"></script>
-<script> -->
+ <!-- <script type="text/javascript" src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/editor.js"></script> -->
+<script> 
 var resource = "backend";
 </script>
 
