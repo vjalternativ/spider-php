@@ -8108,7 +8108,7 @@
             t.environment.editorVersion = '4.x';
             if ('wiriscontextpath' in e.config) {
               t.configurationService =
-                e.config.wiriscontextpath + t.configurationService;
+                e.config.wiriscontextpath+"/integration";
               console.warn(
                 'Deprecated property wiriscontextpath. Use mathTypeParameters on instead.',
                 e.config.wiriscontextpath
