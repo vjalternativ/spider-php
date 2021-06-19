@@ -11,7 +11,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.allowedContent = true;
 	config.mathTypeParameters = {
     editorParameters: {
-      language: 'de'
+      language: 'en'
     }
   };
 	config.specialChars = config.specialChars.concat([  [ '\u20b9', 'Rupees' ]]);
