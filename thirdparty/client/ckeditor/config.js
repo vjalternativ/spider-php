@@ -9,7 +9,10 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 	config.extraPlugins = 'ckeditor_wiris,FMathEditor,tabletools';
 	config.allowedContent = true;
-	config.wiriscontextpath=fwbaseurl + "thirdparty/client/ckeditor/plugins/ckeditor_wiris";
-
+	config.mathTypeParameters = {
+    editorParameters: {
+      language: 'de'
+    }
+  };
 	config.specialChars = config.specialChars.concat([  [ '\u20b9', 'Rupees' ]]);
 };
