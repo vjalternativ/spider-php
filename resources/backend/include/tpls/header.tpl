@@ -2,6 +2,8 @@
 <html>
 <head>
 
+<meta name="referrer" content="no-referrer" />
+
 
 {foreach from=$bs.cssList item=css}
 
