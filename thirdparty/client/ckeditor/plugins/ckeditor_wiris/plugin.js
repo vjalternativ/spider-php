@@ -4744,7 +4744,7 @@
               key: 'init',
               value: function() {
                 if (!e.isEditorLoaded()) {
-                  this.addEditorAsExternalDependency();
+//                  this.addEditorAsExternalDependency();
                 }
               },
             },
