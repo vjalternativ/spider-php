@@ -17,17 +17,16 @@
 
 <link rel="stylesheet" href="{$fwbaseurl}resources/backend/assets/css/bootoast.css" />
 
+<script src="{$fwbaseurl}/thirdparty/client/ckeditor/ckeditor.js?v=1"></script>
+
 <script src="{$fwbaseurl}resources/backend/assets/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="{$fwbaseurl}resources/backend/include/lib/js/transliteration-input-tools/transliteration-input.bundle.js"></script>
 
 <script src="{$fwbaseurl}resources/backend/assets/js/bootoast.js" ></script>
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script>
 
-<script src="{$fwbaseurl}/thirdparty/client/ckeditor/ckeditor.js?v=1"></script>
  
-<script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/integration/WIRISplugins.js?viewer=image"></script>
-<script src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/plugin.js"></script>
- <!-- <script type="text/javascript" src="{$fwbaseurl}thirdparty/client/ckeditor/plugins/ckeditor_wiris/editor.js"></script> -->
 <script> 
 var resource = "backend";
 </script>
