@@ -5,14 +5,7 @@
 
 CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-	config.extraPlugins = 'ckeditor_wiris,FMathEditor,tabletools';
-	config.allowedContent = true;
-	config.mathTypeParameters = {
-    editorParameters: {
-      language: 'en'
-    }
-  };
+	config.extraPlugins = 'FMathEditor,tabletools,mathjax';
 	config.specialChars = config.specialChars.concat([  [ '\u20b9', 'Rupees' ]]);
 };
