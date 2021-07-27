@@ -6,16 +6,16 @@ class SystemLogicHook
     function beforeSave(&$keyvalue)
     {
         $moduleList = lib_datawrapper::getInstance()->get("module_list");
-        if(isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
+        if (isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
             $db = lib_database::getInstance();
-            $alias=(isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
-            if(isset($keyvalue['isnew']) && $keyvalue['isnew']) {
-                $isExist = $db->getrow("select * from ".$keyvalue['hook_table']." where deleted=0 and alias ='".$alias."' ");
-                if($isExist) {
-                    $alias = $alias.'-'.uniqid();
+            $alias = (isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
+            if (isset($keyvalue['isnew']) && $keyvalue['isnew']) {
+                $isExist = $db->getrow("select * from " . $keyvalue['hook_table'] . " where deleted=0 and alias ='" . $alias . "' ");
+                if ($isExist) {
+                    $alias = $alias . '-' . uniqid();
                 }
             }
-            $keyvalue['alias']=$alias;
+            $keyvalue['alias'] = $alias;
         }
         $entity = lib_entity::getInstance();
 
@@ -24,8 +24,8 @@ class SystemLogicHook
 
             if ($keyvalue['hook_isnew']) {
 
-                $isExist = $entity->getwhere("user","user_name='".$keyvalue['username']."'");
-                if($isExist) {
+                $isExist = $entity->getwhere("user", "user_name='" . $keyvalue['username'] . "'");
+                if ($isExist) {
                     die("this account is already registerd.");
                 }
                 $keyval['user_name'] = $keyvalue['username'];
@@ -35,7 +35,7 @@ class SystemLogicHook
                 $userId = $entity->save("user", $keyval);
                 $keyvalue['ownership_id'] = $userId;
             } else {
-                if(isset($keyvalue['ownership_id'])) {
+                if (isset($keyvalue['ownership_id'])) {
                     $keyval['id'] = $keyvalue['ownership_id'];
                     $keyval['name'] = $keyvalue['name'];
                     $keyval['user_name'] = $keyvalue['username'];
@@ -44,8 +44,6 @@ class SystemLogicHook
                 }
             }
         }
-
-
     }
 
     function afterSave(&$keyvalue)
@@ -66,25 +64,23 @@ class SystemLogicHook
             }
         }
 
-        foreach($keyvalue as $key=>$val) {
+        foreach ($keyvalue as $key => $val) {
             $globalRelationshipList = lib_datawrapper::getInstance()->get("relationship_list");
             $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
             $entity = lib_entity::getInstance();
-            if(isset($globalRelationshipList[$key]) && $val) {
-                if($globalRelationshipList[$key]['rtype']=="1_M") {
+            if (isset($globalRelationshipList[$key]) && $val) {
+                if ($globalRelationshipList[$key]['rtype'] == "1_M") {
                     $secondaryTable = $globalEntityList[$globalRelationshipList[$key]['secondarytable']]['name'];
                     $primaryRecord = $keyvalue['id'];
                     $secondaryRecord = $val;
-                    if($keyvalue['hook_table'] == $secondaryTable) {
+                    if ($keyvalue['hook_table'] == $secondaryTable) {
                         $primaryRecord = $secondaryRecord;
                         $secondaryRecord = $keyvalue['id'];
                     }
-                    $entity->saveRelationship($key, $primaryRecord,$secondaryRecord);
+                    $entity->saveRelationship($key, $primaryRecord, $secondaryRecord);
                 }
             }
         }
-
-
     }
 
     function workflowAfterSave(&$keyvalue)
@@ -94,9 +90,9 @@ class SystemLogicHook
         if (isset($app_list_strings['module_list']['workflow'])) {
 
             $sql = "select * from workflow where deleted=0 and status='Active' and workflow_module='" . $keyvalue['hook_table'] . "'";
-            $qry = $db->query($sql,true);
+            $qry = $db->query($sql, true);
 
-            if($qry) {
+            if ($qry) {
                 $rows = $db->fetchRows($sql, array(
                     "id"
                 ));
@@ -108,13 +104,11 @@ class SystemLogicHook
                     }
                 }
             }
-
-
         }
     }
 
-
-    private function replaceAnnotationForWorkFlow($flow,$key,$val) {
+    private function replaceAnnotationForWorkFlow($flow, $key, $val)
+    {
         $flow['description'] = str_replace("@" . $key, $val, $flow['description']);
         $flow['subject'] = str_replace("@" . $key, $val, $flow['subject']);
         $flow['email_to'] = str_replace("@" . $key, $val, $flow['email_to']);
@@ -147,9 +141,8 @@ class SystemLogicHook
 
         $data['name_detailview_link'] = '<a href="' . $vjconfig['baseurl'] . 'backend/index.php?module=' . $keyval['hook_table'] . '&action=detailview&record=' . $id . '">' . $data['name'] . '</a>';
 
-
         foreach ($data as $key => $val) {
-            $flow  = $this->replaceAnnotationForWorkFlow($flow, $key, $val);
+            $flow = $this->replaceAnnotationForWorkFlow($flow, $key, $val);
             $cell = array();
             $cell['heading'] = strtoupper($key);
             $cell['value'] = $val;
@@ -173,7 +166,7 @@ class SystemLogicHook
 
         if (strpos($flow['description'], "@all_fields") !== false) {
             $smarty->assign("rows", $rows);
-            $html = $smarty->fetch($vjconfig['fwbasepath']."resources/backend/modules/workflow/tpls/all_fields.tpl");
+            $html = $smarty->fetch($vjconfig['fwbasepath'] . "resources/backend/modules/workflow/tpls/all_fields.tpl");
             $flow['description'] = str_replace("@all_fields", $html, $flow['description']);
         }
 
@@ -187,9 +180,8 @@ class SystemLogicHook
 
     private function slugify($text)
     {
-
-        $text= str_replace("(", "", $text);
-        $text= str_replace(")", "", $text);
+        $text = str_replace("(", "", $text);
+        $text = str_replace(")", "", $text);
 
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
@@ -215,7 +207,5 @@ class SystemLogicHook
 
         return $text;
     }
-
-
 }
 ?>
