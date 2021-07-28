@@ -23,10 +23,9 @@
 <script type="text/javascript" src="{$fwbaseurl}resources/backend/include/lib/js/transliteration-input-tools/transliteration-input.bundle.js"></script>
 
 <script src="{$fwbaseurl}resources/backend/assets/js/bootoast.js" ></script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script>
-
- 
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 <script> 
 var resource = "backend";
 </script>
