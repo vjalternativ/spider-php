@@ -46,5 +46,16 @@ class MediaFilesService implements IMediaFilesService
         $vjconfig = lib_config::getInstance()->getConfig();
         return $mediaId ? $vjconfig['urlbasepath'] . "backend/index.php?module=media_files&action=download&id=" . $mediaId : false;
     }
+
+    public function removeMedia($id)
+    {
+        $media = lib_entity::getInstance()->get("media_files", $id);
+        if ($media) {
+            $filePath = $media['file_path'];
+            unlink($filePath);
+        }
+        $sql = "DELETE FROM media_files where id = '" . $id . "'";
+        lib_database::getInstance()->query($sql);
+    }
 }
 ?>

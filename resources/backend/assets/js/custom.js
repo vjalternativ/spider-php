@@ -158,3 +158,16 @@ $(document).ready(function(){
 	  });
 
 });
+
+
+function removeAttachment(module,record,field,id) {
+	var x = confirm("Are you sure?");
+	if(!x) {
+	return false;	
+	}
+	
+	var url = "index.php?module="+module+"&action=removeAttachment&record="+record+"&fieldname="+field+"&id="+id;
+	$.post(url,{},function(res){
+		window.location.reload();
+	});
+}

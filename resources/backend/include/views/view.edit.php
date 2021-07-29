@@ -509,6 +509,7 @@ class ViewEdit extends BackendResourceView
                         if ($fieldarray['type'] == "file" && ! empty($this->data[$fieldarray['name']])) {
                             $inputgroup .= "<br />";
                             $inputgroup .= '<a target="_blank"  href="index.php?module=media_files&action=download&id=' . $this->data[$fieldarray['name']] . '" >Attachment</a>';
+                            $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $this->data[$fieldarray['name']] . '\')" >Remove</a>';
                         }
 
                         $colattr = array(

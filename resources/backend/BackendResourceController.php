@@ -512,5 +512,23 @@ class BackendResourceController extends ResourceController
         $primaryModule = $_REQUEST['primaryModule'];
         header("location:index.php?module=" . $primaryModule . "&action=detailview&record=" . $record);
     }
+
+    function action_removeAttachment()
+    {
+        $module = $_REQUEST['module'];
+        $record = $_REQUEST['record'];
+        $field = $_REQUEST['fieldname'];
+        $id = $_REQUEST['id'];
+
+        if ($record && $module) {
+
+            $data = array();
+            $data['id'] = $record;
+            $data[$field] = '';
+            lib_entity::getInstance()->save($module, $data);
+
+            MediaFilesServiceRegistrar::getInstance()->removeMedia($id);
+        }
+    }
 }
 ?>
