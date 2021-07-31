@@ -521,12 +521,9 @@ class BackendResourceController extends ResourceController
         $id = $_REQUEST['id'];
 
         if ($record && $module) {
-
-            $data = array();
-            $data['id'] = $record;
+            $data = lib_entity::getInstance()->get($module, $record);
             $data[$field] = '';
             lib_entity::getInstance()->save($module, $data);
-
             MediaFilesServiceRegistrar::getInstance()->removeMedia($id);
         }
     }
