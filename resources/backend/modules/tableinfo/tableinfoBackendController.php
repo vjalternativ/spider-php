@@ -264,7 +264,7 @@ class tableinfoBackendController extends BackendResourceController
         }
 
         if ($_REQUEST['field-default'] != '') {
-            $postSql .= $_REQUEST['field-default'];
+            $postSql .= " DEFAULT " . $_REQUEST['field-default'];
             $temp['default'] = $_REQUEST['field-default'];
         }
 
