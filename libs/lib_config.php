@@ -9,7 +9,7 @@ class lib_config
 
     function __construct($configPath)
     {
-        $dir = $configPath ? $configPath : __DIR__;
+        $dir = __DIR__;
         $fwbasepath = str_replace("libs", "", $dir);
         if (isset($_SERVER['argv'])) {
             if (substr($_SERVER['SCRIPT_FILENAME'], 0, 1) == "/") {
