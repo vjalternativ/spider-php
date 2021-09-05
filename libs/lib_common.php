@@ -21,7 +21,7 @@ class lib_common
             try {
                 $database->connect($config['host'], $config['user'], $config['password'], $config['name']);
             } catch (Exception $e) {
-                throw $e;
+                throw new Exception(print_r($config, 1));
             }
         }
     }
