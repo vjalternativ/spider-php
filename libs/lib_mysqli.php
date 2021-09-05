@@ -44,7 +44,7 @@ class lib_mysqli extends lib_database
         $this->con = mysqli_connect($host, $user, $password, $database) or die("database connection failed");
 
         if (mysqli_connect_errno()) {
-            die(mysqli_connect_error());
+            throw new Exception($host . " " . $user . " " . $password . " " . mysqli_connect_error());
         }
         mysqli_set_charset($this->con, "utf8mb4");
         $this->query("SET SESSION sql_mode=''");
