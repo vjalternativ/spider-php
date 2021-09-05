@@ -249,7 +249,7 @@ class lib_util
         return false;
     }
 
-    static function isset($array, ...$args)
+    static function isset($array, String ...$args)
     {
         $isValid = true;
         foreach ($args as $index) {
