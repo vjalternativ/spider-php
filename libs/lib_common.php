@@ -13,7 +13,7 @@ class lib_common
         require_once $dir . 'lib_entity.php';
 
         $database = lib_database::getInstance();
-        $config = lib_config::getInstance()->get("database");
+        $config = lib_config::getInstance($configPath)->get("database");
         $disableDb = lib_config::getInstance()->get("disabledb");
         if (! $disableDb) {
             try {
