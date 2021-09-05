@@ -33,11 +33,10 @@ class lib_framework
 
     function init($sessionName = false)
     {
+        $config = lib_config::getInstance($this->configpath)->getConfig();
         $common = new lib_common();
         $common->init($this->configpath);
-
         $params = lib_seo::getInstance()->getParams();
-        $config = lib_config::getInstance($this->configpath)->getConfig();
         $resource = lib_config::getInstance()->get("default_resource");
         date_default_timezone_set($config['timezone']);
         if (php_sapi_name() == "cli" && isset($_SERVER['argv']) && $_SERVER['argv']) {
