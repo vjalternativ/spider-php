@@ -249,18 +249,19 @@ class lib_util
         return false;
     }
 
-    static function isset($array, String ...$args)
-    {
-        $isValid = true;
-        foreach ($args as $index) {
-            if (! isset($array[$index])) {
-                $isValid = false;
-                break;
-            }
-        }
-        return $isValid;
-    }
-
+    /*
+     * static function isset($array, ...$args)
+     * {
+     * $isValid = true;
+     * foreach ($args as $index) {
+     * if (! isset($array[$index])) {
+     * $isValid = false;
+     * break;
+     * }
+     * }
+     * return $isValid;
+     * }
+     */
     static function slugify($text)
     {
         $text = str_replace("(", "", $text);
