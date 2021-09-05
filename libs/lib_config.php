@@ -43,9 +43,10 @@ class lib_config
             $this->config['defaultlang'] = isset($config['defaultlang']) ? $config['defaultlang'] : "en_us";
             $this->config['init_default_modules'] = isset($config['init_default_modules']) ? $config['init_default_modules'] : "true";
         } else {
+            echo $dir . "config.php" . PHP_EOL;
             $server = $_SERVER;
             $err = print_r($server, 1);
-            throw new \ErrorException($err);
+            throw new \ErrorException($dir . " config.php not exist");
         }
     }
 
