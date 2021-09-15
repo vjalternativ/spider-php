@@ -372,7 +372,7 @@ class ViewEdit extends BackendResourceView
                         if (! isset($this->data[$fieldarray['name']])) {
                             $this->data[$fieldarray['name']] = "";
                         }
-                        $val = $this->data[$fieldarray['name']];
+                        $val = addslashes($this->data[$fieldarray['name']]);
 
                         if (isset($attr[2])) {
                             $isdualtag = false;
