@@ -1,14 +1,20 @@
 <?php
-$path = __DIR__.'/';
-require $path.'IScalableDataTable.php';
+$path = __DIR__ . '/';
+require $path . 'IScalableDataTable.php';
 
-abstract class AScalableDataTable implements IScalableDataTable {
+abstract class AScalableDataTable implements IScalableDataTable
+{
 
     private $fieldList = array();
+
     private $dataTablePrefix = "";
+
     private $fieldsPerTable = 20;
+
     private $defaultFields = null;
+
     /**
+     *
      * @return mixed
      */
     public function getDefaultFields()
@@ -17,6 +23,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @param mixed $defaultField
      */
     public function setDefaultFields($cols)
@@ -25,6 +32,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @return number
      */
     public function getFieldsPerTable()
@@ -33,6 +41,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @param number $fieldsPerTable
      */
     public function setFieldsPerTable($fieldsPerTable)
@@ -41,6 +50,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @return mixed
      */
     public function getFieldList()
@@ -49,6 +59,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @return mixed
      */
     public function getDataTablePrefix()
@@ -57,6 +68,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @param mixed $fieldList
      */
     public function setFieldList($fieldList)
@@ -65,6 +77,7 @@ abstract class AScalableDataTable implements IScalableDataTable {
     }
 
     /**
+     *
      * @param mixed $dataTablePrefix
      */
     public function setDataTablePrefix($dataTablePrefix)
@@ -76,79 +89,78 @@ abstract class AScalableDataTable implements IScalableDataTable {
     {
         $fieldList = $this->getFieldList();
         $fieldsPerTable = $this->getFieldsPerTable();
-        $counter  = 1;
+        $counter = 1;
         $tablecounter = 1;
         $tableVsFields = array();
-        foreach($fieldList as $key => $field) {
-            if($counter <= $fieldsPerTable) {
-                $tableVsFields[$this->getDataTablePrefix().'_'.$tablecounter][$key] =  $field;
+        foreach ($fieldList as $key => $field) {
+            if ($counter <= $fieldsPerTable) {
+                $tableVsFields[$this->getDataTablePrefix() . '_' . $tablecounter][$key] = $field;
             }
-            if($counter==$fieldsPerTable) {
+            if ($counter == $fieldsPerTable) {
                 $counter = 1;
                 $tablecounter ++;
                 continue;
             }
 
-            $counter++;
+            $counter ++;
         }
         return $tableVsFields;
     }
 
-
     abstract function isTableExistInDatabase($table);
-    abstract function isFieldExistInTable($field,$table);
+
+    abstract function isFieldExistInTable($field, $table);
+
     abstract function generateTable($table);
-    abstract function generateTableField(DBField $field,$table);
 
-    private function _processDataTablesInDatabase($tables) {
+    abstract function generateTableField(DBField $field, $table);
 
-        foreach($tables as $table) {
-            if(!$this->isTableExistInDatabase($table)) {
-                    $this->generateTable($table);
+    private function _processDataTablesInDatabase($tables)
+    {
+        foreach ($tables as $table) {
+            if (! $this->isTableExistInDatabase($table)) {
+                $this->generateTable($table);
             }
         }
     }
 
-    private function _processDataTableField(DBField $field,$table) {
+    private function _processDataTableField(DBField $field, $table)
+    {
         $fieldExistInTable = $this->isFieldExistInTable($field->getName(), $table);
-        if(!$fieldExistInTable) {
+        if (! $fieldExistInTable) {
             $this->generateTableField($field, $table);
         }
     }
 
     public function processDataTableForFields()
     {
-        if($this->getFieldList() == null) {
+        if ($this->getFieldList() == null) {
             throw new Exception("fieldlist should not be null");
         }
-        if($this->getDataTablePrefix() == null) {
+        if ($this->getDataTablePrefix() == null) {
             throw new Exception("data table prefix should not be null");
         }
-        if($this->getDefaultFields() == null) {
+        if ($this->getDefaultFields() == null) {
             throw new Exception("defaul fields should not be null");
         }
 
         $tableVsFields = $this->_getDataTables();
+
         $tables = array_keys($tableVsFields);
         $this->_processDataTablesInDatabase($tables);
-        foreach($tableVsFields as $table=>$fields) {
-            foreach($fields as $field) {
+        foreach ($tableVsFields as $table => $fields) {
+            foreach ($fields as $field) {
                 $field = DBField::as($field);
                 $field->setTable($table);
                 $this->_processDataTableField($field, $table);
             }
         }
         return $tableVsFields;
-
-
     }
 
-
-    protected static function as(IScalableDataTable $ob) {
+    protected static function as(IScalableDataTable $ob)
+    {
         return $ob;
     }
-
-
-
 }
 ?>

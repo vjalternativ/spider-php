@@ -261,6 +261,9 @@ class ViewEdit extends BackendResourceView
             ),
             "class" => array(
                 "value" => "btn btn-primary pull-right"
+            ),
+            "id" => array(
+                "value" => "submit-form"
             )
         ));
         $save .= '<div class="clearfix"></div>';
@@ -311,6 +314,9 @@ class ViewEdit extends BackendResourceView
             ),
             "enctype" => array(
                 "value" => "multipart/form-data"
+            ),
+            "id" => array(
+                "value" => "editview_form"
             )
         ));
         return $form;

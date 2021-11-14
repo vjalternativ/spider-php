@@ -1,6 +1,4 @@
 <?php
-use function lib_bootstrap\getelement;
-
 require_once lib_config::getInstance()->get("fwbasepath") . 'beans/DBField.php';
 
 abstract class lib_database
@@ -112,7 +110,7 @@ abstract class lib_database
                         $proc['attr'][$pkey] = $tempattr;
                     }
 
-                    $processList[$key] = getelement($proc['tag'], $rowval, $proc['attr'], $isdualtag);
+                    $processList[$key] = lib_util::getelement($proc['tag'], $rowval, $proc['attr'], $isdualtag);
                 }
                 $row = $processList;
             }
@@ -137,10 +135,11 @@ abstract class lib_database
         $this->isFirstRow = $b;
     }
 
-    function fetchRows($sql = "", $dim = false, $val = false, $die = true)
+    private function __fetchRows()
+    {}
+
+    private function _query($sql, $die = true)
     {
-        $rows = array();
-        $temp = &$rows;
         $qry = $this->query($sql);
         if (! $qry) {
             if ($die) {
@@ -152,93 +151,206 @@ abstract class lib_database
                 return false;
             }
         }
-        $checkFirst = true;
-        $this->dimindexer = array();
 
-        while ($row = $this->fetch($qry)) {
-            if ($this->isFirstRow) {
-                if ($checkFirst) {
-                    $row['isfirstrow'] = true;
-                    $checkFirst = false;
-                } else {
-                    $row['isfirstrow'] = false;
-                }
-            }
+        return $qry;
+    }
 
-            if (isset($this->processHook['enumList']) && $this->processHook['enumList']) {
-                foreach ($this->processHook['enumList'] as $col => $enumkey) {
-                    $row[$col] = $this->getEnumValue($enumkey, $row[$col]);
-                }
-            }
-            if (isset($this->processHook['method']) && $this->processHook['method']) {
-                if (isset($this->processHook['instance']) && $this->processHook['instance']) {
-                    $row = call_user_func(array(
-                        $this->processHook['instance'],
-                        $this->processHook['method']
-                    ), $row);
-                } else {
-                    $row = call_user_func($this->processHook['method'], $row);
-                }
-            }
-            if ($dim) {
+    function getAll($sql = "", $dim = false, $val = false, RowProcessHook $rowProcessHook = null, $die = true)
+    {
+        $qry = $this->_query($sql, $die);
 
-                if ($this->processSeq) {
-                    $row = $this->processDimIndexer($row, $dim);
-                }
-                foreach ($dim as $dimkey => $index) {
-                    $cols = false;
+        if ($qry) {
 
-                    if (is_array($index)) {
-                        if (isset($index['cols'])) {
-                            $cols = $index['cols'];
-                            $index = $index['key'];
-                        } else {
-                            $cols = $index;
-                            $index = $dimkey;
-                        }
-                    }
-
-                    if ($cols) {
-                        if (! isset($temp[$row[$index]])) {
-                            foreach ($cols as $col) {
-                                if (isset($row[$col])) {
-                                    $temp[$row[$index]][$col] = $row[$col];
-                                }
-                            }
-                            $temp[$row[$index]]['items'] = false;
-                        }
-                    } else {
-                        if (! isset($temp[$row[$index]])) {
-                            $temp[$row[$index]] = false;
-                        }
-                    }
-
-                    if ($cols) {
-                        $temp = &$temp[$row[$index]]['items'];
-                    } else {
-                        $temp = &$temp[$row[$index]];
-                    }
-                }
-
-                if ($val) {
-                    $temp = $row[$val];
-                } else {
-
-                    $temp = $row;
-                }
-            } else {
-                if ($val) {
-                    $rows[$row[$val]] = $row[$val];
-                } else {
-                    $rows[] = $row;
-                }
-            }
+            $rows = array();
             $temp = &$rows;
+
+            $checkFirst = true;
+
+            $dimindexer = array();
+
+            while ($row = $this->fetch($qry)) {
+                if ($rowProcessHook && $rowProcessHook->getFirstRowMarker()) {
+                    if ($checkFirst) {
+                        $row['isfirstrow'] = true;
+                        $checkFirst = false;
+                    } else {
+                        $row['isfirstrow'] = false;
+                    }
+                }
+
+                if (isset($rowProcessHook->processHook['enumList']) && $rowProcessHook->processHook['enumList']) {
+                    foreach ($rowProcessHook->processHook['enumList'] as $col => $enumkey) {
+                        $row[$col] = $this->getEnumValue($enumkey, $row[$col]);
+                    }
+                }
+                if (isset($rowProcessHook->processHook['method']) && $rowProcessHook->processHook['method']) {
+                    if (isset($rowProcessHook->processHook['instance']) && $rowProcessHook->processHook['instance']) {
+                        $row = call_user_func(array(
+                            $rowProcessHook->processHook['instance'],
+                            $rowProcessHook->processHook['method']
+                        ), $row);
+                    } else {
+                        $row = call_user_func($rowProcessHook->processHook['method'], $row);
+                    }
+                }
+                if ($dim) {
+
+                    if ($rowProcessHook && $rowProcessHook->getProcessSeq()) {
+                        $row = $this->processDimIndexer($row, $dim, $dimindexer);
+                    }
+                    foreach ($dim as $dimkey => $index) {
+                        $cols = false;
+
+                        if (is_array($index)) {
+                            if (isset($index['cols'])) {
+                                $cols = $index['cols'];
+                                $index = $index['key'];
+                            } else {
+                                $cols = $index;
+                                $index = $dimkey;
+                            }
+                        }
+
+                        if ($cols) {
+                            if (! isset($temp[$row[$index]])) {
+                                foreach ($cols as $col) {
+                                    if (isset($row[$col])) {
+                                        $temp[$row[$index]][$col] = $row[$col];
+                                    }
+                                }
+                                $temp[$row[$index]]['items'] = false;
+                            }
+                        } else {
+                            if (! isset($temp[$row[$index]])) {
+                                $temp[$row[$index]] = false;
+                            }
+                        }
+
+                        if ($cols) {
+                            $temp = &$temp[$row[$index]]['items'];
+                        } else {
+                            $temp = &$temp[$row[$index]];
+                        }
+                    }
+
+                    if ($val) {
+                        $temp = $row[$val];
+                    } else {
+
+                        $temp = $row;
+                    }
+                } else {
+                    if ($val) {
+                        $rows[$row[$val]] = $row[$val];
+                    } else {
+                        $rows[] = $row;
+                    }
+                }
+                $temp = &$rows;
+            }
+
+            return $rows;
         }
+        return false;
+    }
 
-        $this->resetHook();
+    // deprecated
+    function fetchRows($sql = "", $dim = false, $val = false, $die = true)
+    {
+        $qry = $this->_query($sql, $die);
+        if ($qry) {
+            $rows = array();
+            $temp = &$rows;
 
-        return $rows;
+            $checkFirst = true;
+            $dimindexer = array();
+
+            while ($row = $this->fetch($qry)) {
+                if ($this->isFirstRow) {
+                    if ($checkFirst) {
+                        $row['isfirstrow'] = true;
+                        $checkFirst = false;
+                    } else {
+                        $row['isfirstrow'] = false;
+                    }
+                }
+
+                if (isset($this->processHook['enumList']) && $this->processHook['enumList']) {
+                    foreach ($this->processHook['enumList'] as $col => $enumkey) {
+                        $row[$col] = $this->getEnumValue($enumkey, $row[$col]);
+                    }
+                }
+                if (isset($this->processHook['method']) && $this->processHook['method']) {
+                    if (isset($this->processHook['instance']) && $this->processHook['instance']) {
+                        $row = call_user_func(array(
+                            $this->processHook['instance'],
+                            $this->processHook['method']
+                        ), $row);
+                    } else {
+                        $row = call_user_func($this->processHook['method'], $row);
+                    }
+                }
+                if ($dim) {
+
+                    if ($this->processSeq) {
+                        $row = $this->processDimIndexer($row, $dim, $dimindexer);
+                    }
+                    foreach ($dim as $dimkey => $index) {
+                        $cols = false;
+
+                        if (is_array($index)) {
+                            if (isset($index['cols'])) {
+                                $cols = $index['cols'];
+                                $index = $index['key'];
+                            } else {
+                                $cols = $index;
+                                $index = $dimkey;
+                            }
+                        }
+
+                        if ($cols) {
+                            if (! isset($temp[$row[$index]])) {
+                                foreach ($cols as $col) {
+                                    if (isset($row[$col])) {
+                                        $temp[$row[$index]][$col] = $row[$col];
+                                    }
+                                }
+                                $temp[$row[$index]]['items'] = false;
+                            }
+                        } else {
+                            if (! isset($temp[$row[$index]])) {
+                                $temp[$row[$index]] = false;
+                            }
+                        }
+
+                        if ($cols) {
+                            $temp = &$temp[$row[$index]]['items'];
+                        } else {
+                            $temp = &$temp[$row[$index]];
+                        }
+                    }
+
+                    if ($val) {
+                        $temp = $row[$val];
+                    } else {
+
+                        $temp = $row;
+                    }
+                } else {
+                    if ($val) {
+                        $rows[$row[$val]] = $row[$val];
+                    } else {
+                        $rows[] = $row;
+                    }
+                }
+                $temp = &$rows;
+            }
+
+            $this->resetHook();
+
+            return $rows;
+        }
+        return false;
     }
 
     function resetHook()
@@ -298,7 +410,7 @@ abstract class lib_database
         return $this->getrow($sql);
     }
 
-    function processDimIndexer($row, $dim)
+    function processDimIndexer($row, $dim, &$dimindexer)
     {
         $seqdim = array();
         foreach ($dim as $key => $val) {
@@ -316,28 +428,28 @@ abstract class lib_database
             $vval .= "_" . $row[$index];
             $skey .= "_" . $index;
             $ikey .= "_" . $index;
-            if (isset($this->dimindexer['last_seq_indexes'][$skey])) {
-                if (! isset($this->dimindexer['vals'][$skey][$vval])) {
-                    $this->dimindexer['last_seq_indexes'][$skey] ++;
-                    $this->dimindexer['vals'][$skey][$vval] = $this->dimindexer['last_seq_indexes'][$skey];
+            if (isset($dimindexer['last_seq_indexes'][$skey])) {
+                if (! isset($dimindexer['vals'][$skey][$vval])) {
+                    $dimindexer['last_seq_indexes'][$skey] ++;
+                    $dimindexer['vals'][$skey][$vval] = $dimindexer['last_seq_indexes'][$skey];
                 }
             } else {
-                $this->dimindexer['last_seq_indexes'][$skey] = 0;
-                $this->dimindexer['vals'][$skey][$vval] = 0;
+                $dimindexer['last_seq_indexes'][$skey] = 0;
+                $dimindexer['vals'][$skey][$vval] = 0;
             }
-            $row[$skey] = $this->dimindexer['last_seq_indexes'][$skey];
+            $row[$skey] = $dimindexer['last_seq_indexes'][$skey];
 
             if ($sval) {
-                if (isset($this->dimindexer['last_iseq_indexes'][$ikey . "_" . $sval])) {
-                    if (! isset($this->dimindexer['vals'][$ikey . "_" . $sval][$vval])) {
-                        $this->dimindexer['last_iseq_indexes'][$ikey . "_" . $sval] ++;
-                        $this->dimindexer['vals'][$ikey . "_" . $sval][$vval] = $this->dimindexer['last_iseq_indexes'][$ikey . "_" . $sval];
+                if (isset($dimindexer['last_iseq_indexes'][$ikey . "_" . $sval])) {
+                    if (! isset($dimindexer['vals'][$ikey . "_" . $sval][$vval])) {
+                        $dimindexer['last_iseq_indexes'][$ikey . "_" . $sval] ++;
+                        $dimindexer['vals'][$ikey . "_" . $sval][$vval] = $dimindexer['last_iseq_indexes'][$ikey . "_" . $sval];
                     }
                 } else {
-                    $this->dimindexer['last_iseq_indexes'][$ikey . "_" . $sval] = 0;
-                    $this->dimindexer['vals'][$ikey . "_" . $sval][$vval] = $this->dimindexer['last_iseq_indexes'][$ikey . "_" . $sval];
+                    $dimindexer['last_iseq_indexes'][$ikey . "_" . $sval] = 0;
+                    $dimindexer['vals'][$ikey . "_" . $sval][$vval] = $dimindexer['last_iseq_indexes'][$ikey . "_" . $sval];
                 }
-                $row[$ikey] = $this->dimindexer['last_iseq_indexes'][$ikey . "_" . $sval];
+                $row[$ikey] = $dimindexer['last_iseq_indexes'][$ikey . "_" . $sval];
                 $sval .= "_" . $row[$index];
             } else {
                 $sval = "val_" . $row[$index];
