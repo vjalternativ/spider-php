@@ -338,7 +338,9 @@ class lib_framework
                 // return false;
             }
         } else {
-            $entity->generateCache();
+            if (isset($_SERVER['argv'][2]) && $_SERVER['argv'][2] == "install") {} else {
+                $entity->generateCache();
+            }
         }
         $dataWrapper->set("entity_list", $globalEntityList);
         $dataWrapper->set("module_list", $globalModuleList);

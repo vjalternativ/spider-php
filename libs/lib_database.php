@@ -1,5 +1,6 @@
 <?php
 require_once lib_config::getInstance()->get("fwbasepath") . 'beans/DBField.php';
+require_once lib_config::getInstance()->get("fwbasepath") . 'beans/RowProcessHook.php';
 
 abstract class lib_database
 {
@@ -140,13 +141,13 @@ abstract class lib_database
 
     private function _query($sql, $die = true)
     {
-        $qry = $this->query($sql);
+        $qry = $this->query($sql, ! $die);
         if (! $qry) {
             if ($die) {
-                echo "<pre>";
+                echo "<pre>yes i am";
                 print_r(debug_print_backtrace());
 
-                die("wrong query " . $sql . " " . mysqli_error($this->con));
+                die("wrong query " . $sql);
             } else {
                 return false;
             }
