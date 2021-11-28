@@ -28,7 +28,7 @@ class ResourceController
 
         $this->resource = $arr[0];
 
-        $this->module = $arr[2];
+        $this->module = isset($arr[2]) ? $arr[2] : $_REQUEST['module'];
 
         $action = $_GET['action'];
         if (! method_exists($this, "action_" . $action)) {
