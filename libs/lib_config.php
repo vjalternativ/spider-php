@@ -5,10 +5,18 @@ class lib_config
 
     private static $instance = null;
 
+    private static $configpath;
+
     private $config;
 
-    function __construct($configPath)
+    public static function setConfigPath($path)
     {
+        self::$configpath = $path;
+    }
+
+    function __construct()
+    {
+        $configPath = self::$configpath;
         $dir = __DIR__;
         $fwbasepath = str_replace("libs", "", $dir);
         if (isset($_SERVER['argv'])) {
@@ -50,10 +58,10 @@ class lib_config
         }
     }
 
-    static function getInstance($configPath = false)
+    static function getInstance()
     {
         if (self::$instance == null) {
-            self::$instance = new lib_config($configPath);
+            self::$instance = new lib_config();
         }
         return self::$instance;
     }

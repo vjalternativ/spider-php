@@ -217,4 +217,15 @@ abstract class ResourceView
         $smarty->assign("params", $this->params);
         return $smarty->fetch($siteTplPath . $tpl);
     }
+
+    function loadCss($filename, $insideModule = true, $insideProject = true)
+    {
+        if ($insideModule) {
+            echo '<link rel="stylesheet" href="' . $this->moduleUrlPath . "assets/js/" . $filename . '" />';
+        } else {
+            if ($insideProject) {
+                echo '<link rel="stylesheet" href="' . lib_config::getInstance()->get("baseurl") . $filename . '" />';
+            }
+        }
+    }
 }
