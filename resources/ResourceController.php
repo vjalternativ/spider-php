@@ -13,21 +13,34 @@ class ResourceController
 
     private $lock = null;
 
+    private $controllerDirectoyPath = "";
+
     function __construct()
     {
         $reflector = new \ReflectionObject($this);
-        $str = $reflector->getFileName();
-        $str = str_replace("modules/", "", $str);
-        $str = substr($str, 0, strrpos($str, "/"));
-        $this->module = substr($str, (strrpos($str, "/") + 1));
-        $str = substr($str, 0, strrpos($str, "/"));
-        $this->resource = substr($str, (strrpos($str, "/") + 1));
+        $filepath = $reflector->getFileName();
+
+        $arr = explode("resources/", $filepath);
+
+        $str = $arr[1];
+
+        $arr = explode("/", $str);
+
+        $this->resource = $arr[0];
+
+        $this->module = $arr[2];
 
         $action = $_GET['action'];
         if (! method_exists($this, "action_" . $action)) {
             $action = "index";
         }
+        $this->controllerDirectoyPath = substr($filepath, 0, strrpos($filepath, "/")) . '/';
         $this->action = $action;
+    }
+
+    public function getControllerDirectoryPath()
+    {
+        return $this->controllerDirectoyPath;
     }
 
     protected function getRealPath($dir, $isFile = false)
@@ -80,7 +93,7 @@ class ResourceController
                 return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
             }
         } else {
-            echo "controller path not found";
+            echo "controller path not found " . 'resources/' . $this->resource . '/modules/' . $mod . '/';
             throw new \Exception("tpl not configured " . $tpl);
         }
     }
