@@ -79,6 +79,12 @@
             "table": "primary",
             "options": "",
             "len": "255"
+        },
+        "alias": {
+            "name": "alias",
+            "type": "varchar",
+            "table": "primary",
+            "len": "255"
         }
     },
     "listviewdef": {
@@ -92,9 +98,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "name"
-                    },
+                    "field": "name",
                     "gridsize": "6"
                 }
             ]
@@ -103,9 +107,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "description"
-                    },
+                    "field": "description",
                     "gridsize": "12"
                 }
             ]
@@ -114,15 +116,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "widget_type"
-                    },
+                    "field": "widget_type",
                     "gridsize": "6"
                 },
                 {
-                    "field": {
-                        "name": "position"
-                    },
+                    "field": "position",
                     "gridsize": "6"
                 }
             ]
@@ -131,9 +129,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "status"
-                    },
+                    "field": "status",
                     "gridsize": "6"
                 }
             ]
@@ -144,15 +140,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "name"
-                    },
+                    "field": "name",
                     "gridsize": "6"
                 },
                 {
-                    "field": {
-                        "name": "date_entered"
-                    },
+                    "field": "date_entered",
                     "gridsize": "6"
                 }
             ]
@@ -161,9 +153,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "description"
-                    },
+                    "field": "description",
                     "gridsize": "12"
                 }
             ]
@@ -172,15 +162,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "status"
-                    },
+                    "field": "status",
                     "gridsize": "6"
                 },
                 {
-                    "field": {
-                        "name": "position"
-                    },
+                    "field": "position",
                     "gridsize": "6"
                 }
             ]
@@ -189,15 +175,20 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "widget_type"
-                    },
+                    "field": "widget_type",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "alias",
                     "gridsize": "6"
                 }
             ]
         }
     ],
     "searchviewdef": {
-        "name": "name"
+        "name": "name",
+        "date_entered": "date_entered",
+        "status": "status",
+        "position": "position"
     }
 }

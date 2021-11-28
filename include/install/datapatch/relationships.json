@@ -15,8 +15,7 @@
         "target_relationship": "",
         "rtype": "M_M",
         "primary_table_text": "page",
-        "secondary_table_text": "widget",
-        "isfirstrow": true
+        "secondary_table_text": "widget"
     },
     "449bfa25-e684-d904-169c-5eca70978353": {
         "id": "449bfa25-e684-d904-169c-5eca70978353",
@@ -34,8 +33,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "menu",
-        "secondary_table_text": "submenu",
-        "isfirstrow": false
+        "secondary_table_text": "submenu"
     },
     "53a18145-a586-196e-fd68-5eca70479ec3": {
         "id": "53a18145-a586-196e-fd68-5eca70479ec3",
@@ -53,8 +51,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "submenu",
-        "secondary_table_text": "tableinfo",
-        "isfirstrow": false
+        "secondary_table_text": "tableinfo"
     },
     "67768d05-32c1-31da-4a43-5eca7086902a": {
         "id": "67768d05-32c1-31da-4a43-5eca7086902a",
@@ -72,8 +69,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "server_context",
-        "secondary_table_text": "server_preference_store",
-        "isfirstrow": false
+        "secondary_table_text": "server_preference_store"
     },
     "7be0bf6f-62f9-8bb3-b0f4-5eca7016e5ed": {
         "id": "7be0bf6f-62f9-8bb3-b0f4-5eca7016e5ed",
@@ -91,8 +87,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "outbound_email_context",
-        "secondary_table_text": "outbound_email_accounts",
-        "isfirstrow": false
+        "secondary_table_text": "outbound_email_accounts"
     },
     "89afa458-42cc-480d-e649-5eca7032691b": {
         "id": "89afa458-42cc-480d-e649-5eca7032691b",
@@ -110,8 +105,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "tableinfo",
-        "secondary_table_text": "relationships",
-        "isfirstrow": false
+        "secondary_table_text": "relationships"
     },
     "8c45ba10-256b-895c-9328-5eca70ce692e": {
         "id": "8c45ba10-256b-895c-9328-5eca70ce692e",
@@ -129,8 +123,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "category",
-        "secondary_table_text": "task",
-        "isfirstrow": false
+        "secondary_table_text": "task"
     },
     "a80ac370-a170-e2bc-b77c-5eca700507a1": {
         "id": "a80ac370-a170-e2bc-b77c-5eca700507a1",
@@ -148,8 +141,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "menu",
-        "secondary_table_text": "tableinfo",
-        "isfirstrow": false
+        "secondary_table_text": "tableinfo"
     },
     "b95630ad-8fb1-1798-4a00-5eca7004afd9": {
         "id": "b95630ad-8fb1-1798-4a00-5eca7004afd9",
@@ -167,8 +159,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "roles",
-        "secondary_table_text": "user",
-        "isfirstrow": false
+        "secondary_table_text": "user"
     },
     "bc6c62de-6019-fe4d-cf4e-5f7dd69358df": {
         "id": "bc6c62de-6019-fe4d-cf4e-5f7dd69358df",
@@ -182,12 +173,11 @@
         "secondarytable": "86835a1f-dc02-8732-005f-5f7dd6555ca7",
         "primarytable_name": "chatroom",
         "secondarytable_name": "members",
-        "parent_relationship": null,
-        "target_relationship": null,
+        "parent_relationship": "",
+        "target_relationship": "",
         "rtype": "M_M",
-        "primary_table_text": null,
-        "secondary_table_text": null,
-        "isfirstrow": false
+        "primary_table_text": "",
+        "secondary_table_text": ""
     },
     "c8dfdabe-4c99-bbc5-9597-5eca702ed99c": {
         "id": "c8dfdabe-4c99-bbc5-9597-5eca702ed99c",
@@ -205,8 +195,7 @@
         "target_relationship": "",
         "rtype": "M_M",
         "primary_table_text": "tableinfo",
-        "secondary_table_text": "language",
-        "isfirstrow": false
+        "secondary_table_text": "language"
     },
     "d15d0bc3-ae95-804b-2c1d-5eca70a94f57": {
         "id": "d15d0bc3-ae95-804b-2c1d-5eca70a94f57",
@@ -224,8 +213,7 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "roles",
-        "secondary_table_text": "privilege",
-        "isfirstrow": false
+        "secondary_table_text": "privilege"
     },
     "f2ff60b8-5d82-b861-96b5-5eca7087589a": {
         "id": "f2ff60b8-5d82-b861-96b5-5eca7087589a",
@@ -243,7 +231,6 @@
         "target_relationship": "",
         "rtype": "1_M",
         "primary_table_text": "widget",
-        "secondary_table_text": "widget_attr",
-        "isfirstrow": false
+        "secondary_table_text": "widget_attr"
     }
 }
