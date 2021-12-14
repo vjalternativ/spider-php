@@ -1,6 +1,6 @@
 <?php
 
-class RowProcessHook
+abstract class RowProcessHook
 {
 
     private $object;
@@ -14,6 +14,25 @@ class RowProcessHook
     private $firstRowMarker = false;
 
     private $processSeq = false;
+
+    /**
+     *
+     * @return <multitype:, unknown>
+     */
+    public function getEnumList()
+    {
+        return $this->enumList;
+    }
+
+    /**
+     *
+     * @param
+     *            Ambigous <multitype:, unknown> $enumList
+     */
+    public function setEnumList($enumList)
+    {
+        $this->enumList = $enumList;
+    }
 
     /**
      *
@@ -51,24 +70,6 @@ class RowProcessHook
         $this->firstRowMarker = $firstRowMarker;
     }
 
-    function __construct($object = null, $method = "", $enumList = array())
-    {
-        $this->object = $object;
-        $this->method = $method;
-        $this->enumList = $enumList;
-
-        if ($this->object) {
-
-            if ($object) {
-                $this->processHook['instance'] = $object;
-            }
-            if ($method) {
-                $this->processHook['method'] = $method;
-            }
-            if ($enumList) {
-                $this->processHook['enumList'] = $enumList;
-            }
-        }
-    }
+    abstract function processRow($row);
 }
 ?>

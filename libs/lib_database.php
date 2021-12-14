@@ -170,30 +170,24 @@ abstract class lib_database
             $dimindexer = array();
 
             while ($row = $this->fetch($qry)) {
-                if ($rowProcessHook && $rowProcessHook->getFirstRowMarker()) {
-                    if ($checkFirst) {
-                        $row['isfirstrow'] = true;
-                        $checkFirst = false;
-                    } else {
-                        $row['isfirstrow'] = false;
-                    }
-                }
 
-                if (isset($rowProcessHook->processHook['enumList']) && $rowProcessHook->processHook['enumList']) {
-                    foreach ($rowProcessHook->processHook['enumList'] as $col => $enumkey) {
+                if ($rowProcessHook) {
+
+                    if ($rowProcessHook->getFirstRowMarker()) {
+                        if ($checkFirst) {
+                            $row['isfirstrow'] = true;
+                            $checkFirst = false;
+                        } else {
+                            $row['isfirstrow'] = false;
+                        }
+                    }
+                    foreach ($rowProcessHook->getEnumList() as $col => $enumkey) {
                         $row[$col] = $this->getEnumValue($enumkey, $row[$col]);
                     }
+
+                    $rowProcessHook->processRow($row);
                 }
-                if (isset($rowProcessHook->processHook['method']) && $rowProcessHook->processHook['method']) {
-                    if (isset($rowProcessHook->processHook['instance']) && $rowProcessHook->processHook['instance']) {
-                        $row = call_user_func(array(
-                            $rowProcessHook->processHook['instance'],
-                            $rowProcessHook->processHook['method']
-                        ), $row);
-                    } else {
-                        $row = call_user_func($rowProcessHook->processHook['method'], $row);
-                    }
-                }
+
                 if ($dim) {
 
                     if ($rowProcessHook && $rowProcessHook->getProcessSeq()) {
