@@ -178,7 +178,7 @@ class SystemLogicHook
         $entity->save("email_buffer", $emailBuffer);
     }
 
-    private function slugify($text)
+    public function slugify($text)
     {
         $text = str_replace("(", "", $text);
         $text = str_replace(")", "", $text);

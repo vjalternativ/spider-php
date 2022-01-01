@@ -1,4 +1,6 @@
 <?php
+use function lib_util\getelement;
+
 require_once lib_config::getInstance()->get('fwbasepath') . 'libs/lib_bootstrap.php';
 
 class tableinfoBackendController extends BackendResourceController
@@ -785,21 +787,31 @@ class tableinfoBackendController extends BackendResourceController
 
     function action_updateAlias()
     {
+        require_once 'spider-php/include/hooks/hook.php';
         $db = lib_database::getInstance();
         $entity = lib_entity::getInstance();
         $mod = $_REQUEST['mod'];
-
-        $sql = "update " . $mod . " set alias =''";
-        $db->query($sql);
+        $hook = new SystemLogicHook();
         $sql = "select * from " . $mod . " where deleted=0";
         $rows = $db->fetchRows($sql, array(
             'id'
         ));
+
+        $aliasVsIdList = array();
         foreach ($rows as $row) {
 
             if (! array_key_exists("alias", $row)) {
                 break;
             }
+
+            $row['alias'] = $hook->slugify($row['name']);
+
+            $alias = $row['alias'];
+            if (isset($aliasVsIdList[$alias])) {
+                $row['alias'] = $alias . '-' . count($aliasVsIdList[$alias]);
+            }
+
+            $aliasVsIdList[$alias][$row['id']] = $row['id'];
 
             $entity->save($mod, $row);
         }
