@@ -1,3 +1,20 @@
+## Method - 1 - Use spider-php as composer package
+
+## create a new php project in eclipse
+* click on file
+* click on new
+* click on php project
+* enter project name
+* click on finish
+
+## add composer support in your newly created project
+* right click on project
+* click on configure
+* click on add composer support
+
+
+## Method 2 - Use spider-php as symbolic link
+
 #import the spider-php project into eclipse workspace
 
 #or git clone spider-php from github
