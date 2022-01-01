@@ -789,6 +789,8 @@ class tableinfoBackendController extends BackendResourceController
         $entity = lib_entity::getInstance();
         $mod = $_REQUEST['mod'];
 
+        $sql = "update " . $mod . " set alias =''";
+        $db->query($sql);
         $sql = "select * from " . $mod . " where deleted=0";
         $rows = $db->fetchRows($sql, array(
             'id'

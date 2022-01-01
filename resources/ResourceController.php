@@ -178,11 +178,20 @@ class ResourceController
         return false;
     }
 
-    protected function validateSession()
+    protected function validateSession($resource = "default")
     {
         $isAuthorized = lib_current_user::sessionCheck();
         if (! $isAuthorized) {
             die("access denied.");
+        }
+    }
+
+    protected function validateRoleAndSession($roleName, $resource = "default")
+    {
+        $this->validateSession($resource);
+        $user = lib_current_user::getEntityInstance($resource);
+        if ($user->role_name != $roleName) {
+            die("access denined");
         }
     }
 
