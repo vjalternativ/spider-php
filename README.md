@@ -1,5 +1,4 @@
 # spider-php framework
 
 Installation
-
-link 
+[docs/installation.md](docs/installation.md)
