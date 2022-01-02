@@ -85,11 +85,11 @@ class spiderCliController extends CliResourceController
 
         // htaccess generation
         $content = file_get_contents($fwbasepath . "include/templates/htaccess");
-        file_put_contents($basepath . $basepath . ".htaccess", $content);
+        file_put_contents($basepath . ".htaccess", $content);
 
         // htaccess generation
         $content = file_get_contents($fwbasepath . "include/templates/gitignore");
-        file_put_contents($basepath . $basepath . ".gitignore", $content);
+        file_put_contents($basepath . ".gitignore", $content);
 
         // copy resource folder
         $cmd = 'cp -r ' . $fwbasepath . 'include/templates/resources ' . $basepath;
