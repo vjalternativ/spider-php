@@ -23,12 +23,6 @@
 * save dependency
 * select vizzy/spider-php and click on update
 
-### configure buildpath
-* right click on project and click on properties
-* search buildpath and click on build path
-* click on add and select vendor/vizzy/spider-php
-* click on ok
-
 
 ### index.php configuration
 

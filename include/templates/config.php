@@ -48,11 +48,13 @@ $config['disabledb'] = __DISABLEDBVALUE__;
 if ($_SERVER['HTTP_HOST'] == "localhost") {
 
     if (isset($_SERVER['DOCUMENT_ROOT'])) {
-        $config['urlbasepath'] = "/__PROJECTPATH__/";
+        $docRoot = $_SERVER['DOCUMENT_ROOT'];
+        $dir = __DIR__;
+        $projectpath = str_replace($docRoot, "", $dir);
+        $config['urlbasepath'] = $projectpath . "/";
+
         $config['baseurl'] = 'http://localhost' . $config['urlbasepath'];
     }
-    // $config['urlbasepath'] = "/__PROJECTPATH__/";
-    // $config['baseurl'] = 'http://localhost' . $config['urlbasepath'];
 
     $config['fwbaseurl'] = $config['baseurl'] . 'spider-php/';
     $config['database']['user'] = "__DBUSER__";

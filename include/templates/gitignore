@@ -1,0 +1,11 @@
+spider-php
+templates_c
+vendor
+cache
+framework.log
+composer.lock
+composer.phar
+php_errors.log
+.project
+.buildpath
+org.*
