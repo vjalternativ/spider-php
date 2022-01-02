@@ -14,13 +14,15 @@ class lib_common
         require_once $dir . 'lib_database.php';
         require_once $dir . 'lib_entity.php';
 
-        $database = lib_database::getInstance();
-        $disableDb = lib_config::getInstance()->get("disabledb");
-        if (! $disableDb) {
-            try {
-                $database->connect($config['host'], $config['user'], $config['password'], $config['name']);
-            } catch (Exception $e) {
-                throw new Exception(print_r($config, 1));
+        if ($config) {
+            $database = lib_database::getInstance();
+            $disableDb = lib_config::getInstance()->get("disabledb");
+            if (! $disableDb) {
+                try {
+                    $database->connect($config['host'], $config['user'], $config['password'], $config['name']);
+                } catch (Exception $e) {
+                    throw new Exception(print_r($config, 1));
+                }
             }
         }
     }

@@ -38,7 +38,9 @@ class lib_framework
         $params = lib_seo::getInstance()->getParams();
         $resource = lib_config::getInstance()->get("default_resource");
         $config = lib_config::getInstance($this->configpath)->getConfig();
-        date_default_timezone_set($config['timezone']);
+        if (isset($config['timezone'])) {
+            date_default_timezone_set($config['timezone']);
+        }
         if (php_sapi_name() == "cli" && isset($_SERVER['argv']) && $_SERVER['argv']) {
             $resource = 'cli';
             if (isset($_SERVER['argv'][1])) {
@@ -218,7 +220,7 @@ class lib_framework
             $action = 'action_' . $_GET['action'];
 
             $vjconfig = \lib_config::getInstance()->getConfig();
-            if ($vjconfig['init_default_modules']) {
+            if (isset($vjconfig['init_default_modules'])) {
                 $this->initModules();
             }
             $controller = new $class();

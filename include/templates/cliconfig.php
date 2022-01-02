@@ -1,3 +1,3 @@
 <?php
 global $cliconfig;
-$cliconfig['/var/www/html/spiderdemo']['host'] = "localhost";
+$cliconfig['__BASEPATH__']['host'] = "localhost";

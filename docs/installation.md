@@ -13,6 +13,38 @@
 * right click on project
 * click on configure
 * click on add composer support
+* set type as project
+* save composer file
+* click on install dependency on top right corner
+* click on dependencies tab
+* search spider-php in packgist
+* select vizzy/spider-php package
+* click on add dependency
+* save dependency
+* select vizzy/spider-php and click on update
+
+### configure buildpath
+* right click on project and click on properties
+* search buildpath and click on build path
+* click on add and select vendor/vizzy/spider-php
+* click on ok
+
+
+### index.php configuration
+
+* put below code in index.php
+
+	<?php
+	set_time_limit(0);
+	ini_set("memory_limit", - 1);
+	set_include_path(__DIR__);
+	require_once 'vendor/autoload.php';
+	require_once 'vendor/vizzy/spider-php/libs/lib_framework.php';
+	$fw = new lib_framework();
+	$fw->execute();
+	?>
+
+
 
 
 ## Method 2 - Use spider-php as symbolic link
