@@ -24,6 +24,22 @@ class lib_common
                     throw new Exception(print_r($config, 1));
                 }
             }
+
+            if (isset($config['datasource'])) {
+                foreach ($config['datasource'] as $profile => $dbsourceMap) {
+                    $dir = __DIR__ . '/';
+                    require_once $dir . 'lib_' . $profile . '.php';
+
+                    foreach ($dbsourceMap as $key => $dbsource) {
+
+                        $class = 'lib_' . $profile;
+                        $ob = new $class();
+                        $ob = lib_database::getIDBProfile($ob);
+                        lib_database::addDataSource($profile, $key, $ob);
+                        $ob->connect($dbsource['host'], $dbsource['user'], $dbsource['password'], $dbsource['name']);
+                    }
+                }
+            }
         }
     }
 }

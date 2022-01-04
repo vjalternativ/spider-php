@@ -34,7 +34,7 @@
 	set_include_path(__DIR__);
 	require_once 'vendor/autoload.php';
 	require_once 'vendor/vizzy/spider-php/libs/lib_framework.php';
-	$fw = new lib_framework();
+	$fw = new lib_framework(__DIR__);
 	$fw->execute();
 	?>
 

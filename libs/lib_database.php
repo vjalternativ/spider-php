@@ -19,6 +19,8 @@ abstract class lib_database
 
     private $debug = false;
 
+    private static $profileVsKeyVsDataSource = array();
+
     function setProcessSequence($b)
     {
         $this->processSeq = $b;
@@ -522,5 +524,22 @@ abstract class lib_database
     abstract function createTable($table, $cols);
 
     abstract function addColumn(DBField $field, $table);
+
+    public static function addDataSource($profile, $key, lib_database $ob)
+    {
+        self::$profileVsKeyVsDataSource[$profile][$key] = $ob;
+    }
+
+    static function getPostgresDataSource($key)
+    {
+        $ob = null;
+        if (isset(self::$profileVsKeyVsDataSource['postgres'][$key])) {
+            $ob = self::$profileVsKeyVsDataSource['postgres'][$key];
+        } else {
+            throw new ErrorException("profile not exist for postgres " . $key);
+        }
+
+        return self::getIDBProfile($ob);
+    }
 }
 ?>
