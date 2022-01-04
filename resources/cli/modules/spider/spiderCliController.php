@@ -27,16 +27,15 @@ class spiderCliController extends CliResourceController
 
         // symbolic link generation
         $cmd = 'ln -s ' . $fwbasepath . " " . $basepath . 'spider-php';
-        echo $cmd . PHP_EOL;
-        shell_exec($cmd);
+        $this->exec($cmd);
 
         // templates_c generation
         $cmd = 'mkdir ' . $basepath . 'templates_c';
-        shell_exec($cmd);
+        $this->exec($cmd);
 
         // templates_c generation
         $cmd = 'mkdir ' . $basepath . 'cache';
-        shell_exec($cmd);
+        $this->exec($cmd);
 
         // cliconfig.php generation
 
@@ -93,7 +92,7 @@ class spiderCliController extends CliResourceController
 
         // copy resource folder
         $cmd = 'cp -r ' . $fwbasepath . 'include/templates/resources ' . $basepath;
-        shell_exec($cmd);
+        $this->exec($cmd);
 
         // copy buildpath configuration
         $content = file_get_contents($fwbasepath . "include/templates/buildpath");

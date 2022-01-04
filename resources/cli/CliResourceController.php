@@ -65,5 +65,11 @@ class CliResourceController
             }
         }
     }
+
+    function exec($cmd)
+    {
+        echo $cmd . PHP_EOL;
+        return shell_exec($cmd);
+    }
 }
 ?>
