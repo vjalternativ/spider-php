@@ -220,7 +220,7 @@ class lib_framework
             $action = 'action_' . $_GET['action'];
 
             $vjconfig = \lib_config::getInstance()->getConfig();
-            if (isset($vjconfig['init_default_modules']) && ! $vjconfig['disabledb']) {
+            if (isset($vjconfig['init_default_modules']) && (! array_key_exists("disabledb", $vjconfig) || ! $vjconfig['disabledb'])) {
                 $this->initModules();
             }
             $controller = new $class();
