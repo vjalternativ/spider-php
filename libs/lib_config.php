@@ -35,6 +35,23 @@ class lib_config
         }
         $this->config['fwbasepath'] = $fwbasepath;
         $this->config['basepath'] = $dir;
+        if (isset($_SERVER['DOCUMENT_ROOT'])) {
+
+            $prefix = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"];
+            if (! ($_SERVER['SERVER_PORT'] == "80" || $_SERVER['SERVER_PORT'] == "443")) {
+                $prefix .= ":" . $_SERVER['SERVER_PORT'];
+            }
+            $docRoot = $_SERVER['DOCUMENT_ROOT'];
+            $dir = $dir;
+            $projectpath = str_replace($docRoot, "", $dir);
+            $this->config['urlbasepath'] = $projectpath;
+            $this->config['baseurl'] = $prefix . $this->config['urlbasepath'];
+
+            $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
+
+            $this->config['fwurlbasepath'] = $projectpath;
+            $this->config['fwbaseurl'] = 'http://localhost' . $this->config['fwurlbasepath'];
+        }
 
         global $config;
         if (file_exists($dir . 'config.php')) {
@@ -45,6 +62,13 @@ class lib_config
                 $_SERVER['HTTP_HOST'] = isset($cliconfig[$clipath]['host']) ? $cliconfig[$clipath]['host'] : "localhost";
             }
             require_once $dir . 'config.php';
+            unset($config['fwbasepath']);
+            unset($config['basepath']);
+            unset($config['urlbasepath']);
+            unset($config['fwurlbasepath']);
+            unset($config['baseurl']);
+            unset($config['fwbaseurl']);
+
             $this->config = array_merge($this->config, $config);
             $this->config['display_errors'] = isset($this->config['display_errors']) ? $this->config['display_errors'] : false;
             ini_set("display_errors", $this->config['display_errors']);

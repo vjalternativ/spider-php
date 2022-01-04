@@ -35,9 +35,12 @@ class lib_framework
     {
         $common = new lib_common();
         $common->init($this->configpath);
+
+        $config = lib_config::getInstance()->getConfig();
+
         $params = lib_seo::getInstance()->getParams();
         $resource = lib_config::getInstance()->get("default_resource");
-        $config = lib_config::getInstance($this->configpath)->getConfig();
+        $config = lib_config::getInstance()->getConfig();
         if (isset($config['timezone'])) {
             date_default_timezone_set($config['timezone']);
         }
