@@ -45,17 +45,16 @@ $config['resource_alias']['backend'] = 'controlarea';
 
 $config['disabledb'] = __DISABLEDBVALUE__;
 
+if (isset($_SERVER['DOCUMENT_ROOT'])) {
+    $docRoot = $_SERVER['DOCUMENT_ROOT'];
+    $dir = __DIR__;
+    $projectpath = str_replace($docRoot, "", $dir);
+    $config['urlbasepath'] = $projectpath . "/";
+
+    $config['baseurl'] = 'http://localhost' . $config['urlbasepath'];
+}
+
 if ($_SERVER['HTTP_HOST'] == "localhost") {
-
-    if (isset($_SERVER['DOCUMENT_ROOT'])) {
-        $docRoot = $_SERVER['DOCUMENT_ROOT'];
-        $dir = __DIR__;
-        $projectpath = str_replace($docRoot, "", $dir);
-        $config['urlbasepath'] = $projectpath . "/";
-
-        $config['baseurl'] = 'http://localhost' . $config['urlbasepath'];
-    }
-
     $config['fwbaseurl'] = $config['baseurl'] . 'spider-php/';
     $config['database']['user'] = "__DBUSER__";
     $config['database']['password'] = "__DBPASSWORD__";
