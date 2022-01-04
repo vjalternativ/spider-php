@@ -26,8 +26,8 @@ class spiderCliController extends CliResourceController
         echo $fwbasepath . PHP_EOL;
 
         // symbolic link generation
-        $cmd = 'ln -s ' . $fwbasepath . " " . $basepath . 'spider-php';
-        $this->exec($cmd);
+        // $cmd = 'ln -s ' . $fwbasepath . " " . $basepath . 'spider-php';
+        // $this->exec($cmd);
 
         // templates_c generation
         $cmd = 'mkdir ' . $basepath . 'templates_c';
