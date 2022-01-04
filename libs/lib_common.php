@@ -9,17 +9,17 @@ class lib_common
         require_once $dir . 'lib_logger.php';
         require_once $dir . 'lib_config.php';
         lib_config::setConfigPath($configPath);
-        $config = lib_config::getInstance()->get("database");
+        $config = lib_config::getInstance()->getConfig();
         require_once $dir . 'lib_datawrapper.php';
         require_once $dir . 'lib_database.php';
         require_once $dir . 'lib_entity.php';
 
-        if ($config) {
+        if (isset($config['database'])) {
             $database = lib_database::getInstance();
             $disableDb = lib_config::getInstance()->get("disabledb");
             if (! $disableDb) {
                 try {
-                    $database->connect($config['host'], $config['user'], $config['password'], $config['name']);
+                    $database->connect($config['database']['host'], $config['database']['user'], $config['database']['password'], $config['database']['name']);
                 } catch (Exception $e) {
                     throw new Exception(print_r($config, 1));
                 }
@@ -34,8 +34,8 @@ class lib_common
 
                         $class = 'lib_' . $profile;
                         $ob = new $class();
-                        $ob = lib_database::getIDBProfile($ob);
-                        lib_database::addDataSource($profile, $key, $ob);
+                        $ob = lib_database::addDataSource($profile, $key, $ob);
+
                         $ob->connect($dbsource['host'], $dbsource['user'], $dbsource['password'], $dbsource['name']);
                     }
                 }

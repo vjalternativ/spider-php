@@ -95,6 +95,10 @@ class spiderCliController extends CliResourceController
         $cmd = 'cp -r ' . $fwbasepath . 'include/templates/resources ' . $basepath;
         shell_exec($cmd);
 
+        // copy buildpath configuration
+        $content = file_get_contents($fwbasepath . "include/templates/buildpath");
+        file_put_contents($basepath . ".buildpath", $content);
+
         // next step suggestion
         echo "enter below command to install" . PHP_EOL;
         echo "php " . $basepath . 'index.php spider install' . PHP_EOL;

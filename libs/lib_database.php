@@ -376,21 +376,27 @@ abstract class lib_database
         return " " . $table . " SET " . implode(",", $fieldSet);
     }
 
-    function insert($table, $row)
+    function insert($table, $row, $extraKeyVal = array())
     {
-        $sql = "INSERT INTO " . $this->getTabelFieldColValueSql($table, $row, array(
-            'date_added' => 'now()'
-        ));
+        $arr = array();
+        foreach ($extraKeyVal as $key => $val) {
+            $arr[] = $key . '=' . $val;
+        }
+        $sql = "INSERT INTO " . $this->getTabelFieldColValueSql($table, $row, $arr);
 
         return $this->query($sql, true);
     }
 
-    function update($table, $row, $idcolumn, $where = false)
+    function update($table, $row, $idcolumn, $where = false, $extraKeyVal = array())
     {
         if (isset($row[$idcolumn])) {
-            $sql = "UPDATE " . $this->getTabelFieldSetSql($table, $row, array(
-                'date_updated = now()'
-            ));
+
+            $arr = array();
+            foreach ($extraKeyVal as $key => $val) {
+                $arr[] = $key . '=' . $val;
+            }
+
+            $sql = "UPDATE " . $this->getTabelFieldSetSql($table, $row, $arr);
             $sql .= " WHERE " . $idcolumn . "= '" . $row[$idcolumn] . "' ";
             if ($where) {
                 $sql .= " AND " . $where;
@@ -528,6 +534,8 @@ abstract class lib_database
     public static function addDataSource($profile, $key, lib_database $ob)
     {
         self::$profileVsKeyVsDataSource[$profile][$key] = $ob;
+
+        return $ob;
     }
 
     static function getPostgresDataSource($key)
