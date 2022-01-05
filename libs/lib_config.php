@@ -35,7 +35,7 @@ class lib_config
         }
         $this->config['fwbasepath'] = $fwbasepath;
         $this->config['basepath'] = $dir;
-        if (isset($_SERVER['DOCUMENT_ROOT'])) {
+        if (isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT']) {
 
             $prefix = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"];
             if (! ($_SERVER['SERVER_PORT'] == "80" || $_SERVER['SERVER_PORT'] == "443")) {
