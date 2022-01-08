@@ -84,7 +84,9 @@ class SpiderService
                 $this->exec($cmd);
             }
 
-            file_put_contents($targetPath, $content);
+            if (! file_exists($targetPath)) {
+                file_put_contents($targetPath, $content);
+            }
         }
     }
 }
