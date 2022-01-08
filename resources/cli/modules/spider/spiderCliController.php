@@ -115,5 +115,20 @@ class spiderCliController extends CliResourceController
             $this->_init();
         }
     }
+
+    function action_create()
+    {
+        $resource = $this->getarg(3);
+        $module = $this->getarg(4);
+        if ($resource && $module) {
+
+            $type = $this->getarg(5);
+            if ($type) {} else {
+                SpiderService::getInstance()->copyTemplateForResource($resource, $module);
+            }
+        } else {
+            $this->echo("specify resource and module");
+        }
+    }
 }
 ?>

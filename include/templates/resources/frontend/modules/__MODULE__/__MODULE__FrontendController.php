@@ -1,5 +1,5 @@
 <?php
-class pageFrontendController extends FrontendResourceController {
+class __MODULE__FrontendController extends FrontendResourceController {
 
     function action_index() {
 
