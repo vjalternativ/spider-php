@@ -194,6 +194,7 @@ abstract class lib_database
 
                     if ($rowProcessHook && $rowProcessHook->getProcessSeq()) {
                         $row = $this->processDimIndexer($row, $dim, $dimindexer);
+                        $rowProcessHook->setDimIndexer($dimindexer);
                     }
                     foreach ($dim as $dimkey => $index) {
                         $cols = false;
@@ -343,6 +344,7 @@ abstract class lib_database
                 $temp = &$rows;
             }
 
+            $this->dimindexer = $dimindexer;
             $this->resetHook();
 
             return $rows;

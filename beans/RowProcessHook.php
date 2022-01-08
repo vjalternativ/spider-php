@@ -15,6 +15,8 @@ abstract class RowProcessHook
 
     private $processSeq = false;
 
+    private $dimIndexer = array();
+
     /**
      *
      * @return <multitype:, unknown>
@@ -71,5 +73,15 @@ abstract class RowProcessHook
     }
 
     abstract function processRow($row);
+
+    public function setDimIndexer($dimIndexer)
+    {
+        $this->dimIndexer = $dimIndexer;
+    }
+
+    public function getDimIndexer()
+    {
+        return $this->dimIndexer;
+    }
 }
 ?>
