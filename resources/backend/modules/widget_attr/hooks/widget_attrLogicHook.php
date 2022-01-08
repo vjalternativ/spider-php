@@ -60,7 +60,7 @@ class widget_attrLogicHook
                             $fieldval = isset($jsonPrev[$field['name']]) ? $jsonPrev[$field['name']] : "";
                         }
                     } else {
-                        $fieldval = $_REQUEST[$field['name']];
+                        $fieldval = isset($_REQUEST[$field['name']]) ? $_REQUEST[$field['name']] : "";
                     }
 
                     $json[$field['name']] = $fieldval;
