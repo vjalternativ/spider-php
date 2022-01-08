@@ -40,29 +40,19 @@ class SpiderService
         return $fileList;
     }
 
-    private function replaceSpiderVars($str, $resource, $module, $view)
+    private function replaceSpiderVars($str, $resource, $module, $view = false)
     {
         $str = str_replace("__MODULE__", $module, $str);
-        $str = str_replace("__VIEW__", $view, $str);
 
+        if ($view) {
+            $str = str_replace("__VIEW__", $view, $str);
+        }
         return $str;
     }
 
-    public function copyTemplateForResource($resource, $module = false, $view = false)
+    private function copyTemplate($dir, $resource, $module, $view)
     {
         $dirprefix = lib_config::getInstance()->get("fwbasepath") . 'include/templates/';
-
-        $dir = $dirprefix . 'resources/' . $resource . '/';
-        if ($module) {
-            $dir .= 'modules/';
-        }
-
-        if ($view) {
-            $dir .= 'modules/__MODULE__/views/';
-        }
-
-        $module = $module ? $module : "page";
-        $view = $view ? $view : "default";
 
         $basepath = lib_config::getInstance()->get("basepath");
         $fileList = $this->getFiles($dir);
@@ -86,6 +76,27 @@ class SpiderService
 
             if (! file_exists($targetPath)) {
                 file_put_contents($targetPath, $content);
+            }
+        }
+    }
+
+    public function copyTemplateForResource($resource, $module = false, $view = false)
+    {
+        $dirprefix = lib_config::getInstance()->get("fwbasepath") . 'include/templates/';
+
+        $dir = $dirprefix . 'resources/' . $resource . '/';
+        if ($module) {
+            $dir .= 'modules/__MODULE__/';
+
+            $module = $module ? $module : "page";
+
+            if ($view) {
+                $path = $dir . 'views/';
+                $this->copyTemplate($path, $resource, $module, $view);
+                $path = $dir . 'tpls/';
+                $this->copyTemplate($path, $resource, $module, $view);
+            } else {
+                $this->copyTemplate($dir, $resource, $module, "default", "v1");
             }
         }
     }

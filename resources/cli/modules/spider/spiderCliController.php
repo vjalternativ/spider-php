@@ -124,8 +124,10 @@ class spiderCliController extends CliResourceController
         $module = $this->getarg(4);
         if ($resource && $module) {
 
-            $type = $this->getarg(5);
-            if ($type) {} else {
+            $view = $this->getarg(5);
+            if ($view) {
+                SpiderService::getInstance()->copyTemplateForResource($resource, $module, $view);
+            } else {
                 SpiderService::getInstance()->copyTemplateForResource($resource, $module);
             }
         } else {

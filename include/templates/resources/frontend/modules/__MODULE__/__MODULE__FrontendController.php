@@ -1,11 +1,11 @@
 <?php
-class __MODULE__FrontendController extends FrontendResourceController {
 
-    function action_index() {
+class __MODULE__FrontendController extends FrontendResourceController
+{
 
-            $this->view="home";
-
+    function action_index()
+    {
+        $this->view = "__VIEW__";
     }
-
 }
 ?>
