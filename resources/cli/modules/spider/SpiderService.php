@@ -19,7 +19,7 @@ class SpiderService
 
     private function getFiles($dir, $fileList = array())
     {
-        $dir = trim($dir, "/");
+        $dir = rtrim($dir, "/");
         $dir .= '/';
         $files = scandir($dir);
         if ($files) {
@@ -48,28 +48,42 @@ class SpiderService
         return $str;
     }
 
-    public function copyTemplateForResource($resource, $module, $view = "default")
+    public function copyTemplateForResource($resource, $module = false, $view = false)
     {
-        $dir = lib_config::getInstance()->get("fwbasepath") . 'include/templates/resources/' . $resource . '/';
+        $dirprefix = lib_config::getInstance()->get("fwbasepath") . 'include/templates/';
+
+        $dir = $dirprefix . 'resources/' . $resource . '/';
+        if ($module) {
+            $dir .= 'modules/';
+        }
+
+        if ($view) {
+            $dir .= 'modules/__MODULE__/views/';
+        }
+
+        $module = $module ? $module : "page";
+        $view = $view ? $view : "default";
+
         $basepath = lib_config::getInstance()->get("basepath");
         $fileList = $this->getFiles($dir);
-        echo "<pre>";
-        print_r($fileList);
-        die();
         foreach ($fileList as $file) {
 
             $content = file_get_contents($file);
-            $relativePath = str_replace($dir, "", $file);
+            $relativePath = str_replace($dirprefix, "", $file);
 
             $relativePath = $this->replaceSpiderVars($relativePath, $resource, $module, $view);
+
             $content = $this->replaceSpiderVars($content, $resource, $module, $view);
             $targetPath = $basepath . $relativePath;
 
-            $targetDir = substr($targetPath, 0, strrpos("/"));
-            if (! dir($targetDir)) {
+            $targetDir = substr($targetPath, 0, strrpos($targetPath, "/"));
+
+            if (! is_dir($targetDir)) {
                 $cmd = 'mkdir -p ' . $targetDir;
+
                 $this->exec($cmd);
             }
+
             file_put_contents($targetPath, $content);
         }
     }

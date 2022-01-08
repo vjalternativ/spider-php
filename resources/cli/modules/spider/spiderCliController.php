@@ -1,4 +1,6 @@
 <?php
+$dir = __DIR__;
+require_once $dir . '/SpiderService.php';
 
 class spiderCliController extends CliResourceController
 {
