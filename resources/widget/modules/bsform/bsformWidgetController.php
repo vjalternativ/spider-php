@@ -342,18 +342,14 @@ class bsformWidgetController extends WidgetResourceController
             if (isset($item['type']) && $item['type'] == 'row') {
                 if (isset($item['fields'])) {
                     $col = "";
-                    foreach ($item['fields'] as $fieldname => $fieldarray) {
+                    foreach ($item['fields'] as $fieldarray) {
 
-                        $fieldarray['name'] = $fieldname;
+                        $fieldname = $fieldarray['name'];
 
                         $val = "";
 
-                        if (! isset($fieldarray['type'])) {
-                            echo "<pre>";
-                            print_r($fieldarray);
-                            die();
-                        }
                         $attr = $this->getattr($fieldarray['type'], $fieldname, $val, $metaData);
+
                         if (isset($fieldarray['extraclass'])) {
                             $attr[1]['class'] .= $fieldarray['extraclass'];
                         }
@@ -373,7 +369,7 @@ class bsformWidgetController extends WidgetResourceController
                             $attr[1]['value'] = htmlentities($attr[1]['value']);
                         }
 
-                        $val = $data[$fieldarray['name']];
+                        $val = isset($data[$fieldarray['name']]) ? $data[$fieldarray['name']] : "";
 
                         if (isset($attr[2])) {
                             $isdualtag = false;

@@ -9,11 +9,13 @@ class BSFormMetaData
 
     private $formActionURL = "";
 
-    private $data = array();
+    private $formData = array();
+
+    private $formFiles = array();
 
     private $mode = "edit";
 
-    private $isValidFormData = false;
+    private $isValidFormFields = false;
 
     private $invalidFormFields = array();
 
@@ -27,14 +29,24 @@ class BSFormMetaData
         return $this->mode;
     }
 
-    public function setData($data)
+    public function setFormData($data)
     {
-        $this->data = $data;
+        $this->formData = $data;
     }
 
-    public function getData()
+    public function getFormData()
     {
-        return $this->data;
+        return $this->formData;
+    }
+
+    public function setFormFiles($files)
+    {
+        $this->formFiles = $files;
+    }
+
+    public function getFormFiles()
+    {
+        return $this->formFiles;
     }
 
     public function setFormActiionURL($url)
@@ -57,6 +69,36 @@ class BSFormMetaData
         return $this->submitButtonLabel;
     }
 
+    private function processName($text)
+    {
+        $text = str_replace("(", "", $text);
+        $text = str_replace(")", "", $text);
+
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+
+        // lowercase
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
+    }
+
     public function addBSFormRow($fields = array())
     {
         if ($fields) {
@@ -71,7 +113,7 @@ class BSFormMetaData
     {
         $label = $label ? $label : $name;
         $field = array(
-            "name" => $name,
+            "name" => $this->processName($name),
             "label" => $label,
             "type" => $type,
             "gridsize" => $size,
@@ -87,7 +129,7 @@ class BSFormMetaData
         $label = $label ? $label : $name;
         $attrs['required'] = "required";
         $field = array(
-            "name" => $name,
+            "name" => $this->processName($name),
             "label" => $label,
             "type" => $type,
             "gridsize" => $size,
@@ -132,29 +174,42 @@ class BSFormMetaData
 
     public function validateFormData()
     {
-        $this->isValidFormData = true;
-        foreach ($this->metaData as $type => $row) {
+        $this->isValidFormFields = true;
 
-            if ($type == "row") {
+        foreach ($this->metaData as $row) {
 
-                foreach ($row as $field) {
+            if ($row['type'] == "row") {
+                foreach ($row['fields'] as $field) {
 
                     if (isset($field['attrs']['required'])) {
 
-                        if (! (isset($this->data[$field['name']]) && ! empty($this->data[$field['name']]))) {
-                            $this->invalidFormFields[] = $field['name'];
-                        }
+                        if ($field['type'] == "file") {
 
-                        $this->isValidFormData = false;
+                            if (! (isset($this->formFiles[$field['name']]) && $this->formFiles[$field['name']]['error'] == '0')) {
+                                $this->invalidFormFields[] = $field['name'];
+                                $this->isValidFormFields = false;
+                            }
+                        } else {
+
+                            if (! (isset($this->formData[$field['name']]) && ! empty($this->formData[$field['name']]))) {
+                                $this->invalidFormFields[] = $field['name'];
+                                $this->isValidFormFields = false;
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    public function isValidFormData()
+    public function isValidFormFields()
     {
-        return $this->isValidFormData;
+        return $this->isValidFormFields;
+    }
+
+    public function getInvalidFormFields()
+    {
+        return $this->invalidFormFields;
     }
 }
 
