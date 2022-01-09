@@ -221,7 +221,7 @@ abstract class ResourceView
     function loadCss($filename, $insideModule = true, $insideProject = true)
     {
         if ($insideModule) {
-            echo '<link rel="stylesheet" href="' . $this->moduleUrlPath . "assets/js/" . $filename . '" />';
+            echo '<link rel="stylesheet" href="' . $this->moduleUrlPath . "assets/css/" . $filename . '" />';
         } else {
             if ($insideProject) {
                 echo '<link rel="stylesheet" href="' . lib_config::getInstance()->get("baseurl") . $filename . '" />';
