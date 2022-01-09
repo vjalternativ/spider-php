@@ -63,7 +63,7 @@ class BSFormMetaData
         }
     }
 
-    public function createBSField($name, $type, $size = 6, $label = false, $options = array(), $mode = false)
+    public function createBSField($name, $type, $size = 6, $label = false, $options = "", $mode = false, $attrs = array())
     {
         $label = $label ? $label : $name;
         $field = array(
@@ -72,9 +72,37 @@ class BSFormMetaData
             "type" => $type,
             "gridsize" => $size,
             "options" => $options,
-            "mode" => $mode
+            "mode" => $mode,
+            "attrs" => $attrs
         );
         return $field;
+    }
+
+    public function createBSFieldRequired($name, $type, $size = 6, $label = false, $options = "", $attrs = array())
+    {
+        $label = $label ? $label : $name;
+        $attrs['required'] = "required";
+        $field = array(
+            "name" => $name,
+            "label" => $label,
+            "type" => $type,
+            "gridsize" => $size,
+            "options" => $options,
+            "mode" => false,
+            "attrs" => $attrs
+        );
+
+        return $field;
+    }
+
+    public function createBSFieldEnum($name, $options, $size = 6, $label = false, $mode = false, $attrs = array())
+    {
+        return $this->createBSField($name, "enum", $size, $label, $options, $mode, $attrs);
+    }
+
+    public function createBSFieldEnumRequired($name, $options, $size = 6, $label = false, $attrs = array())
+    {
+        return $this->createBSFieldRequired($name, "enum", $label);
     }
 
     public function getMetaDef()

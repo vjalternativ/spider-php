@@ -5,6 +5,7 @@ require_once $dir . 'lib_common.php';
 require_once $dir . 'lib_seo.php';
 require_once $dir . 'lib_util.php';
 require_once $dir . 'lib_smarty.php';
+require_once $dir . 'lib_session.php';
 
 class lib_framework
 {

@@ -298,8 +298,9 @@ class bsformWidgetController extends WidgetResourceController
         return $form;
     }
 
-    function getattr($type, $name, $value = '')
+    function getattr($type, $name, $value = '', BSFormMetaData $meta)
     {
+        $data = $meta->getData();
         $attr = $this->datatypeFields[$type];
         // to do make data type associative
         $element = $attr['element'][0];
@@ -346,9 +347,21 @@ class bsformWidgetController extends WidgetResourceController
                         $fieldarray['name'] = $fieldname;
 
                         $val = "";
-                        $attr = $this->getattr($fieldarray['type'], $fieldname);
+
+                        if (! isset($fieldarray['type'])) {
+                            echo "<pre>";
+                            print_r($fieldarray);
+                            die();
+                        }
+                        $attr = $this->getattr($fieldarray['type'], $fieldname, $val, $metaData);
                         if (isset($fieldarray['extraclass'])) {
                             $attr[1]['class'] .= $fieldarray['extraclass'];
+                        }
+
+                        if (isset($fieldarray['attrs']) && $fieldarray['attrs']) {
+                            foreach ($fieldarray['attrs'] as $key => $val) {
+                                $attr[1][$key] = $val;
+                            }
                         }
                         $isdualtag = true;
 
@@ -399,9 +412,6 @@ class bsformWidgetController extends WidgetResourceController
 
                             $label = isset($mod_string[$fieldarray['label']]) ? $mod_string[$fieldarray['label']] : $fieldarray['label'];
                         }
-                        $addon = lib_util::getelement('span', $label, array(
-                            "class" => 'input-group-addon'
-                        ));
 
                         if ($fieldarray['type'] == 'relate') {
                             if (! isset($data[$fieldarray['name'] . "_name"])) {
@@ -499,14 +509,24 @@ class bsformWidgetController extends WidgetResourceController
                                 $field = lib_util::getelement($attr[0], "", $attr[1], $isdualtag);
                             }
                             $field = lib_util::getelement("div", $field, array(
-                                "class" => "form-control"
+                                "class" => "form-control checkbox-form-control"
                             ));
                         }
 
                         $elementhtml = "";
+
+                        $addon = "";
+
                         if ($fieldarray['type'] == "checkbox") {
+
+                            $addon = lib_util::getelement('span', $label, array(
+                                "class" => 'input-group-addon post-addon'
+                            ));
                             $elementhtml = $field . $addon;
                         } else {
+                            $addon = lib_util::getelement('span', $label, array(
+                                "class" => 'input-group-addon pre-addon'
+                            ));
                             $elementhtml = $addon . $field;
                         }
 
