@@ -133,12 +133,27 @@ class bsformWidgetController extends WidgetResourceController
                 array(
                     'id' => 'name',
                     'name' => 'name',
+                    'type' => 'date',
+                    'value' => 'name',
+                    'class' => 'form-control'
+                )
+            )
+        );
+
+        $datatypes['datepicker'] = array(
+            'isdualtag' => false,
+            'element' => array(
+                'input',
+                array(
+                    'id' => 'name',
+                    'name' => 'name',
                     'type' => 'text',
                     'value' => 'name',
                     'class' => 'form-control  datepicker'
                 )
             )
         );
+
         $datatypes['md5'] = array(
             'isdualtag' => false,
             'element' => array(
@@ -176,6 +191,17 @@ class bsformWidgetController extends WidgetResourceController
             )
         );
 
+        $datatypes['password'] = array(
+            'element' => array(
+                'password',
+                array(
+                    'id' => 'name',
+                    'name' => 'name',
+                    'class' => 'form-control'
+                )
+            )
+        );
+
         $this->datatypeFields = $datatypes;
         $vjconfig = lib_config::getInstance()->getConfig();
         $this->tpl = $vjconfig['fwbasepath'] . 'include/tpls/editview.tpl';
@@ -188,23 +214,31 @@ class bsformWidgetController extends WidgetResourceController
         return $params;
     }
 
+    private function asBSFormMeta(BSFormMetaData $ob)
+    {
+        return $ob;
+    }
+
     function getDefaultLayout($params)
     {
         $metadata = $params['metadata'];
+        $metadata = $this->asBSFormMeta($metadata);
 
         $bs = lib_bootstrap::getInstance();
 
-        $this->data['id'] = isset($this->data['id']) ? $this->data['id'] : "";
+        $data = $metadata->getData();
+
+        $data['id'] = isset($data['id']) ? $data['id'] : "";
 
         $html = $this->parseEditViewDef($metadata);
 
         $html .= $bs->getelement('input', '', array(
             'name' => 'id',
             'id' => 'id',
-            'value' => $this->data['id'],
+            'value' => $data['id'],
             'type' => 'hidden'
         ));
-        $save = $bs->getelement("button", "Save", array(
+        $save = $bs->getelement("button", $metadata->getSubmitButtonLabel(), array(
             "type" => array(
                 "value" => "submit"
             ),
@@ -217,11 +251,15 @@ class bsformWidgetController extends WidgetResourceController
         ));
         $save .= '<div class="clearfix"></div>';
 
-        $panelheading = $bs->getelement('div', ucfirst($params['title']), array(
-            'class' => array(
-                'value' => 'panel-heading'
-            )
-        ));
+        $panelheading = "";
+
+        if (isset($params['title'])) {
+            $panelheading = $bs->getelement('div', ucfirst($params['title']), array(
+                'class' => array(
+                    'value' => 'panel-heading'
+                )
+            ));
+        }
 
         $panelbody = $bs->getelement('div', $html, array(
             'class' => array(
@@ -239,7 +277,7 @@ class bsformWidgetController extends WidgetResourceController
             )
         ));
 
-        $url = "index.php?module=" . $this->module . "&action=save";
+        $url = $metadata->getFormActionURL();
         $form = $bs->getelement('form', $panel, array(
             "name" => array(
                 "value" => "editview"
@@ -272,8 +310,8 @@ class bsformWidgetController extends WidgetResourceController
             if ($key == 'value') {
                 $atr[$key] = "";
 
-                if (isset($this->data[$name])) {
-                    $atr[$key] = $this->data[$name];
+                if (isset($data[$name])) {
+                    $atr[$key] = $data[$name];
                 }
             } else if ($at == 'name') {
                 $atr[$key] = $name;
@@ -286,12 +324,17 @@ class bsformWidgetController extends WidgetResourceController
         return $newattr;
     }
 
-    function parseEditViewDef($def)
+    function parseEditViewDef(BSFormMetaData $metaData)
     {
+        $def = $metaData->getMetaDef();
+
+        $data = $metaData->getData();
+
         $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
         $mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
         $entity = lib_entity::getInstance();
 
+        $mode = $metaData->getMode();
         $bs = lib_bootstrap::getInstance();
         $formgroup = '';
         foreach ($def as $item) {
@@ -309,28 +352,51 @@ class bsformWidgetController extends WidgetResourceController
                         }
                         $isdualtag = true;
 
-                        if (! isset($this->data[$fieldname])) {
-                            $this->data[$fieldname] = "";
+                        if (! isset($data[$fieldname])) {
+                            $data[$fieldname] = "";
                         }
 
                         if (isset($attr[1]['value'])) {
                             $attr[1]['value'] = htmlentities($attr[1]['value']);
                         }
-                        $val = $this->data[$fieldarray['name']];
+
+                        $val = $data[$fieldarray['name']];
 
                         if (isset($attr[2])) {
                             $isdualtag = false;
                         }
 
-                        if ($fieldarray['type'] == "checkbox") {
-                            $attr[1]['value'] = 1;
-                        } else if ($fieldarray['type'] == "md5") {
-                            $attr[1]['value'] = "";
+                        switch ($fieldarray['type']) {
+                            case "checkbox":
+                                $attr[1]['value'] = 1;
+                                break;
+                            case "md5":
+                                $attr[1]['value'] = "";
+                                break;
+                            case "varchar":
+                            case "password":
+                            case "date":
+                            case "datepicker":
+                                $attr[1]['value'] = $val;
+                                break;
+                        }
+
+                        if ($fieldarray['mode']) {
+                            if ($fieldarray['mode'] == "detail") {
+                                $attr[1]['disabled'] = "disabled";
+                            }
+                        } else {
+                            if ($mode == "detail") {
+                                $attr[1]['disabled'] = "disabled";
+                            }
                         }
 
                         $field = lib_util::getelement($attr[0], $val, $attr[1], $isdualtag);
+
                         $label = ucfirst($fieldarray['name']);
+
                         if (isset($fieldarray['label'])) {
+
                             $label = isset($mod_string[$fieldarray['label']]) ? $mod_string[$fieldarray['label']] : $fieldarray['label'];
                         }
                         $addon = lib_util::getelement('span', $label, array(
@@ -338,13 +404,13 @@ class bsformWidgetController extends WidgetResourceController
                         ));
 
                         if ($fieldarray['type'] == 'relate') {
-                            if (! isset($this->data[$fieldarray['name'] . "_name"])) {
-                                $this->data[$fieldarray['name'] . "_name"] = "";
+                            if (! isset($data[$fieldarray['name'] . "_name"])) {
+                                $data[$fieldarray['name'] . "_name"] = "";
                             }
                             $field = $bs->getelement('input', '', array(
                                 "class" => "form-control",
                                 "id" => $fieldarray['name'] . '_name',
-                                "value" => $this->data[$fieldarray['name'] . "_name"],
+                                "value" => $data[$fieldarray['name'] . "_name"],
                                 "name" => $fieldarray['name'] . '_name',
                                 "autocomplete" => "off",
                                 "onkeyup" => "relatemodule('" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
@@ -354,15 +420,15 @@ class bsformWidgetController extends WidgetResourceController
                                 "name" => $fieldarray['name'],
                                 "id" => $fieldarray['name'],
                                 "type" => "hidden",
-                                "value" => $this->data[$fieldarray['name']]
+                                "value" => $data[$fieldarray['name']]
                             ), false);
                         } else if ($fieldarray['type'] == 'dependent_relate') {
-                            if (! isset($this->data[$fieldarray['name'] . "_name"])) {
-                                $this->data[$fieldarray['name'] . "_name"] = "";
+                            if (! isset($data[$fieldarray['name'] . "_name"])) {
+                                $data[$fieldarray['name'] . "_name"] = "";
                             }
                             $field = $bs->getelement('input', '', array(
                                 "class" => "form-control",
-                                "value" => $this->data[$fieldarray['name'] . "_name"],
+                                "value" => $data[$fieldarray['name'] . "_name"],
                                 "id" => $fieldarray['name'] . '_name',
                                 "name" => $fieldarray['name'] . '_name',
                                 "autocomplete" => "off",
@@ -373,27 +439,27 @@ class bsformWidgetController extends WidgetResourceController
                                 "name" => $fieldarray['name'],
                                 "id" => $fieldarray['name'],
                                 "type" => "hidden",
-                                "value" => $this->data[$fieldarray['name']]
+                                "value" => $data[$fieldarray['name']]
                             ), false);
                         } else if ($fieldarray['type'] == 'nondb' && isset($fieldarray['rmodule'])) {
 
-                            if (! isset($this->data[$fieldarray['name'] . "_name"])) {
-                                $this->data[$fieldarray['name'] . '_name'] = "";
+                            if (! isset($data[$fieldarray['name'] . "_name"])) {
+                                $data[$fieldarray['name'] . '_name'] = "";
                             }
                             if ($fieldarray['type'] == "nondb" && isset($_REQUEST['parent_module']) && $_REQUEST['parent_module'] == $fieldarray['rmodule']) {
-                                $this->data[$fieldarray['name']] = $_REQUEST['parent_record'];
+                                $data[$fieldarray['name']] = $_REQUEST['parent_record'];
                                 $pmodule = $_REQUEST['parent_module'];
-                                $nondbData = $entity->get($pmodule, $this->data[$fieldarray['name']]);
+                                $nondbData = $entity->get($pmodule, $data[$fieldarray['name']]);
                                 if ($nondbData) {
-                                    $this->data[$fieldarray['name']] = $nondbData['id'];
-                                    $this->data[$fieldarray['name'] . '_name'] = $nondbData['name'];
+                                    $data[$fieldarray['name']] = $nondbData['id'];
+                                    $data[$fieldarray['name'] . '_name'] = $nondbData['name'];
                                 }
                             }
 
                             $field = $bs->getelement('input', '', array(
                                 "class" => "form-control",
                                 "id" => $fieldarray['name'] . '_name',
-                                "value" => $this->data[$fieldarray['name'] . '_name'],
+                                "value" => $data[$fieldarray['name'] . '_name'],
                                 "name" => $fieldarray['name'] . '_name',
                                 "autocomplete" => "off",
                                 "onkeyup" => "relatemodule('" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
@@ -403,7 +469,7 @@ class bsformWidgetController extends WidgetResourceController
                                 "name" => $fieldarray['name'],
                                 "id" => $fieldarray['name'],
                                 "type" => "hidden",
-                                "value" => $this->data[$fieldarray['name']]
+                                "value" => $data[$fieldarray['name']]
                             ), false);
                         } else if ($fieldarray['type'] == 'enum') {
 
@@ -427,6 +493,7 @@ class bsformWidgetController extends WidgetResourceController
                             }
                             $field = lib_util::getelement($attr[0], $optionhtml, $attr[1], $isdualtag);
                         } else if ($fieldarray['type'] == "checkbox") {
+
                             if ($val == '1') {
                                 $attr[1]['checked'] = "checked";
                                 $field = lib_util::getelement($attr[0], "", $attr[1], $isdualtag);
@@ -436,7 +503,12 @@ class bsformWidgetController extends WidgetResourceController
                             ));
                         }
 
-                        $elementhtml = $addon . $field;
+                        $elementhtml = "";
+                        if ($fieldarray['type'] == "checkbox") {
+                            $elementhtml = $field . $addon;
+                        } else {
+                            $elementhtml = $addon . $field;
+                        }
 
                         if ($fieldarray['type'] == 'relate' || $fieldarray['type'] == 'dependent_relate' || ($fieldarray['type'] == "nondb" && isset($fieldarray['rmodule']))) {
                             $addon = $bs->getelement('span', '<i class="fa fa-search"></i>', array(
@@ -450,13 +522,13 @@ class bsformWidgetController extends WidgetResourceController
                             "class" => "input-group"
                         ));
 
-                        if ($fieldarray['type'] == "file" && ! empty($this->data[$fieldarray['name']])) {
+                        if ($fieldarray['type'] == "file" && ! empty($data[$fieldarray['name']])) {
                             $inputgroup .= "<br />";
-                            $inputgroup .= '<a target="_blank"  href="index.php?module=media_files&action=download&id=' . $this->data[$fieldarray['name']] . '" >Attachment</a>';
-                            $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $this->data[$fieldarray['name']] . '\')" >Remove</a>';
+                            $inputgroup .= '<a target="_blank"  href="index.php?module=media_files&action=download&id=' . $data[$fieldarray['name']] . '" >Attachment</a>';
+                            $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
                         }
 
-                        $fieldarray['gridsize'] = isset($item['gridsize']) ? $fieldarray['gridsize'] : "6";
+                        $fieldarray['gridsize'] = isset($fieldarray['gridsize']) ? $fieldarray['gridsize'] : "6";
                         $colattr = array(
                             "class" => array(
                                 "value" => "col-md-" . $fieldarray['gridsize']
