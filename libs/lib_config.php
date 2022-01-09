@@ -50,7 +50,7 @@ class lib_config
             $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
 
             $this->config['fwurlbasepath'] = $projectpath;
-            $this->config['fwbaseurl'] = 'http://localhost' . $this->config['fwurlbasepath'];
+            $this->config['fwbaseurl'] = $prefix . $this->config['fwurlbasepath'];
         }
 
         global $config;

@@ -13,6 +13,10 @@ class BSFormMetaData
 
     private $mode = "edit";
 
+    private $isValidFormData = false;
+
+    private $invalidFormFields = array();
+
     public function setMode($mode)
     {
         $this->mode = "detail";
@@ -124,6 +128,33 @@ class BSFormMetaData
         $row['type'] = "custom_html";
         $row['html'] = $html;
         $this->metaData[] = $row;
+    }
+
+    public function validateFormData()
+    {
+        $this->isValidFormData = true;
+        foreach ($this->metaData as $type => $row) {
+
+            if ($type == "row") {
+
+                foreach ($row as $field) {
+
+                    if (isset($field['attrs']['required'])) {
+
+                        if (! (isset($this->data[$field['name']]) && ! empty($this->data[$field['name']]))) {
+                            $this->invalidFormFields[] = $field['name'];
+                        }
+
+                        $this->isValidFormData = false;
+                    }
+                }
+            }
+        }
+    }
+
+    public function isValidFormData()
+    {
+        return $this->isValidFormData;
     }
 }
 

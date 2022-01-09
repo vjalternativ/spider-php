@@ -11,7 +11,11 @@ class FormField
 
     private $gridsize;
 
-    function __construct($name, $type, $size = 6, $label = false)
+    private $mode = false;
+
+    private $options = array();
+
+    function __construct($name, $type, $size = 6, $label = false, $options = array(), $mode = false, $attrs = array())
     {
         $label = $label ? $label : $name;
 
@@ -19,6 +23,9 @@ class FormField
         $this->type = $type;
         $this->size = $size;
         $this->label = $label;
+        $this->mode = $mode;
+        $this->attrs = $attrs;
+        $this->options = $options;
     }
 }
 ?>
