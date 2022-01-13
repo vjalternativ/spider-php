@@ -47,7 +47,11 @@ class lib_config
             $this->config['urlbasepath'] = $projectpath;
             $this->config['baseurl'] = $prefix . $this->config['urlbasepath'];
 
-            $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
+            if (substr($this->config['fwbasepath'], 0, strlen($docRoot)) == $docRoot) {
+                $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
+            } else {
+                $projectpath .= "spider-php";
+            }
 
             $this->config['fwurlbasepath'] = $projectpath;
             $this->config['fwbaseurl'] = $prefix . $this->config['fwurlbasepath'];
