@@ -50,7 +50,7 @@ class lib_config
             if (substr($this->config['fwbasepath'], 0, strlen($docRoot)) == $docRoot) {
                 $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
             } else {
-                $projectpath .= "spider-php";
+                $projectpath .= "spider-php/";
             }
 
             $this->config['fwurlbasepath'] = $projectpath;
