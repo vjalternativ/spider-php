@@ -199,7 +199,9 @@ class BackendResourceController extends ResourceController
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $data = $_POST;
-
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
         $module = $this->entity;
         $keyvalue = array();
         $table = $module;
@@ -229,6 +231,19 @@ class BackendResourceController extends ResourceController
 
                                     if (! isset($_REQUEST[$field['name']])) {
                                         $keyvalue[$field['name']] = 0;
+                                    }
+                                }
+                            } else {
+                                if (! is_array($col['field'])) {
+
+                                    $fkey = $col['field'];
+                                    $field = $tableinfo['tableinfo']['fields'][$fkey];
+                                    if ($field['type'] == "checkbox") {
+                                        // echo "processing field is checkbox ".$field['name']."<br />";
+
+                                        if (! isset($_REQUEST[$field['name']])) {
+                                            $keyvalue[$field['name']] = 0;
+                                        }
                                     }
                                 }
                             }
