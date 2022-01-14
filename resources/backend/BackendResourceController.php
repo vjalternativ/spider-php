@@ -199,9 +199,6 @@ class BackendResourceController extends ResourceController
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $data = $_POST;
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
         $module = $this->entity;
         $keyvalue = array();
         $table = $module;
@@ -511,7 +508,7 @@ class BackendResourceController extends ResourceController
         $table .= $pagingHtml;
         echo $table;
 
-        die();
+        exit();
     }
 
     function action_addSubpanelRelationship()
