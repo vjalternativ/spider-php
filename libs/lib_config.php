@@ -39,7 +39,7 @@ class lib_config
 
             $prefix = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"];
             if (! ($_SERVER['SERVER_PORT'] == "80" || $_SERVER['SERVER_PORT'] == "443")) {
-                $prefix .= ":" . $_SERVER['SERVER_PORT'];
+                // $prefix .= ":" . $_SERVER['SERVER_PORT'];
             }
             $docRoot = $_SERVER['DOCUMENT_ROOT'];
             $dir = $dir;
