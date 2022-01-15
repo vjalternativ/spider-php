@@ -70,9 +70,11 @@ class lib_config
             unset($config['basepath']);
             unset($config['urlbasepath']);
             unset($config['fwurlbasepath']);
-            unset($config['baseurl']);
-            unset($config['fwbaseurl']);
 
+            if (isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT']) {
+                unset($config['baseurl']);
+                unset($config['fwbaseurl']);
+            }
             $this->config = array_merge($this->config, $config);
             $this->config['display_errors'] = isset($this->config['display_errors']) ? $this->config['display_errors'] : false;
             ini_set("display_errors", $this->config['display_errors']);
