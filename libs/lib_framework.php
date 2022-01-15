@@ -28,6 +28,7 @@ class lib_framework
 
     function __construct($path, $sessionName = false)
     {
+        set_include_path($path);
         $this->configpath = $path;
         $this->init($sessionName);
     }

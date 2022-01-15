@@ -1,25 +1,12 @@
 <?php
-global $jobdata;
 
 class cronprocessCliController extends CliResourceController
 {
 
-    function action_index()
+    private function processJobData($jobdata)
     {
-        $db = lib_database::getInstance();
-        $sql = "select * from scheduler where deleted=0  and status='Active'  and ";
-        global $jobdata;
-        $jobdata = array();
-        if (isset($_SERVER['argv'][1])) {
-            $sql .= " id = '" . $_SERVER['argv'][1] . "'";
-        } else {
-            $sql .= " jobstatus='pending' ";
-        }
-        $sql .= " order by date_modified asc limit 1";
-        $jobdata = $db->getrow($sql);
-
         if ($jobdata) {
-            register_shutdown_function('shutdown');
+            register_shutdown_function('shutdown', $jobdata);
 
             $entity = lib_entity::getInstance();
             $jobdata['jobstatus'] = "started";
@@ -30,6 +17,35 @@ class cronprocessCliController extends CliResourceController
             $ob = new $class();
             $ob->execute();
         }
+    }
+
+    function action_force()
+    {
+        $jobClass = $this->getarg(3);
+
+        if ($jobClass) {
+            $sql = "select * from scheduler where deleted=0  and status='Active'  and jobclass='" . $jobClass . "'";
+            $jobdata = lib_database::getInstance()->getrow($sql);
+
+            if ($jobdata) {
+
+                $this->processJobData($jobdata);
+            } else {
+                $this->echo("invalid job class");
+            }
+        } else {
+            $this->echo("specify jobclass");
+        }
+    }
+
+    function action_index()
+    {
+        $db = lib_database::getInstance();
+        $sql = "select * from scheduler where deleted=0  and status='Active'  and ";
+        $sql .= " jobstatus='pending' ";
+        $sql .= " order by date_modified asc limit 1";
+        $jobdata = $db->getrow($sql);
+        $this->processJobData($jobdata);
 
         /*
          * global $entity,$log;
@@ -55,9 +71,8 @@ class cronprocessCliController extends CliResourceController
     }
 }
 
-function shutdown()
+function shutdown($jobdata)
 {
-    global $jobdata;
     $entity = lib_entity::getInstance();
     $vjconfig = lib_config::getInstance()->getConfig();
     $jobdata['jobstatus'] = "completed";

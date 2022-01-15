@@ -5,16 +5,26 @@ class cronCliController extends CliResourceController
 
     var $jobs = array();
 
-    function action_index()
+    function __construct()
     {
         $db = lib_database::getInstance();
         $sql = "select now() as nowdate,scheduler.* from scheduler where deleted=0 and status='Active'   order by date_modified asc";
         $rows = $db->fetchRows($sql, array(
-            "id"
+            "jobclass"
         ));
         $this->jobs = $rows;
-        if ($rows)
+    }
+
+    function action_index()
+    {
+        if ($this->jobs)
             $this->process();
+    }
+
+    function action_force()
+    {
+        if ($this->jobs)
+            $this->process(true);
     }
 
     function isvalid($jobdata)
@@ -37,28 +47,58 @@ class cronCliController extends CliResourceController
         return true;
     }
 
-    function process()
+    private function scheduleJob($jobdata)
     {
-        $entity = lib_entity::getInstance();
-        $vjconfig = lib_config::getInstance()->getConfig();
+        $jobdata['jobstatus'] = "pending";
+        lib_entity::getInstance()->save("scheduler", $jobdata);
+    }
 
-        foreach ($this->jobs as $key => $jobdata) {
-            if (! $this->isvalid($jobdata)) {
-                unset($this->jobs[$key]);
-            }
-        }
+    private function startCronProcess()
+    {
+        $basepath = lib_config::getInstance()->get("basepath");
+
+        shell_exec("php " . $basepath . "index.php cronprocess > /dev/null 2>/dev/null &");
+    }
+
+    function process($force = false)
+    {
         if ($this->jobs) {
-            foreach ($this->jobs as $jobdata) {
-                $jobdata['jobstatus'] = "pending";
-                $entity->save("scheduler", $jobdata);
+
+            if ($force) {
+                $jobclass = $this->getarg(3);
+                if ($jobclass) {
+
+                    if (isset($this->jobs[$jobclass])) {
+                        $jobdata = $this->jobs[$jobclass];
+                        $this->scheduleJob($jobdata);
+                        $this->startCronProcess();
+                    } else {
+                        $this->echo("invalid jobclass");
+                    }
+                } else {
+                    $this->echo("specify job class");
+                }
+            } else {
+
+                foreach ($this->jobs as $key => $jobdata) {
+                    if (! $this->isvalid($jobdata) && ! $force) {
+                        unset($this->jobs[$key]);
+                    }
+                }
+                if ($this->jobs) {
+                    foreach ($this->jobs as $jobdata) {
+                        $this->scheduleJob($jobdata);
+                    }
+                    $this->startCronProcess();
+                }
             }
-            shell_exec("php " . $vjconfig['basepath'] . "index.php cronprocess > /dev/null 2>/dev/null &");
         }
     }
 
     function processJob($jobdata)
     {
         $vjconfig = lib_config::getInstance()->getConfig();
+
         if (isset($jobdata['path'])) {
 
             file_put_contents("locks/thread.json", json_encode($jobdata));
