@@ -36,9 +36,9 @@ class lib_array
                     $matrix[$row][] = $item;
                 }
             } else {
-                $depthIndex ++;
+                $dindex = $depthIndex + 1;
 
-                $matrix = $this->transformArrayToMatrix($item, $cols, $depth, $depthIndex, $matrix);
+                $matrix = $this->transformArrayToMatrix($item, $cols, $depth, $dindex, $matrix);
             }
         }
 
