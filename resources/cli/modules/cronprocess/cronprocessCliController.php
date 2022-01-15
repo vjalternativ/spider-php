@@ -7,15 +7,23 @@ class cronprocessCliController extends CliResourceController
     {
         if ($jobdata) {
             register_shutdown_function('shutdown', $jobdata);
-
             $entity = lib_entity::getInstance();
             $jobdata['jobstatus'] = "started";
             $entity->save("scheduler", $jobdata);
 
-            require_once $jobdata['path'];
-            $class = $jobdata['jobclass'];
-            $ob = new $class();
-            $ob->execute();
+            $path = $jobdata['path'];
+            if ($path) {
+                if (file_exists($path)) {
+                    require_once $path;
+                    $class = $jobdata['jobclass'];
+                    $ob = new $class();
+                    $ob->execute();
+                } else {
+                    $this->echo("invalid job filepath " . $path);
+                }
+            } else {
+                $this->echo("invalid job filepath : empty");
+            }
         }
     }
 
