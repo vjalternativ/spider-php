@@ -1,5 +1,6 @@
 <?php
 require_once lib_config::getInstance()->get("fwbasepath") . 'libs/lib_bootstrap.php';
+require_once lib_config::getInstance()->get("fwbasepath") . 'resources/backend/modules/media_files/MediaFilesService.php';
 
 class bsformWidgetController extends WidgetResourceController
 {
@@ -226,7 +227,7 @@ class bsformWidgetController extends WidgetResourceController
 
         $bs = lib_bootstrap::getInstance();
 
-        $data = $metadata->getData();
+        $data = $metadata->getFormData();
 
         $data['id'] = isset($data['id']) ? $data['id'] : "";
 
@@ -300,7 +301,7 @@ class bsformWidgetController extends WidgetResourceController
 
     function getattr($type, $name, $value = '', BSFormMetaData $meta)
     {
-        $data = $meta->getData();
+        $data = $meta->getFormData();
         $attr = $this->datatypeFields[$type];
         // to do make data type associative
         $element = $attr['element'][0];
@@ -329,8 +330,8 @@ class bsformWidgetController extends WidgetResourceController
     {
         $def = $metaData->getMetaDef();
 
-        $data = $metaData->getData();
-
+        $data = $metaData->getFormData();
+        $files = $metaData->getFormFiles();
         $app_list_strings = lib_datawrapper::getInstance()->get("app_list_strings_list");
         $mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
         $entity = lib_entity::getInstance();
@@ -537,13 +538,23 @@ class bsformWidgetController extends WidgetResourceController
                         $inputgroup = $bs->getelement("div", $elementhtml, array(
                             "class" => "input-group"
                         ));
+                        if ($fieldarray['type'] == "file") {
+                            if ($files) {
 
-                        if ($fieldarray['type'] == "file" && ! empty($data[$fieldarray['name']])) {
-                            $inputgroup .= "<br />";
-                            $inputgroup .= '<a target="_blank"  href="index.php?module=media_files&action=download&id=' . $data[$fieldarray['name']] . '" >Attachment</a>';
-                            $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
+                                if (isset($files[$fieldarray['name']]) && $files[$fieldarray['name']]['error'] == "0") {
+
+                                    $inputgroup .= "<br />";
+
+                                    $link = MediaFilesService::getInstance()->getMediaLinkForPath($files[$fieldarray['name']]['tmp_name'], $files[$fieldarray['name']]['name'], $files[$fieldarray['name']]['type']);
+                                    $inputgroup .= '<a target="_blank"  href="' . $link . '" >' . $files[$fieldarray['name']]['name'] . '</a>';
+                                    // $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
+                                }
+                            } else {
+                                // $inputgroup .= "<br />";
+                                // $inputgroup .= '<a target="_blank" href="index.php?module=media_files&action=download&id=' . $data[$fieldarray['name']] . '" >Attachment</a>';
+                                // $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
+                            }
                         }
-
                         $fieldarray['gridsize'] = isset($fieldarray['gridsize']) ? $fieldarray['gridsize'] : "6";
                         $colattr = array(
                             "class" => array(

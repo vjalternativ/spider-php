@@ -10,6 +10,11 @@ abstract class RuntimeBean
         if (! $this->path) {
             throw new Exception("runtimme path is not set");
         }
+
+        $dir = substr($this->path, 0, strrpos($this->path, "/"));
+        if (! is_dir($dir)) {
+            shell_exec("mkdir -p " . $dir);
+        }
     }
 
     protected function doWrite($data = array())

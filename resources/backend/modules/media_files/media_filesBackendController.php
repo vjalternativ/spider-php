@@ -10,16 +10,33 @@ class media_filesBackendController extends BackendResourceController
         parent::__construct();
     }
 
+    private function readFile($path, $name, $filetype)
+    {
+        if (file_exists($path)) {} else {
+            echo $path . " not exist";
+            die();
+        }
+        header('Content-Disposition: filename="' . $name . '"');
+        header('Content-type: ' . $filetype);
+        readfile($path);
+    }
+
     function action_download()
     {
         $entity = lib_entity::getInstance();
         ob_end_clean();
-        $id = $_REQUEST['id'];
-        $media = $entity->get("media_files", $id);
-        $url = $media['file_path'];
-        header('Content-Disposition: filename="' . $media['name'] . '"');
-        header('Content-type: ' . $media['file_type']);
-        readfile($url);
+        if (isset($_REQUEST['path'])) {
+
+            $path = $_REQUEST['path'];
+            $name = $_REQUEST['name'];
+            $filetype = $_REQUEST['filetype'];
+            $this->readFile($path, $name, $filetype);
+        } else if (isset($_REQUEST['id'])) {
+            $id = $_REQUEST['id'];
+            $media = $entity->get("media_files", $id);
+            $url = $media['file_path'];
+            $this->readFile($url, $media['name'], $media['file_type']);
+        }
     }
 
     function action_uploadMediaFile()

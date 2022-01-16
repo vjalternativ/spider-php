@@ -1,7 +1,26 @@
 <?php
+require_once __DIR__ . '/IMediaFilesService.php';
 
 class MediaFilesService implements IMediaFilesService
 {
+
+    private static $instance = null;
+
+    private function __construct()
+    {}
+
+    private static function asIMediaFilesService(IMediaFilesService $ob)
+    {
+        return $ob;
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new MediaFilesService();
+        }
+        return self::asIMediaFilesService(self::$instance);
+    }
 
     public function saveMediaFileByFieldName($fieldName, $keyvalue)
     {
@@ -56,6 +75,12 @@ class MediaFilesService implements IMediaFilesService
         }
         $sql = "DELETE FROM media_files where id = '" . $id . "'";
         lib_database::getInstance()->query($sql);
+    }
+
+    public function getMediaLinkForPath($path, $name, $filetype)
+    {
+        $vjconfig = lib_config::getInstance()->getConfig();
+        return $path ? $vjconfig['urlbasepath'] . "backend/index.php?module=media_files&action=download&path=" . $path . "&name=" . $name . "&filetype=" . $filetype : false;
     }
 }
 ?>

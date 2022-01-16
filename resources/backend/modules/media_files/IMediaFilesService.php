@@ -10,5 +10,7 @@ interface IMediaFilesService
     function getMediaLink($mediaId);
 
     function removeMedia($id);
+
+    function getMediaLinkForPath($path, $name, $filetype);
 }
 ?>
