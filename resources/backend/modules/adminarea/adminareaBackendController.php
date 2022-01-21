@@ -300,7 +300,7 @@ class adminareaBackendController extends BackendResourceController
             $data = $db->fetchRows($sql, array(
                 "id"
             ));
-            file_put_contents($vjconfig["fwbasepath"] . "include/install/datapatch/" . $key . ".json", json_encode($data, JSON_PRETTY_PRINT));
+            file_put_contents($vjconfig["basepath"] . "include/install/datapatch/" . $key . ".json", json_encode($data, JSON_PRETTY_PRINT));
         }
     }
 

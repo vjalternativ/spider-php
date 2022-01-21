@@ -84,6 +84,23 @@
             "name": "jobstatus",
             "type": "varchar",
             "len": "255"
+        },
+        "start_on": {
+            "name": "start_on",
+            "type": "datetime",
+            "table": "primary"
+        },
+        "module": {
+            "name": "module",
+            "type": "varchar",
+            "table": "primary",
+            "len": "255"
+        },
+        "method": {
+            "name": "method",
+            "type": "varchar",
+            "table": "primary",
+            "len": "255"
         }
     },
     "listviewdef": {
@@ -98,16 +115,7 @@
             "fields": [
                 {
                     "field": "name",
-                    "gridsize": 6
-                }
-            ]
-        },
-        {
-            "type": "row",
-            "fields": [
-                {
-                    "field": "description",
-                    "gridsize": 12
+                    "gridsize": "6"
                 }
             ]
         },
@@ -152,6 +160,23 @@
                 {
                     "field": "jobstatus",
                     "gridsize": "6"
+                },
+                {
+                    "field": "start_on",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "module",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "method",
+                    "gridsize": "6"
                 }
             ]
         }
@@ -162,11 +187,11 @@
             "fields": [
                 {
                     "field": "name",
-                    "gridsize": 6
+                    "gridsize": "6"
                 },
                 {
                     "field": "date_entered",
-                    "gridsize": 6
+                    "gridsize": "6"
                 }
             ]
         },
@@ -175,12 +200,67 @@
             "fields": [
                 {
                     "field": "description",
-                    "gridsize": 12
+                    "gridsize": "12"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "path",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "inminute",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "jobstatus",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "status",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "jobclass",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "start_on",
+                    "gridsize": "6"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "fields": [
+                {
+                    "field": "module",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "method",
+                    "gridsize": "6"
                 }
             ]
         }
     ],
     "searchviewdef": {
-        "name": "name"
+        "name": "name",
+        "date_entered": "date_entered",
+        "status": "status",
+        "jobstatus": "jobstatus"
     }
 }
