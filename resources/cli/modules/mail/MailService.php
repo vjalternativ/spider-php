@@ -4,8 +4,21 @@ $vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/PHPMailer.php';
 
-class SendMail
+class MailService
 {
+
+    private static $instance = null;
+
+    private function __construct()
+    {}
+
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new MailService();
+        }
+        return self::$instance;
+    }
 
     /**
      * This function will send notification when email account sends more than 478 mails in a day
@@ -139,7 +152,7 @@ class SendMail
         return $aRet;
     }
 
-    function execute()
+    function processEmailBuffer()
     {
         // making sure only a single instance of this script is running at a time
         $lockfile = lib_config::getInstance()->get("basepath") . 'locks/sendmail.txt';
