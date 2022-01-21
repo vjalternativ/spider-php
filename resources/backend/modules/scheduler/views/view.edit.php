@@ -17,11 +17,13 @@ class schedulerViewEdit extends ViewEdit
         $functionList = array();
         if ($moduleList) {
 
-            $active = $this->data['module'];
+            if (isset($this->data['module'])) {
+                $active = $this->data['module'];
 
-            if (isset($modules[$active])) {
-                $functionList = $modules[$active]['functions'];
-                $functionList = array_combine($functionList, $functionList);
+                if (isset($modules[$active])) {
+                    $functionList = $modules[$active]['functions'];
+                    $functionList = array_combine($functionList, $functionList);
+                }
             }
         }
         $moduleList = array_combine($moduleList, $moduleList);
