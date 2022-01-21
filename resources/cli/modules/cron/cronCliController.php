@@ -7,6 +7,7 @@ class cronCliController extends CliResourceController
 
     function __construct()
     {
+        parent::__construct();
         $db = lib_database::getInstance();
         $sql = "select now() as nowdate,scheduler.* from scheduler where deleted=0 and status='Active'   order by date_modified asc";
         $rows = $db->fetchRows($sql, array(
@@ -30,6 +31,8 @@ class cronCliController extends CliResourceController
     function isvalid($jobdata)
     {
         if ($jobdata['jobstatus'] == "started") {
+            $this->echo("job " . $jobdata['jobclass'] . "already started");
+
             return false;
         }
         $today = new DateTime($jobdata['nowdate']);
@@ -39,6 +42,9 @@ class cronCliController extends CliResourceController
         $diffmin = ($today->getTimestamp() - $date->getTimestamp()) / 60;
 
         if ($diffmin < $jobdata['inminute']) {
+
+            $this->echo("job " . $jobdata['jobclass'] . " ignoring as diff " . $diffmin);
+
             return false;
         }
 
@@ -49,6 +55,7 @@ class cronCliController extends CliResourceController
 
     private function scheduleJob($jobdata)
     {
+        $this->echo("job " . $jobdata['jobclass'] . " scheduling");
         $jobdata['jobstatus'] = "pending";
         lib_entity::getInstance()->save("scheduler", $jobdata);
     }

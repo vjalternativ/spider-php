@@ -1,7 +1,7 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
 
-class SiteMapProcessJob
+class SiteMapProcessor
 {
 
     public $job;
