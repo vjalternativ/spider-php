@@ -5,6 +5,8 @@ $config = array();
 $config['sitename'] = "Spider-PHP Control Panel";
 $config['timezone'] = "Asia/Kolkata";
 
+$config['server_timezone'] = "Asia/Kolkata";
+
 $config['database']['host'] = "localhost";
 
 $config['database']['user'] = "__DBUSER__";
