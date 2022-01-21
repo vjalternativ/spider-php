@@ -1,9 +1,12 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'] . 'crons/SiteMapProcessor.php';
+require_once $vjconfig['fwbasepath'] . 'resources/cli/CLIService.php';
 
 class SitemapJob
 {
+
+    use CLIService;
 
     public $updateval = 0;
 

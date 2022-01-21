@@ -24,7 +24,7 @@ class SiteMapProcessor
 
     private $updateval = 0;
 
-    public function execute()
+    public function execute($loopindex = 0)
     {
         $this->logger = new lib_logger("sitemap_proces.log");
         $db = lib_database::getInstance();
@@ -37,6 +37,7 @@ class SiteMapProcessor
             if ($row['updateval'] == "") {
                 $row['updateval'] = 0;
             }
+
             $this->job = $row;
             $this->offset = $row['offsetval'];
 
@@ -60,8 +61,7 @@ class SiteMapProcessor
 
             $module = $row['page_module'];
             if ($module && isset($globalModuleList[$module])) {
-                $this->logger->debug("processing job " . json_encode($this->job));
-                $this->processXmlData($index, $isnew, $module);
+                $this->processXmlData($index, $isnew, $module, $loopindex);
             }
         }
     }
@@ -88,6 +88,7 @@ class SiteMapProcessor
     private function getPageSqlQuery($module)
     {
         $qry = $this->getPageSql($module);
+        return $qry;
         if ($qry->num_rows == 0) {
 
             if ($this->job['jobstatus'] == "pending") {
@@ -106,18 +107,19 @@ class SiteMapProcessor
     private function getPageSql($module)
     {
         $sql = "select id,name,alias from " . $module . " where   alias is not null  and ( sitemap = " . $this->job['updateval'];
+        $sql .= " or sitemap is null";
+        $sql .= ")   limit " . $this->processpages;
+
         $this->updateval = 0;
         if ($this->job['updateval'] == "0") {
-            $sql .= " or sitemap is null";
             $this->updateval = 1;
         }
-        $sql .= ")   limit " . $this->processpages;
 
         $qry = lib_database::getInstance()->query($sql);
         return $qry;
     }
 
-    function processXmlData($index, $isNew, $module)
+    function processXmlData($index, $isNew, $module, $loopindex = 0)
     {
         $db = lib_database::getInstance();
         $entity = lib_entity::getInstance();
@@ -136,7 +138,13 @@ class SiteMapProcessor
         if (! $isNew) {
             $counter = $this->sitemap['links'];
         }
+
+        $rows = array();
         while ($row = $db->fetch($qry)) {
+            $rows[] = $row;
+        }
+
+        foreach ($rows as $row) {
 
             $this->offset ++;
 
@@ -167,6 +175,7 @@ class SiteMapProcessor
             $data['childs'][] = $urlNode;
 
             $sql = "update " . $module . " set sitemap = " . $this->updateval . " where id='" . $row['id'] . "'";
+
             $db->query($sql);
             $counter ++;
         }
@@ -178,6 +187,11 @@ class SiteMapProcessor
                 $this->createXML($data, $counter, $index);
             } else {
                 $this->updateXml($data, $counter, $index);
+            }
+            $loopindex ++;
+
+            if ($loopindex < 250) {
+                $this->execute($loopindex);
             }
         } else {
             $this->job['offsetval'] = 0;
