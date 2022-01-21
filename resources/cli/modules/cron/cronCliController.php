@@ -30,13 +30,28 @@ class cronCliController extends CliResourceController
 
     function isvalid($jobdata)
     {
+        $now = date("Y-m-d H:i:s");
+
+        $starton = $jobdata['start_on'];
+        $dateModified = $jobdata['date_modified'];
+
+        if ($starton) {
+
+            if ($now < $starton) {
+                return false;
+            }
+
+            if ($starton > $dateModified) {
+                $jobdata['date_modified'] = $starton;
+            }
+        }
+
         if ($jobdata['jobstatus'] == "started") {
             $this->echo("job " . $jobdata['jobclass'] . "already started");
 
             return false;
         }
         $today = new DateTime($jobdata['nowdate']);
-        $dateModified = $jobdata['date_modified'];
         $date = new DateTime($dateModified);
 
         $diffmin = ($today->getTimestamp() - $date->getTimestamp()) / 60;
@@ -107,22 +122,9 @@ class cronCliController extends CliResourceController
         $vjconfig = lib_config::getInstance()->getConfig();
 
         if (isset($jobdata['path'])) {
-
             file_put_contents("locks/thread.json", json_encode($jobdata));
             shell_exec("php " . $vjconfig['basepath'] . "index.php cronprocess > /dev/null 2>/dev/null &");
             sleep(1);
-
-            // shell_exec("php ".$vjconfig['basepath'].'cronprocessor.php '.$jobdata['id']." ".$jobdata['path'].' '.$jobdata['class']." > /dev/null 2>/dev/null &");
-            /*
-             * require_once $jobdata['path'];
-             * $class= $jobdata['jobclass'];
-             *
-             *
-             * $ob = new $class();
-             * $ob->execute();
-             * $jobdata['jobstatus'] = "completed";
-             * $entity->save("scheduler",$jobdata);
-             */
         }
     }
 }

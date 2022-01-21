@@ -1,18 +1,15 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
-require_once $vjconfig['fwbasepath'] . 'crons/SiteMapProcessor.php';
-require_once $vjconfig['fwbasepath'] . 'resources/cli/CLIService.php';
+require_once $vjconfig['fwbasepath'] . 'resources/cli/modules/sitemap/SiteMapProcessor.php';
 
-class SitemapJob
+class sitemapCliController extends CliResourceController
 {
-
-    use CLIService;
 
     public $updateval = 0;
 
     public $row = array();
 
-    public function execute()
+    function action_generate()
     {
         $db = lib_database::getInstance();
         $sql = "select * from sitemapjob where deleted=0";
