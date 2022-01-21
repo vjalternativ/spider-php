@@ -1,5 +1,4 @@
 <?php
-$vjconfig = lib_config::getInstance()->getConfig();
 
 class SiteMapProcessor
 {
