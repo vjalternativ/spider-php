@@ -38,6 +38,7 @@ class cronCliController extends CliResourceController
         if ($starton) {
 
             if ($now < $starton) {
+                $this->echo("job " . $jobdata['jobclass'] . " " . $jobdata['module'] . " " . $jobdata['method'] . " now is less than start on " . $jobdata['start_on']);
                 return false;
             }
 
