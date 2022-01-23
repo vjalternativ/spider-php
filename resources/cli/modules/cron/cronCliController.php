@@ -48,7 +48,7 @@ class cronCliController extends CliResourceController
         }
 
         if ($jobdata['jobstatus'] == "started") {
-            $this->echo("job " . $jobdata['jobclass'] . "already started");
+            $this->echo("job " . $jobdata['jobclass'] . " " . $jobdata['module'] . " " . $jobdata['method'] . " already started");
 
             return false;
         }
@@ -104,6 +104,8 @@ class cronCliController extends CliResourceController
             } else {
 
                 foreach ($this->jobs as $key => $jobdata) {
+                    $this->echo("job " . $jobdata['jobclass'] . " " . $jobdata['module'] . " " . $jobdata['method'] . " checking is valid");
+
                     if (! $this->isvalid($jobdata) && ! $force) {
                         unset($this->jobs[$key]);
                     }
