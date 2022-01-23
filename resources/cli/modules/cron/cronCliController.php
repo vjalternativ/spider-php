@@ -10,9 +10,7 @@ class cronCliController extends CliResourceController
         parent::__construct();
         $db = lib_database::getInstance();
         $sql = "select now() as nowdate,scheduler.* from scheduler where deleted=0 and status='Active'   order by date_modified asc";
-        $rows = $db->fetchRows($sql, array(
-            "jobclass"
-        ));
+        $rows = $db->fetchRows($sql);
         $this->jobs = $rows;
     }
 
@@ -20,12 +18,6 @@ class cronCliController extends CliResourceController
     {
         if ($this->jobs)
             $this->process();
-    }
-
-    function action_force()
-    {
-        if ($this->jobs)
-            $this->process(true);
     }
 
     function isvalid($jobdata)
@@ -87,35 +79,18 @@ class cronCliController extends CliResourceController
     {
         if ($this->jobs) {
 
-            if ($force) {
-                $jobclass = $this->getarg(3);
-                if ($jobclass) {
+            foreach ($this->jobs as $key => $jobdata) {
+                $this->echo("job " . $jobdata['jobclass'] . " " . $jobdata['module'] . " " . $jobdata['method'] . " checking is valid");
 
-                    if (isset($this->jobs[$jobclass])) {
-                        $jobdata = $this->jobs[$jobclass];
-                        $this->scheduleJob($jobdata);
-                        $this->startCronProcess();
-                    } else {
-                        $this->echo("invalid jobclass");
-                    }
-                } else {
-                    $this->echo("specify job class");
+                if (! $this->isvalid($jobdata) && ! $force) {
+                    unset($this->jobs[$key]);
                 }
-            } else {
-
-                foreach ($this->jobs as $key => $jobdata) {
-                    $this->echo("job " . $jobdata['jobclass'] . " " . $jobdata['module'] . " " . $jobdata['method'] . " checking is valid");
-
-                    if (! $this->isvalid($jobdata) && ! $force) {
-                        unset($this->jobs[$key]);
-                    }
+            }
+            if ($this->jobs) {
+                foreach ($this->jobs as $jobdata) {
+                    $this->scheduleJob($jobdata);
                 }
-                if ($this->jobs) {
-                    foreach ($this->jobs as $jobdata) {
-                        $this->scheduleJob($jobdata);
-                    }
-                    $this->startCronProcess();
-                }
+                $this->startCronProcess();
             }
         }
     }
