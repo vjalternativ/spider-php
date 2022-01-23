@@ -58,7 +58,7 @@ class cronCliController extends CliResourceController
 
         if ($diffmin < $jobdata['inminute']) {
 
-            $this->echo("job " . $jobdata['jobclass'] . " ignoring as diff " . $diffmin);
+            $this->echo("job " . $jobdata['jobclass'] . " " . $jobdata['module'] . " " . $jobdata['method'] . " ignoring as diff " . $diffmin);
 
             return false;
         }
@@ -122,7 +122,7 @@ class cronCliController extends CliResourceController
         $vjconfig = lib_config::getInstance()->getConfig();
 
         if (isset($jobdata['path'])) {
-            file_put_contents("locks/thread.json", json_encode($jobdata));
+            file_put_contents($vjconfig['storage_basepath'] . "locks/thread.json", json_encode($jobdata));
             shell_exec("php " . $vjconfig['basepath'] . "index.php cronprocess > /dev/null 2>/dev/null &");
             sleep(1);
         }
