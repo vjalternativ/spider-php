@@ -88,6 +88,12 @@
             "type": "varchar",
             "table": "primary",
             "len": "255"
+        },
+        "page_prefix": {
+            "name": "page_prefix",
+            "type": "varchar",
+            "table": "primary",
+            "len": "255"
         }
     },
     "listviewdef": {
@@ -97,16 +103,14 @@
         "offsetval": "offsetval",
         "lastsitemap": "lastsitemap",
         "updateval": "updateval",
-        "date_entered": "date_entered"
+        "date_modified": "date_modified"
     },
     "editviewdef": [
         {
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "name"
-                    },
+                    "field": "name",
                     "gridsize": "6"
                 }
             ]
@@ -115,9 +119,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "description"
-                    },
+                    "field": "description",
                     "gridsize": "12"
                 }
             ]
@@ -126,15 +128,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "jobstatus"
-                    },
+                    "field": "jobstatus",
                     "gridsize": "6"
                 },
                 {
-                    "field": {
-                        "name": "offsetval"
-                    },
+                    "field": "offsetval",
                     "gridsize": "6"
                 }
             ]
@@ -143,9 +141,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "page_module"
-                    },
+                    "field": "page_module",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "page_prefix",
                     "gridsize": "6"
                 }
             ]
@@ -156,9 +156,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "name"
-                    },
+                    "field": "name",
                     "gridsize": "6"
                 }
             ]
@@ -167,9 +165,7 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "description"
-                    },
+                    "field": "description",
                     "gridsize": "12"
                 }
             ]
@@ -178,15 +174,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "jobstatus"
-                    },
+                    "field": "jobstatus",
                     "gridsize": "6"
                 },
                 {
-                    "field": {
-                        "name": "offsetval"
-                    },
+                    "field": "offsetval",
                     "gridsize": "6"
                 }
             ]
@@ -195,15 +187,11 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "lastsitemap"
-                    },
+                    "field": "lastsitemap",
                     "gridsize": "6"
                 },
                 {
-                    "field": {
-                        "name": "updateval"
-                    },
+                    "field": "updateval",
                     "gridsize": "6"
                 }
             ]
@@ -212,15 +200,23 @@
             "type": "row",
             "fields": [
                 {
-                    "field": {
-                        "name": "page_module"
-                    },
+                    "field": "page_module",
+                    "gridsize": "6"
+                },
+                {
+                    "field": "page_prefix",
                     "gridsize": "6"
                 }
             ]
         }
     ],
     "searchviewdef": {
-        "name": "name"
+        "name": "name",
+        "page_module": "page_module",
+        "jobstatus": "jobstatus",
+        "offsetval": "offsetval",
+        "lastsitemap": "lastsitemap",
+        "updateval": "updateval",
+        "date_modified": "date_modified"
     }
 }

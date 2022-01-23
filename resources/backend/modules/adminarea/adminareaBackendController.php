@@ -247,6 +247,12 @@ class adminareaBackendController extends BackendResourceController
     {
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
         $vjconfig = lib_config::getInstance()->getConfig();
+
+        $cmd = 'mkdir -p ' . $vjconfig['basepath'] . 'include/install/datapatch';
+        shell_exec($cmd);
+        $cmd = 'mkdir -p ' . $vjconfig['basepath'] . 'include/install/schemapatch';
+        shell_exec($cmd);
+
         $this->repairTables['user'] = 1;
         foreach ($globalEntityList as $key => $entity) {
 

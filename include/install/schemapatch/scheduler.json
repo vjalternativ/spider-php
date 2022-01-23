@@ -107,7 +107,8 @@
         "name": "name",
         "date_entered": "date_entered",
         "status": "status",
-        "jobstatus": "jobstatus"
+        "jobstatus": "jobstatus",
+        "date_modified": "date_modified"
     },
     "editviewdef": [
         {
@@ -261,6 +262,7 @@
         "name": "name",
         "date_entered": "date_entered",
         "status": "status",
-        "jobstatus": "jobstatus"
+        "jobstatus": "jobstatus",
+        "date_modified": "date_modified"
     }
 }
