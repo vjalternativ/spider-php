@@ -250,11 +250,16 @@ class lib_framework
                 $smarty->assign("urlscheme", $scheme);
 
                 require_once $vjconfig['fwbasepath'] . 'include/views/ResourceView.php';
+                $resourceview = $vjconfig['fwbasepath'] . 'resources/' . $this->resource . '/include/views/' . ucfirst($this->resource) . 'ResourceView.php';
 
-                if (file_exists($vjconfig['basepath'] . 'resources/' . $this->resource . '/include/views/' . ucfirst($this->resource) . 'ResourceView' . '.php')) {
-                    require_once $vjconfig['basepath'] . 'resources/' . $this->resource . '/include/views/' . ucfirst($this->resource) . 'ResourceView' . '.php';
-                } else {
-                    require_once $vjconfig['fwbasepath'] . 'resources/' . $this->resource . '/include/views/' . ucfirst($this->resource) . 'ResourceView' . '.php';
+                if (file_exists($resourceview)) {
+                    require_once $resourceview;
+                }
+
+                $resourceViewExten = $vjconfig['basepath'] . 'resources/' . $this->resource . '/include/views/' . ucfirst($this->resource) . 'ResourceViewExten' . '.php';
+
+                if (file_exists($resourceViewExten)) {
+                    require_once $resourceViewExten;
                 }
 
                 if ($this->resource == "backend") {

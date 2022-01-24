@@ -66,9 +66,10 @@ class FrontendResourceController extends ResourceController
             }
 
             $pageData = lib_datawrapper::getInstance()->get("pagedata");
+
             if ($pageData) {
                 $this->params['meta_key'] = $pageData['meta_key'];
-                $this->params['meta_des'] = $pageData['meta_desc'];
+                $this->params['meta_desc'] = $pageData['meta_desc'];
                 $this->params['meta_title'] = $pageData['meta_title'];
             }
         } else {
