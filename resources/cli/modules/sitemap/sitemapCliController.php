@@ -12,42 +12,53 @@ class sitemapCliController extends CliResourceController
     function action_generate()
     {
         $db = lib_database::getInstance();
-        $sql = "select * from sitemapjob where deleted=0";
+        $sql = "select * from sitemapjob where deleted=0 and jobstatus not in ('pending','inprogress')";
         $rows = $db->fetchRows($sql, array(
             'id'
         ));
         foreach ($rows as $row) {
-            if ($row['jobstatus'] == "pending") {
-                continue;
-            } else {
-                if ($row['updateval'] == "1") {
-                    $this->updateval = 0;
-                } else {
-                    $this->updateval = 1;
-                }
-            }
-            $row['updateval'] = $this->updateval;
-            $this->cleanupSiteMaps($row);
-            $this->updateSiteMapJob($row);
 
-            $processor = new SiteMapProcessor();
+            if ($row['updateval'] == "0") {
+                $this->updateval = 1;
+            }
+
+            $config = lib_config::getInstance()->getConfig();
+
+            $targetPath = $config['storage_basepath'] . 'sitemaps/' . $row['page_module'];
+            $path = $targetPath . '_tmp/';
+            $sitemapbasepath = $config['baseurl'] . 'sitemaps/' . $row['page_module'] . '/';
+
+            $this->preCleanupSiteMaps($row);
+
+            $entity = lib_entity::getInstance();
+            $row['jobstatus'] = "pending";
+            $entity->save("sitemapjob", $row);
+
+            $processor = new SiteMapProcessor($row, $this->updateval, $path, $sitemapbasepath);
             $processor->execute();
+
+            $row['offsetval'] = 0;
+            $row['jobstatus'] = "completed";
+            $row['updateval'] = $this->updateval;
+            $entity->save("sitemapjob", $row);
+
+            $this->postCleanupSiteMap($targetPath, $path);
         }
     }
 
-    function updateSiteMapJob($row)
-    {
-        $entity = lib_entity::getInstance();
-        $row['jobstatus'] = "pending";
-        $row['updateval'] = $this->updateval;
-        $entity->save("sitemapjob", $row);
-    }
-
-    function cleanupSiteMaps($row)
+    function preCleanupSiteMaps($row)
     {
         $db = lib_database::getInstance();
         $sql = "delete from sitemap where page_module='" . $row['page_module'] . "'";
         $db->query($sql);
+    }
+
+    function postCleanupSiteMap($targetPath, $path)
+    {
+        $cmd = 'rm -rf ' . $targetPath;
+        shell_exec($cmd);
+        $cmd = 'mv ' . $path . ' ' . $targetPath;
+        shell_exec($cmd);
     }
 }
 

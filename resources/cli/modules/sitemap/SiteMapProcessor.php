@@ -15,53 +15,54 @@ class SiteMapProcessor
 
     public $path = '';
 
-    public $targetPath = '';
-
     public $sitemapbasepath = '';
 
     private $logger;
 
-    private $updateval = 0;
+    private $sitemapUpdateVal = 0;
+
+    function __construct($row, $updateval, $path, $sitemapbasepath)
+    {
+        $this->job = $row;
+        $this->sitemapUpdateVal = $updateval;
+        $this->path = $path;
+        $this->sitemapbasepath = $sitemapbasepath;
+    }
 
     public function execute($loopindex = 0)
     {
         $this->logger = new lib_logger("sitemap_proces.log");
         $db = lib_database::getInstance();
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
-        $vjconfig = lib_config::getInstance()->getConfig();
 
-        $sql = "select * from sitemapjob where deleted=0 and  (jobstatus='pending' or jobstatus='inprogress') limit 1";
-        $row = $db->getRow($sql);
-        if ($row) {
-            if ($row['updateval'] == "") {
-                $row['updateval'] = 0;
+        $row = $this->job;
+
+        $this->offset = $row['offsetval'];
+
+        $index = floor($this->offset / $this->linksperfile) + 1;
+
+        $file_name = $this->path . 'sitemap-' . $index . '.xml';
+
+        $isnew = true;
+
+        $processSiteMap = false;
+        if (file_exists($file_name)) {
+            $isnew = false;
+            $sql = "select * from sitemap where page_module	='" . $row['page_module'] . "' order by date_entered desc limit 1";
+            $this->sitemap = $db->getRow($sql);
+            if ($this->sitemap) {
+                $processSiteMap = true;
             }
+        } else {
+            $command = 'mkdir -p ' . $this->path;
+            shell_exec($command);
+            $processSiteMap = true;
+        }
 
-            $this->job = $row;
-            $this->offset = $row['offsetval'];
+        $module = $row['page_module'];
 
-            $index = floor($this->offset / $this->linksperfile) + 1;
-
-            $this->targetPath = $vjconfig['storage_basepath'] . 'sitemaps/' . $row['page_module'];
-            $this->path = $this->targetPath . '_tmp/';
-            $this->sitemapbasepath = $vjconfig['baseurl'] . 'sitemaps/' . $row['page_module'] . '/';
-            $file_name = $this->path . 'sitemap-' . $index . '.xml';
-
-            $isnew = true;
-
-            if (file_exists($file_name)) {
-                $isnew = false;
-                $sql = "select * from sitemap where id='" . $row['lastsitemap'] . "'";
-                $this->sitemap = $db->getRow($sql);
-            } else {
-                $command = 'mkdir -p ' . $this->path;
-                shell_exec($command);
-            }
-
-            $module = $row['page_module'];
-            if ($module && isset($globalModuleList[$module])) {
-                $this->processXmlData($index, $isnew, $module, $loopindex);
-            }
+        if ($processSiteMap && $module && isset($globalModuleList[$module])) {
+            $this->processXmlData($index, $isnew, $module, $loopindex);
         }
     }
 
@@ -87,18 +88,6 @@ class SiteMapProcessor
     private function getPageSqlQuery($module)
     {
         $qry = $this->getPageSql($module);
-        return $qry;
-        if ($qry->num_rows == 0) {
-
-            if ($this->job['jobstatus'] == "pending") {
-                if ($this->job['updateval'] == "0") {
-                    $this->job['updateval'] = 1;
-                } else {
-                    $this->job['updateval'] = 0;
-                }
-                $qry = $this->getPageSql($module);
-            }
-        }
 
         return $qry;
     }
@@ -109,19 +98,19 @@ class SiteMapProcessor
         $sql .= " or sitemap is null";
         $sql .= ")   limit " . $this->processpages;
 
-        $this->updateval = 0;
-        if ($this->job['updateval'] == "0") {
-            $this->updateval = 1;
-        }
-
         $qry = lib_database::getInstance()->query($sql);
         return $qry;
+    }
+
+    function markSitemapJobCompleted()
+    {
+        $this->job['offsetval'] = 0;
+        $this->job['jobstatus'] = "completed";
     }
 
     function processXmlData($index, $isNew, $module, $loopindex = 0)
     {
         $db = lib_database::getInstance();
-        $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
         $data = array();
@@ -173,7 +162,7 @@ class SiteMapProcessor
             $urlNode['childs'][] = $priorty;
             $data['childs'][] = $urlNode;
 
-            $sql = "update " . $module . " set sitemap = " . $this->updateval . " where id='" . $row['id'] . "'";
+            $sql = "update " . $module . " set sitemap = " . $this->sitemapUpdateVal . " where id='" . $row['id'] . "'";
 
             $db->query($sql);
             $counter ++;
@@ -188,25 +177,9 @@ class SiteMapProcessor
                 $this->updateXml($data, $counter, $index);
             }
             $loopindex ++;
-
-            if ($loopindex < 250) {
-                $this->execute($loopindex);
-            }
-        } else {
-            $this->job['offsetval'] = 0;
-            $this->job['jobstatus'] = "completed";
-            $this->cleanupSiteMaps();
+            lib_entity::getInstance()->save("sitemapjob", $this->job);
+            $this->execute($loopindex);
         }
-        $entity->save("sitemapjob", $this->job);
-    }
-
-    function cleanupSiteMaps()
-    {
-        $dir = $this->targetPath;
-        $cmd = 'rm -rf ' . $dir;
-        shell_exec($cmd);
-        $cmd = 'mv ' . $this->path . ' ' . $this->targetPath;
-        shell_exec($cmd);
     }
 
     function processNode($xmlDoc, &$node, $data)
@@ -266,8 +239,7 @@ class SiteMapProcessor
         $data['filepath'] = $this->sitemapbasepath . $file_name;
         $data['links'] = $counter;
         $data['page_module'] = $this->job['page_module'];
-        $id = $entity->save("sitemap", $data);
-        $this->job['lastsitemap'] = $id;
+        $entity->save("sitemap", $data);
     }
 }
 
