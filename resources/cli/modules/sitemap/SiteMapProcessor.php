@@ -94,7 +94,7 @@ class SiteMapProcessor
 
     private function getPageSql($module)
     {
-        $sql = "select id,name,alias from " . $module . " where   alias is not null  and ( sitemap = " . $this->job['updateval'];
+        $sql = "select id,name,alias,date_modified from " . $module . " where   alias is not null  and ( sitemap = " . $this->job['updateval'];
         $sql .= " or sitemap is null";
         $sql .= ")   limit " . $this->processpages;
 
@@ -117,9 +117,6 @@ class SiteMapProcessor
         $data['childs'] = array();
         $havePages = false;
 
-        $date = date("Y-m-d");
-        $timestamp = $date . 'T00:00:00+00:00';
-
         $qry = $this->getPageSqlQuery($module);
         $counter = 0;
 
@@ -133,6 +130,9 @@ class SiteMapProcessor
         }
 
         foreach ($rows as $row) {
+
+            $date = new DateTime($row['date_modified']);
+            $timestamp = $date->format("Y-m-d") . "T" . $date->format("H:i:s") . "+00:00";
 
             $this->offset ++;
 
