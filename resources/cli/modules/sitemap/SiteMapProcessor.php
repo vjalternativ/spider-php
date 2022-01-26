@@ -132,7 +132,7 @@ class SiteMapProcessor
         foreach ($rows as $row) {
 
             $date = new DateTime($row['date_modified']);
-            $timestamp = $date->format("Y-m-d") . "T" . $date->format("H:i:s") . "+00:00";
+            $timestamp = $date->format("Y-m-d") . "T" . $date->format("H:i:sP");
 
             $this->offset ++;
 
