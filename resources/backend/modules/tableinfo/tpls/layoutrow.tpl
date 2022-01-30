@@ -62,8 +62,8 @@
 <input type="hidden" name="layout-field-type[]" value="hr" /> 
 <input type="hidden" name="layout-field[]" value="hr" /> 
 <input type="hidden" name="layout-gridsize[]" value="12" />
-<input type="text"  class="form-control" name="param-label[]" value="{$meta.label}" />
-<input type="hidden" name="layout-field-label[]" value="{$meta.label}" />
+<input type="text"  class="form-control" name="layout-field-label[]" value="{$meta.label}" />
+
 
 <div class="input-group-addon">Horizontal Rule</div>
 <div class="input-group-addon" onclick="deletecell(this)">

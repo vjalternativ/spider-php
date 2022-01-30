@@ -339,6 +339,7 @@ class bsformWidgetController extends WidgetResourceController
         $mode = $metaData->getMode();
         $bs = lib_bootstrap::getInstance();
         $formgroup = '';
+
         foreach ($def as $item) {
             if (isset($item['type']) && $item['type'] == 'row') {
                 if (isset($item['fields'])) {

@@ -1,7 +1,27 @@
 <?php
+$vjconfig = lib_config::getInstance()->getConfig();
+require_once $vjconfig['fwbasepath'] . 'resources/widget/IWidgetService.php';
+require_once $vjconfig['fwbasepath'] . 'resources/widget/WidgetService.php';
+require_once $vjconfig['fwbasepath'] . 'resources/widget/AWidget.php';
+require_once $vjconfig['fwbasepath'] . 'resources/widget/WidgetResourceController.php';
 
 class WidgetService implements IWidgetService
 {
+
+    private static $instance = null;
+
+    static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new WidgetService();
+        }
+        return self::asIWidgetService(self::$instance);
+    }
+
+    private static function asIWidgetService(IWidgetService $ob)
+    {
+        return $ob;
+    }
 
     public function getWidget($widgetType, $row = false)
     {

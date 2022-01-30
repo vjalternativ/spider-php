@@ -32,5 +32,19 @@ class lib_session
         }
         $_SESSION[$key] = $value;
     }
+
+    public function unset($key, $index = null)
+    {
+        if ($index) {
+
+            if (isset($_SESSION[$key][$index])) {
+                unset($_SESSION[$key][$index]);
+            }
+        } else {
+            if (isset($_SESSION[$key])) {
+                unset($_SESSION[$key]);
+            }
+        }
+    }
 }
 ?>

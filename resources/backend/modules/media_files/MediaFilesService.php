@@ -6,8 +6,16 @@ class MediaFilesService implements IMediaFilesService
 
     private static $instance = null;
 
+    private $mediaFilesPath;
+
     private function __construct()
-    {}
+    {
+        $this->mediaFilesPath = lib_config::getInstance()->get('storage_basepath') . "media_files/";
+        if (! is_dir($this->mediaFilesPath)) {
+            $cmd = 'mkdir -p ' . $this->mediaFilesPath;
+            shell_exec($cmd);
+        }
+    }
 
     private static function asIMediaFilesService(IMediaFilesService $ob)
     {
@@ -22,14 +30,14 @@ class MediaFilesService implements IMediaFilesService
         return self::asIMediaFilesService(self::$instance);
     }
 
-    public function saveMediaFileByFieldName($fieldName, $keyvalue)
+    public function saveMediaFileByFieldName($fieldName, $keyvalue = false, $rename = false)
     {
         $field = array();
         $field['name'] = $fieldName;
-        return $this->saveMediaFileByFieldArray($field, $keyvalue);
+        return $this->saveMediaFileByFieldArray($field, $keyvalue, $rename);
     }
 
-    public function saveMediaFileByFieldArray($field, $keyvalue)
+    public function saveMediaFileByFieldArray($field, $keyvalue = false, $rename = false)
     {
         $entity = lib_entity::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
@@ -37,7 +45,7 @@ class MediaFilesService implements IMediaFilesService
         $mediaId = false;
         if (isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error'] == '0') {
             $mediaKeyValue = array();
-            if ((! isset($keyvalue['isnew']) || ! $keyvalue['isnew']) && ! empty($keyvalue[$field['name']])) {
+            if ($keyvalue && (! isset($keyvalue['isnew']) || ! $keyvalue['isnew']) && ! empty($keyvalue[$field['name']])) {
                 $mediaKeyValue = $entity->get("media_files", $keyvalue[$field['name']]);
                 if (isset($mediaKeyValue['file_path'])) {
 
@@ -51,7 +59,11 @@ class MediaFilesService implements IMediaFilesService
             }
             $target = $dir . '/' . $fileId;
             $tmp = $_FILES[$field['name']]['tmp_name'];
-            move_uploaded_file($tmp, $target);
+            if ($rename) {
+                rename($tmp, $target);
+            } else {
+                move_uploaded_file($tmp, $target);
+            }
             $mediaKeyValue['name'] = $_FILES[$field['name']]['name'];
             $mediaKeyValue['file_path'] = $target;
             $mediaKeyValue['file_type'] = $_FILES[$field['name']]['type'];

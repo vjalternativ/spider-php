@@ -95,7 +95,7 @@ class BSFormMetaData
         if (empty($text)) {
             return 'n-a';
         }
-
+        $text = str_replace("-", "_", $text);
         return $text;
     }
 
@@ -124,7 +124,7 @@ class BSFormMetaData
         return $field;
     }
 
-    public function createBSFieldRequired($name, $type, $size = 6, $label = false, $options = "", $attrs = array())
+    public function createBSFieldRequired($name, $type, $size = 6, $label = false, $options = "", $mode = false, $attrs = array())
     {
         $label = $label ? $label : $name;
         $attrs['required'] = "required";
@@ -134,7 +134,7 @@ class BSFormMetaData
             "type" => $type,
             "gridsize" => $size,
             "options" => $options,
-            "mode" => false,
+            "mode" => $mode,
             "attrs" => $attrs
         );
 
