@@ -277,9 +277,15 @@ class lib_framework
                 if (file_exists($filepath)) {
                     $class = $this->module . 'View' . ucfirst($controller->view) . 'Exten';
                 } else {
-                    $filepath = $vjconfig['basepath'] . 'resources/' . $this->resource . '/modules/' . $this->module . '/views/view.' . $controller->view . '.php';
-                    if (! file_exists($filepath)) {
-                        $filepath = $vjconfig['fwbasepath'] . 'resources/backend/modules/' . $this->module . '/views/view.' . $controller->view . '.php';
+
+                    $filepath = $vjconfig['basepath'] . 'resources/' . $this->resource . '/modules/' . $this->module . '/views/' . $this->module . 'View' . ucfirst($controller->view) . '.php';
+                    if (file_exists($filepath)) {
+                        $class = $this->module . 'View' . ucfirst($controller->view);
+                    } else {
+                        $filepath = $vjconfig['basepath'] . 'resources/' . $this->resource . '/modules/' . $this->module . '/views/view.' . $controller->view . '.php';
+                        if (! file_exists($filepath)) {
+                            $filepath = $vjconfig['fwbasepath'] . 'resources/backend/modules/' . $this->module . '/views/view.' . $controller->view . '.php';
+                        }
                     }
                 }
                 $isview = true;
@@ -292,7 +298,6 @@ class lib_framework
                 if (! $isview) {
                     $class = 'View' . ucfirst($controller->view);
                 }
-
                 $view = new $class();
                 if (isset($controller->listview)) {
                     $view->listview += $controller->listview;

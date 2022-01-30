@@ -30,51 +30,53 @@ class FrontendResourceController extends ResourceController
 
         $controller = $this->sitebasePath . $this->page . '/' . $this->page . ucfirst($_GET['resource']) . 'Controller.php';
 
-        if (file_exists($controller) || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
-            if ($this->page == "page") {
-                if (isset($seoParams[0]) && $seoParams[0]) {
-                    $sql = "select * from page where alias='" . $seoParams[0] . "' and deleted=0";
-                    if (isset($seoParams[1]) && $seoParams[0] == "page") {
-                        $sql = "select * from page where alias='" . $seoParams[1] . "' and deleted=0";
-                    }
-                    $row = $db->getrow($sql);
-                    if ($row) {
-                        lib_datawrapper::getInstance()->set("pagedata", $row);
-                        $this->page = "page";
+        if (! $vjconfig['disabledb']) {
+            if (file_exists($controller) || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
+                if ($this->page == "page") {
+                    if (isset($seoParams[0]) && $seoParams[0]) {
+                        $sql = "select * from page where alias='" . $seoParams[0] . "' and deleted=0";
+                        if (isset($seoParams[1]) && $seoParams[0] == "page") {
+                            $sql = "select * from page where alias='" . $seoParams[1] . "' and deleted=0";
+                        }
+                        $row = $db->getrow($sql);
+                        if ($row) {
+                            lib_datawrapper::getInstance()->set("pagedata", $row);
+                            $this->page = "page";
+                        }
+                    } else {
+                        $sql = "select * from page where alias='home' and deleted=0";
+                        $row = $db->getrow($sql);
+                        if ($row) {
+                            lib_datawrapper::getInstance()->set("pagedata", $row);
+                            $this->page = "page";
+                        }
                     }
                 } else {
-                    $sql = "select * from page where alias='home' and deleted=0";
+                    $sql = "select * from page where alias='" . $this->page . "' and deleted=0 ";
                     $row = $db->getrow($sql);
                     if ($row) {
                         lib_datawrapper::getInstance()->set("pagedata", $row);
-                        $this->page = "page";
                     }
+                    if ($this->backendPageModel) {
+                        $sql = "select * from " . $this->backendPageModel . " where alias='" . $seoParams[1] . "' and deleted=0 ";
+                        $row = $db->getrow($sql);
+                        if ($row) {
+                            lib_datawrapper::getInstance()->set("pagedata", $row);
+                        }
+                    }
+                }
+
+                $pageData = lib_datawrapper::getInstance()->get("pagedata");
+
+                if ($pageData) {
+                    $this->params['meta_key'] = $pageData['meta_key'];
+                    $this->params['meta_desc'] = $pageData['meta_desc'];
+                    $this->params['meta_title'] = $pageData['meta_title'];
                 }
             } else {
-                $sql = "select * from page where alias='" . $this->page . "' and deleted=0 ";
-                $row = $db->getrow($sql);
-                if ($row) {
-                    lib_datawrapper::getInstance()->set("pagedata", $row);
-                }
-                if ($this->backendPageModel) {
-                    $sql = "select * from " . $this->backendPageModel . " where alias='" . $seoParams[1] . "' and deleted=0 ";
-                    $row = $db->getrow($sql);
-                    if ($row) {
-                        lib_datawrapper::getInstance()->set("pagedata", $row);
-                    }
-                }
+
+                die("404 page not found");
             }
-
-            $pageData = lib_datawrapper::getInstance()->get("pagedata");
-
-            if ($pageData) {
-                $this->params['meta_key'] = $pageData['meta_key'];
-                $this->params['meta_desc'] = $pageData['meta_desc'];
-                $this->params['meta_title'] = $pageData['meta_title'];
-            }
-        } else {
-
-            die("404 page not found");
         }
     }
 
