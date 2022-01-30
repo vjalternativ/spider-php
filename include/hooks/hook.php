@@ -6,7 +6,7 @@ class SystemLogicHook
     function beforeSave(&$keyvalue)
     {
         $moduleList = lib_datawrapper::getInstance()->get("module_list");
-        if (isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
+        if (isset($keyvalue['name']) && isset($moduleList[$keyvalue['hook_table']]['tableinfo']['fields']['alias'])) {
             $db = lib_database::getInstance();
             $alias = (isset($keyvalue['alias']) && $keyvalue['alias']) ? $keyvalue['alias'] : $this->slugify($keyvalue['name']);
             if (isset($keyvalue['isnew']) && $keyvalue['isnew']) {

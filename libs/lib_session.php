@@ -21,9 +21,16 @@ class lib_session
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
 
-    public function set($key, $val)
+    public function set($key, $val, $index = null)
     {
-        $_SESSION[$key] = $val;
+        $value = $val;
+        if ($index) {
+            $data = $this->get($key);
+            $data = $data ? $data : array();
+            $data[$index] = $val;
+            $value = $data;
+        }
+        $_SESSION[$key] = $value;
     }
 }
 ?>

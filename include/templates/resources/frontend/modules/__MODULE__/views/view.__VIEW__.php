@@ -1,6 +1,6 @@
 <?php
 
-class __MODULE__View__VIEW__ extends FrontendResourceView
+class __MODULE__View__VIEW__ extends FrontendResourceViewExten
 {
 
     function display()
