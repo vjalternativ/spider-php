@@ -30,7 +30,7 @@ class FrontendResourceController extends ResourceController
 
         $controller = $this->sitebasePath . $this->page . '/' . $this->page . ucfirst($_GET['resource']) . 'Controller.php';
 
-        if (! $vjconfig['disabledb']) {
+        if (! array_key_exists("disabledb", $vjconfig) || ! $vjconfig['disabledb']) {
             if (file_exists($controller) || file_exists($this->sitebasePath . '/pages/' . $this->page . '/controller.php')) {
                 if ($this->page == "page") {
                     if (isset($seoParams[0]) && $seoParams[0]) {
