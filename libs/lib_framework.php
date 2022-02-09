@@ -243,6 +243,7 @@ class lib_framework
             if (! empty($controller->view)) {
 
                 $smarty = \lib_smarty::getSmartyInstance();
+
                 $smarty->assign("fwbaseurl", $vjconfig['fwbaseurl']);
                 $smarty->assign("fwbasepath", $vjconfig['fwbasepath']);
 

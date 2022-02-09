@@ -72,6 +72,8 @@ class FrontendResourceController extends ResourceController
                     $this->params['meta_key'] = $pageData['meta_key'];
                     $this->params['meta_desc'] = $pageData['meta_desc'];
                     $this->params['meta_title'] = $pageData['meta_title'];
+
+                    $this->params['pagedata'] = $pageData;
                 }
             } else {
 
