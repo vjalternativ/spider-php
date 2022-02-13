@@ -53,6 +53,9 @@ abstract class ResourceView
 
     protected $tplPath;
 
+    function __construct()
+    {}
+
     function setLoadHeaderFooter($b = true)
     {
         $this->isLoadHeaderFoooter = $b;

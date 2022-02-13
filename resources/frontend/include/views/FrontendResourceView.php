@@ -3,6 +3,11 @@
 class FrontendResourceView extends ResourceView
 {
 
+    function __construct()
+    {
+        parent::__construct();
+    }
+
     private $backendPageModule;
 
     function loadHeader()
