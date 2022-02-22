@@ -37,6 +37,14 @@ class FrontendResourceView extends ResourceView
                 $this->params['meta_title'] = $row['meta_title'];
                 $this->params['meta_desc'] = $row['meta_desc'];
                 $this->params['meta_key'] = $row['meta_key'];
+                $baseurl = lib_config::getInstance()->get('baseurl');
+
+                $seoParams = lib_seo::getInstance()->getParams();
+                if (! $seoParams) {
+                    $baseurl = rtrim($baseurl, "/");
+                }
+
+                $this->params['canonical_url'] = $baseurl . implode("/", $seoParams);
             }
         }
     }

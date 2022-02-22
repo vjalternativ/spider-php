@@ -74,6 +74,14 @@ class FrontendResourceController extends ResourceController
                     $this->params['meta_title'] = $pageData['meta_title'];
 
                     $this->params['pagedata'] = $pageData;
+
+                    $baseurl = $vjconfig['baseurl'];
+
+                    if (! $seoParams) {
+                        $baseurl = rtrim($baseurl, "/");
+                    }
+
+                    $this->params['canonical_url'] = $baseurl . implode("/", $seoParams);
                 }
             } else {
 
