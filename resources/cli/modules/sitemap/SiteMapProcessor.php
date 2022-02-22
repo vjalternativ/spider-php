@@ -142,10 +142,11 @@ class SiteMapProcessor
             }
 
             $prefix = $this->job['page_prefix'];
-
+            $baseurl = $vjconfig['baseurl'];
             if ($row['alias'] == "page" || $row['alias'] == "home") {
                 $row['alias'] = '';
                 $prefix = "";
+                $baseurl = rtrim($baseurl, "/");
             }
             $urlNode = array();
             $urlNode['element'] = "url";
@@ -153,7 +154,7 @@ class SiteMapProcessor
             $havePages = true;
             $loc = array();
             $loc['element'] = "loc";
-            $loc['val'] = $vjconfig['baseurl'] . $prefix . $row['alias'];
+            $loc['val'] = $baseurl . $prefix . $row['alias'];
             $urlNode['childs'][] = $loc;
             $lastmod = array();
             $lastmod['element'] = "lastmod";
