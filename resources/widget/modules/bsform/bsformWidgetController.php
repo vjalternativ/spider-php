@@ -509,24 +509,33 @@ class bsformWidgetController extends WidgetResourceController
                             $field = lib_util::getelement("div", $field, array(
                                 "class" => "form-control checkbox-form-control"
                             ));
+
+                            if (isset($fieldarray['options']) && is_array($fieldarray['options']) && $fieldarray['options']) {
+
+                                $field = "";
+                                foreach ($fieldarray['options'] as $option) {
+
+                                    $field .= lib_util::getelement("input", "", array(
+                                        "type" => "checkbox",
+                                        "name" => $fieldarray['name'] . "[]",
+                                        "value" => $option
+                                    ), false) . " " . $option . " ";
+                                }
+
+                                $field = lib_util::getelement("div", $field, array(
+                                    "class" => "form-control checkbox-form-control"
+                                ));
+                            }
                         }
 
                         $elementhtml = "";
 
                         $addon = "";
 
-                        if ($fieldarray['type'] == "checkbox") {
-
-                            $addon = lib_util::getelement('span', $label, array(
-                                "class" => 'input-group-addon post-addon'
-                            ));
-                            $elementhtml = $field . $addon;
-                        } else {
-                            $addon = lib_util::getelement('span', $label, array(
-                                "class" => 'input-group-addon pre-addon'
-                            ));
-                            $elementhtml = $addon . $field;
-                        }
+                        $addon = lib_util::getelement('span', $label, array(
+                            "class" => 'input-group-addon pre-addon'
+                        ));
+                        $elementhtml = $addon . $field;
 
                         if ($fieldarray['type'] == 'relate' || $fieldarray['type'] == 'dependent_relate' || ($fieldarray['type'] == "nondb" && isset($fieldarray['rmodule']))) {
                             $addon = $bs->getelement('span', '<i class="fa fa-search"></i>', array(

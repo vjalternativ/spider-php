@@ -3,6 +3,15 @@
 trait CLIService
 {
 
+    private $eol = "<br />";
+
+    function __construct()
+    {
+        if (php_sapi_name() == "cli") {
+            $this->eol = PHP_EOL;
+        }
+    }
+
     private function getCellVal($val, $colsize)
     {
         $blank = "";
@@ -44,9 +53,9 @@ trait CLIService
 
     public function exec($cmd)
     {
-        echo $cmd . PHP_EOL;
-        $output = shell_exec($cmd);
-        echo $output . PHP_EOL;
+        echo $cmd . $this->eol;
+        $output = exec($cmd);
+        echo $output . $this->eol;
         return $output;
     }
 

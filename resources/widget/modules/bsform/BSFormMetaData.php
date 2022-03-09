@@ -151,6 +151,16 @@ class BSFormMetaData
         return $this->createBSFieldRequired($name, "enum", $label);
     }
 
+    public function createBSFieldCheckbox($name, $options, $size = 6, $label = false, $mode = false, $attrs = array())
+    {
+        return $this->createBSField($name, "checkbox", $size, $label, $options, $mode, $attrs);
+    }
+
+    public function createBSFieldCheckboxRequired($name, $options, $size = 6, $label = false, $attrs = array())
+    {
+        return $this->createBSFieldRequired($name, "checkbox", $size, $label, $options);
+    }
+
     public function getMetaDef()
     {
         return $this->metaData;
