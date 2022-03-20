@@ -252,6 +252,12 @@ class tableinfoBackendController extends BackendResourceController
         } else if ($temp['type'] == "multienum") {
             $fieldType = "text";
             $temp['options'] = $_REQUEST['field-options'];
+            if (isset($_REQUEST['relate_relationship'])) {
+                if ($_REQUEST['relate_relationship']) {
+                    unset($temp['options']);
+                    $temp['relationship'] = $_REQUEST['relate_relationship'];
+                }
+            }
         }
 
         $postSql = "";
@@ -276,17 +282,26 @@ class tableinfoBackendController extends BackendResourceController
 
         $table = $_REQUEST['tableinfo-name'];
 
-        $sql = "ALTER TABLE " . $table . " ADD COLUMN " . $_REQUEST['field-name'] . " " . $fieldType . " ";
-        $sql .= " " . $postSql;
-        $db->query($sql);
-        $tbinfo = $entity->get('tableinfo', $_REQUEST['tableinfo-id']);
+        $formodule = $_REQUEST['formodule'];
+
+        if ($formodule == "tableinfo") {
+
+            $sql = "ALTER TABLE " . $table . " ADD COLUMN " . $_REQUEST['field-name'] . " " . $fieldType . " ";
+            $sql .= " " . $postSql;
+            $db->query($sql);
+        }
+
+        $formodulerecord = $_REQUEST['formodulerecord'];
+        $tbinfo = $entity->get($formodule, $formodulerecord);
         $desc = json_decode(base64_decode($tbinfo['description']), 1);
         $desc['fields'][$_REQUEST['field-name']] = $temp;
+
         $descstring = base64_encode(json_encode($desc));
         $tbinfo['description'] = $descstring;
-        $entity->save('tableinfo', $tbinfo);
-        lib_util::redirect('tableinfo', 'detailview', array(
-            'record' => $_REQUEST['tableinfo-id']
+
+        $entity->save($formodule, $tbinfo);
+        lib_util::redirect($formodule, 'detailview', array(
+            'record' => $formodulerecord
         ));
     }
 
@@ -345,8 +360,11 @@ class tableinfoBackendController extends BackendResourceController
     {
         $entity = lib_entity::getInstance();
         $viewtype = $_REQUEST['type'];
-        $id = $_REQUEST['record'];
-        $info = $entity->get('tableinfo', $id);
+
+        $formodule = $_REQUEST['formodule'];
+
+        $formoduleRecord = $_REQUEST['formodulerecord'];
+        $info = $entity->get($formodule, $formoduleRecord);
         $metainfo = array();
         $rowindex = 0;
         $totalgrid = 0;
@@ -383,7 +401,7 @@ class tableinfoBackendController extends BackendResourceController
         }
 
         $info[$viewtype . 'def'] = json_encode($metainfo);
-        $entity->save("tableinfo", $info);
+        $entity->save($formodule, $info);
         die();
     }
 
@@ -487,7 +505,10 @@ class tableinfoBackendController extends BackendResourceController
         $id = $_REQUEST['module_id'];
         $fields = isset($_REQUEST['field']) ? $_REQUEST['field'] : array();
 
-        $data = $entity->get("tableinfo", $id);
+        $formodule = $_REQUEST['formodule'];
+        $formodulerecord = $_REQUEST['formodulerecord'];
+
+        $data = $entity->get($formodule, $formodulerecord);
 
         $desc = json_decode(base64_decode($data['description']), 1);
 
@@ -501,16 +522,18 @@ class tableinfoBackendController extends BackendResourceController
 
             unset($desc['fields'][$field]);
 
-            $cols = $db->getfields($data['name']);
-            if (in_array($field, $cols)) {
-                $sql = "alter table " . $data['name'] . " drop " . $field;
-                $db->query($sql);
+            if ($formodule == "tableinfo") {
+                $cols = $db->getfields($data['name']);
+                if (in_array($field, $cols)) {
+                    $sql = "alter table " . $data['name'] . " drop " . $field;
+                    $db->query($sql);
+                }
             }
         }
         $data['description'] = base64_encode(json_encode($desc));
-        $entity->save("tableinfo", $data);
-        lib_util::redirect("tableinfo", "detailview", array(
-            "record" => $id
+        $entity->save($formodule, $data);
+        lib_util::redirect($formodule, "detailview", array(
+            "record" => $formodulerecord
         ));
     }
 
@@ -844,5 +867,22 @@ class tableinfoBackendController extends BackendResourceController
         $smarty->assign("meta", $meta);
         $smarty->assign("viewtype", $viewtype);
         echo $smarty->fetch($vjconfig['fwbasepath'] . "resources/backend/modules/tableinfo/tpls/layoutrow.tpl");
+    }
+
+    function action_ajaxGetRelatedData()
+    {
+        $formodule = $_REQUEST['formodule'];
+        $q = $_REQUEST['q'];
+        $sql = "select id,name from " . $formodule . " where deleted=0 and name like '%" . $q . "%' ";
+        $rows = lib_database::getInstance()->getAll($sql);
+
+        $data = array();
+        foreach ($rows as $row) {
+            $arr = array();
+            $arr['label'] = $row['name'];
+            $arr['value'] = $row['id'];
+            $data[] = $arr;
+        }
+        echo json_encode($data);
     }
 }

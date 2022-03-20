@@ -19,6 +19,8 @@
 	  <div class="col-md-6">
 	  <input type="hidden" name="tableinfo-id" value="{$record}" />
 	  <input type="hidden" name="tableinfo-name" value="{$primarytable}" />
+	  <input type="hidden" id="formodule" name="formodule" value="{$formodule}" />
+	  <input type="hidden" id="formodulerecord" name="formodulerecord" value="{$formodulerecord}" />
 	   
 	  <input type="text" name="field-name" id="field-name" class="form-control" placeholder="Field Name" />
 	  </div>

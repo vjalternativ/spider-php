@@ -177,8 +177,9 @@ function delrow(elem) {
 
 
 function saveLayout(id,record,type) {
-	
-	var url = 'index.php?module=tableinfo&action=ajaxSaveLayout&type='+type+'&record='+record;
+	var formodule  = $("#formodule").val();
+	var formodulerecord  = $("#formodulerecord").val();
+	var url = 'index.php?module=tableinfo&action=ajaxSaveLayout&type='+type+'&record='+record+'&formodule='+formodule+'&formodulerecord='+formodulerecord;
 	var data = $("#"+type+"layout-form-tag").serializeArray();
 	$.post(url,data,function(response) {
 		console.log(response);						 
