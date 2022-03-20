@@ -366,24 +366,26 @@ class tableinfoBackendController extends BackendResourceController
         $formoduleRecord = $_REQUEST['formodulerecord'];
         $info = $entity->get($formodule, $formoduleRecord);
         $metainfo = array();
-        $rowindex = 0;
+        $rowindex = - 1;
         $totalgrid = 0;
+
         if (isset($_REQUEST['layout-field-type'])) {
             foreach ($_REQUEST['layout-field-type'] as $key => $type) {
                 $type = trim($type);
-                if ($type == "") {
+                if ($type == "row") {
+                    $rowindex ++;
+                } else if ($type == "") {
                     $type = "row";
-                    error_log("type is blank " . print_r($_REQUEST));
                 }
                 $grid = $_REQUEST['layout-gridsize'][$key];
                 if ($totalgrid > 0 && $grid == "12") {
-                    $rowindex ++;
+                    // $rowindex ++;
                     $totalgrid = 0;
                 }
                 $metainfo[$rowindex]['type'] = $type;
                 if ($type == 'hr') {
                     $metainfo[$rowindex]['label'] = $_REQUEST['layout-field-label'][$key];
-                } else if ($type == 'row' && isset($_REQUEST['layout-field'][$key])) {
+                } else if (isset($_REQUEST['layout-field'][$key])) {
                     $field = $_REQUEST['layout-field'][$key];
                     $metainfo[$rowindex]['fields'][] = array(
                         'field' => array(
@@ -395,7 +397,7 @@ class tableinfoBackendController extends BackendResourceController
                 $totalgrid += $grid;
                 if ($totalgrid == "12") {
                     $totalgrid = 0;
-                    $rowindex ++;
+                    // $rowindex ++;
                 }
             }
         }

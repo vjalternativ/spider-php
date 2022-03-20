@@ -266,6 +266,7 @@ class HTMLFormProcessor
             $item['type'] = isset($item['type']) ? $item['type'] : 'row';
 
             if (isset($item['type']) && $item['type'] == 'row') {
+
                 if (isset($item['fields'])) {
                     $col = "";
 
@@ -279,11 +280,15 @@ class HTMLFormProcessor
 
                     foreach ($item['fields'] as $fieldarray) {
 
+                        $gridsize = $fieldarray['gridsize'] ? $fieldarray['gridsize'] : 6;
+
                         $fieldkey = is_array($fieldarray) ? $fieldarray['field'] : $fieldarray;
 
                         $fieldkey = is_array($fieldkey) ? $fieldkey['name'] : $fieldkey;
 
                         $fieldarray = $this->fields[$fieldkey];
+
+                        $fieldarray['gridsize'] = $gridsize;
 
                         $fieldname = $fieldarray['name'];
 
@@ -508,6 +513,7 @@ class HTMLFormProcessor
                                 // $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
                             }
                         }
+
                         $fieldarray['gridsize'] = isset($fieldarray['gridsize']) ? $fieldarray['gridsize'] : "6";
                         $colattr = array(
                             "class" => array(
