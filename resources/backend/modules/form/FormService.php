@@ -1,4 +1,5 @@
 <?php
+require_once lib_config::getInstance()->get("fwbasepath") . 'resources/backend/modules/media_files/MediaFilesService.php';
 
 class FormService
 {
@@ -31,6 +32,12 @@ class FormService
                 $virtualfields[$name] = $field;
                 unset($data[$name]);
             }
+        }
+
+        $files = $form->getFormFiles();
+        foreach ($files as $file => $filedata) {
+            $data[$file] = MediaFilesService::getInstance()->saveMediaFileByFieldName($file);
+            $files[$file] = $filedata;
         }
 
         $id = lib_entity::getInstance()->save($module, $data);
