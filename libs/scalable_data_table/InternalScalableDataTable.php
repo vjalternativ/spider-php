@@ -54,7 +54,7 @@ abstract class InternalScalableDataTable extends AScalableDataTable
             foreach ($fields as $field) {
                 $field = DBField::as($field);
                 $this->fieldMap[$field->getName()]['table'] = $table;
-                if (! isset($this->fieldMap[$field->getName()]['date_modifed'])) {
+                if (! isset($this->fieldMap[$field->getName()]['date_modified'])) {
                     $this->fieldMap[$field->getName()]['date_modified'] = date("Y-m-d H:i:s");
                 }
             }
