@@ -387,12 +387,16 @@ class tableinfoBackendController extends BackendResourceController
                     $metainfo[$rowindex]['label'] = $_REQUEST['layout-field-label'][$key];
                 } else if (isset($_REQUEST['layout-field'][$key])) {
                     $field = $_REQUEST['layout-field'][$key];
-                    $metainfo[$rowindex]['fields'][] = array(
+                    $fieldinfo = array(
                         'field' => array(
                             "name" => $field
                         ),
                         'gridsize' => $grid
                     );
+                    if (isset($_REQUEST['layout-' . $field . '-isreq'])) {
+                        $fieldinfo['r'] = 1;
+                    }
+                    $metainfo[$rowindex]['fields'][] = $fieldinfo;
                 }
                 $totalgrid += $grid;
                 if ($totalgrid == "12") {

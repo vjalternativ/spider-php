@@ -28,6 +28,8 @@ class HTMLFormProcessor
 
     private $title;
 
+    private $forModule = "";
+
     function __construct()
     {
         $datatypes = array();
@@ -237,15 +239,65 @@ class HTMLFormProcessor
         $this->tpl = lib_config::getInstance()->get('fwbasepath') . 'include/tpls/editview.tpl';
     }
 
+    private function processModuleDef()
+    {
+        foreach ($this->metaData as $metakey => $item) {
+
+            $item['type'] = isset($item['type']) ? $item['type'] : 'row';
+
+            if (isset($item['type']) && $item['type'] == 'row') {
+
+                if (isset($item['fields'])) {
+
+                    if (isset($item['fields']['field'])) {
+
+                        $field = $item['fields']['field'];
+                        $item['fields'] = array();
+
+                        $item['fields'][] = $field;
+                    }
+
+                    foreach ($item['fields'] as $fkey => $fieldarray) {
+
+                        // $gridsize = $fieldarray['gridsize'] ? $fieldarray['gridsize'] : 6;
+                        $isreq = isset($fieldarray['r']) ? true : false;
+                        if ($isreq) {
+
+                            $this->metaData[$metakey]['fields'][$fkey]['attrs']['required'] = 'required';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     function loadModuleDef($moduleName)
     {
         $module = lib_datawrapper::getInstance()->get("module_list", $moduleName);
-
+        $this->setForModule($module);
         if ($module && isset($module['tableinfo'])) {
-
             $this->fields = $module['tableinfo']['fields'];
             $this->metaData = json_decode($module['editviewdef'], true);
+            $this->processModuleDef();
         }
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getForModule()
+    {
+        return $this->forModule;
+    }
+
+    /**
+     *
+     * @param string $forModule
+     */
+    public function setForModule($forModule)
+    {
+        $this->forModule = $forModule;
     }
 
     function parseEditViewDef()
@@ -280,8 +332,8 @@ class HTMLFormProcessor
 
                     foreach ($item['fields'] as $fieldarray) {
 
-                        $gridsize = $fieldarray['gridsize'] ? $fieldarray['gridsize'] : 6;
-
+                        $gridsize = (isset($fieldarray['gridsize']) && $fieldarray['gridsize']) ? $fieldarray['gridsize'] : 6;
+                        $isreq = isset($fieldarray['r']) ? true : false;
                         $fieldkey = is_array($fieldarray) ? $fieldarray['field'] : $fieldarray;
 
                         $fieldkey = is_array($fieldkey) ? $fieldkey['name'] : $fieldkey;
@@ -290,6 +342,9 @@ class HTMLFormProcessor
 
                         $fieldarray['gridsize'] = $gridsize;
 
+                        if ($isreq) {
+                            $fieldarray['attrs']['required'] = 'required';
+                        }
                         $fieldname = $fieldarray['name'];
 
                         $val = "";
@@ -575,9 +630,16 @@ class HTMLFormProcessor
                     $atr[$key] = $data[$name];
                 }
             } else if ($at == 'name') {
+
                 $atr[$key] = $name;
             }
         }
+
+        if ($type == "multienum") {
+
+            $atr['name'] = $name . '[]';
+        }
+
         $newattr[] = $atr;
         if (isset($attr['isdualtag'])) {
             $newattr[] = $attr['isdualtag'];
@@ -666,7 +728,7 @@ class HTMLFormProcessor
         return $this->mode;
     }
 
-    private function getFormData()
+    public function getFormData()
     {
         return $this->formData;
     }
@@ -784,8 +846,8 @@ class HTMLFormProcessor
             if ($row['type'] == "row") {
                 foreach ($row['fields'] as $field) {
 
-                    if (isset($field['attrs']['required'])) {
-
+                    if (isset($this->fields[$field['field']['name']]) && isset($field['attrs']['required'])) {
+                        $field['type'] = $this->fields[$field['field']['name']]['type'];
                         if ($field['type'] == "file") {
 
                             if (! (isset($this->formFiles[$field['name']]) && $this->formFiles[$field['name']]['error'] == '0')) {
@@ -794,7 +856,7 @@ class HTMLFormProcessor
                             }
                         } else {
 
-                            if (! (isset($this->formData[$field['name']]) && ! empty($this->formData[$field['name']]))) {
+                            if (! (isset($this->formData[$field['field']['name']]) && ! empty($this->formData[$field['field']['name']]))) {
                                 $this->invalidFormFields[] = $field['name'];
                                 $this->isValidFormFields = false;
                             }
@@ -862,7 +924,7 @@ class HTMLFormProcessor
         if ($data) {
 
             $moduleName = $data['module'];
-
+            $this->setForModule($moduleName);
             $module = lib_datawrapper::getInstance()->get("module_list", $moduleName);
 
             $this->fields = $module['tableinfo']['fields'];
@@ -875,11 +937,15 @@ class HTMLFormProcessor
                     if (isset($this->fields[$key])) {
                         continue;
                     }
+
+                    $field['virtualfield'] = true;
                     $this->fields[$key] = $field;
                 }
             }
 
             $this->metaData = json_decode($data['editviewdef'], true);
+
+            $this->processModuleDef();
         }
     }
 
@@ -930,6 +996,11 @@ class HTMLFormProcessor
             $attrs['data-ajax'] = lib_config::getInstance()->get("baseurl") . "index.php?resource=backend&module=tableinfo&action=ajaxGetRelatedData&formodule=" . $module;
         }
         return lib_util::getelement("select", $optionhtml, $attrs, true);
+    }
+
+    public function getFields()
+    {
+        return $this->fields;
     }
 }
 

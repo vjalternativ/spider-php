@@ -39,10 +39,13 @@
 <div class="input-group">
 <div class="form-control">
 {$fieldinfo.field.name}
-<input type="hidden" name="layout-field-type[]" value="row" /> 
+<input type="hidden" name="layout-field-type[]" value="{if $colcounter==0}row{/if}" /> 
 <input type="hidden" name="layout-field[]" value="{$fieldinfo.field.name}" /> 
 <input type="hidden" name="layout-gridsize[]" value="{$fieldinfo.gridsize}" />
 <input type="hidden" name="layout-field-label[]" value="" />
+</div>
+<div class="input-group-addon">
+<input name="layout-{$fieldinfo.field.name}-isreq" value='1' type="checkbox"  {if $fieldinfo.r} checked="checked" {/if} /> R
 </div>
 <div class="input-group-addon" onclick="deletecell(this)"><i class="fa fa-window-close text-danger" aria="hidden"></i></div>
 </div>
