@@ -161,7 +161,6 @@ class lib_framework
         $params = \lib_seo::getInstance()->getParams();
         $vjconfig = \lib_config::getInstance()->getConfig();
         $resource = $this->resource;
-        $resourcePath = $this->resourcePath;
 
         if (! isset($_GET['module'])) {
             if ($this->usingConigDefaultResource) {
