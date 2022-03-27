@@ -18,14 +18,17 @@ class tabWidgetController extends WidgetResourceController
         $this->registerField("sql", "text");
     }
 
-    function addTab($params = array())
+    function addTab($params = array(), $key = false)
     {
         if ($this->checkFirst && ! $this->hasActive) {
             $params['isfirstrow'] = true;
             $this->checkFirst = false;
         }
-
-        $this->params['tabs'][] = $params;
+        if ($key) {
+            $this->params['tabs'][$key] = $params;
+        } else {
+            $this->params['tabs'][] = $params;
+        }
     }
 
     function getWidget()
@@ -67,6 +70,12 @@ class tabWidgetController extends WidgetResourceController
 
             foreach ($params['tabs'] as $key => $tab) {
                 $this->addTab($tab, $key);
+            }
+
+            unset($params['tabs']);
+
+            foreach ($params as $key => $val) {
+                $this->params[$key] = $val;
             }
 
             return $this->params;

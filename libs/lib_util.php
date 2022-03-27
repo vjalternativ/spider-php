@@ -290,5 +290,50 @@ class lib_util
 
         return $text;
     }
+
+    public static function loadAvailableFile($baseClass, $relativePath)
+    {
+        $config = lib_config::getInstance();
+
+        $class = 'I' . $baseClass;
+        $path = $config->get("basepath") . 'resources/' . $relativePath . '/' . $class . '.php';
+
+        if (file_exists($path)) {
+            require_once $path;
+        }
+
+        $class = 'I' . $baseClass;
+        $path = $config->get("fwbasepath") . 'resources/' . $relativePath . '/' . $class . '.php';
+
+        if (file_exists($path)) {
+            require_once $path;
+        }
+
+        $class = $baseClass . 'Exten';
+        $path = $config->get("basepath") . 'resources/' . $relativePath . '/' . $class . '.php';
+
+        if (file_exists($path)) {
+            require_once $path;
+
+            return $class;
+        }
+
+        $class = $baseClass;
+        $path = $config->get("basepath") . 'resources/' . $relativePath . '/' . $class . '.php';
+        if (file_exists($path)) {
+            require_once $path;
+
+            return $class;
+        }
+
+        $path = $config->get("fwbasepath") . 'resources/' . $relativePath . '/' . $class . '.php';
+        if (file_exists($path)) {
+            require_once $path;
+
+            return $class;
+        }
+
+        return false;
+    }
 }
 ?>

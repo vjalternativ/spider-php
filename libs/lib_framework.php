@@ -204,23 +204,18 @@ class lib_framework
 
         if (isset($_GET['module']) && isset($_GET['action'])) {
             require_once $vjconfig['fwbasepath'] . 'resources/ResourceController.php';
-            $class = $_GET['module'] . ucfirst($_GET['resource']) . 'Controller';
-            $modulePath = $this->_getResourceAbsoluteFilePath($resource . '/modules/' . $_GET['module'] . '/' . $class . '.php');
-            $pathinterface = $this->_getResourceAbsoluteFilePath($resource . '/modules/' . $_GET['module'] . 'I' . ucfirst($_GET['module']) . ucfirst($_GET['module']) . ucfirst($_GET['resource']) . 'Controller.php');
-            require_once $resourcePath;
+            require_once $vjconfig['fwbasepath'] . 'resources/widget/WidgetResourceController.php';
 
-            if ($pathinterface) {
-                require_once $pathinterface;
+            if ($resource != 'widget') {
+                require_once $vjconfig['fwbasepath'] . 'resources/' . $resource . '/' . ucfirst($resource) . 'ResourceController.php';
             }
+            $class = ucfirst($resource) . 'ResourceController';
 
-            $class = ucfirst($_GET['resource']) . 'ResourceController';
-            if ($modulePath) {
-                $class = ucfirst($_GET['module']) . ucfirst($_GET['resource']) . 'Controller';
-            } else {
-                $modulePath = $resourcePath;
-            }
+            $baseClass = $_GET['module'] . ucfirst($_GET['resource']) . 'Controller';
 
-            require_once $modulePath;
+            $baseClass = lib_util::loadAvailableFile($baseClass, $resource . '/modules/' . $_GET['module']);
+
+            $class = $baseClass ? $baseClass : $class;
 
             $action = 'action_' . $_GET['action'];
 

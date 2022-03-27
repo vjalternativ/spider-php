@@ -54,29 +54,18 @@ class WidgetService implements IWidgetService
         return $ob;
     }
 
-    private function getWidgetObjectPath($widget)
+    private function getWidgetObjectClass($widget)
     {
-        $vjconfig = lib_config::getInstance()->getConfig();
-        $path = "resources/widget/modules/" . $widget . "/" . $widget . "WidgetController.php";
-        if (file_exists($vjconfig['basepath'] . $path)) {
-            $path = $vjconfig['basepath'] . $path;
-        } else if (file_exists($vjconfig['fwbasepath'] . $path)) {
-            $path = $vjconfig['fwbasepath'] . $path;
-        } else {
-            return false;
-        }
+        $baseClass = $widget . 'WidgetController';
 
-        return $path;
+        return lib_util::loadAvailableFile($baseClass, "widget/modules/" . $widget);
     }
 
     private function getWidgetObject($widget)
     {
-        $ob = false;
-        $path = $this->getWidgetObjectPath($widget);
+        $class = $this->getWidgetObjectClass($widget);
 
-        if ($path) {
-            require_once $path;
-            $class = $widget . 'WidgetController';
+        if ($class) {
             $ob = new $class();
             return $this->_geWidgetObject($ob);
         }

@@ -13,7 +13,7 @@
       
     {else}
     data-toggle="tab" 
-    href="#tab-{$params.id}-{$key}"
+    href="#tab-x{$params.id}-{$key}"
     {/if}
     >{$tab.name}</a>
   </li>
