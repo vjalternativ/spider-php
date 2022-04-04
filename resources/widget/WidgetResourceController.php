@@ -123,6 +123,7 @@ class WidgetResourceController extends ResourceController
         $html = "";
         $datawrapper = lib_datawrapper::getInstance();
         $widgetdatawrapper = $datawrapper->get("widget_data_wrapper");
+
         if ($widgetdatawrapper && isset($widgetdatawrapper['resources'])) {
             foreach ($widgetdatawrapper['resources'] as $path => $resource) {
                 if (isset($resource['counter']) && $resource['counter'] == 0) {

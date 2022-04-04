@@ -131,14 +131,7 @@ class WidgetService implements IWidgetService
 
     private function rendorWidget(WidgetResourceController $ob, $params = array())
     {
-
-        // $vjconfig = lib_config::getInstance()->getConfig();
-        // $smarty = lib_smarty::getSmartyInstance();
         $html = $this->getResourcesHtml();
-
-        // $smarty->assign("widgetbasepath",$vjconfig['basepath'].$path);
-        // $smarty->assign("widgeturlbasepath",$vjconfig['urlbasepath'].$path);
-        // $smarty->assign("params",$params);
 
         $html .= $ob->rendorTpl($ob->getModule() . 'Widget.tpl', $params, false, $ob->getModule());
 

@@ -202,7 +202,12 @@ class LayoutManagerService
         $params['tbid'] = "relationship_table";
 
         $counter = 0;
+
+        $nameVsRelationship = array();
+
         foreach ($relationships as $key => $field) {
+
+            $nameVsRelationship[$field['name']] = $field;
 
             $fieldParamData[$key]['action'] = "";
 
@@ -343,6 +348,17 @@ class LayoutManagerService
             $tableinfo['fields'][$r['name']]['label'] = $r['primarytable_name'];
         }
 
+        $sql = "select * from relationships where primarytable = '" . $tableid . "' and deleted=0 and rtype='1_M'";
+        $rlist = $db->fetchRows($sql);
+
+        foreach ($rlist as $r) {
+
+            $tableinfo['fields'][$r['name']]['name'] = $r['name'];
+            $tableinfo['fields'][$r['name']]['type'] = 'nondb';
+            $tableinfo['fields'][$r['name']]['relationship'] = $r['name'];
+            $tableinfo['fields'][$r['name']]['label'] = $r['name'];
+        }
+
         $smarty->assign("fields", $tableinfo['fields']);
 
         $smarty->assign("table", $listviewLayoutTable);
@@ -408,10 +424,9 @@ class LayoutManagerService
         $smarty->assign('viewtype', 'editview');
 
         $meta = isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array();
-
         $meta = TableinfoService::getInstance()->fixGridDef($meta);
 
-        $meta = TableinfoService::getInstance()->processGridWithFieldInfo($meta, $fieldParamData);
+        $meta = TableinfoService::getInstance()->processGridWithFieldInfo($meta, $fieldParamData, $nameVsRelationship);
 
         $smarty->assign("metadata", $meta);
         $smarty->assign("layout_param_list", $app_list_strings["layout_param_list"]);

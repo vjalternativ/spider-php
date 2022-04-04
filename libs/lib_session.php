@@ -16,21 +16,30 @@ class lib_session
         return self::$instance;
     }
 
-    public function get($key)
+    public function get($key, $secondaryKey = false)
     {
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+        return $secondaryKey ? (isset($_SESSION[$key][$secondaryKey]) ? $_SESSION[$key][$secondaryKey] : null) : (isset($_SESSION[$key]) ? $_SESSION[$key] : null);
     }
 
-    public function set($key, $val, $index = null)
+    public function set($key, $value, $secondaryvalue = '__UNDEFINED__')
     {
-        $value = $val;
-        if ($index) {
-            $data = $this->get($key);
-            $data = $data ? $data : array();
-            $data[$index] = $val;
-            $value = $data;
+        if ($secondaryvalue == "photo-signature-form") {
+            echo $key . " " . $value . " <br >";
+            die();
         }
-        $_SESSION[$key] = $value;
+        if ($secondaryvalue == "__UNDEFINED__") {
+            $_SESSION[$key] = $value;
+        } else {
+
+            if (array_key_exists($key, $_SESSION)) {
+                $data = is_array($_SESSION[$key]) ? $_SESSION[$key] : array();
+                $data[$value] = $secondaryvalue;
+                $_SESSION[$key] = $data;
+            } else {
+                $_SESSION[$key] = array();
+                $_SESSION[$key][$value] = $secondaryvalue;
+            }
+        }
     }
 
     public function unset($key, $index = null)

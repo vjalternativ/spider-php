@@ -30,6 +30,115 @@ class HTMLFormProcessor
 
     private $forModule = "";
 
+    private $relationships = array();
+
+    private $formType = 'simple';
+
+    private $formIndex = 0;
+
+    private $formLength = 1;
+
+    private $parentId = "";
+
+    private $parentRelationship = "";
+
+    /**
+     *
+     * @return number
+     */
+    public function getFormLength()
+    {
+        return $this->formLength;
+    }
+
+    /**
+     *
+     * @param number $formLength
+     */
+    public function setFormLength($formLength)
+    {
+        $this->formLength = $formLength;
+    }
+
+    /**
+     *
+     * @return number
+     */
+    public function getFormIndex()
+    {
+        return $this->formIndex;
+    }
+
+    /**
+     *
+     * @param number $formIndex
+     */
+    public function setFormIndex($formIndex)
+    {
+        $this->formIndex = $formIndex;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getParentRelationship()
+    {
+        return $this->parentRelationship;
+    }
+
+    /**
+     *
+     * @param string $parentRelationship
+     */
+    public function setParentRelationship($parentRelationship)
+    {
+        $this->parentRelationship = $parentRelationship;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     *
+     * @param string $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getFormType()
+    {
+        return $this->formType;
+    }
+
+    /**
+     *
+     * @param string $formType
+     */
+    public function setFormType($formType)
+    {
+        $this->formType = $formType;
+        $this->formIndex = 0;
+
+        if ($formType == "multiple") {
+            $this->formLength = 7;
+        } else {
+            $this->formLength = 1;
+        }
+    }
+
     function __construct()
     {
         $datatypes = array();
@@ -241,6 +350,11 @@ class HTMLFormProcessor
 
     private function processModuleDef()
     {
+        $formDataFields = array();
+        $formFilesFields = array();
+
+        $tempRuntime = new TempRuntime();
+
         foreach ($this->metaData as $metakey => $item) {
 
             $item['type'] = isset($item['type']) ? $item['type'] : 'row';
@@ -259,6 +373,29 @@ class HTMLFormProcessor
 
                     foreach ($item['fields'] as $fkey => $fieldarray) {
 
+                        $name = $fieldarray['field']['name'];
+
+                        $field = $this->fields[$name];
+                        if ($field['type'] == "file") {
+                            if (isset($_FILES[$field['name']])) {
+                                if ($_FILES[$field['name']]['error'] == '0') {
+                                    $tempRuntime->moveToTemp($_FILES[$field['name']]['tmp_name']);
+                                    $formFilesFields[$field['name']]['tmp_name'] = $tempRuntime->getTempFilePath($_FILES[$field['name']]['tmp_name']);
+                                }
+                            }
+                        } else {
+
+                            if ($this->getFormType() == "multiple") {
+
+                                if (isset($_POST[$this->getForModule()][$field['name'] . '_' . $this->formIndex])) {
+                                    $formDataFields[$this->getForModule()][$field['name'] . '_' . $this->formIndex] = $_POST[$this->getForModule()][$field['name'] . '_' . $this->formIndex];
+                                }
+                            } else {
+                                if (isset($_POST[$field['name']])) {
+                                    $formDataFields[$field['name']] = $_POST[$field['name']];
+                                }
+                            }
+                        }
                         // $gridsize = $fieldarray['gridsize'] ? $fieldarray['gridsize'] : 6;
                         $isreq = isset($fieldarray['r']) ? true : false;
                         if ($isreq) {
@@ -269,6 +406,9 @@ class HTMLFormProcessor
                 }
             }
         }
+
+        $this->setFormData($formDataFields);
+        $this->setFormFiles($formFilesFields);
     }
 
     function loadModuleDef($moduleName)
@@ -305,6 +445,7 @@ class HTMLFormProcessor
         $def = $this->metaData;
 
         $data = $this->formData;
+
         $files = $this->formFiles;
 
         $mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
@@ -338,234 +479,248 @@ class HTMLFormProcessor
 
                         $fieldkey = is_array($fieldkey) ? $fieldkey['name'] : $fieldkey;
 
-                        $fieldarray = $this->fields[$fieldkey];
+                        $fieldarray = isset($this->fields[$fieldkey]) ? $this->fields[$fieldkey] : array();
+
+                        if (isset($this->relationships[$fieldkey])) {
+                            $fieldarray = $this->relationships[$fieldkey];
+
+                            $fieldarray['type'] = 'relationship';
+                        }
 
                         $fieldarray['gridsize'] = $gridsize;
 
                         if ($isreq) {
                             $fieldarray['attrs']['required'] = 'required';
                         }
-                        $fieldname = $fieldarray['name'];
 
-                        $val = "";
+                        $inputgroup = '';
+                        if ($fieldarray['type'] == "relationship") {} else {
 
-                        $attr = $this->getattr($fieldarray['type'], $fieldname, $val);
+                            $fieldname = $fieldarray['name'];
 
-                        if (isset($fieldarray['extraclass'])) {
-                            $attr[1]['class'] .= $fieldarray['extraclass'];
-                        }
+                            $val = "";
 
-                        if (isset($fieldarray['attrs']) && $fieldarray['attrs']) {
-                            foreach ($fieldarray['attrs'] as $key => $val) {
-                                $attr[1][$key] = $val;
+                            $attr = $this->getattr($fieldarray['type'], $fieldname, $val);
+
+                            if (isset($fieldarray['extraclass'])) {
+                                $attr[1]['class'] .= $fieldarray['extraclass'];
                             }
-                        }
-                        $isdualtag = true;
 
-                        if (! isset($data[$fieldname])) {
-                            $data[$fieldname] = "";
-                        }
-
-                        if (isset($attr[1]['value'])) {
-                            $attr[1]['value'] = htmlentities($attr[1]['value']);
-                        }
-
-                        $val = isset($data[$fieldarray['name']]) ? $data[$fieldarray['name']] : "";
-
-                        if (isset($attr[2])) {
-                            $isdualtag = false;
-                        }
-
-                        switch ($fieldarray['type']) {
-                            case "checkbox":
-                                $attr[1]['value'] = 1;
-                                break;
-                            case "md5":
-                                $attr[1]['value'] = "";
-                                break;
-                            case "varchar":
-                            case "password":
-                            case "date":
-                            case "datepicker":
-                                $attr[1]['value'] = $val;
-                                break;
-                        }
-
-                        if (isset($fieldarray['mode']) && $fieldarray['mode']) {
-                            if ($fieldarray['mode'] == "detail") {
-                                $attr[1]['disabled'] = "disabled";
+                            if (isset($fieldarray['attrs']) && $fieldarray['attrs']) {
+                                foreach ($fieldarray['attrs'] as $key => $val) {
+                                    $attr[1][$key] = $val;
+                                }
                             }
-                        } else {
-                            if ($mode == "detail") {
-                                $attr[1]['disabled'] = "disabled";
+                            $isdualtag = true;
+
+                            if (! isset($data[$fieldname])) {
+                                $data[$fieldname] = "";
                             }
-                        }
 
-                        $field = lib_util::getelement($attr[0], $val, $attr[1], $isdualtag);
-
-                        $label = ucfirst($fieldarray['name']);
-
-                        if (isset($fieldarray['label'])) {
-
-                            $label = isset($mod_string[$fieldarray['label']]) ? $mod_string[$fieldarray['label']] : $fieldarray['label'];
-                        }
-
-                        if ($fieldarray['type'] == 'relate') {
-                            if (! isset($data[$fieldarray['name'] . "_name"])) {
-                                $data[$fieldarray['name'] . "_name"] = "";
+                            if (isset($attr[1]['value'])) {
+                                $attr[1]['value'] = htmlentities($attr[1]['value']);
                             }
-                            $field = $bs->getelement('input', '', array(
-                                "class" => "form-control",
-                                "id" => $fieldarray['name'] . '_name',
-                                "value" => $data[$fieldarray['name'] . "_name"],
-                                "name" => $fieldarray['name'] . '_name',
-                                "autocomplete" => "off",
-                                "onkeyup" => "relatemodule('" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
-                            ), false);
-                            $field .= $bs->getelement('input', '', array(
-                                "class" => "form-control",
-                                "name" => $fieldarray['name'],
-                                "id" => $fieldarray['name'],
-                                "type" => "hidden",
-                                "value" => $data[$fieldarray['name']]
-                            ), false);
-                        } else if ($fieldarray['type'] == 'dependent_relate') {
-                            if (! isset($data[$fieldarray['name'] . "_name"])) {
-                                $data[$fieldarray['name'] . "_name"] = "";
-                            }
-                            $field = $bs->getelement('input', '', array(
-                                "class" => "form-control",
-                                "value" => $data[$fieldarray['name'] . "_name"],
-                                "id" => $fieldarray['name'] . '_name',
-                                "name" => $fieldarray['name'] . '_name',
-                                "autocomplete" => "off",
-                                "onkeyup" => "dependentRelatemodule('" . $fieldarray['relate_relationship'] . "','" . $fieldarray['dependent_relate_field'] . "','" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
-                            ), false);
-                            $field .= $bs->getelement('input', '', array(
-                                "class" => "form-control",
-                                "name" => $fieldarray['name'],
-                                "id" => $fieldarray['name'],
-                                "type" => "hidden",
-                                "value" => $data[$fieldarray['name']]
-                            ), false);
-                        } else if ($fieldarray['type'] == 'nondb' && isset($fieldarray['rmodule'])) {
 
-                            if (! isset($data[$fieldarray['name'] . "_name"])) {
-                                $data[$fieldarray['name'] . '_name'] = "";
+                            if ($this->getFormType() == "multiple") {
+                                $val = isset($data[$this->getForModule()][$fieldarray['name'] . '_' . $this->formIndex]) ? $data[$this->getForModule()][$fieldarray['name'] . '_' . $this->formIndex] : "";
+                            } else {
+                                $val = isset($data[$fieldarray['name']]) ? $data[$fieldarray['name']] : "";
                             }
-                            if ($fieldarray['type'] == "nondb" && isset($_REQUEST['parent_module']) && $_REQUEST['parent_module'] == $fieldarray['rmodule']) {
-                                $data[$fieldarray['name']] = $_REQUEST['parent_record'];
-                                $pmodule = $_REQUEST['parent_module'];
-                                $nondbData = $entity->get($pmodule, $data[$fieldarray['name']]);
-                                if ($nondbData) {
-                                    $data[$fieldarray['name']] = $nondbData['id'];
-                                    $data[$fieldarray['name'] . '_name'] = $nondbData['name'];
+                            if (isset($attr[2])) {
+                                $isdualtag = false;
+                            }
+
+                            switch ($fieldarray['type']) {
+                                case "checkbox":
+                                    $attr[1]['value'] = 1;
+                                    break;
+                                case "md5":
+                                    $attr[1]['value'] = "";
+                                    break;
+                                case "varchar":
+                                case "password":
+                                case "date":
+                                case "datepicker":
+                                    $attr[1]['value'] = $val;
+                                    break;
+                            }
+
+                            if (isset($fieldarray['mode']) && $fieldarray['mode']) {
+                                if ($fieldarray['mode'] == "detail") {
+                                    $attr[1]['disabled'] = "disabled";
+                                }
+                            } else {
+                                if ($mode == "detail") {
+                                    $attr[1]['disabled'] = "disabled";
                                 }
                             }
 
-                            $field = $bs->getelement('input', '', array(
-                                "class" => "form-control",
-                                "id" => $fieldarray['name'] . '_name',
-                                "value" => $data[$fieldarray['name'] . '_name'],
-                                "name" => $fieldarray['name'] . '_name',
-                                "autocomplete" => "off",
-                                "onkeyup" => "relatemodule('" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
-                            ), false);
-                            $field .= $bs->getelement('input', '', array(
-                                "class" => "form-control",
-                                "name" => $fieldarray['name'],
-                                "id" => $fieldarray['name'],
-                                "type" => "hidden",
-                                "value" => $data[$fieldarray['name']]
-                            ), false);
-                        } else if ($fieldarray['type'] == 'enum' || $fieldarray['type'] == 'multienum') {
+                            $field = lib_util::getelement($attr[0], $val, $attr[1], $isdualtag);
 
-                            $field = $this->getEnumOptionsHTML($fieldarray, $val, $attr[1]);
+                            $label = ucfirst($fieldarray['name']);
 
-                            /*
-                             * if (! isset($fieldarray['options']) || ! isset($app_list_strings[$fieldarray['options']])) {
-                             * $fieldarray['options'] = false;
-                             * // die("option is not defined for field".$fieldarray['name']);
-                             * }
-                             *
-                             * $optionhtml = "";
-                             * if (isset($app_list_strings[$fieldarray['options']])) {
-                             * $options = $app_list_strings[$fieldarray['options']];
-                             * foreach ($options as $okey => $oval) {
-                             * $opattr = array(
-                             * "value" => $okey
-                             * );
-                             * if ($val == $okey) {
-                             * $opattr['selected'] = "selected";
-                             * }
-                             * $optionhtml .= lib_util::getelement('option', $oval, $opattr);
-                             * }
-                             * }
-                             * $field = lib_util::getelement($attr[0], $optionhtml, $attr[1], $isdualtag);
-                             */
-                        } else if ($fieldarray['type'] == "checkbox") {
+                            if (isset($fieldarray['label'])) {
 
-                            if ($val == '1') {
-                                $attr[1]['checked'] = "checked";
-                                $field = lib_util::getelement($attr[0], "", $attr[1], $isdualtag);
+                                $label = isset($mod_string[$fieldarray['label']]) ? $mod_string[$fieldarray['label']] : $fieldarray['label'];
                             }
-                            $field = lib_util::getelement("div", $field, array(
-                                "class" => "form-control checkbox-form-control"
-                            ));
 
-                            if (isset($fieldarray['options']) && is_array($fieldarray['options']) && $fieldarray['options']) {
+                            if ($fieldarray['type'] == 'relate') {
+                                if (! isset($data[$fieldarray['name'] . "_name"])) {
+                                    $data[$fieldarray['name'] . "_name"] = "";
+                                }
+                                $field = $bs->getelement('input', '', array(
+                                    "class" => "form-control",
+                                    "id" => $fieldarray['name'] . '_name',
+                                    "value" => $data[$fieldarray['name'] . "_name"],
+                                    "name" => $fieldarray['name'] . '_name',
+                                    "autocomplete" => "off",
+                                    "onkeyup" => "relatemodule('" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
+                                ), false);
+                                $field .= $bs->getelement('input', '', array(
+                                    "class" => "form-control",
+                                    "name" => $fieldarray['name'],
+                                    "id" => $fieldarray['name'],
+                                    "type" => "hidden",
+                                    "value" => $data[$fieldarray['name']]
+                                ), false);
+                            } else if ($fieldarray['type'] == 'dependent_relate') {
+                                if (! isset($data[$fieldarray['name'] . "_name"])) {
+                                    $data[$fieldarray['name'] . "_name"] = "";
+                                }
+                                $field = $bs->getelement('input', '', array(
+                                    "class" => "form-control",
+                                    "value" => $data[$fieldarray['name'] . "_name"],
+                                    "id" => $fieldarray['name'] . '_name',
+                                    "name" => $fieldarray['name'] . '_name',
+                                    "autocomplete" => "off",
+                                    "onkeyup" => "dependentRelatemodule('" . $fieldarray['relate_relationship'] . "','" . $fieldarray['dependent_relate_field'] . "','" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
+                                ), false);
+                                $field .= $bs->getelement('input', '', array(
+                                    "class" => "form-control",
+                                    "name" => $fieldarray['name'],
+                                    "id" => $fieldarray['name'],
+                                    "type" => "hidden",
+                                    "value" => $data[$fieldarray['name']]
+                                ), false);
+                            } else if ($fieldarray['type'] == 'nondb' && isset($fieldarray['rmodule'])) {
 
-                                $field = "";
-                                foreach ($fieldarray['options'] as $option) {
-
-                                    $field .= lib_util::getelement("input", "", array(
-                                        "type" => "checkbox",
-                                        "name" => $fieldarray['name'] . "[]",
-                                        "value" => $option
-                                    ), false) . " " . $option . " ";
+                                if (! isset($data[$fieldarray['name'] . "_name"])) {
+                                    $data[$fieldarray['name'] . '_name'] = "";
+                                }
+                                if ($fieldarray['type'] == "nondb" && isset($_REQUEST['parent_module']) && $_REQUEST['parent_module'] == $fieldarray['rmodule']) {
+                                    $data[$fieldarray['name']] = $_REQUEST['parent_record'];
+                                    $pmodule = $_REQUEST['parent_module'];
+                                    $nondbData = $entity->get($pmodule, $data[$fieldarray['name']]);
+                                    if ($nondbData) {
+                                        $data[$fieldarray['name']] = $nondbData['id'];
+                                        $data[$fieldarray['name'] . '_name'] = $nondbData['name'];
+                                    }
                                 }
 
+                                $field = $bs->getelement('input', '', array(
+                                    "class" => "form-control",
+                                    "id" => $fieldarray['name'] . '_name',
+                                    "value" => $data[$fieldarray['name'] . '_name'],
+                                    "name" => $fieldarray['name'] . '_name',
+                                    "autocomplete" => "off",
+                                    "onkeyup" => "relatemodule('" . $fieldarray['rmodule'] . "',this.value,'" . $fieldarray['name'] . "')"
+                                ), false);
+                                $field .= $bs->getelement('input', '', array(
+                                    "class" => "form-control",
+                                    "name" => $fieldarray['name'],
+                                    "id" => $fieldarray['name'],
+                                    "type" => "hidden",
+                                    "value" => $data[$fieldarray['name']]
+                                ), false);
+                            } else if ($fieldarray['type'] == 'enum' || $fieldarray['type'] == 'multienum') {
+
+                                $field = $this->getEnumOptionsHTML($fieldarray, $val, $attr[1]);
+
+                                /*
+                                 * if (! isset($fieldarray['options']) || ! isset($app_list_strings[$fieldarray['options']])) {
+                                 * $fieldarray['options'] = false;
+                                 * // die("option is not defined for field".$fieldarray['name']);
+                                 * }
+                                 *
+                                 * $optionhtml = "";
+                                 * if (isset($app_list_strings[$fieldarray['options']])) {
+                                 * $options = $app_list_strings[$fieldarray['options']];
+                                 * foreach ($options as $okey => $oval) {
+                                 * $opattr = array(
+                                 * "value" => $okey
+                                 * );
+                                 * if ($val == $okey) {
+                                 * $opattr['selected'] = "selected";
+                                 * }
+                                 * $optionhtml .= lib_util::getelement('option', $oval, $opattr);
+                                 * }
+                                 * }
+                                 * $field = lib_util::getelement($attr[0], $optionhtml, $attr[1], $isdualtag);
+                                 */
+                            } else if ($fieldarray['type'] == "checkbox") {
+
+                                if ($val == '1') {
+                                    $attr[1]['checked'] = "checked";
+                                    $field = lib_util::getelement($attr[0], "", $attr[1], $isdualtag);
+                                }
                                 $field = lib_util::getelement("div", $field, array(
                                     "class" => "form-control checkbox-form-control"
                                 ));
+
+                                if (isset($fieldarray['options']) && is_array($fieldarray['options']) && $fieldarray['options']) {
+
+                                    $field = "";
+                                    foreach ($fieldarray['options'] as $option) {
+
+                                        $field .= lib_util::getelement("input", "", array(
+                                            "type" => "checkbox",
+                                            "name" => $fieldarray['name'] . "[]",
+                                            "value" => $option
+                                        ), false) . " " . $option . " ";
+                                    }
+
+                                    $field = lib_util::getelement("div", $field, array(
+                                        "class" => "form-control checkbox-form-control"
+                                    ));
+                                }
                             }
-                        }
 
-                        $elementhtml = "";
+                            $elementhtml = "";
 
-                        $addon = "";
+                            $addon = "";
 
-                        $addon = lib_util::getelement('span', $label, array(
-                            "class" => 'input-group-addon pre-addon'
-                        ));
-                        $elementhtml = $addon . $field;
-
-                        if ($fieldarray['type'] == 'relate' || $fieldarray['type'] == 'dependent_relate' || ($fieldarray['type'] == "nondb" && isset($fieldarray['rmodule']))) {
-                            $addon = $bs->getelement('span', '<i class="fa fa-search"></i>', array(
-                                "class" => 'input-group-addon'
+                            $addon = lib_util::getelement('span', $label, array(
+                                "class" => 'input-group-addon pre-addon'
                             ));
-                            $elementhtml .= $addon;
+                            $elementhtml = $addon . $field;
 
-                            // $elementhtml .= $bs->getelement('button','Select',array("class"=>'btn btn-primary'));
-                        }
-                        $inputgroup = $bs->getelement("div", $elementhtml, array(
-                            "class" => "input-group"
-                        ));
-                        if ($fieldarray['type'] == "file") {
-                            if ($files) {
+                            if ($fieldarray['type'] == 'relate' || $fieldarray['type'] == 'dependent_relate' || ($fieldarray['type'] == "nondb" && isset($fieldarray['rmodule']))) {
+                                $addon = $bs->getelement('span', '<i class="fa fa-search"></i>', array(
+                                    "class" => 'input-group-addon'
+                                ));
+                                $elementhtml .= $addon;
 
-                                if (isset($files[$fieldarray['name']]) && $files[$fieldarray['name']]['error'] == "0") {
+                                // $elementhtml .= $bs->getelement('button','Select',array("class"=>'btn btn-primary'));
+                            }
+                            $inputgroup = $bs->getelement("div", $elementhtml, array(
+                                "class" => "input-group"
+                            ));
+                            if ($fieldarray['type'] == "file") {
+                                if ($files) {
 
-                                    $inputgroup .= "<br />";
+                                    if (isset($files[$fieldarray['name']]) && $files[$fieldarray['name']]['error'] == "0") {
 
-                                    $link = MediaFilesService::getInstance()->getMediaLinkForPath($files[$fieldarray['name']]['tmp_name'], $files[$fieldarray['name']]['name'], $files[$fieldarray['name']]['type']);
-                                    $inputgroup .= '<a target="_blank"  href="' . $link . '" >' . $files[$fieldarray['name']]['name'] . '</a>';
+                                        $inputgroup .= "<br />";
+
+                                        $link = MediaFilesService::getInstance()->getMediaLinkForPath($files[$fieldarray['name']]['tmp_name'], $files[$fieldarray['name']]['name'], $files[$fieldarray['name']]['type']);
+                                        $inputgroup .= '<a target="_blank"  href="' . $link . '" >' . $files[$fieldarray['name']]['name'] . '</a>';
+                                        // $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
+                                    }
+                                } else {
+                                    // $inputgroup .= "<br />";
+                                    // $inputgroup .= '<a target="_blank" href="index.php?module=media_files&action=download&id=' . $data[$fieldarray['name']] . '" >Attachment</a>';
                                     // $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
                                 }
-                            } else {
-                                // $inputgroup .= "<br />";
-                                // $inputgroup .= '<a target="_blank" href="index.php?module=media_files&action=download&id=' . $data[$fieldarray['name']] . '" >Attachment</a>';
-                                // $inputgroup .= '&nbsp;&nbsp;<a href="#" onclick="removeAttachment(\'' . $this->module . '\',\'' . $this->record . '\',\'' . $fieldarray['name'] . '\',\'' . $data[$fieldarray['name']] . '\')" >Remove</a>';
                             }
                         }
 
@@ -616,6 +771,7 @@ class HTMLFormProcessor
     function getattr($type, $name, $value = '')
     {
         $data = $this->getFormData();
+
         $attr = $this->datatypeFields[$type];
         // to do make data type associative
         $element = $attr['element'][0];
@@ -625,13 +781,23 @@ class HTMLFormProcessor
         foreach ($atr as $key => $at) {
             if ($key == 'value') {
                 $atr[$key] = "";
+                if ($this->getFormType() == "multiple") {
 
-                if (isset($data[$name])) {
-                    $atr[$key] = $data[$name];
+                    if (isset($data[$this->getForModule()][$name . '_' . $this->formIndex])) {
+
+                        $atr[$key] = $data[$this->getForModule()][$name . '_' . $this->formIndex];
+                    }
+                } else {
+                    if (isset($data[$name])) {
+                        $atr[$key] = $data[$name];
+                    }
                 }
             } else if ($at == 'name') {
-
-                $atr[$key] = $name;
+                if ($this->getFormType() == "multiple") {
+                    $atr[$key] = $this->getForModule() . '[' . $name . '_' . $this->formIndex . ']';
+                } else {
+                    $atr[$key] = $name;
+                }
             }
         }
 
@@ -644,10 +810,21 @@ class HTMLFormProcessor
         if (isset($attr['isdualtag'])) {
             $newattr[] = $attr['isdualtag'];
         }
+
         return $newattr;
     }
 
-    function getFormHTML()
+    public function getFormBodyHTML($includeFooter = false)
+    {
+        $html = '';
+        for ($this->formIndex; $this->formIndex < $this->formLength; $this->formIndex ++) {
+            $html .= $this->_getFormBodyHTML($includeFooter);
+        }
+
+        return $html;
+    }
+
+    private function _getFormBodyHTML($includeFooter = false)
     {
         $bs = lib_bootstrap::getInstance();
 
@@ -663,18 +840,6 @@ class HTMLFormProcessor
             'value' => $data['id'],
             'type' => 'hidden'
         ));
-        $save = $bs->getelement("button", $this->getSubmitButtonLabel(), array(
-            "type" => array(
-                "value" => "submit"
-            ),
-            "class" => array(
-                "value" => "btn btn-primary pull-right"
-            ),
-            "id" => array(
-                "value" => "submit-form"
-            )
-        ));
-        $save .= '<div class="clearfix"></div>';
 
         $panelheading = "";
 
@@ -691,19 +856,59 @@ class HTMLFormProcessor
                 'value' => 'panel-body'
             )
         ));
-        $panelfooter = $bs->getelement('div', $save, array(
-            'class' => array(
-                'value' => 'panel-footer'
-            )
-        ));
+        $panelfooter = '';
+
+        if ($includeFooter) {
+
+            $panelfooter = $this->getFormFooter();
+        }
         $panel = $bs->getelement('div', $panelheading . $panelbody . $panelfooter, array(
             'class' => array(
                 'value' => 'panel panel-info'
             )
         ));
 
+        return $panel;
+    }
+
+    private function getFormFooter($includePanelContainer = false)
+    {
+        $bs = lib_bootstrap::getInstance();
+
+        $save = $bs->getelement("button", $this->getSubmitButtonLabel(), array(
+            "type" => array(
+                "value" => "submit"
+            ),
+            "class" => array(
+                "value" => "btn btn-primary pull-right"
+            ),
+            "id" => array(
+                "value" => "submit-form"
+            )
+        ));
+        $save .= '<div class="clearfix"></div>';
+        $panelfooter = $bs->getelement('div', $save, array(
+            'class' => array(
+                'value' => 'panel-footer'
+            )
+        ));
+
+        if ($includePanelContainer) {
+            $panelfooter = $bs->getelement('div', $panelfooter, array(
+                'class' => array(
+                    'value' => 'panel panel-info'
+                )
+            ));
+        }
+        return $panelfooter;
+    }
+
+    function getFormHTMLForBody($body, $includePanelContainerForFooter = false)
+    {
+        $bs = lib_bootstrap::getInstance();
         $url = $this->getFormActionURL();
-        $form = $bs->getelement('form', $panel, array(
+        $body .= $this->getFormFooter($includePanelContainerForFooter);
+        $form = $bs->getelement('form', $body, array(
             "name" => array(
                 "value" => "editview"
             ),
@@ -721,6 +926,12 @@ class HTMLFormProcessor
             )
         ));
         return $form;
+    }
+
+    function getFormHTML()
+    {
+        $panel = $this->getFormBodyHTML();
+        return $this->getFormHTMLForBody($panel);
     }
 
     private function getMode()
@@ -924,10 +1135,15 @@ class HTMLFormProcessor
         if ($data) {
 
             $moduleName = $data['module'];
+            $this->setFormType($data['type'] ? $data['type'] : 'simple');
+
             $this->setForModule($moduleName);
+
             $module = lib_datawrapper::getInstance()->get("module_list", $moduleName);
 
             $this->fields = $module['tableinfo']['fields'];
+
+            $this->relationships = isset($module['relationships']) ? $module['relationships'] : array();
 
             $datafields = json_decode(base64_decode($data['description']), true);
 

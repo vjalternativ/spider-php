@@ -65,7 +65,7 @@ class TableinfoService
         return $defArray;
     }
 
-    function processGridWithFieldInfo($defArray, $fieldsData)
+    function processGridWithFieldInfo($defArray, $fieldsData, $nameVsRelationship = array())
     {
         if (! is_array($defArray)) {
             $defArray = array();
@@ -76,6 +76,8 @@ class TableinfoService
                     if (isset($field['field'])) {
                         if (isset($fieldsData[$field['field']])) {
                             $defArray[$rowindex]['fields'][$colindex]['field'] = $fieldsData[$field['field']];
+                        } else if ($nameVsRelationship && $nameVsRelationship[$field['field']]) {
+                            $defArray[$rowindex]['fields'][$colindex]['field'] = $nameVsRelationship[$field['field']];
                         }
                     }
                 }

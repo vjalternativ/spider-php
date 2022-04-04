@@ -64,6 +64,10 @@ $app_list_strings = array(
         "all" => "all",
         "new" => "new",
         "mod" => "modified"
+    ),
+    'form_type_list' => array(
+        "simple" => "simple",
+        "multiple" => "multiple"
     )
 );
 
