@@ -1,6 +1,4 @@
 <?php
-use function lib_util\getelement;
-
 require_once lib_config::getInstance()->get('fwbasepath') . 'libs/lib_bootstrap.php';
 
 class tableinfoBackendController extends BackendResourceController
@@ -890,5 +888,28 @@ class tableinfoBackendController extends BackendResourceController
             $data[] = $arr;
         }
         echo json_encode($data);
+    }
+
+    function action_updateFieldLabel()
+    {
+        $module = $_REQUEST['mod'];
+        $field = $_REQUEST['field'];
+        $lable = $_REQUEST['label'];
+
+        if ($module && $field && $lable) {
+
+            $tableinfo = lib_entity::getInstance()->getwhere("tableinfo", "name='" . $module . "'");
+
+            if ($tableinfo) {
+
+                $json = json_decode(base64_decode($tableinfo['description']), true);
+
+                if (isset($json['fields'][$field])) {
+                    $json['fields'][$field]['label'] = $lable;
+                    $tableinfo['description'] = base64_encode(json_encode($json));
+                    lib_entity::getInstance()->save("tableinfo", $tableinfo);
+                }
+            }
+        }
     }
 }

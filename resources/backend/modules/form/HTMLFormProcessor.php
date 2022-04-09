@@ -558,10 +558,17 @@ class HTMLFormProcessor
                             $field = lib_util::getelement($attr[0], $val, $attr[1], $isdualtag);
 
                             $label = ucfirst($fieldarray['name']);
+                            $label = str_replace("_", " ", $label);
 
                             if (isset($fieldarray['label'])) {
 
                                 $label = isset($mod_string[$fieldarray['label']]) ? $mod_string[$fieldarray['label']] : $fieldarray['label'];
+
+                                if (substr($label, 0, 4) == "LBL_") {
+                                    $label = str_replace("LBL_", "", $label);
+                                    $label = strtolower($label);
+                                    $label = ucfirst($label);
+                                }
                             }
 
                             if ($fieldarray['type'] == 'relate') {
