@@ -4,6 +4,8 @@ require_once lib_config::getInstance()->get("fwbasepath") . 'libs/lib_bootstrap.
 class HTMLFormProcessor
 {
 
+    private $name = "";
+
     private $fields = array();
 
     private $datatypeFields = array();
@@ -41,6 +43,24 @@ class HTMLFormProcessor
     private $parentId = "";
 
     private $parentRelationship = "";
+
+    /**
+     *
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     *
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 
     /**
      *
@@ -351,8 +371,8 @@ class HTMLFormProcessor
     private function processModuleDef()
     {
         $formDataFields = array();
-        $formFilesFields = array();
 
+        $formFilesFields = isset($_FILES) ? $_FILES : array();
         $tempRuntime = new TempRuntime();
 
         foreach ($this->metaData as $metakey => $item) {
@@ -379,6 +399,7 @@ class HTMLFormProcessor
                         if ($field['type'] == "file") {
                             if (isset($_FILES[$field['name']])) {
                                 if ($_FILES[$field['name']]['error'] == '0') {
+
                                     $tempRuntime->moveToTemp($_FILES[$field['name']]['tmp_name']);
                                     $formFilesFields[$field['name']]['tmp_name'] = $tempRuntime->getTempFilePath($_FILES[$field['name']]['tmp_name']);
                                 }
@@ -440,8 +461,109 @@ class HTMLFormProcessor
         $this->forModule = $forModule;
     }
 
+    function processFieldLabel($fieldarray)
+    {
+        $mod_string = lib_datawrapper::getInstance()->get("mod_string_list");
+
+        $label = ucfirst($fieldarray['name']);
+        $label = str_replace("_", " ", $label);
+
+        if (isset($fieldarray['label'])) {
+
+            $label = isset($mod_string[$fieldarray['label']]) ? $mod_string[$fieldarray['label']] : $fieldarray['label'];
+
+            if (substr($label, 0, 4) == "LBL_") {
+                $label = str_replace("LBL_", "", $label);
+                $label = strtolower($label);
+                $label = ucfirst($label);
+            }
+        }
+
+        return $label;
+    }
+
+    private function processFieldValue($fieldarray, $data, $files)
+    {
+        $fieldkey = $fieldarray['name'];
+        $val = '';
+        if ($this->getFormType() == "multiple") {
+            $val = isset($data[$this->getForModule()][$fieldkey . '_' . $this->formIndex]) ? $data[$this->getForModule()][$fieldkey . '_' . $this->formIndex] : "";
+        } else {
+            $val = isset($data[$fieldkey]) ? $data[$fieldkey] : "";
+        }
+        if (array_key_exists($fieldkey, $files)) {
+
+            if (isset($files[$fieldarray['name']]) && $files[$fieldarray['name']]['error'] == "0") {
+                $link = MediaFilesService::getInstance()->getMediaLinkForPath($files[$fieldarray['name']]['tmp_name'], $files[$fieldarray['name']]['name'], $files[$fieldarray['name']]['type']);
+                $val = '<a target="_blank"  href="' . $link . '" >' . $files[$fieldarray['name']]['name'] . '</a>';
+            }
+        }
+        return $val;
+    }
+
+    function parseEditViewDefForTable()
+    {
+        require_once lib_config::getInstance()->get("fwbasepath") . 'libs/htmlreport/HTMLReport.php';
+
+        $htmlReport = new HTMLReport();
+        $this->getName();
+        $def = $this->metaData;
+        $data = $this->formData;
+
+        $files = $this->formFiles;
+
+        $reportTable = new ReportTable();
+
+        foreach ($def as $item) {
+            $item['type'] = isset($item['type']) ? $item['type'] : 'row';
+            $reportRow = new ReportRow();
+
+            if (isset($item['type']) && $item['type'] == 'row') {
+
+                if (isset($item['fields'])) {
+
+                    if (isset($item['fields']['field'])) {
+
+                        $field = $item['fields']['field'];
+                        $item['fields'] = array();
+
+                        $item['fields'][] = $field;
+                    }
+
+                    foreach ($item['fields'] as $fieldarray) {
+
+                        // $gridsize = (isset($fieldarray['gridsize']) && $fieldarray['gridsize']) ? $fieldarray['gridsize'] : 6;
+                        $fieldkey = is_array($fieldarray) ? $fieldarray['field'] : $fieldarray;
+
+                        $fieldkey = is_array($fieldkey) ? $fieldkey['name'] : $fieldkey;
+
+                        $fieldarray = isset($this->fields[$fieldkey]) ? $this->fields[$fieldkey] : array();
+
+                        $val = $this->processFieldValue($fieldarray, $data, $files);
+
+                        $element = new ReportElement($this->processFieldLabel($fieldarray), $val);
+                        $reportRow->addElement($element);
+                    }
+
+                    $reportTable->addReportRow($reportRow);
+                }
+            }
+        }
+
+        $name = $this->getName();
+        if ($this->getFormIndex() > 0) {
+            $name = "";
+        }
+        $htmlReport->addHTMLSection($name, $reportTable);
+        return $htmlReport->getHTML();
+    }
+
     function parseEditViewDef()
     {
+        if ($this->getMode() == "table") {
+            return $this->parseEditViewDefForTable();
+        }
+
         $def = $this->metaData;
 
         $data = $this->formData;
@@ -841,6 +963,10 @@ class HTMLFormProcessor
 
         $html = $this->parseEditViewDef();
 
+        if ($this->getMode() == "table") {
+            return $html;
+        }
+
         $html .= $bs->getelement('input', '', array(
             'name' => 'id',
             'id' => 'id',
@@ -1141,6 +1267,7 @@ class HTMLFormProcessor
 
         if ($data) {
 
+            $this->setName($data['name']);
             $moduleName = $data['module'];
             $this->setFormType($data['type'] ? $data['type'] : 'simple');
 
