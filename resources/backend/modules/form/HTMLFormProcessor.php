@@ -1,5 +1,6 @@
 <?php
 require_once lib_config::getInstance()->get("fwbasepath") . 'libs/lib_bootstrap.php';
+require_once lib_config::getInstance()->get("fwbasepath") . 'beans/TempRuntime.php';
 
 class HTMLFormProcessor
 {

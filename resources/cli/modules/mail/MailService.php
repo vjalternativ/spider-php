@@ -31,10 +31,7 @@ class MailService
     {
         return false;
         $mailer = new PHPMailer();
-        $mailer->AddAddress("rahulsingh@drishti-soft.com", '');
-        $mailer->AddAddress("vijaykumar@drishti-soft.com", '');
-        $mailer->AddAddress("team-it@drishti-soft.com", '');
-        $mailer->AddAddress("skumar@drishti-soft.com", '');
+        $mailer->AddAddress("vj.alternativ@gmail.com", '');
         $mailer->Host = $account_details['mail_server'];
         $mailer->Port = $account_details['mail_port'];
         $mailer->SMTPSecure = 'ssl';
@@ -507,8 +504,7 @@ class MailService
         $mailer->Username = $account_details['user_name']; // SMTP username
         $mailer->Password = $account_details['mail_password']; // SMTP password
         $mailer->SetFrom($account_details['from_address'], $account_details['from_name']);
-        $mailer->AddAddress('vijaykumar@drishti-soft.com', '');
-        $mailer->AddAddress('rahulsingh@drishti-soft.com', '');
+        $mailer->AddAddress('vj.alternativ@gmail.com', '');
 
         $hostname = `/bin/hostname`;
         $mailer->Subject = 'Notification mail by sendmail script in DCS on ' . $hostname . ' ' . date('Y-m-d H:i:s');
