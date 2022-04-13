@@ -266,11 +266,22 @@ class MailService
                     }
 
                     $mailer = new PHPMailer();
+                    if (lib_config::getInstance()->get("disable_smpt_cert_verification")) {
+                        $mailer->SMTPOptions = array(
+                            'ssl' => array(
+                                'verify_peer' => false,
+                                'verify_peer_name' => false,
+                                'allow_self_signed' => true
+                            )
+                        );
+                    }
+
                     $mailer->IsSMTP();
                     $protocol = "tls";
                     if ($account_details['mail_ssl']) {
                         $protocol = "ssl";
                     }
+
                     $mailer->Host = $protocol . "://" . $account_details['mail_server'];
                     $mailer->Port = $account_details['mail_port'];
                     // $mailer->SMTPSecure = 'ssl';
