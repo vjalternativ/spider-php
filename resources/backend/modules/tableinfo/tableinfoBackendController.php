@@ -405,6 +405,7 @@ class tableinfoBackendController extends BackendResourceController
         }
 
         $info[$viewtype . 'def'] = json_encode($metainfo);
+
         $entity->save($formodule, $info);
         die();
     }

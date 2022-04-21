@@ -424,6 +424,7 @@ class LayoutManagerService
         $smarty->assign('viewtype', 'editview');
 
         $meta = isset($tableinfo['metadata']['editview']) ? $tableinfo['metadata']['editview'] : array();
+
         $meta = TableinfoService::getInstance()->fixGridDef($meta);
 
         $meta = TableinfoService::getInstance()->processGridWithFieldInfo($meta, $fieldParamData, $nameVsRelationship);

@@ -539,5 +539,10 @@ class BackendResourceController extends ResourceController
             MediaFilesServiceRegistrar::getInstance()->removeMedia($id);
         }
     }
+
+    protected function addNonauthMethod($method)
+    {
+        $this->nonauth[$method] = 1;
+    }
 }
 ?>

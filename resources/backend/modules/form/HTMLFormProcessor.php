@@ -45,6 +45,66 @@ class HTMLFormProcessor
 
     private $parentRelationship = "";
 
+    private $labelMode = 'addon';
+
+    private $gridModelLabelWidth = 3;
+
+    private $enableCaptcha = false;
+
+    /**
+     *
+     * @return boolean
+     */
+    public function getEnableCaptcha()
+    {
+        return $this->enableCaptcha;
+    }
+
+    /**
+     *
+     * @param boolean $enableCaptcha
+     */
+    public function setEnableCaptcha($enableCaptcha)
+    {
+        $this->enableCaptcha = $enableCaptcha;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getLabelMode()
+    {
+        return $this->labelMode;
+    }
+
+    /**
+     *
+     * @return number
+     */
+    public function getGridModelLabelWidth()
+    {
+        return $this->gridModelLabelWidth;
+    }
+
+    /**
+     *
+     * @param string $labelMode
+     */
+    public function setLabelMode($labelMode)
+    {
+        $this->labelMode = $labelMode;
+    }
+
+    /**
+     *
+     * @param number $gridModelLabelWidth
+     */
+    public function setGridModelLabelWidth($gridModelLabelWidth)
+    {
+        $this->gridModelLabelWidth = $gridModelLabelWidth;
+    }
+
     /**
      *
      * @return mixed
@@ -765,28 +825,6 @@ class HTMLFormProcessor
                             } else if ($fieldarray['type'] == 'enum' || $fieldarray['type'] == 'multienum') {
 
                                 $field = $this->getEnumOptionsHTML($fieldarray, $val, $attr[1]);
-
-                                /*
-                                 * if (! isset($fieldarray['options']) || ! isset($app_list_strings[$fieldarray['options']])) {
-                                 * $fieldarray['options'] = false;
-                                 * // die("option is not defined for field".$fieldarray['name']);
-                                 * }
-                                 *
-                                 * $optionhtml = "";
-                                 * if (isset($app_list_strings[$fieldarray['options']])) {
-                                 * $options = $app_list_strings[$fieldarray['options']];
-                                 * foreach ($options as $okey => $oval) {
-                                 * $opattr = array(
-                                 * "value" => $okey
-                                 * );
-                                 * if ($val == $okey) {
-                                 * $opattr['selected'] = "selected";
-                                 * }
-                                 * $optionhtml .= lib_util::getelement('option', $oval, $opattr);
-                                 * }
-                                 * }
-                                 * $field = lib_util::getelement($attr[0], $optionhtml, $attr[1], $isdualtag);
-                                 */
                             } else if ($fieldarray['type'] == "checkbox") {
 
                                 if ($val == '1') {
@@ -815,12 +853,10 @@ class HTMLFormProcessor
                                 }
                             }
 
-                            $elementhtml = "";
-
                             $addon = "";
 
                             $addon = lib_util::getelement('span', $label, array(
-                                "class" => 'input-group-addon pre-addon'
+                                "class" => 'input-group-addon pre-addon '
                             ));
                             $elementhtml = $addon . $field;
 
@@ -832,9 +868,22 @@ class HTMLFormProcessor
 
                                 // $elementhtml .= $bs->getelement('button','Select',array("class"=>'btn btn-primary'));
                             }
+
                             $inputgroup = $bs->getelement("div", $elementhtml, array(
                                 "class" => "input-group"
                             ));
+                            if ($this->getLabelMode() == "grid") {
+
+                                $rem = $fieldarray['gridsize'] % $this->gridModelLabelWidth;
+                                if ($rem) {
+                                    $fieldarray['gridsize'] += $this->gridModelLabelWidth - $rem;
+                                }
+                                $labelGridSize = (12 / $fieldarray['gridsize']) * $this->gridModelLabelWidth;
+                                $fieldGridSize = 12 - $labelGridSize;
+                                $elementhtml = '<div class="row"><div class="col-md-' . $labelGridSize . ' form-cell form-label">' . $label . '</div><div class="col-md-' . $fieldGridSize . ' form-cell">' . $field . '</div></div>';
+                                $inputgroup = $elementhtml;
+                            }
+
                             if ($fieldarray['type'] == "file") {
                                 if ($files) {
 
@@ -854,7 +903,6 @@ class HTMLFormProcessor
                             }
                         }
 
-                        $fieldarray['gridsize'] = isset($fieldarray['gridsize']) ? $fieldarray['gridsize'] : "6";
                         $colattr = array(
                             "class" => array(
                                 "value" => "col-md-" . $fieldarray['gridsize']
@@ -951,6 +999,15 @@ class HTMLFormProcessor
             $html .= $this->_getFormBodyHTML($includeFooter);
         }
 
+        if ($this->getEnableCaptcha()) {
+
+            $html .= '<div class="row"><div class="col-md-12">';
+            $html .= '<img src="' . lib_config::getInstance()->get("baseurl") . 'backend/form/captcha?rand=' . rand() . '" id="captchaimg"><br>';
+            $html .= '<label for="message">Enter the code above here :</label><br>';
+            $html .= '<input id="captcha_code" required name="captcha_code" type="text"><br>';
+            $html .= 'Can\'t read the image? click <a href="javascript:refreshCaptcha();">here</a> to refresh.';
+            $html .= '</div></div>';
+        }
         return $html;
     }
 
@@ -1186,6 +1243,19 @@ class HTMLFormProcessor
     {
         $this->isValidFormFields = true;
 
+        if (isset($_SESSION['captcha_code'])) {
+
+            if (isset($_POST['captcha_code'])) {
+                if ($_SESSION['captcha_code'] != $_POST['captcha_code']) {
+                    $this->isValidFormFields = false;
+                    $this->invalidFormFields[] = 'captcha_code';
+                }
+            } else {
+                $this->isValidFormFields = false;
+                $this->invalidFormFields[] = 'captcha_code';
+            }
+            unset($_SESSION['captcha_code']);
+        }
         foreach ($this->metaData as $row) {
 
             if ($row['type'] == "row") {

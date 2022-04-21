@@ -1,198 +1,28 @@
 <?php
 $vjconfig = lib_config::getInstance()->getConfig();
 require_once $vjconfig['fwbasepath'] . 'resources/backend/modules/user/authenticate/Authenticate.php';
+require_once $vjconfig['fwbasepath'] . 'resources/backend/modules/adminarea/SchemaDataPatcher.php';
 
 class adminareaBackendController extends BackendResourceController
 {
-
-    public $repairTables = array();
-
-    function __construct()
-    {
-        parent::__construct();
-        $this->repairTables["tableinfo"] = 1;
-        $this->repairTables["relationships"] = 1;
-        $this->repairTables["tableinfo_relationships_1_m"] = 1;
-        $this->repairTables["menu"] = 1;
-        $this->repairTables["menu_tableinfo_1_m"] = 1;
-        $this->repairTables["roles"] = 1;
-        $this->repairTables["roles_item"] = 1;
-        $this->repairTables["privilege"] = 1;
-        $this->repairTables["roles_privilege_1_m"] = 1;
-        $this->repairTables["language"] = 1;
-        $this->repairTables["tableinfo_language_m_m"] = 1;
-        $this->repairTables["submenu"] = 1;
-        $this->repairTables["menu_submenu_1_m"] = 1;
-        $this->repairTables["submenu_tableinfo_1_m"] = 1;
-    }
 
     function action_home()
     {
         $this->view = 'home';
     }
 
-    private function repairTableSchema($rows)
-    {
-        $entity = lib_entity::getInstance();
-        $db = lib_database::getInstance();
-        foreach ($rows as $row) {
-            $desc = json_decode(base64_decode($row['description']), 1);
-            $sql = "select 1 from " . $row['name'] . " limit 1";
-            $qry = $db->query($sql, true);
-            if ($qry) {
-                if (isset($desc['fields'])) {
-                    foreach ($desc['fields'] as $field) {
-                        if ($field['type'] == "nondb") {
-                            continue;
-                        }
-                        $field['name'] = trim($field['name']);
-                        $dbField = $db->getfields($row['name']);
-                        if (isset($dbField[$field['name']])) {
-                            continue;
-                        }
-                        $fieldType = $field['type'];
-
-                        $temp = array(
-                            "name" => $field['name'],
-                            'type' => $field['type']
-                        );
-                        if ($temp['type'] == "relate" || $temp['type'] == "file") {
-                            $fieldType = "char";
-                            $field['len'] = '36';
-                            $temp['rmodule'] = $field['rmodule'];
-                        } else if ($temp['type'] == 'dependent_relate') {
-                            $fieldType = "char";
-                            $field['len'] = '36';
-
-                            $temp['rmodule'] = $field['rmodule'];
-                            $temp['dependent_relate_field'] = $field['dependent_relate_field'];
-                            $temp['dependent_relate_field'] = $field['dependent_relate_field'];
-                            $temp['relate_relationship'] = $field['relate_relationship'];
-                        } else if ($temp['type'] == "checkbox") {
-                            $fieldType = "int";
-                        } else if ($temp['type'] == "enum") {
-                            $fieldType = "varchar";
-                            $field['len'] = "200";
-                            $temp['options'] = $field['options'];
-                        } else if ($temp['type'] == "multienum") {
-                            $fieldType = "text";
-                        }
-
-                        $sql = "ALTER TABLE " . $row['name'] . " ADD COLUMN " . $field['name'] . " " . $fieldType . " ";
-
-                        if ($field['len'] != "") {
-                            $temp['len'] = $field['len'];
-                            $sql .= " (" . $field['len'] . ") ";
-                        }
-
-                        if ($field['notnull'] == 'true') {
-                            $sql .= " NOT NULL ";
-                            $temp['notnull'] = 1;
-                        }
-
-                        if ($field['default'] != '') {
-                            $sql .= " DEFAULT " . $field['default'];
-                            $temp['default'] = $field['default'];
-                        }
-
-                        if (! empty($field['field_index'])) {
-                            $temp['field_index'] = $field['field_index'];
-                        }
-
-                        echo $sql . "<br />";
-                        $db->query($sql);
-                    }
-                }
-            } else {
-
-                // $entity = new Entity;
-
-                $desc['type'] = $row['tabletype'];
-                $entity->createEntity($row['name'], $desc, true);
-                echo ("repair new table " . $row['name'] . "<br />");
-            }
-        }
-    }
-
-    private function processSchemaAndDataPatch($data)
-    {
-        $entity = lib_entity::getInstance();
-        $rows = $data['tableinfo'];
-        $this->repairTableSchema($rows);
-        $this->updateDataPatch($data);
-        $entity->generateCache();
-    }
-
     function action_repair()
     {
-        $this->repairFramework();
+        $schemaDataPatcher = SchemaDataPatcher::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
         $data = json_decode(file_get_contents($vjconfig['basepath'] . "schemajson/schema.json"), 1);
-        $this->processSchemaAndDataPatch($data);
+        $schemaDataPatcher->processSchemaAndDataPatch($data);
     }
 
     function action_generateCache()
     {
         $entity = lib_entity::getInstance();
         $entity->generateCache();
-    }
-
-    private function updateDataPatch($data)
-    {
-        $db = lib_database::getInstance();
-        foreach ($data as $table => $rows) {
-
-            $sql = "select * from " . $table . " where deleted=0";
-            $tableRows = $db->fetchRows($sql, array(
-                "id"
-            ));
-            $tableRowsByName = array();
-            foreach ($tableRows as $row) {
-                if (isset($row['name'])) {
-                    $tableRowsByName[$row['name']] = $row['id'];
-                }
-            }
-
-            foreach ($rows as $id => $row) {
-                $isNew = false;
-                $sql = "UPDATE ";
-                if (isset($tableRows[$id])) {
-                    echo "updating table " . $table . " for ID " . $id . "<br />";
-                } else {
-
-                    if (isset($tableRowsByName[$row['name']])) {
-                        echo "updating existing table with new tableinfo " . $table . " for ID " . $id . "<br />";
-
-                        $sqla = "update " . $table . " set id='" . $id . "' where id='" . $tableRowsByName[$row['name']] . "' ";
-                        $db->query($sqla);
-
-                        $row['id'] = $id;
-                    } else {
-                        $isNew = true;
-                        $sql = "INSERT INTO ";
-                        // $row['new_with_id'] = true;
-                        echo "inserting table " . $table . " for ID " . $id . "<br />";
-                    }
-                }
-
-                $sql .= $table . " SET ";
-                $cols = array();
-                unset($row['isfirstrow']);
-                foreach ($row as $key => $val) {
-                    $cols[$key] = $key . "='" . addslashes($val) . "'";
-                }
-                $sql .= implode(",", $cols);
-                if (! $isNew) {
-                    $sql .= " WHERE id = '" . $row['id'] . "'";
-                }
-                if ($table == "roles_item") {
-                    echo $sql . "<br/ >";
-                }
-                $db->query($sql);
-                // $row['hook_skip'] = true;
-                // $entity->save($table,$row);
-            }
-        }
     }
 
     function action_updateschema()
@@ -310,55 +140,9 @@ class adminareaBackendController extends BackendResourceController
         }
     }
 
-    function repairFramework()
-    {
-        $vjconfig = lib_config::getInstance()->getConfig();
-        $data = array();
-
-        $db = lib_database::getInstance();
-
-        $sql = "delete from tableinfo where deleted=1";
-        $db->query($sql);
-        foreach ($this->repairTables as $tablename => $row) {
-            $row = json_decode(file_get_contents($vjconfig['fwbasepath'] . "include/install/datapatch/" . $tablename . ".json"), 1);
-            $data[$tablename] = $row;
-        }
-        $this->processSchemaAndDataPatch($data);
-
-        $sql = "select * from tableinfo where deleted=0";
-        $trows = $db->fetchRows($sql, array(
-            "id"
-        ));
-
-        $sql = "select * from relationships where deleted=0";
-        $rows = $db->fetchRows($sql, array(
-            "id"
-        ));
-        $entity = lib_entity::getInstance();
-        // echo "<pre>";print_r($rows);die;
-        foreach ($rows as $row) {
-            if (isset($trows[$row['primarytable']]) && isset($trows[$row['secondarytable']])) {
-                $row['primary_table_text'] = $trows[$row['primarytable']]['name'];
-                $row['secondary_table_text'] = $trows[$row['secondarytable']]['name'];
-                $row['primarytable'] = $trows[$row['primarytable']]['id'];
-                $row['secondarytable'] = $trows[$row['secondarytable']]['id'];
-                $entity->save("relationships", $row);
-            } else {
-
-                if ($row['primary_table_text'] && $row['secondary_table_text']) {}
-                echo "relationship entity not found for " . $row['name'] . "<br/>";
-                /*
-                 * if(isset($globalEntityList[$row['primarytable']])) {
-                 * die($globalEntityList[$row['primarytable']]);
-                 * }
-                 */
-            }
-        }
-    }
-
     function action_repairFramework()
     {
-        $this->repairFramework();
+        SchemaDataPatcher::getInstance()->repairFramework();
     }
 
     function action_cleanupmodules()
