@@ -27,16 +27,7 @@ class adminareaBackendController extends BackendResourceController
 
     function action_updateschema()
     {
-        $db = lib_database::getInstance();
-        $vjconfig = lib_config::getInstance()->getConfig();
-        $data = array();
-        foreach ($this->repairTables as $table => $val) {
-            $sql = "select * from " . $table . " where deleted=0";
-            $data[$table] = $db->fetchRows($sql, array(
-                "id"
-            ));
-        }
-        file_put_contents($vjconfig['basepath'] . "schemajson/schema.json", json_encode($data, JSON_PRETTY_PRINT));
+        SchemaDataPatcher::getInstance()->updateSchema();
     }
 
     function changeFieldLayout($layout, $isSeq = false)
