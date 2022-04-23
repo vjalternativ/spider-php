@@ -7,6 +7,8 @@ class HTMLFormProcessor
 
     private $name = "";
 
+    private $alias = "";
+
     private $fields = array();
 
     private $datatypeFields = array();
@@ -50,6 +52,44 @@ class HTMLFormProcessor
     private $gridModelLabelWidth = 3;
 
     private $enableCaptcha = false;
+
+    private $additionalContent = '';
+
+    /**
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     *
+     * @param string $alias
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getAdditionalContent()
+    {
+        return $this->additionalContent;
+    }
+
+    /**
+     *
+     * @param string $additionalContent
+     */
+    public function setAdditionalContent($additionalContent)
+    {
+        $this->additionalContent = $additionalContent;
+    }
 
     /**
      *
@@ -431,9 +471,9 @@ class HTMLFormProcessor
 
     private function processModuleDef()
     {
-        $formDataFields = array();
+        $formDataFields = $this->getFormData();
 
-        $formFilesFields = isset($_FILES) ? $_FILES : array();
+        $formFilesFields = $this->getFormFiles();
         $tempRuntime = new TempRuntime();
 
         foreach ($this->metaData as $metakey => $item) {
@@ -684,7 +724,7 @@ class HTMLFormProcessor
                             $val = "";
 
                             $attr = $this->getattr($fieldarray['type'], $fieldname, $val);
-
+                            $attr[1]['class'] .= ' ' . $this->getAlias() . '_' . $fieldname;
                             if (isset($fieldarray['extraclass'])) {
                                 $attr[1]['class'] .= $fieldarray['extraclass'];
                             }
@@ -1008,6 +1048,9 @@ class HTMLFormProcessor
             $html .= 'Can\'t read the image? click <a href="javascript:refreshCaptcha();">here</a> to refresh.';
             $html .= '</div></div>';
         }
+
+        $html .= $this->getAdditionalContent();
+
         return $html;
     }
 
@@ -1243,7 +1286,7 @@ class HTMLFormProcessor
     {
         $this->isValidFormFields = true;
 
-        if (isset($_SESSION['captcha_code'])) {
+        if ($this->getEnableCaptcha()) {
 
             if (isset($_POST['captcha_code'])) {
                 if ($_SESSION['captcha_code'] != $_POST['captcha_code']) {
@@ -1338,7 +1381,9 @@ class HTMLFormProcessor
 
         if ($data) {
 
+            $this->setAlias($formalias);
             $this->setName($data['name']);
+
             $moduleName = $data['module'];
             $this->setFormType($data['type'] ? $data['type'] : 'simple');
 
@@ -1366,7 +1411,10 @@ class HTMLFormProcessor
 
             $this->metaData = json_decode($data['editviewdef'], true);
 
-            $this->processModuleDef();
+            for ($this->formIndex; $this->formIndex < $this->formLength; $this->formIndex ++) {
+                $this->processModuleDef();
+            }
+            $this->setFormType($this->getFormType());
         }
     }
 
