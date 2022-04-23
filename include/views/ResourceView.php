@@ -158,7 +158,9 @@ abstract class ResourceView
         $smarty = lib_smarty::getSmartyInstance();
 
         $smarty->assign('bootparams', $this->bootparams);
-        $this->params += $params;
+        foreach ($params as $key => $val) {
+            $this->params[$key] = $val;
+        }
         $smarty->assign('params', $this->params);
         $smarty->assign('app_list_strings', $app_list_strings);
         if (file_exists($this->pagetplpath . $tpl)) {
