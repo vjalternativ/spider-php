@@ -55,6 +55,26 @@ class HTMLFormProcessor
 
     private $additionalContent = '';
 
+    private $footerContent = '';
+
+    /**
+     *
+     * @return string
+     */
+    public function getFooterContent()
+    {
+        return $this->footerContent;
+    }
+
+    /**
+     *
+     * @param string $footerContent
+     */
+    public function setFooterContent($footerContent)
+    {
+        $this->footerContent = $footerContent;
+    }
+
     /**
      *
      * @return string
@@ -1121,7 +1141,7 @@ class HTMLFormProcessor
             )
         ));
         $save .= '<div class="clearfix"></div>';
-        $panelfooter = $bs->getelement('div', $save, array(
+        $panelfooter = $bs->getelement('div', $this->getFooterContent() . $save, array(
             'class' => array(
                 'value' => 'panel-footer'
             )
