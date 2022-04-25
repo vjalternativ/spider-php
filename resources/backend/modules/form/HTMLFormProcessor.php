@@ -940,7 +940,7 @@ class HTMLFormProcessor
                                 }
                                 $labelGridSize = (12 / $fieldarray['gridsize']) * $this->gridModelLabelWidth;
                                 $fieldGridSize = 12 - $labelGridSize;
-                                $elementhtml = '<div class="row"><div class="col-md-' . $labelGridSize . ' form-cell form-label">' . $label . '</div><div class="col-md-' . $fieldGridSize . ' form-cell">' . $field . '</div></div>';
+                                $elementhtml = '<div class="row"><div class="col-md-' . $labelGridSize . ' form-cell form-label  text-md-right ">' . $label . '</div><div class="col-md-' . $fieldGridSize . ' form-cell">' . $field . '</div></div>';
                                 $inputgroup = $elementhtml;
                             }
 
