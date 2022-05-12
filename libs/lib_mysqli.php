@@ -86,6 +86,7 @@ class lib_mysqli extends lib_database
             $qry = mysqli_query($this->con, $sql);
             return $qry;
         }
+        
         $qry = mysqli_query($this->con, $sql) or die("Query Failed :" . $sql . "<br />" . mysqli_error($this->con) . $this->print_bt());
         return $qry;
     }

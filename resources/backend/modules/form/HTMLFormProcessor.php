@@ -521,6 +521,8 @@ class HTMLFormProcessor
                             if (isset($_FILES[$field['name']])) {
                                 if ($_FILES[$field['name']]['error'] == '0') {
 
+                                    
+                                    $formFilesFields[$field['name']]  = $_FILES[$field['name']];
                                     $tempRuntime->moveToTemp($_FILES[$field['name']]['tmp_name']);
                                     $formFilesFields[$field['name']]['tmp_name'] = $tempRuntime->getTempFilePath($_FILES[$field['name']]['tmp_name']);
                                 }
@@ -1328,8 +1330,10 @@ class HTMLFormProcessor
                         $field['type'] = $this->fields[$field['field']['name']]['type'];
                         if ($field['type'] == "file") {
 
-                            if (! (isset($this->formFiles[$field['name']]) && $this->formFiles[$field['name']]['error'] == '0')) {
-                                $this->invalidFormFields[] = $field['name'];
+                            if (! (isset($this->formFiles[$field['field']['name']]) && $this->formFiles[$field['field']['name']]['error'] == '0')) {
+                                $this->invalidFormFields[] = $field['field']['name'];
+                                echo "<pre>";print_r($this->formFiles);
+                                //die;
                                 $this->isValidFormFields = false;
                             }
                         } else {
@@ -1337,6 +1341,9 @@ class HTMLFormProcessor
                             if (! (isset($this->formData[$field['field']['name']]) && ! empty($this->formData[$field['field']['name']]))) {
                                 $this->invalidFormFields[] = $field['name'];
                                 $this->isValidFormFields = false;
+                                echo "<pre>";print_r($field);
+                                //die;
+                                
                             }
                         }
                     }

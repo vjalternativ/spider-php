@@ -80,6 +80,8 @@ class lib_paginate
 
     function process()
     {
+        
+        
         $url = $this->url;
         $index = $this->index;
         $noresult = $this->noresult;
@@ -105,6 +107,7 @@ class lib_paginate
             $page = $index;
         }
         if (isset($page) && $page > 0) {
+            $page = intval($page);
             $start = ($page - 1) * $noresult;
             $next = $page + 1;
             $nexturl = $url . $next;
@@ -115,7 +118,6 @@ class lib_paginate
 
         if ($sql) {
             $sql .= " LIMIT $start,$maxlimit";
-
             $qry = $db->query($sql);
             $totalresult = $start + $qry->num_rows;
         } else {

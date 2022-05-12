@@ -965,7 +965,7 @@ class lib_entity
         return $name . '_' . $qry->num_rows;
     }
 
-    function repairTable($primary, $fields = array(), $secondary)
+    function repairTable($primary, $fields , $secondary)
     {
         $db = lib_database::getInstance();
         if (empty($primary) || ! $fields || ! $secondary) {
@@ -1127,7 +1127,7 @@ class lib_entity
     {
         $paginate = lib_paginate::getInstance();
         $paginate->url = '';
-        $paginate->index = 'id';
+        //$paginate->index = 'id';
         $paginate->noresult = 10;
         $paginate->endto = 10;
         $paginate->sql = $sql;
