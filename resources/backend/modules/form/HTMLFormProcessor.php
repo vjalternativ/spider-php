@@ -521,8 +521,7 @@ class HTMLFormProcessor
                             if (isset($_FILES[$field['name']])) {
                                 if ($_FILES[$field['name']]['error'] == '0') {
 
-                                    
-                                    $formFilesFields[$field['name']]  = $_FILES[$field['name']];
+                                    $formFilesFields[$field['name']] = $_FILES[$field['name']];
                                     $tempRuntime->moveToTemp($_FILES[$field['name']]['tmp_name']);
                                     $formFilesFields[$field['name']]['tmp_name'] = $tempRuntime->getTempFilePath($_FILES[$field['name']]['tmp_name']);
                                 }
@@ -617,25 +616,24 @@ class HTMLFormProcessor
         if (array_key_exists($fieldkey, $files)) {
 
             if (isset($files[$fieldarray['name']]) && $files[$fieldarray['name']]['error'] == "0") {
+
                 $link = MediaFilesService::getInstance()->getMediaLinkForPath($files[$fieldarray['name']]['tmp_name'], $files[$fieldarray['name']]['name'], $files[$fieldarray['name']]['type']);
                 $val = '<a target="_blank"  href="' . $link . '" >' . $files[$fieldarray['name']]['name'] . '</a>';
+
+                if (substr($files[$fieldarray['name']]['type'], 0, 5) == "image") {
+                    $val = '<img src="' . $link . '" height="120" width="150" />';
+                }
             }
         }
         return $val;
     }
 
-    function parseEditViewDefForTable()
+    function parseEditViewDefForTable($reportTable)
     {
-        require_once lib_config::getInstance()->get("fwbasepath") . 'libs/htmlreport/HTMLReport.php';
-
-        $htmlReport = new HTMLReport();
-        $this->getName();
         $def = $this->metaData;
         $data = $this->formData;
 
         $files = $this->formFiles;
-
-        $reportTable = new ReportTable();
 
         foreach ($def as $item) {
             $item['type'] = isset($item['type']) ? $item['type'] : 'row';
@@ -672,21 +670,10 @@ class HTMLFormProcessor
                 }
             }
         }
-
-        $name = $this->getName();
-        if ($this->getFormIndex() > 0) {
-            $name = "";
-        }
-        $htmlReport->addHTMLSection($name, $reportTable);
-        return $htmlReport->getHTML();
     }
 
     function parseEditViewDef()
     {
-        if ($this->getMode() == "table") {
-            return $this->parseEditViewDefForTable();
-        }
-
         $def = $this->metaData;
 
         $data = $this->formData;
@@ -1057,8 +1044,25 @@ class HTMLFormProcessor
     public function getFormBodyHTML($includeFooter = false)
     {
         $html = '';
-        for ($this->formIndex; $this->formIndex < $this->formLength; $this->formIndex ++) {
-            $html .= $this->_getFormBodyHTML($includeFooter);
+
+        if ($this->getMode() == "table") {
+
+            require_once lib_config::getInstance()->get("fwbasepath") . 'libs/htmlreport/HTMLReport.php';
+
+            $htmlReport = new HTMLReport();
+            $reportTable = new ReportTable();
+
+            for ($this->formIndex; $this->formIndex < $this->formLength; $this->formIndex ++) {
+                $this->parseEditViewDefForTable($reportTable);
+            }
+            $name = $this->getName();
+
+            $htmlReport->addHTMLSection($name, $reportTable);
+            $html .= $htmlReport->getHTML();
+        } else {
+            for ($this->formIndex; $this->formIndex < $this->formLength; $this->formIndex ++) {
+                $html .= $this->_getFormBodyHTML($includeFooter);
+            }
         }
 
         if ($this->getEnableCaptcha()) {
@@ -1085,10 +1089,6 @@ class HTMLFormProcessor
         $data['id'] = isset($data['id']) ? $data['id'] : "";
 
         $html = $this->parseEditViewDef();
-
-        if ($this->getMode() == "table") {
-            return $html;
-        }
 
         $html .= $bs->getelement('input', '', array(
             'name' => 'id',
@@ -1332,8 +1332,9 @@ class HTMLFormProcessor
 
                             if (! (isset($this->formFiles[$field['field']['name']]) && $this->formFiles[$field['field']['name']]['error'] == '0')) {
                                 $this->invalidFormFields[] = $field['field']['name'];
-                                echo "<pre>";print_r($this->formFiles);
-                                //die;
+                                echo "<pre>";
+                                print_r($this->formFiles);
+                                // die;
                                 $this->isValidFormFields = false;
                             }
                         } else {
@@ -1341,9 +1342,9 @@ class HTMLFormProcessor
                             if (! (isset($this->formData[$field['field']['name']]) && ! empty($this->formData[$field['field']['name']]))) {
                                 $this->invalidFormFields[] = $field['name'];
                                 $this->isValidFormFields = false;
-                                echo "<pre>";print_r($field);
-                                //die;
-                                
+                                echo "<pre>";
+                                print_r($field);
+                                // die;
                             }
                         }
                     }
