@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/lib_timezone.php';
 
 class lib_entity
 {
@@ -965,7 +966,7 @@ class lib_entity
         return $name . '_' . $qry->num_rows;
     }
 
-    function repairTable($primary, $fields , $secondary)
+    function repairTable($primary, $fields, $secondary)
     {
         $db = lib_database::getInstance();
         if (empty($primary) || ! $fields || ! $secondary) {
@@ -1127,7 +1128,7 @@ class lib_entity
     {
         $paginate = lib_paginate::getInstance();
         $paginate->url = '';
-        //$paginate->index = 'id';
+        // $paginate->index = 'id';
         $paginate->noresult = 10;
         $paginate->endto = 10;
         $paginate->sql = $sql;
@@ -1145,6 +1146,9 @@ class lib_entity
                 "href" => $url
             )
         );
+
+        $timezone = lib_timezone::getInstance();
+        $paginate->setProcessHook($timezone, "processDefaultFields");
     }
 
     function saveRelationship($relationship, $primaryRecord, $relationshipId)
