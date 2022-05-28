@@ -12,7 +12,7 @@
 <script src="{$fwbaseurl}resources/backend/assets/js/bootstrap-datetimepicker.js"></script>
 
 <script src="{$fwbaseurl}resources/backend/modules/notification/assets/js/notificationdispatcher.js?v=1"></script>
-<script src="{$fwbaseurl}resources/backend/assets/js/custom.js?v=2"></script>
+<script src="{$fwbaseurl}resources/backend/assets/js/custom.js?v=6"></script>
 
 <script src="{$fwbaseurl}resources/backend/assets/editor/editor.js?v=1"></script>
 <script src="{$fwbaseurl}libs/assets/js/lib_desktopnotification.js?v=1"></script>

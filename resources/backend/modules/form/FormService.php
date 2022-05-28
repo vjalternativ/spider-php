@@ -17,6 +17,8 @@ class FormService
         return self::$instance;
     }
 
+    private $savedData = array();
+
     function saveForm(HTMLFormProcessor $form)
     {
         for ($i = $form->getFormIndex(); $i < $form->getFormLength(); $i ++) {
@@ -84,6 +86,7 @@ class FormService
             }
 
             $id = lib_entity::getInstance()->save($module, $data);
+            $this->savedData[$module][$index] = $id;
             foreach ($virtualfields as $field) {
 
                 if ($field['type'] == "multienum") {
@@ -108,6 +111,11 @@ class FormService
                 }
             }
         }
+    }
+
+    function getSavedId($module, $index = 0)
+    {
+        return $this->savedData[$module][$index];
     }
 }
 ?>

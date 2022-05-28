@@ -1056,7 +1056,7 @@ class lib_entity
     {
         $db = lib_database::getInstance();
 
-        $sql = "select rel.*,tb.name as rtable  from relationships rel left join tableinfo tb on rel.secondarytable=tb.id  where rel.primarytable='" . $this->tableinfo['id'] . "' and (rel.rtype='1_M' or rel.rtype='M_M') and rel.deleted=0";
+        $sql = "select rel.*,tb.name as rtable  from relationships rel left join tableinfo tb on rel.secondarytable=tb.id  where ((rel.primarytable='" . $this->tableinfo['id'] . "' and (rel.rtype='1_M' or rel.rtype='M_M')) or (rel.secondarytable='" . $this->tableinfo['id'] . "' and  rel.rtype='M_M' )) and rel.deleted=0";
         $this->relationships = $db->getrows($sql, 'name');
     }
 
@@ -1065,6 +1065,12 @@ class lib_entity
         $table = $this->relationships[$rtable]['rtable'];
 
         $_REQUEST['get_relationship_name'] = $rtable;
+
+        if ($table == $this->module) {
+
+            $table = $this->relationships[$rtable]['primarytable_name'];
+        }
+
         $sql = "select " . $table . ".* from $rtable  inner join " . $table . " on " . $rtable . "." . $table . "_id = " . $table . ".id and " . $table . ".deleted=0 where " . $rtable . "." . $this->module . "_id='" . $this->record . "' and " . $rtable . ".deleted=0 order by " . $rtable . ".date_modified desc";
         $rows = $this->results($table, $sql, true, false, $index);
         return $rows;
@@ -1178,7 +1184,11 @@ class lib_entity
 
     function addRelationship($relationship, $relationshipId)
     {
-        return $this->saveRelationship($relationship, $this->record, $relationshipId);
+        $rel = lib_datawrapper::getInstance()->get("relationship_list", $this->relationship);
+        $primary = $rel['primarytable_name'] == $this->module ? $this->record : $relationshipId;
+        $secondary = $rel['primarytable_name'] == $this->module ? $relationshipId : $this->record;
+
+        return $this->saveRelationship($relationship, $primary, $secondary);
     }
 
     function removeRelationship($relationship, $relId)

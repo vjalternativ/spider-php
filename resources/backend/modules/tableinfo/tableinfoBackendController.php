@@ -270,7 +270,10 @@ class tableinfoBackendController extends BackendResourceController
         }
 
         if ($_REQUEST['field-default'] != '') {
-            $postSql .= " DEFAULT " . $_REQUEST['field-default'];
+
+            $default = "'" . $_REQUEST['field-default'] . "'";
+
+            $postSql .= " DEFAULT " . $default;
             $temp['default'] = $_REQUEST['field-default'];
         }
 
@@ -286,6 +289,7 @@ class tableinfoBackendController extends BackendResourceController
 
             $sql = "ALTER TABLE " . $table . " ADD COLUMN " . $_REQUEST['field-name'] . " " . $fieldType . " ";
             $sql .= " " . $postSql;
+
             $db->query($sql);
         }
 

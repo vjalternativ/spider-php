@@ -112,9 +112,10 @@ function selectSubpanelItems(id) {
 	var parentModule = $("#subpanel_"+id+"_parent_module").val();
 	var parentId = $("#subpanel_"+id+"_parent_id").val();
 	var parentRecord = $("#subpanel_"+id+"_parent_record").val();
-	
+	var primaryModule = $("#subpanel_ptable-"+id).val();
 	var url = "./index.php?module=tableinfo&action=ajaxFetchSubpanleList&rtable="+rtable+"&relname="+relname+"&parent_module="+parentModule+"&parent_id="+parentId+"&parent_record="+parentRecord;
 	$.post(url,{},function(result) {
+			$("#genericmodal_subpanel-form").attr("action","index.php?module="+primaryModule+"&action=addSubpanelRelationship&record="+parentRecord+"&primaryModule="+primaryModule);
 			$("#genericmodal_subpanel-body").html(result);
 			$("#genericmodal_subpanel").modal("show");
 	});

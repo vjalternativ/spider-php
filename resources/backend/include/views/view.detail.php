@@ -229,6 +229,8 @@ class ViewDetail extends BackendResourceView
         $smarty = lib_smarty::getSmartyInstance();
         foreach ($this->subpanels as $subpanels) {
 
+            $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['rtable'];
+
             $pageinfo = $entity->get_relationships($subpanels['name'], false, $subpanels);
             $rows = $pageinfo['data'];
 
@@ -254,7 +256,7 @@ class ViewDetail extends BackendResourceView
             $smarty->assign("extraPostFields", $extraPostFields);
             $table = $smarty->fetch($vjconfig['fwbasepath'] . "include/vjlib/libs/tpls/table.tpl");
 
-            $pageinfo['url'] = "./index.php?module=" . $this->module . "&action=getAjaxSubPanelData";
+            $pageinfo['url'] = "./index.php?module=" . $subpanelModule . "&action=getAjaxSubPanelData";
 
             $pageinfo['container_id'] = $subpanels['id'];
 
@@ -265,9 +267,9 @@ class ViewDetail extends BackendResourceView
 
             // $table = $bs->generateTable(array_values($pageinfo['data']),$params);
 
-            $heading = '<span class="heading">' . $subpanels['secondarytable_name'] . '</span>';
+            $heading = '<span class="heading">' . $subpanelModule . '</span>';
             $heading .= '<input type="hidden" id="subpanel_ptable-' . $subpanels['id'] . '"   value="' . $this->module . '" />';
-            $heading .= '<input type="hidden" id="subpanel_rtable-' . $subpanels['id'] . '"   value="' . $subpanels['rtable'] . '" />';
+            $heading .= '<input type="hidden" id="subpanel_rtable-' . $subpanels['id'] . '"   value="' . $subpanelModule . '" />';
             $heading .= '<input type="hidden" id="subpanel_relname-' . $subpanels['id'] . '"   value="' . $subpanels['name'] . '" />';
 
             $parentModule = "";
@@ -281,7 +283,7 @@ class ViewDetail extends BackendResourceView
             $heading .= '<input type="hidden" id="subpanel_' . $subpanels['id'] . '_parent_id"   value="' . $parentId . '" />';
             $heading .= '<input type="hidden" id="subpanel_' . $subpanels['id'] . '_parent_record"   value="' . $parentRecord . '" />';
 
-            $heading .= '<a href="index.php?module=' . $subpanels['rtable'] . '&action=editview&parent_module=' . $this->module . '&parent_record=' . $this->record . '&rel=' . $subpanels['name'] . '"><button class="btn btn-primary pull-right">Add New</button></a>';
+            $heading .= '<a href="index.php?module=' . $subpanelModule . '&action=editview&parent_module=' . $this->module . '&parent_record=' . $this->record . '&rel=' . $subpanels['name'] . '"><button class="btn btn-primary pull-right">Add New</button></a>';
             $heading .= '<button class="btn btn-success pull-right margin-right-10" onclick="selectSubpanelItems(\'' . $subpanels['id'] . '\')">Select</button>';
             $heading .= '<div class="clearfix"></div>';
 
