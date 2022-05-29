@@ -99,7 +99,7 @@ class SchemaDataPatcher
 
                         if ($field['default'] != '') {
 
-                            $default = " '" . $field['default'] . "' ";
+                            $default = " default '" . $field['default'] . "' ";
                             $sql .= $default;
                             $temp['default'] = $default;
                         }
