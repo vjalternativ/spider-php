@@ -865,15 +865,22 @@ class lib_entity
         return $string;
     }
 
+    function setModule($table)
+    {
+        $this->module = $table;
+        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
+        $tableinfo = $globalModuleList[$table];
+        $this->tableinfo = $tableinfo;
+    }
+
     function get($table, $id)
     {
+        $this->setModule($table);
+        $tableinfo = $this->tableinfo;
         $globalEntityList = lib_datawrapper::getInstance()->get("entity_list");
-        $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
         $db = lib_database::getInstance();
-        $this->module = $table;
 
-        $tableinfo = $globalModuleList[$table];
         if ($tableinfo['tabletype'] == "cstm") {
             $sql = "select * from " . $table . " where id='" . $id . "'";
             return $db->getrow($sql);
@@ -1071,9 +1078,16 @@ class lib_entity
             $table = $this->relationships[$rtable]['primarytable_name'];
         }
 
-        $sql = "select " . $table . ".* from $rtable  inner join " . $table . " on " . $rtable . "." . $table . "_id = " . $table . ".id and " . $table . ".deleted=0 where " . $rtable . "." . $this->module . "_id='" . $this->record . "' and " . $rtable . ".deleted=0 order by " . $rtable . ".date_modified desc";
-        $rows = $this->results($table, $sql, true, false, $index);
-        return $rows;
+        if ($table) {
+            $sql = "select " . $table . ".* from $rtable  inner join " . $table . " on " . $rtable . "." . $table . "_id = " . $table . ".id and " . $table . ".deleted=0 where " . $rtable . "." . $this->module . "_id='" . $this->record . "' and " . $rtable . ".deleted=0 order by " . $rtable . ".date_modified desc";
+            $rows = $this->results($table, $sql, true, false, $index);
+            return $rows;
+        } else {
+            echo $rtable . "<br />";
+            echo "<pre>";
+            print_r($this->relationships);
+            die();
+        }
     }
 
     function results($tentity = false, $sql = false, $paginate = true, $url = false, $index = false)

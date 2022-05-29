@@ -57,6 +57,26 @@ class HTMLFormProcessor
 
     private $footerContent = '';
 
+    private $footerGridSize = 12;
+
+    /**
+     *
+     * @return number
+     */
+    public function getFooterGridSize()
+    {
+        return $this->footerGridSize;
+    }
+
+    /**
+     *
+     * @param number $footerGridSize
+     */
+    public function setFooterGridSize($footerGridSize)
+    {
+        $this->footerGridSize = $footerGridSize;
+    }
+
     /**
      *
      * @return string
@@ -514,7 +534,7 @@ class HTMLFormProcessor
 
                     foreach ($item['fields'] as $fkey => $fieldarray) {
 
-                        $name = $fieldarray['field']['name'];
+                        $name = is_array($fieldarray) ? $fieldarray['field']['name'] : $fieldarray;
 
                         $field = $this->fields[$name];
                         if ($field['type'] == "file") {
@@ -1143,7 +1163,9 @@ class HTMLFormProcessor
             )
         ));
         $save .= '<div class="clearfix"></div>';
-        $panelfooter = $bs->getelement('div', $this->getFooterContent() . $save, array(
+
+        $footer = '<div class="row"><div class="col-md-' . $this->getFooterGridSize() . '">' . $this->getFooterContent() . $save . '</div></div>';
+        $panelfooter = $bs->getelement('div', $footer, array(
             'class' => array(
                 'value' => 'panel-footer'
             )
@@ -1230,9 +1252,16 @@ class HTMLFormProcessor
         return $text;
     }
 
-    public function addBSFormRow($fields = array())
+    public function addBSFormRow($fields)
     {
         if ($fields) {
+
+            if (! is_array($fields)) {
+                $fields = array(
+                    $fields
+                );
+            }
+
             $row = array();
             $row['type'] = "row";
             $row['fields'] = $fields;
@@ -1306,6 +1335,7 @@ class HTMLFormProcessor
 
     public function validateFormData()
     {
+        $this->processModuleDef();
         $this->isValidFormFields = true;
 
         if ($this->getEnableCaptcha()) {
@@ -1325,6 +1355,8 @@ class HTMLFormProcessor
 
             if ($row['type'] == "row") {
                 foreach ($row['fields'] as $field) {
+
+                    $field = is_array($field) ? $field : $this->fields[$field];
 
                     if (isset($this->fields[$field['field']['name']]) && isset($field['attrs']['required'])) {
                         $field['type'] = $this->fields[$field['field']['name']]['type'];
@@ -1479,6 +1511,21 @@ class HTMLFormProcessor
             $secondary = lib_datawrapper::getInstance()->get("entity_list", $relationship['secondarytable']);
 
             $module = $secondary['name'];
+
+            if (isset($this->formData['id']) && $this->formData['id']) {
+                $sql = "select t.* from " . $fieldarray['relationship'] . " r
+                        inner join " . $module . " t on r." . $module . "_id=t.id and r.deleted=0 and t.deleted=0 and r." . $this->getForModule() . "_id ='" . $this->formData['id'] . "' ";
+
+                $rows = lib_database::getInstance()->getAll($sql);
+                foreach ($rows as $row) {
+                    $opattr = array(
+                        "value" => $row['id'],
+                        "selected" => "selected"
+                    );
+
+                    $optionhtml .= lib_util::getelement('option', $row['name'], $opattr);
+                }
+            }
 
             $sql = "select * from " . $module . " where deleted=0 order by name asc limit 10";
             $rows = lib_database::getInstance()->getAll($sql);
