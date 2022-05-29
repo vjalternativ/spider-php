@@ -98,8 +98,10 @@ class SchemaDataPatcher
                         }
 
                         if ($field['default'] != '') {
-                            $sql .= $field['default'];
-                            $temp['default'] = $field['default'];
+
+                            $default = " '" . $field['default'] . "' ";
+                            $sql .= $default;
+                            $temp['default'] = $default;
                         }
 
                         if (! empty($field['field_index'])) {
