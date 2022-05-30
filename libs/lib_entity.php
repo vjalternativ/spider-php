@@ -1075,7 +1075,7 @@ class lib_entity
 
         if ($table == $this->module) {
 
-            $table = $this->relationships[$rtable]['primarytable_name'];
+            $table = $this->relationships[$rtable]['primarytable_text'];
         }
 
         if ($table) {
@@ -1198,9 +1198,10 @@ class lib_entity
 
     function addRelationship($relationship, $relationshipId)
     {
-        $rel = lib_datawrapper::getInstance()->get("relationship_list", $this->relationship);
-        $primary = $rel['primarytable_name'] == $this->module ? $this->record : $relationshipId;
-        $secondary = $rel['primarytable_name'] == $this->module ? $relationshipId : $this->record;
+        $rel = lib_datawrapper::getInstance()->get("relationship_list", $relationship);
+
+        $primary = $rel['primary_table_text'] == $this->module ? $this->record : $relationshipId;
+        $secondary = $rel['primary_table_text'] == $this->module ? $relationshipId : $this->record;
 
         return $this->saveRelationship($relationship, $primary, $secondary);
     }
