@@ -278,12 +278,16 @@ class lib_entity
                 }
 
                 if (! $repair) {
+
                     $keyvalue = array(
                         "name" => $entityName,
                         'primarytable_name' => $label,
                         'secondarytable_name' => $secondlabel,
                         'primarytable' => $values[0],
                         'secondarytable' => $values[1],
+                        'primary_table_text' => $values[3],
+                        'secondary_table_text' => $values[4],
+
                         'rtype' => strtoupper($params['rtype'])
                     );
                     $relid = $this->save("relationships", $keyvalue);
@@ -683,6 +687,7 @@ class lib_entity
             "before_save" => array(),
             "after_save" => array()
         );
+
         if (file_exists($vjconfig['fwbasepath'] . "resources/backend/modules/" . $table . "/logic_hooks.php")) {
             require $vjconfig['fwbasepath'] . "resources/backend/modules/" . $table . "/logic_hooks.php";
         }
@@ -747,13 +752,6 @@ class lib_entity
             $keyvalue['hook_tabletype'] = $globalModuleList[$table]['tabletype'];
         }
 
-        foreach ($globalLogicHook['before_save'] as $hook) {
-            require_once $vjconfig['fwbasepath'] . $hook[1];
-            $hookobj = new $hook[2]();
-            $this->hookTable = $table;
-            $hookobj->{$hook[3]}($keyvalue);
-        }
-
         foreach ($logicHook[$table]['before_save'] as $hook) {
 
             $isHook = false;
@@ -768,6 +766,13 @@ class lib_entity
             }
             $hookobj = new $hook[2]();
 
+            $this->hookTable = $table;
+            $hookobj->{$hook[3]}($keyvalue);
+        }
+
+        foreach ($globalLogicHook['before_save'] as $hook) {
+            require_once $vjconfig['fwbasepath'] . $hook[1];
+            $hookobj = new $hook[2]();
             $this->hookTable = $table;
             $hookobj->{$hook[3]}($keyvalue);
         }
@@ -1051,7 +1056,9 @@ class lib_entity
                 'type' => 'relationship',
                 'values' => array(
                     $primaryinfo['id'],
-                    $secondaryinfo['id']
+                    $secondaryinfo['id'],
+                    $primaryinfo['name'],
+                    $secondaryinfo['name']
                 )
             ));
         } else {
@@ -1199,6 +1206,15 @@ class lib_entity
     function addRelationship($relationship, $relationshipId)
     {
         $rel = lib_datawrapper::getInstance()->get("relationship_list", $relationship);
+
+        if ($this->module == "") {
+            $this->module = $rel['primary_table_text'];
+        }
+
+        if ($rel['primary_table_text'] == "") {
+            $entity = lib_datawrapper::getInstance()->get("entity_list", $rel['primarytable']);
+            $rel['primary_table_text'] = $entity['name'];
+        }
 
         $primary = $rel['primary_table_text'] == $this->module ? $this->record : $relationshipId;
         $secondary = $rel['primary_table_text'] == $this->module ? $relationshipId : $this->record;
