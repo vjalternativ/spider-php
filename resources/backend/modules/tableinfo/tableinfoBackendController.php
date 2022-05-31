@@ -911,6 +911,7 @@ class tableinfoBackendController extends BackendResourceController
 
                 if (isset($json['fields'][$field])) {
                     $json['fields'][$field]['label'] = $lable;
+
                     $tableinfo['description'] = base64_encode(json_encode($json));
                     lib_entity::getInstance()->save("tableinfo", $tableinfo);
                 }

@@ -59,6 +59,26 @@ class HTMLFormProcessor
 
     private $footerGridSize = 12;
 
+    private $verticalHeader = false;
+
+    /**
+     *
+     * @return boolean
+     */
+    public function getVerticalHeader()
+    {
+        return $this->verticalHeader;
+    }
+
+    /**
+     *
+     * @param boolean $verticalHeader
+     */
+    public function setVerticalHeader($verticalHeader)
+    {
+        $this->verticalHeader = $verticalHeader;
+    }
+
     /**
      *
      * @return number
@@ -658,6 +678,7 @@ class HTMLFormProcessor
         foreach ($def as $item) {
             $item['type'] = isset($item['type']) ? $item['type'] : 'row';
             $reportRow = new ReportRow();
+            $headerReportRow = new ReportRow();
 
             if (isset($item['type']) && $item['type'] == 'row') {
 
@@ -682,10 +703,25 @@ class HTMLFormProcessor
 
                         $val = $this->processFieldValue($fieldarray, $data, $files);
 
+                        $addkey = true;
+
+                        if ($this->getFormLength() > 1) {
+                            $addkey = false;
+
+                            if ($this->getFormIndex() == 0) {
+                                $element = new ReportElement($this->processFieldLabel($fieldarray), $val);
+                                $headerReportRow->addElement($element, true, false);
+                            }
+                        }
+
                         $element = new ReportElement($this->processFieldLabel($fieldarray), $val);
-                        $reportRow->addElement($element);
+
+                        $reportRow->addElement($element, $addkey);
                     }
 
+                    if ($this->getFormLength() > 1 && $this->getFormIndex() == 0) {
+                        $reportTable->addReportRow($headerReportRow);
+                    }
                     $reportTable->addReportRow($reportRow);
                 }
             }

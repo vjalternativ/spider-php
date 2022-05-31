@@ -9,13 +9,16 @@ class ReportRow extends HTMLTableRow
         parent::__construct();
     }
 
-    function addElement(ReportElement $element)
+    function addElement(ReportElement $element, $addkey = true, $addvalue = true)
     {
-        $cell = new HTMLTableCell("<b>" . $element->getKey() . "</b>");
-        $this->addTableCell($cell);
-
-        $cell = new HTMLTableCell($element->getValue());
-        $this->addTableCell($cell);
+        if ($addkey) {
+            $cell = new HTMLTableCell("<b>" . $element->getKey() . "</b>");
+            $this->addTableCell($cell);
+        }
+        if ($addvalue) {
+            $cell = new HTMLTableCell($element->getValue());
+            $this->addTableCell($cell);
+        }
     }
 }
 ?>
