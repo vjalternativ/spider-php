@@ -1082,7 +1082,7 @@ class lib_entity
 
         if ($table == $this->module) {
 
-            $table = $this->relationships[$rtable]['primarytable_text'];
+            $table = $this->relationships[$rtable]['primary_table_text'];
         }
 
         if ($table) {

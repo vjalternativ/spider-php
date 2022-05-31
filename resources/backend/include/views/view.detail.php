@@ -230,8 +230,8 @@ class ViewDetail extends BackendResourceView
         foreach ($this->subpanels as $subpanels) {
 
             $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['rtable'];
-
             $pageinfo = $entity->get_relationships($subpanels['name'], false, $subpanels);
+
             $rows = $pageinfo['data'];
 
             $rows = array_slice($rows, 0, $pageinfo['resultperpage'], true);

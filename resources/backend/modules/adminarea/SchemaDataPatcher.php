@@ -146,12 +146,30 @@ class SchemaDataPatcher
         }
     }
 
+    private function repairRelationship()
+    {
+        $sql = "select * from relationships where deleted=0";
+        $rows = lib_database::getInstance()->getrows($sql);
+        foreach ($rows as $row) {
+            if (! $row['primary_table_text']) {
+                $id = $row['primarytable'];
+
+                $tb = lib_database::getInstance()->get("tableinfo", "id", $id);
+
+                $row['primary_table_text'] = $tb['name'];
+
+                lib_database::getInstance()->update("relationships", $row, "id");
+            }
+        }
+    }
+
     public function processSchemaAndDataPatch($data)
     {
         $entity = lib_entity::getInstance();
         $rows = $data['tableinfo'];
         $this->repairTableSchema($rows);
         $this->updateDataPatch($data);
+        $this->repairRelationship();
         $entity->generateCache();
     }
 
