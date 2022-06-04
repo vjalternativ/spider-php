@@ -61,6 +61,26 @@ class HTMLFormProcessor
 
     private $verticalHeader = false;
 
+    private $formDataId = array();
+
+    /**
+     *
+     * @return multitype:
+     */
+    public function getFormDataId()
+    {
+        return isset($this->formDataId[$this->getForModule()][$this->getFormIndex()]) ? $this->formDataId[$this->getForModule()][$this->getFormIndex()] : false;
+    }
+
+    /**
+     *
+     * @param multitype: $formDataId
+     */
+    public function setFormDataId($module, $index, $id)
+    {
+        $this->formDataId[$module][$index] = $id;
+    }
+
     /**
      *
      * @return boolean
@@ -529,7 +549,7 @@ class HTMLFormProcessor
         $this->tpl = lib_config::getInstance()->get('fwbasepath') . 'include/tpls/editview.tpl';
     }
 
-    private function processModuleDef()
+    private function processModuleDef($sessionFiles = array())
     {
         $formDataFields = $this->getFormData();
 
@@ -558,12 +578,17 @@ class HTMLFormProcessor
 
                         $field = $this->fields[$name];
                         if ($field['type'] == "file") {
+
                             if (isset($_FILES[$field['name']])) {
                                 if ($_FILES[$field['name']]['error'] == '0') {
 
                                     $formFilesFields[$field['name']] = $_FILES[$field['name']];
                                     $tempRuntime->moveToTemp($_FILES[$field['name']]['tmp_name']);
                                     $formFilesFields[$field['name']]['tmp_name'] = $tempRuntime->getTempFilePath($_FILES[$field['name']]['tmp_name']);
+                                } else {
+                                    if (isset($sessionFiles[$field['name']]['tmp_name']) && $sessionFiles[$field['name']]['error'] == 0) {
+                                        $_FILES[$field['name']] = $sessionFiles[$field['name']];
+                                    }
                                 }
                             }
                         } else {
@@ -778,7 +803,18 @@ class HTMLFormProcessor
                         $fieldarray['gridsize'] = $gridsize;
 
                         if ($isreq) {
+
                             $fieldarray['attrs']['required'] = 'required';
+
+                            if ($this->getFormType() == "multiple") {
+                                if (isset($files[$this->getForModule()][$fieldarray['name']['tmp_name']])) {
+                                    unset($fieldarray['attrs']['required']);
+                                }
+                            } else {
+                                if (isset($files[$fieldarray['name']]['tmp_name'])) {
+                                    unset($fieldarray['attrs']['required']);
+                                }
+                            }
                         }
 
                         $inputgroup = '';
@@ -1054,7 +1090,6 @@ class HTMLFormProcessor
     function getattr($type, $name, $value = '')
     {
         $data = $this->getFormData();
-
         $attr = $this->datatypeFields[$type];
         // to do make data type associative
         $element = $attr['element'][0];
@@ -1064,15 +1099,18 @@ class HTMLFormProcessor
         foreach ($atr as $key => $at) {
             if ($key == 'value') {
                 $atr[$key] = "";
-                if ($this->getFormType() == "multiple") {
 
-                    if (isset($data[$this->getForModule()][$name . '_' . $this->formIndex])) {
+                if ($type == "file") {} else {
+                    if ($this->getFormType() == "multiple") {
 
-                        $atr[$key] = $data[$this->getForModule()][$name . '_' . $this->formIndex];
-                    }
-                } else {
-                    if (isset($data[$name])) {
-                        $atr[$key] = $data[$name];
+                        if (isset($data[$this->getForModule()][$name . '_' . $this->formIndex])) {
+
+                            $atr[$key] = $data[$this->getForModule()][$name . '_' . $this->formIndex];
+                        }
+                    } else {
+                        if (isset($data[$name])) {
+                            $atr[$key] = $data[$name];
+                        }
                     }
                 }
             } else if ($at == 'name') {
@@ -1399,10 +1437,9 @@ class HTMLFormProcessor
                         if ($field['type'] == "file") {
 
                             if (! (isset($this->formFiles[$field['field']['name']]) && $this->formFiles[$field['field']['name']]['error'] == '0')) {
+
                                 $this->invalidFormFields[] = $field['field']['name'];
-                                echo "<pre>";
-                                print_r($this->formFiles);
-                                // die;
+
                                 $this->isValidFormFields = false;
                             }
                         } else {
@@ -1410,9 +1447,6 @@ class HTMLFormProcessor
                             if (! (isset($this->formData[$field['field']['name']]) && ! empty($this->formData[$field['field']['name']]))) {
                                 $this->invalidFormFields[] = $field['name'];
                                 $this->isValidFormFields = false;
-                                echo "<pre>";
-                                print_r($field);
-                                // die;
                             }
                         }
                     }
@@ -1471,7 +1505,7 @@ class HTMLFormProcessor
         return $this->submitButtonLabel;
     }
 
-    function loadformDef($formalias)
+    function loadformDef($formalias, $sessionFiles = array())
     {
         $data = lib_entity::getInstance()->getwhere("form", 'alias="' . $formalias . '"');
 
@@ -1508,7 +1542,7 @@ class HTMLFormProcessor
             $this->metaData = json_decode($data['editviewdef'], true);
 
             for ($this->formIndex; $this->formIndex < $this->formLength; $this->formIndex ++) {
-                $this->processModuleDef();
+                $this->processModuleDef($sessionFiles);
             }
             $this->setFormType($this->getFormType());
         }

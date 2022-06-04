@@ -32,6 +32,7 @@ class FormService
         $module = $form->getForModule();
         $data = $form->getFormData();
         $files = $form->getFormFiles();
+
         if ($form->getFormType() == "multiple") {
 
             if (isset($data[$module])) {
@@ -43,6 +44,7 @@ class FormService
                         $row[substr($key, 0, strlen($key) - strlen($index) - 1)] = $val;
                     }
                 }
+
                 $data = $row;
             }
             if (isset($files[$module])) {
@@ -76,6 +78,8 @@ class FormService
 
                     $field['data'] = $data[$name];
                     $virtualfields[$name] = $field;
+
+                    echo "removing field " . $data[$name] . "<br />";
                     unset($data[$name]);
                 }
             }
@@ -85,6 +89,9 @@ class FormService
                 $files[$file] = $filedata;
             }
 
+            if ($form->getFormDataId()) {
+                $data['id'] = $form->getFormDataId();
+            }
             $id = lib_entity::getInstance()->save($module, $data);
             $this->savedData[$module][$index] = $id;
             foreach ($virtualfields as $field) {
