@@ -472,7 +472,7 @@ abstract class lib_database
 
     abstract function connect($host, $user, $pwd, $name);
 
-    abstract function query($sql);
+    abstract function query($sql, $return = false);
 
     abstract function fetch($qry);
 

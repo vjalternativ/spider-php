@@ -83,10 +83,14 @@ class lib_mysqli extends lib_database
     function query($sql, $return = false)
     {
         if ($return) {
-            $qry = mysqli_query($this->con, $sql);
-            return $qry;
+            try {
+                $qry = mysqli_query($this->con, $sql);
+                return $qry;
+            } catch (Exception $e) {
+                return false;
+            }
         }
-        
+
         $qry = mysqli_query($this->con, $sql) or die("Query Failed :" . $sql . "<br />" . mysqli_error($this->con) . $this->print_bt());
         return $qry;
     }
