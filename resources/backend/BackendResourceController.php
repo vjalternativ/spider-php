@@ -341,6 +341,7 @@ class BackendResourceController extends ResourceController
         if (isset($_REQUEST['parent_module']) && isset($_REQUEST['parent_record']) && isset($_REQUEST['rel'])) {
             $relationship = $_REQUEST['rel'];
             $parentModule = $_REQUEST['parent_module'];
+            $entity->setModule($parentModule);
             $entity->record = $_REQUEST['parent_record'];
             $entity->addRelationship($relationship, $id);
             lib_util::redirect($parentModule, "detailview", array(

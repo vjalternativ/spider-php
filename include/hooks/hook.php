@@ -59,6 +59,7 @@ class SystemLogicHook
                 }
             }
             if ($keyvalue['hook_isnew']) {
+                $entity->setModule("roles");
                 $entity->record = $keyvalue['hook_table_id'];
                 $entity->addRelationship("roles_user_1_m", $keyvalue['ownership_id']);
             }
