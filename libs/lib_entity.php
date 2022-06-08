@@ -1083,6 +1083,11 @@ class lib_entity
         if ($table == $this->module) {
 
             $table = $this->relationships[$rtable]['primary_table_text'];
+
+            if ($table == "") {
+                $entity = lib_datawrapper::getInstance()->get("entity_list", $this->relationships[$rtable]['primarytable']);
+                $table = $entity['name'];
+            }
         }
 
         if ($table) {

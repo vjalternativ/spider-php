@@ -469,6 +469,7 @@ class BackendResourceController extends ResourceController
         $index = $_REQUEST['page'];
         $entity->load_relationships();
         $table = $entity->relationships[$relname]['rtable'];
+
         $pageinfo = $entity->get_relationships($relname, $index);
         $rows = $pageinfo['data'];
         $rows = array_slice($rows, 0, $pageinfo['resultperpage'], true);

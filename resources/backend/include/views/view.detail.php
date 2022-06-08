@@ -230,7 +230,7 @@ class ViewDetail extends BackendResourceView
         foreach ($this->subpanels as $subpanels) {
 
             $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['rtable'];
-            $pageinfo = $entity->get_relationships($subpanels['name'], false, $subpanels);
+            $pageinfo = $entity->get_relationships($subpanels['name'], false);
 
             $rows = $pageinfo['data'];
 
@@ -256,7 +256,7 @@ class ViewDetail extends BackendResourceView
             $smarty->assign("extraPostFields", $extraPostFields);
             $table = $smarty->fetch($vjconfig['fwbasepath'] . "include/vjlib/libs/tpls/table.tpl");
 
-            $pageinfo['url'] = "./index.php?module=" . $subpanelModule . "&action=getAjaxSubPanelData";
+            $pageinfo['url'] = "./index.php?module=" . $this->module . "&action=getAjaxSubPanelData";
 
             $pageinfo['container_id'] = $subpanels['id'];
 
