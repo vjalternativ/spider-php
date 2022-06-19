@@ -317,7 +317,10 @@ abstract class lib_database
                             }
                         } else {
                             if (! isset($temp[$row[$index]])) {
-                                $temp[$row[$index]] = false;
+                                if (is_array($temp)) {
+
+                                    $temp[$row[$index]] = false;
+                                }
                             }
                         }
 

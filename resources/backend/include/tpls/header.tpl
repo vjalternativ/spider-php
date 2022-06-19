@@ -58,7 +58,7 @@ var resource = "backend";
     <ul class="nav navbar-nav">
     
     {foreach from=$menudata key=menu_id item=menuinfo}		
-      <li class="{if $menuinfo.isactive_menu} active {/if}">
+      <li class="{if isset($menuinfo.isactive_menu)} active {/if}">
       <a href="index.php?module={$menuinfo.first_module_name}">{$menuinfo.menu_name|upper} </a>
       </li>
       <li class="dropdown hide">
@@ -66,10 +66,11 @@ var resource = "backend";
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
         
-        
+        {if isset($menuinfo.items)}
 		     {foreach from=$menuinfo.items key=tableinfo_id item=menu}		
 		          <li><a href="index.php?module={$menu.name}">{$menu.name|upper}</a></li>
 		     {/foreach}
+		{/if}
         </ul>
       </li>
     {/foreach}
