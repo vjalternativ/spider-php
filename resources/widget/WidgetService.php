@@ -119,7 +119,8 @@ class WidgetService implements IWidgetService
                     if ($resource['type'] == "css") {
                         $html .= '<link rel="stylesheet" href="' . $vjconfig['urlbasepath'] . $path . '" />';
                     } else if ($resource['type'] == "js") {
-                        $html .= '<script src="' . $vjconfig['urlbasepath'] . $path . '" ></script>';
+                        $version = $resource['version'];
+                        $html .= '<script src="' . $vjconfig['urlbasepath'] . $path . '?v=' . $version . '" ></script>';
                     }
                     unset($widgetdatawrapper['resources'][$path]);
                 }

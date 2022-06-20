@@ -286,7 +286,7 @@ class WidgetResourceController extends ResourceController
         }
     }
 
-    function loadresource($type, $relativefilepath)
+    function loadresource($type, $relativefilepath, $version = 1)
     {
         $vjconfig = lib_config::getInstance()->getConfig();
         $widgetfolder = $this->module;
@@ -307,6 +307,7 @@ class WidgetResourceController extends ResourceController
         if (file_exists($vjconfig['basepath'] . $path)) {
             $widgetdatawrapper['resources'][$path]['counter'] = $counter;
             $widgetdatawrapper['resources'][$path]['type'] = $type;
+            $widgetdatawrapper['resources'][$path]['version'] = $version;
             $datawrapper->set("widget_data_wrapper", $widgetdatawrapper);
         }
     }
