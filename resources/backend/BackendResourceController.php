@@ -331,8 +331,10 @@ class BackendResourceController extends ResourceController
 
                 $parentId = $data[$relData['name']];
                 $sql = "delete  from " . $relData['name'] . " where deleted=0 and " . $globalEntityList[$relData["secondarytable"]]['name'] . "_id='" . $id . "'";
+
                 $db->query($sql);
 
+                $entity->module = $relData['primary_table_text'];
                 $entity->record = $parentId;
                 $entity->addRelationship($relData['name'], $id);
             }
@@ -349,6 +351,7 @@ class BackendResourceController extends ResourceController
             ));
             exit();
         } else {
+
             lib_util::redirect($module, "detailview", array(
                 "record" => $id
             ));
