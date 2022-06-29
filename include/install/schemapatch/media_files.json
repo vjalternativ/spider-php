@@ -131,7 +131,11 @@
             "fields": [
                 {
                     "field": "file_type",
-                    "gridsize": 6
+                    "gridsize": "6"
+                },
+                {
+                    "field": "file_path",
+                    "gridsize": "6"
                 }
             ]
         }
