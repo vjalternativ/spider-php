@@ -1,1 +1,1 @@
-<input type="text" class="form-control" name="{$filter.name}" placeholder="{$mod_string[$filter.label]}" value="{if isset($params[$filter.name])}{$params[$filter.name]}{/if}" />
+<input type="text" class="form-control" name="{$filter.name}" placeholder="{if isset($filter.label) && isset($mod_string[$filter.label])} {$mod_string[$filter.label]} {else} {$filter.name}{/if}" value="{if isset($params[$filter.name])}{$params[$filter.name]}{/if}" />

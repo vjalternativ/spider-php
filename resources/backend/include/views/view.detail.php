@@ -200,7 +200,7 @@ class ViewDetail extends BackendResourceView
         $this->datatypeFields = $datatypes;
 
         $vjconfig = lib_config::getInstance()->getConfig();
-        $this->tpl = $vjconfig['fwbasepath'] . 'include/tpls/detailview.tpl';
+        $this->tpl = $vjconfig['fwbasepath'] . 'resources/backend/include/tpls/detailview.tpl';
 
         $entity->load_relationships();
 
@@ -254,7 +254,8 @@ class ViewDetail extends BackendResourceView
             $extraPostFields['id']['data']['html'] = '<button type="button" onclick="removeRelationship(\'' . $entity->record . '\',\'' . $subpanels['name'] . '\',\'REPLACE_KEY\')" class="btn btn-danger">X</button>';
             $extraPostFields['id']['header']['html'] = '';
             $smarty->assign("extraPostFields", $extraPostFields);
-            $table = $smarty->fetch($vjconfig['fwbasepath'] . "include/vjlib/libs/tpls/table.tpl");
+            $smarty->assign("extraPreFields", array());
+            $table = $smarty->fetch($vjconfig['fwbasepath'] . "resources/backend/include/tpls/table.tpl");
 
             $pageinfo['url'] = "./index.php?module=" . $this->module . "&action=getAjaxSubPanelData";
 

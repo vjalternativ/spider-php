@@ -50,8 +50,9 @@ class lib_util
     {
         $microTime = microtime();
         list ($a_dec, $a_sec) = explode(" ", $microTime);
-
-        $dec_hex = dechex($a_dec * 1000000);
+        $val = $a_dec * 100000;
+        $val = floor($val);
+        $dec_hex = dechex($val);
         $sec_hex = dechex($a_sec);
 
         self::ensure_length($dec_hex, 5);

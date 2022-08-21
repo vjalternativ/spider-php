@@ -1,5 +1,6 @@
 <?php
 $globalLogicHook = lib_datawrapper::getInstance()->get("global_logichook_list");
+$globalLogicHook = $globalLogicHook ? $globalLogicHook : array();
 $globalLogicHook['before_save'] = array();
 $globalLogicHook['after_save'] = array();
 $globalLogicHook['before_save'][] = array(

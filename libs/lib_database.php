@@ -108,7 +108,9 @@ abstract class lib_database
 
                     foreach ($proc['attr'] as $pkey => $tempattr) {
                         foreach ($row as $col => $val) {
-                            $tempattr = str_replace("key_" . $col, $val, $tempattr);
+                            if ($val) {
+                                $tempattr = str_replace("key_" . $col, $val, $tempattr);
+                            }
                         }
                         $proc['attr'][$pkey] = $tempattr;
                     }
@@ -220,6 +222,11 @@ abstract class lib_database
                             }
                         } else {
                             if (! isset($temp[$row[$index]])) {
+
+                                if (! is_array($temp)) {
+                                    $temp = array();
+                                }
+
                                 $temp[$row[$index]] = false;
                             }
                         }

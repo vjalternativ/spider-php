@@ -15,14 +15,15 @@
 <div class="form-group">
 <div class="row">
 {/if}
-
+{if $filter.type=="varchar"}
 <div class="col-md-3">
+
 {if $filter.type=='varchar'}
 {include file=$tpls.filter.varchar}
 {/if}
 
 </div>
-
+{/if}
 
 {if $counter==4}
 </div>

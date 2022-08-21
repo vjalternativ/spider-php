@@ -918,4 +918,30 @@ class tableinfoBackendController extends BackendResourceController
             }
         }
     }
+
+    function action_repairRelationships()
+    {
+        $db = lib_database::getInstance();
+
+        $sql = "select * from tableinfo where deleted=0 ";
+        $tbinfo = $db->getAll($sql, array(
+            "id"
+        ));
+        $sql = "select * from relationships where deleted=0";
+        $relationships = $db->getAll($sql, array(
+            "id"
+        ));
+
+        foreach ($relationships as $relationship) {
+
+            if (isset($tbinfo[$relationship['primarytable']]) && isset($tbinfo[$relationship['secondarytable']])) {
+
+                $relationship['primary_table_text'] = $tbinfo[$relationship['primarytable']]['name'];
+
+                $relationship['secondary_table_text'] = $tbinfo[$relationship['secondarytable']]['name'];
+
+                $db->update("relationships", $relationship, "id");
+            }
+        }
+    }
 }

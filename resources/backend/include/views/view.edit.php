@@ -216,6 +216,7 @@ class ViewEdit extends BackendResourceView
         }
         $this->def = $vardef;
         if (! $this->data) {
+            $this->data = array();
             $this->data['id'] = "";
             $this->data['name'] = "";
         }

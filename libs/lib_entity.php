@@ -285,8 +285,8 @@ class lib_entity
                         'secondarytable_name' => $secondlabel,
                         'primarytable' => $values[0],
                         'secondarytable' => $values[1],
-                        'primary_table_text' => $values[3],
-                        'secondary_table_text' => $values[4],
+                        'primary_table_text' => $values[2],
+                        'secondary_table_text' => $values[3],
 
                         'rtype' => strtoupper($params['rtype'])
                     );
@@ -848,6 +848,7 @@ class lib_entity
         if (isset($this->instanceType['db'])) {
             return $this->saveIntoDB($table, $keyvalue, $where, $return);
         }
+        return false;
     }
 
     function getquery($entity, $where = array())
