@@ -532,6 +532,7 @@ class BackendResourceController extends ResourceController
 
     function action_removeAttachment()
     {
+        require_once __DIR__ . '/../modules/media_files/MediaFilesService.php';
         $module = $_REQUEST['module'];
         $record = $_REQUEST['record'];
         $field = $_REQUEST['fieldname'];
@@ -541,7 +542,7 @@ class BackendResourceController extends ResourceController
             $data = lib_entity::getInstance()->get($module, $record);
             $data[$field] = '';
             lib_entity::getInstance()->save($module, $data);
-            MediaFilesServiceRegistrar::getInstance()->removeMedia($id);
+            MediaFilesService::getInstance()->removeMedia($id);
         }
     }
 
