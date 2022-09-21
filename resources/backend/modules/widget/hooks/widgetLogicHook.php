@@ -54,6 +54,10 @@ class widgetLogicHook
         }
 
         $data['description'] = json_encode($json);
+    }
+
+    function afterSave($data)
+    {
         WidgetRuntime::getInstance()->write();
     }
 }
