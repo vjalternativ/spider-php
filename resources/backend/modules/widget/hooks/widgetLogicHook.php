@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../WidgetRuntime.php';
 
 class widgetLogicHook
 {
@@ -53,5 +54,6 @@ class widgetLogicHook
         }
 
         $data['description'] = json_encode($json);
+        WidgetRuntime::getInstance()->write();
     }
 }

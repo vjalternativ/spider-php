@@ -9,7 +9,9 @@ $app_list_strings = array(
         'relationship' => 'Relationship',
         'user' => 'User',
         'cstm' => 'Custom',
-        'page' => 'Page'
+        'page' => 'Page',
+        'basic_wod' => 'Basic_Wod',
+        'plain' => 'Plain'
     ),
     'user_type_list' => array(
         'superuser' => 'Super User',

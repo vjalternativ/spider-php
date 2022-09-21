@@ -1,6 +1,6 @@
 <?php
 $dir = __DIR__ . '/';
-
+require_once $dir . '../beans/RuntimeBean.php';
 require_once $dir . 'lib_common.php';
 require_once $dir . 'lib_seo.php';
 require_once $dir . 'lib_util.php';

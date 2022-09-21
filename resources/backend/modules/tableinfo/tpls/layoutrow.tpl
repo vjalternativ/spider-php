@@ -45,7 +45,7 @@
 <input type="hidden" name="layout-field-label[]" value="" />
 </div>
 <div class="input-group-addon">
-<input name="layout-{$fieldinfo.field.name}-isreq" value='1' type="checkbox"  {if $fieldinfo.r} checked="checked" {/if} /> R
+<input name="layout-{$fieldinfo.field.name}-isreq" value='1' type="checkbox"  {if isset($fieldinfo.r)} checked="checked" {/if} /> R
 </div>
 <div class="input-group-addon" onclick="deletecell(this)"><i class="fa fa-window-close text-danger" aria="hidden"></i></div>
 </div>
