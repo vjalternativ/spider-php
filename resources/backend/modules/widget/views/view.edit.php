@@ -66,7 +66,7 @@ class widgetViewEdit extends ViewEdit
                 require_once $vjconfig['basepath'] . "include/entrypoints/site/pages/" . $page . "/layout/" . $vjconfig['sitetpl'] . "/" . $page . "Positions.php";
             }
         }
-        $posList = array(); //todo : pos list support
+        $posList = array(); // todo : pos list support
         $posList[''] = "select";
 
         $GLOBALS['app_list_strings']['position_list'] = $posList;
@@ -89,16 +89,15 @@ class widgetViewEdit extends ViewEdit
             $wtype = $this->data['widget_type'];
 
             $fields = WidgetServiceRegistrar::getWidgetServiceInstance()->getWidgetConfigFields($wtype);
-            if($fields) {
+            if ($fields) {
                 foreach ($fields as $field) {
                     $this->def['fields'][$field['name']]['name'] = $field['name'];
                     $this->def['fields'][$field['name']]['type'] = $field['type'];
                     $this->def['metadata']['editview'][$field['name']]['type'] = 'row';
-                    $this->def['metadata']['editview'][$field['name']]['fields'][0]['gridsize'] = 6;
+                    $this->def['metadata']['editview'][$field['name']]['fields'][0]['gridsize'] = $field['gridsize'];
                     $this->def['metadata']['editview'][$field['name']]['fields'][0]['field'] = $field;
                 }
             }
-
         }
     }
 
@@ -106,11 +105,8 @@ class widgetViewEdit extends ViewEdit
     {
         parent::display();
         $vjconfig = lib_config::getInstance()->getConfig();
-        echo '<script src="'.$vjconfig['fwbaseurl'].'resources/backend/assets/ckeditor/ckeditor.js"></script>';
+        echo '<script src="' . $vjconfig['baseurl'] . 'spider-php/thirdparty/client/ckeditor/ckeditor.js?v=1"></script>';
         echo '<script src="' . $vjconfig['fwbaseurl'] . 'resources/backend/modules/widget/assets/js/widget.js"></script>';
-
     }
-
-
 }
 ?>

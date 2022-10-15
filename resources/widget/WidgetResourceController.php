@@ -9,11 +9,12 @@ class WidgetResourceController extends ResourceController
 
     private $widgetInstance = null;
 
-    private function getField($name, $type)
+    private function getField($name, $type, $col = 6)
     {
         $fieldData = array();
         $fieldData['name'] = $name;
         $fieldData['type'] = $type;
+        $fieldData['gridsize'] = $col;
 
         return $fieldData;
     }
@@ -250,9 +251,9 @@ class WidgetResourceController extends ResourceController
         return self::loadWidget($row['widget_type'], $params);
     }
 
-    function registerConfigField($name, $type)
+    function registerConfigField($name, $type, $col = 6)
     {
-        $this->configFields[] = $this->getField($name, $type);
+        $this->configFields[] = $this->getField($name, $type, $col);
     }
 
     function getConfigFields()

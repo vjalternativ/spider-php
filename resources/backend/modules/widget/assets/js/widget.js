@@ -12,6 +12,8 @@ $(document).ready(function(){
 		
 	});
 	
+	elem =document.getElementById("editor");
+	if(elem)
 	CKEDITOR.replace( 'editor' );
 	
 });

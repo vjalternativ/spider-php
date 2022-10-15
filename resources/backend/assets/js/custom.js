@@ -157,6 +157,61 @@ $(document).ready(function(){
 	  $('.datetimepicker').datetimepicker({
 	      format: 'YYYY-MM-DD H:m'
 	  });
+	  
+	  let mathElements = [
+        'math',
+        'maction',
+        'maligngroup',
+        'malignmark',
+        'menclose',
+        'merror',
+        'mfenced',
+        'mfrac',
+        'mglyph',
+        'mi',
+        'mlabeledtr',
+        'mlongdiv',
+        'mmultiscripts',
+        'mn',
+        'mo',
+        'mover',
+        'mpadded',
+        'mphantom',
+        'mroot',
+        'mrow',
+        'ms',
+        'mscarries',
+        'mscarry',
+        'msgroup',
+        'msline',
+        'mspace',
+        'msqrt',
+        'msrow',
+        'mstack',
+        'mstyle',
+        'msub',
+        'msup',
+        'msubsup',
+        'mtable',
+        'mtd',
+        'mtext',
+        'mtr',
+        'munder',
+        'munderover',
+        'semantics',
+        'annotation',
+        'annotation-xml'
+    ];
+	  
+	  
+		$(".editor").each(function(){
+			
+				CKEDITOR.replace( this , {
+					extraAllowedContent: mathElements.join( ' ' ) + '(*)[*]{*};img[data-mathml,data-custom-editor,role](Wirisformula)'
+				});	
+			
+	}); 
+	
 
 });
 
