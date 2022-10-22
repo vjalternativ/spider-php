@@ -287,10 +287,12 @@ abstract class lib_database
                 }
                 if (isset($this->processHook['method']) && $this->processHook['method']) {
                     if (isset($this->processHook['instance']) && $this->processHook['instance']) {
-                        $row = call_user_func(array(
-                            $this->processHook['instance'],
-                            $this->processHook['method']
-                        ), $row);
+                        if ($row) {
+                            $row = call_user_func(array(
+                                $this->processHook['instance'],
+                                $this->processHook['method']
+                            ), $row);
+                        }
                     } else {
                         $row = call_user_func($this->processHook['method'], $row);
                     }
