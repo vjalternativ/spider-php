@@ -227,9 +227,10 @@ class ViewDetail extends BackendResourceView
         $entity = lib_entity::getInstance();
         $bs = lib_bootstrap::getInstance();
         $smarty = lib_smarty::getSmartyInstance();
+
         foreach ($this->subpanels as $subpanels) {
 
-            $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['rtable'];
+            $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['secondarytable_name'];
             $pageinfo = $entity->get_relationships($subpanels['name'], false);
 
             $rows = $pageinfo['data'];
