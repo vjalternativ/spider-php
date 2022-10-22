@@ -60,5 +60,28 @@ class UserService
         $autheticate = new Authenticate();
         return $autheticate->login($username, $password, $resource);
     }
+
+    function changePasswordForRole($role, $roleId, $newPassword)
+    {
+        $entity = lib_entity::getInstance();
+        $student = $entity->get($role, $roleId);
+        if ($student) {
+            $student['password'] = $newPassword;
+            $entity->save($role, $student);
+            return $entity;
+        }
+        return false;
+    }
+
+    function changePasswordForRoleByUername($role, $userName, $newPassword)
+    {
+        $sql = "select id from " . $role . " where username='" . $userName . "'";
+        $row = lib_database::getInstance()->getrow($sql);
+        if ($row) {
+            return $this->changePasswordForRole($role, $row['id'], $newPassword);
+        }
+
+        return false;
+    }
 }
 ?>

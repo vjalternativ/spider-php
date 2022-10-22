@@ -99,6 +99,9 @@ class FrontendResourceController extends ResourceController
     {
         $dataWrapper = lib_datawrapper::getInstance();
         $breadcrumb = $dataWrapper->get("breadcrumb");
+        if (! $breadcrumb) {
+            $breadcrumb = array();
+        }
         $breadcrumb['title'] = $title;
         foreach ($items as $id => $item) {
 

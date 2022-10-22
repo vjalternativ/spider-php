@@ -439,6 +439,7 @@ class tableinfoBackendController extends BackendResourceController
             $relationshipEntity = $globalRelationshipList[$relname];
             $sql = false;
             $proceed = true;
+
             if (isset($_REQUEST['parent_record'])) {
                 $parentRecord = $_REQUEST['parent_record'];
                 if ($relationshipEntity['parent_relationship'] && $relationshipEntity['target_relationship']) {
@@ -450,6 +451,7 @@ class tableinfoBackendController extends BackendResourceController
 
                     $db = lib_database::getInstance();
                     $sql = "select * from " . $parentRelationship['name'] . " where deleted=0 and " . $globalEntityList[$parentRelationship['secondarytable']]['name'] . "_id='" . $parentRecord . "'";
+
                     $primaryField = $globalEntityList[$parentRelationship['primarytable']]['name'] . "_id";
 
                     $rows = $db->fetchRows($sql, array(
@@ -472,14 +474,21 @@ class tableinfoBackendController extends BackendResourceController
                     } else {
                         $proceed = false;
                     }
+                } else {
+                    # #todo entity list view handling
+
+                    $sql = "select t.* from " . $relname . " r inner join " . $rtable . " t  on r." . $relationshipEntity['secondary_table_text'] . "_id=t.id  and r." . $relationshipEntity['primary_table_text'] . "_id!='" . $parentRecord . "' and t.deleted=0 ";
+                    $proceed = true;
                 }
             }
 
             if ($proceed) {
+
                 $rows = $entity->results($rtable, $sql);
             } else {
                 $rows = arrray();
             }
+
             $smarty->assign("headers", $entity->listview['metadata']);
             $smarty->assign("rows", $rows['data']);
             $extraPreFields = array();

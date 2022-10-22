@@ -230,7 +230,8 @@ class ViewDetail extends BackendResourceView
 
         foreach ($this->subpanels as $subpanels) {
 
-            $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['secondarytable_name'];
+            $subpanelModule = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_text'] : $subpanels['rtable'];
+            $subpanelModuleHeading = ($this->module == $subpanels['rtable']) ? $subpanels['primarytable_name'] : $subpanels['secondarytable_name'];
             $pageinfo = $entity->get_relationships($subpanels['name'], false);
 
             $rows = $pageinfo['data'];
@@ -269,7 +270,7 @@ class ViewDetail extends BackendResourceView
 
             // $table = $bs->generateTable(array_values($pageinfo['data']),$params);
 
-            $heading = '<span class="heading">' . $subpanelModule . '</span>';
+            $heading = '<span class="heading">' . $subpanelModuleHeading . '</span>';
             $heading .= '<input type="hidden" id="subpanel_ptable-' . $subpanels['id'] . '"   value="' . $this->module . '" />';
             $heading .= '<input type="hidden" id="subpanel_rtable-' . $subpanels['id'] . '"   value="' . $subpanelModule . '" />';
             $heading .= '<input type="hidden" id="subpanel_relname-' . $subpanels['id'] . '"   value="' . $subpanels['name'] . '" />';
