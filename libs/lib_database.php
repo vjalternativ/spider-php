@@ -189,7 +189,7 @@ abstract class lib_database
                         $row[$col] = $this->getEnumValue($enumkey, $row[$col]);
                     }
 
-                    $rowProcessHook->processRow($row);
+                    $row = $rowProcessHook->processRow($row);
                 }
 
                 if ($dim) {
