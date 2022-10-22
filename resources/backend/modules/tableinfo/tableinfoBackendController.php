@@ -477,7 +477,8 @@ class tableinfoBackendController extends BackendResourceController
                 } else {
                     # #todo entity list view handling
 
-                    $sql = "select t.* from " . $relname . " r inner join " . $rtable . " t  on r." . $relationshipEntity['secondary_table_text'] . "_id=t.id  and r." . $relationshipEntity['primary_table_text'] . "_id!='" . $parentRecord . "' and t.deleted=0 ";
+                    $sql = "select t.id from " . $relname . " r inner join " . $rtable . " t  on r." . $relationshipEntity['secondary_table_text'] . "_id=t.id  and t.deleted=0 ";
+                    $sql = "select ti.* from " . $rtable . " ti where deleted=0 and id not in (" . $sql . ")";
                     $proceed = true;
                 }
             }
