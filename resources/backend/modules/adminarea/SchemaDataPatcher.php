@@ -22,6 +22,7 @@ class SchemaDataPatcher
         $this->repairTables["menu_submenu_1_m"] = 1;
         $this->repairTables["submenu_tableinfo_1_m"] = 1;
         $this->repairTables["form"] = 1;
+        $this->repairTables["user"] = 1;
     }
 
     private static $instance = null;
@@ -196,6 +197,39 @@ class SchemaDataPatcher
             ));
         }
         file_put_contents($vjconfig['basepath'] . "schemajson/schema.json", json_encode($data, JSON_PRETTY_PRINT));
+    }
+
+    public function updateFrameworkPatch()
+    {
+        $basepath = lib_config::getInstance()->get("basepath");
+        $fwbasepath = lib_config::getInstance()->get("fwbasepath");
+
+        $datapatchpath = $basepath . 'include/install/datapatch/';
+        $fwdatapatchpath = $fwbasepath . 'include/install/datapatch/';
+
+        $schemapatchpath = $basepath . 'include/install/schemapatch/';
+        $fwschemapatchpath = $fwbasepath . 'include/install/schemapatch/';
+
+        $tableinfo = json_decode(file_get_contents($datapatchpath . 'tableinfo.json'), true);
+        $fwtableinfo = json_decode(file_get_contents($fwdatapatchpath . 'tableinfo.json'), true);
+
+        $nameVsId = array();
+        foreach ($tableinfo as $id => $info) {
+            $nameVsId[$info['name']] = $id;
+        }
+
+        foreach ($this->repairTables as $table => $val) {
+            unlink($fwschemapatchpath . $table . '.json');
+            $cmd = 'cp ' . $schemapatchpath . $table . '.json ' . $fwschemapatchpath . $table . '.json';
+            shell_exec($cmd);
+
+            $id = $nameVsId[$table];
+            if (isset($fwtableinfo[$id])) {
+                $fwtableinfo[$id] = $tableinfo[$id];
+            }
+        }
+
+        file_put_contents($fwdatapatchpath . 'tableinfo.json', json_encode($fwtableinfo, JSON_PRETTY_PRINT));
     }
 }
 ?>

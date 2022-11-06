@@ -172,4 +172,10 @@ class adminareaBackendController extends BackendResourceController
         // select name,count(*) from relationships group by name having count(*) > 1;
         // select name,group_concat(t.id) ids from tableinfo t group by t.name having count(*)>1;
     }
+
+    function action_updateFrameworkPatch()
+    {
+        $this->action_showPatch();
+        SchemaDataPatcher::getInstance()->updateFrameworkPatch();
+    }
 }
