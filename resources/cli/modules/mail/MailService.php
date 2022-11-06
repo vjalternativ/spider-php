@@ -3,6 +3,7 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/PHPMailer.php';
+use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService
 {
