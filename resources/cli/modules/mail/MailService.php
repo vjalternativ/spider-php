@@ -69,6 +69,7 @@ class MailService
 
         while ($contextTuple = $db->fetch($resultGetContext)) {
 
+            $contextTuple['context'] = $contextTuple['context'] ? $contextTuple['context'] : 'default';
             $contextTuple['context'] = strtolower($contextTuple['context']);
 
             $contexts[$contextTuple['context']]['accounts'][] = $contextTuple;
@@ -228,7 +229,7 @@ class MailService
 
                 foreach ($emails['mails'] as $info) {
                     if (! in_array($info['context'], $contexts['indexes'])) {
-                        $info['context'] = 'Default';
+                        $info['context'] = 'default';
                         if (! in_array('default', $contexts['indexes'])) {
                             continue;
                         }
