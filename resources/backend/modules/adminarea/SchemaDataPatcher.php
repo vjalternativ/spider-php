@@ -23,6 +23,7 @@ class SchemaDataPatcher
         $this->repairTables["submenu_tableinfo_1_m"] = 1;
         $this->repairTables["form"] = 1;
         $this->repairTables["user"] = 1;
+        $this->repairTables["media_files"] = 1;
     }
 
     private static $instance = null;

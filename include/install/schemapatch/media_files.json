@@ -105,25 +105,22 @@
             "fields": [
                 {
                     "field": "name",
-                    "gridsize": 6
+                    "gridsize": "6"
                 },
                 {
                     "field": "date_entered",
-                    "gridsize": 6
-                }
-            ]
-        },
-        {
-            "type": "row",
-            "fields": [
-                {
-                    "field": "description",
-                    "gridsize": 12
+                    "gridsize": "6"
                 }
             ]
         },
         {
             "type": "hr",
+            "fields": [
+                {
+                    "field": "description",
+                    "gridsize": "12"
+                }
+            ],
             "label": "Other Fields"
         },
         {
@@ -141,6 +138,8 @@
         }
     ],
     "searchviewdef": {
-        "name": "name"
+        "name": "name",
+        "date_entered": "date_entered",
+        "file_type": "file_type"
     }
 }
