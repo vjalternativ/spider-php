@@ -352,9 +352,10 @@ class BackendResourceController extends ResourceController
             exit();
         } else {
 
-            lib_util::redirect($module, "detailview", array(
+            $arr = array(
                 "record" => $id
-            ));
+            );
+            lib_util::redirect($module, "detailview", $arr);
         }
     }
 

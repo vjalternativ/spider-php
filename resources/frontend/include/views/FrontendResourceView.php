@@ -26,12 +26,14 @@ class FrontendResourceView extends ResourceView
      *
      * @param mixed $backendPageModule
      */
-    public function setBackendPageModule($backendPageModule)
+    public function setBackendPageModule($backendPageModule, $alias = false, $row = false)
     {
         $this->backendPageModule = $backendPageModule;
         if ($this->backendPageModule) {
-            $sql = "select * from " . $this->backendPageModule . " where alias='" . lib_seo::getInstance()->get(1) . "' and deleted=0 ";
-            $row = lib_database::getInstance()->getrow($sql);
+            $alias = $alias ? $alias : lib_seo::getInstance()->get(1);
+
+            $sql = "select * from " . $this->backendPageModule . " where alias='" . $alias . "' and deleted=0 ";
+            $row = $row ? $row : lib_database::getInstance()->getrow($sql);
             if ($row) {
                 lib_datawrapper::getInstance()->set("pagedata", $row);
                 $this->params['meta_title'] = $row['meta_title'];
