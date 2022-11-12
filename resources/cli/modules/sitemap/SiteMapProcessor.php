@@ -95,6 +95,7 @@ class SiteMapProcessor
         $sql = "select id,name,alias,date_modified from " . $module . " where   alias is not null  and sitemap != '" . $this->job['token'] . "'";
 
         $sql .= "   limit " . $this->processpages;
+        echo $sql . PHP_EOL;
 
         $qry = lib_database::getInstance()->query($sql);
         return $qry;
