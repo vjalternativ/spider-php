@@ -18,8 +18,8 @@ class WidgetRuntime extends RuntimeBean
     private function __construct()
     {
         $date = date("Y-m-d");
-        $this->setPath("widgetRuntime.json");
-        $json = $this->readJson();
+
+        $json = $this->load();
 
         if ($json) {
             if ($date == $json['lastCacheDate']) {
@@ -50,7 +50,8 @@ class WidgetRuntime extends RuntimeBean
         $data = array();
         $data['widgetConfig'] = $this->widgetConfig;
         $data['lastCacheDate'] = $date;
-        $this->doWrite($data);
+        $this->data = $data;
+        parent::write();
     }
 
     public function getConfig($widgetAlias, $key = null)
@@ -66,6 +67,11 @@ class WidgetRuntime extends RuntimeBean
             return $this->widgetConfig[$widgetAlias];
         }
         return false;
+    }
+
+    public function getPath()
+    {
+        return "WidgetRuntime";
     }
 }
 
