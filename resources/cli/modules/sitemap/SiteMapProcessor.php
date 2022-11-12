@@ -96,8 +96,6 @@ class SiteMapProcessor
 
         $sql .= "   limit " . $this->processpages;
 
-        echo $sql . "\n";
-
         $qry = lib_database::getInstance()->query($sql);
         return $qry;
     }
