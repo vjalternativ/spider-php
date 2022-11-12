@@ -222,7 +222,7 @@ class SiteMapProcessor
         $data = array();
         $data['element'] = "urlset";
         $data['attributes'] = array();
-        $data['attributes']['xmlns'] = "http: // www.sitemaps.org/schemas/sitemap/0.9";
+        $data['attributes']['xmlns'] = "http://www.sitemaps.org/schemas/sitemap/0.9";
         $data['attributes']['xmlns:xsi'] = "http://www.w3.org/2001/XMLSchema-instance";
         $data['attributes']['xsi:schemaLocation'] = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd";
         $data['childs'] = $childdata['childs'];
