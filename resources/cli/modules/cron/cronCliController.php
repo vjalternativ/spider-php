@@ -71,7 +71,7 @@ class cronCliController extends CliResourceController
     private function startCronProcess()
     {
         $config = lib_config::getInstance()->getConfig();
-        $basepath = $config->get("basepath");
+        $basepath = $config['basepath'];
 
         $config['php_bin'] = isset($config['php_bin']) ? $config['php_bin'] : "php";
         shell_exec($config['php_bin'] . " " . $basepath . "index.php cronprocess > /dev/null 2>/dev/null &");
