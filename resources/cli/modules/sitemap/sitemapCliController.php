@@ -37,6 +37,7 @@ class sitemapCliController extends CliResourceController
         } else if (isset($rows['completed'])) {
             $row = reset($rows['completed']);
             $row['token'] = uniqid();
+            $this->preCleanupSiteMaps($row, $runTime);
         }
 
         if ($row) {

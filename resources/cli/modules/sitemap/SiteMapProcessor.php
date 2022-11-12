@@ -37,7 +37,7 @@ class SiteMapProcessor
 
         $row = $this->job;
 
-        $this->offset = $row['rowindex'];
+        $this->offset = $row['rowindex'] ? $row['rowindex'] : 0;
 
         $index = floor($this->offset / $this->linksperfile) + 1;
 
