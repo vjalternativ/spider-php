@@ -5,6 +5,8 @@ abstract class RuntimeBean
 
     protected $path;
 
+    protected $data = array();
+
     private function checkPath()
     {
         if (! $this->path) {
@@ -17,7 +19,7 @@ abstract class RuntimeBean
         }
     }
 
-    protected function doWrite($data = array())
+    private function doWrite($data = array())
     {
         $this->checkPath();
         $data['last_run_time'] = date("Y-m-d H:i:s");
@@ -34,11 +36,24 @@ abstract class RuntimeBean
         return false;
     }
 
-    abstract function write();
+    public function write()
+    {
+        $this->doWrite($this->data);
+    }
 
     protected function setPath($path)
     {
-        $this->path = lib_config::getInstance()->get("storage_basepath") . 'runtime/' . $path;
+        $this->path = lib_config::getInstance()->get("storage_basepath") . 'runtime/' . $path . ".json";
+    }
+
+    abstract function getPath();
+
+    public function load()
+    {
+        $this->setPath($this->getPath());
+        $data = $this->readJson();
+        $this->data = $data ? $data : array();
+        return $this->data;
     }
 }
 ?>

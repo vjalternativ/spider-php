@@ -79,7 +79,8 @@ class lib_entity
 
     public $sitemap = array(
         'name' => 'sitemap',
-        'type' => 'int',
+        'type' => 'varchar',
+        'len' => 255,
         'link' => false,
         'label' => 'sitemap'
     );
@@ -1333,6 +1334,8 @@ class lib_entity
                 }
             }
         }
+
+        ksort($globalModuleList);
 
         $content = file_get_contents($vjconfig['fwbasepath'] . 'include/vjlib/templates/relationship_list.php');
         $content = str_replace("__RELACE_PART__", var_export($globalRelationshipList, 1), $content);

@@ -1,4 +1,6 @@
 <?php
+$fwbasepath = lib_config::getInstance()->get("fwbasepath");
+require_once $fwbasepath . 'resources/backend/modules/seo_template/SEOTemplateService.php';
 
 class SystemLogicHook
 {
@@ -43,6 +45,12 @@ class SystemLogicHook
                     $entity->save("user", $keyval);
                 }
             }
+        }
+
+        // SEO Template
+        $seoTemplateService = SEOTemplateService::getInstance();
+        if ($seoTemplate = $seoTemplateService->getSEOTemplateForModule($keyvalue['hook_table'])) {
+            $keyvalue = $seoTemplateService->getUpdatedSEORecord($seoTemplate, $keyvalue['hook_table'], $keyvalue);
         }
     }
 

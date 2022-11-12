@@ -1,4 +1,6 @@
 <?php
+$vjconfig = lib_config::getInstance()->getConfig();
+require_once $vjconfig['fwbasepath'] . 'resources/backend/modules/sitemapjob/SitemapJobRuntime.php';
 
 class SiteMapProcessor
 {
@@ -21,23 +23,21 @@ class SiteMapProcessor
 
     private $sitemapUpdateVal = 0;
 
-    function __construct($row, $updateval, $path, $sitemapbasepath)
+    function __construct($row, $path, $sitemapbasepath)
     {
         $this->job = $row;
-        $this->sitemapUpdateVal = $updateval;
         $this->path = $path;
         $this->sitemapbasepath = $sitemapbasepath;
     }
 
     public function execute($loopindex = 0)
     {
-        $this->logger = new lib_logger("sitemap_proces.log");
         $db = lib_database::getInstance();
         $globalModuleList = lib_datawrapper::getInstance()->get("module_list");
 
         $row = $this->job;
 
-        $this->offset = $row['offsetval'];
+        $this->offset = $row['rowindex'];
 
         $index = floor($this->offset / $this->linksperfile) + 1;
 
@@ -49,13 +49,11 @@ class SiteMapProcessor
         if (file_exists($file_name)) {
             $isnew = false;
             $sql = "select * from sitemap where page_module	='" . $row['page_module'] . "' order by date_entered desc limit 1";
-            $this->sitemap = $db->getRow($sql);
+            $this->sitemap = $db->getrow($sql);
             if ($this->sitemap) {
                 $processSiteMap = true;
             }
         } else {
-            $command = 'mkdir -p ' . $this->path;
-            shell_exec($command);
             $processSiteMap = true;
         }
 
@@ -94,9 +92,11 @@ class SiteMapProcessor
 
     private function getPageSql($module)
     {
-        $sql = "select id,name,alias,date_modified from " . $module . " where   alias is not null  and ( sitemap = " . $this->job['updateval'];
-        $sql .= " or sitemap is null";
-        $sql .= ")   limit " . $this->processpages;
+        $sql = "select id,name,alias,date_modified from " . $module . " where   alias is not null  and sitemap != '" . $this->job['token'] . "'";
+
+        $sql .= "   limit " . $this->processpages;
+
+        echo $sql . "\n";
 
         $qry = lib_database::getInstance()->query($sql);
         return $qry;
@@ -167,13 +167,13 @@ class SiteMapProcessor
             $urlNode['childs'][] = $priorty;
             $data['childs'][] = $urlNode;
 
-            $sql = "update " . $module . " set sitemap = " . $this->sitemapUpdateVal . " where id='" . $row['id'] . "'";
-
+            $sql = "update " . $module . " set sitemap = '" . $this->job['token'] . "' where id='" . $row['id'] . "'";
             $db->query($sql);
             $counter ++;
         }
         $this->job['offsetval'] = $this->offset;
 
+        echo "have pages " . $havePages . " is new " . $isNew;
         if ($havePages) {
             $this->job['jobstatus'] = "inprogress";
             if ($isNew) {
@@ -223,7 +223,7 @@ class SiteMapProcessor
         $data = array();
         $data['element'] = "urlset";
         $data['attributes'] = array();
-        $data['attributes']['xmlns'] = "http://www.sitemaps.org/schemas/sitemap/0.9";
+        $data['attributes']['xmlns'] = "http: // www.sitemaps.org/schemas/sitemap/0.9";
         $data['attributes']['xmlns:xsi'] = "http://www.w3.org/2001/XMLSchema-instance";
         $data['attributes']['xsi:schemaLocation'] = "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd";
         $data['childs'] = $childdata['childs'];

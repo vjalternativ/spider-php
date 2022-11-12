@@ -1,20 +1,16 @@
 <?php
 require_once __DIR__ . '/RuntimeBean.php';
 
-abstract class ModuleRuntime extends RuntimeBean
+class ModuleRuntime extends RuntimeBean
 {
 
     private $moduleList = array();
 
-    abstract function getPath();
-
-    abstract function getModule();
-
     function init()
     {
         $date = date("Y-m-d");
-        $this->setPath($this->getPath());
-        $json = $this->readJson();
+
+        $json = $this->load();
 
         if ($json) {
             if ($date == $json['lastCacheDate']) {
@@ -41,13 +37,20 @@ abstract class ModuleRuntime extends RuntimeBean
             $data = array();
             $data['moduleList'] = $this->moduleList;
             $data['lastCacheDate'] = $date;
-            $this->doWrite($data);
+            $this->data = $data;
+
+            parent::write();
         }
     }
 
     public function getModuleList()
     {
         return $this->moduleList;
+    }
+
+    public function getPath()
+    {
+        return "ModuleRuntime";
     }
 }
 ?>

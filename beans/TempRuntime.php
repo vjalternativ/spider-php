@@ -10,7 +10,7 @@ class TempRuntime extends RuntimeBean
 
     function __construct()
     {
-        $this->setPath("tmp/temprutime.json");
+        $json = $this->load();
 
         $this->tempPath = lib_config::getInstance()->get("storage_basepath") . 'tmp/files/';
 
@@ -18,7 +18,6 @@ class TempRuntime extends RuntimeBean
             shell_exec("mkdir -p " . $this->tempPath);
         }
         $this->lastCreationDate = date("Y-m-d");
-        $json = $this->readJson();
 
         if (! ($json && $this->lastCreationDate == $json['lastCreationDate'])) {
             $cmd = 'rm -rf ' . $this->tempPath . '*';
@@ -49,6 +48,11 @@ class TempRuntime extends RuntimeBean
     {
         $file = substr($source, strrpos($source, "/") + 1);
         return $this->tempPath . $file;
+    }
+
+    public function getPath()
+    {
+        return "tmp/temprutime";
     }
 }
 ?>

@@ -1,4 +1,6 @@
 <?php
+$fwbasepath = lib_config::getInstance()->get("fwbasepath");
+require_once $fwbasepath . 'resources/backend/modules/seo_template/SEOTemplateService.php';
 
 class seo_templateCliController extends CliResourceController
 {
@@ -7,32 +9,26 @@ class seo_templateCliController extends CliResourceController
     {
         $db = lib_database::getInstance();
 
-        $sql = "select * from seo_template where status='queued' order by date_entered desc limit 1";
+        $sql = "select * from seo_template where status in ('queued','inprogress') order by date_entered asc limit 1";
         $seoTemplate = $db->getrow($sql);
         if ($seoTemplate) {
 
-            $module = $seoTemplate['module'];
+            $table = $seoTemplate['module'];
             $rowindex = $seoTemplate['rowindex'];
-            $sql = "select * from " . $module . " order by date_entered asc limit " . $rowindex . ",1000 ";
+            $sql = "select * from " . $table . " order by date_entered asc limit " . $rowindex . ",1000 ";
             $rows = $db->getAll($sql);
             if ($rows) {
-
-                $metaTitle = $seoTemplate['meta_title'];
-                $metaDesc = $seoTemplate['meta_desc'];
-                $metaKey = $seoTemplate['meta_key'];
+                $seoTemplateService = SEOTemplateService::getInstance();
                 foreach ($rows as $row) {
-                    $row['meta_title'] = str_replace("@name", $row['name'], $metaTitle);
-                    $row['meta_desc'] = str_replace("@name", $row['name'], $metaDesc);
-                    $row['meta_key'] = str_replace("@name", $row['name'], $metaKey);
-                    lib_database::getInstance()->update($module, $row, "id");
+                    $seoTemplateService->updateSEOForRecord($seoTemplate, $table, $row);
                 }
 
                 $seoTemplate['rowindex'] = $rowindex + count($rows);
                 $seoTemplate['status'] = "inprogress";
-                $db->update("seo_template", $seoTemplate, "id");
             } else {
                 $seoTemplate['status'] = "completed";
             }
+            $db->update("seo_template", $seoTemplate, "id");
         }
     }
 }
