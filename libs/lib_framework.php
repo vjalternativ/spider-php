@@ -309,6 +309,7 @@ class lib_framework
                         $view->data = $params['data'];
                     }
                 }
+                $view->preHeader();
                 $view->_loadHeader();
                 $view->preDisplay();
                 $view->display();

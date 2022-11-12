@@ -61,6 +61,9 @@ abstract class ResourceView
         $this->isLoadHeaderFoooter = $b;
     }
 
+    function preHeader()
+    {}
+
     function preDisplay()
     {}
 
