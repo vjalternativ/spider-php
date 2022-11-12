@@ -9,7 +9,7 @@ class seo_templateCliController extends CliResourceController
     {
         $db = lib_database::getInstance();
 
-        $sql = "select * from seo_template where deleted=0 status in ('queued','inprogress') order by date_entered asc limit 1";
+        $sql = "select * from seo_template where deleted=0 and status in ('queued','inprogress') order by date_entered asc limit 1";
         $seoTemplate = $db->getrow($sql);
         if ($seoTemplate) {
 
