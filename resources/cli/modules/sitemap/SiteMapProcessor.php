@@ -173,7 +173,6 @@ class SiteMapProcessor
         }
         $this->job['offsetval'] = $this->offset;
 
-        echo "have pages " . $havePages . " is new " . $isNew;
         if ($havePages) {
             $this->job['jobstatus'] = "inprogress";
             if ($isNew) {
