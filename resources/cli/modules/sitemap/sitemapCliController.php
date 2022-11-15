@@ -24,46 +24,63 @@ class sitemapCliController extends CliResourceController
             }
         }
         $row = array();
-        $runTime = new SitemapJobRuntime();
-        $runTime->load();
 
         if (isset($rows['inprogress'])) {
             $row = reset($rows['inprogress']);
         } else if (isset($rows['queued'])) {
             $row = reset($rows['queued']);
-            $row['token'] = uniqid();
-
-            $this->preCleanupSiteMaps($row, $runTime);
         } else if (isset($rows['completed'])) {
             $row = reset($rows['completed']);
+        }
+
+        if ($row) {
+            $this->generateSitemapForRecord($row);
+        }
+    }
+
+    private function generateSitemapForRecord($row)
+    {
+        $runTime = new SitemapJobRuntime();
+        $runTime->load();
+        $cleanupStatus = array(
+            "queued",
+            "completed"
+        );
+        if (in_array($row['jobstatus'], $cleanupStatus)) {
             $row['token'] = uniqid();
             $this->preCleanupSiteMaps($row, $runTime);
         }
 
+        $row['jobstatus'] = "inprogress";
+        $entity = lib_entity::getInstance();
+        $entity->save("sitemapjob", $row);
+
+        $config = lib_config::getInstance()->getConfig();
+        $targetPath = $config['storage_basepath'] . 'sitemaps/' . $row['page_module'];
+        $path = $targetPath . '_tmp/';
+
+        if (! is_dir($path)) {
+            $cmd = "mkdir -p " . $path;
+            shell_exec($cmd);
+        }
+
+        $sitemapbaseurl = $config['baseurl'] . 'sitemaps/' . $row['page_module'] . '/';
+
+        $processor = new SiteMapProcessor($row, $path, $sitemapbaseurl);
+        $processor->execute();
+
+        $this->postCleanupSiteMap($targetPath, $path);
+
+        $row['jobstatus'] = "completed";
+        $entity->save("sitemapjob", $row);
+    }
+
+    function action_forcegenerate()
+    {
+        $id = $this->getarg(3);
+        $row = lib_entity::getInstance()->get("sitemapjob", $id);
         if ($row) {
-
-            $row['jobstatus'] = "inprogress";
-            $entity->save("sitemapjob", $row);
-
-            $db = lib_database::getInstance();
-            $config = lib_config::getInstance()->getConfig();
-            $targetPath = $config['storage_basepath'] . 'sitemaps/' . $row['page_module'];
-            $path = $targetPath . '_tmp/';
-
-            if (! is_dir($path)) {
-                $cmd = "mkdir -p " . $path;
-                shell_exec($cmd);
-            }
-
-            $sitemapbaseurl = $config['baseurl'] . 'sitemaps/' . $row['page_module'] . '/';
-
-            $processor = new SiteMapProcessor($row, $path, $sitemapbaseurl);
-            $processor->execute();
-
-            $this->postCleanupSiteMap($targetPath, $path);
-
-            $row['jobstatus'] = "completed";
-            $entity->save("sitemapjob", $row);
+            $this->generateSitemapForRecord($row);
         }
     }
 
