@@ -58,7 +58,6 @@ class SchemaDataPatcher
 
                     $tbinfo['description'] = $row['description'];
                     $sql = "update tableinfo set description ='" . $row['description'] . "' where name='" . $row['name'] . "' ";
-                    echo $sql . "<br />";
                     $db->query($sql);
                 }
 
