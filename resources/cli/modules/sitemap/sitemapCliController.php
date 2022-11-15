@@ -79,6 +79,7 @@ class sitemapCliController extends CliResourceController
     function action_forcegenerate()
     {
         $id = $this->getarg(3);
+        echo "checking sitemap for id " . $id . PHP_EOL;
         $row = lib_entity::getInstance()->get("sitemapjob", $id);
         if ($row) {
             $this->generateSitemapForRecord($row);
