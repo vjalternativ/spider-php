@@ -52,15 +52,14 @@ class SchemaDataPatcher
             if ($qry) {
 
                 $sql = "select * from tableinfo where name='" . $row['name'] . "'";
-                echo "check module for description " . $row['name'];
 
                 $tbinfo = $db->getrow($sql);
                 if ($tbinfo) {
 
-                    echo " module for description found " . $row['name'];
-
                     $tbinfo['description'] = $row['description'];
-                    $db->update("tableinfo", $tbinfo, "name");
+                    $sql = "update tableinfo set description ='" . $row['description'] . "' where name='" . $row['name'] . "' ";
+                    echo $sql . "<br />";
+                    $db->query($sql);
                 }
 
                 if (isset($desc['fields'])) {
