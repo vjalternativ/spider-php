@@ -109,6 +109,7 @@ class SiteMapProcessor
 
     function processXmlData($index, $isNew, $module, $loopindex = 0)
     {
+        echo "going to process xml for module " . $module . PHP_EOL;
         $db = lib_database::getInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 

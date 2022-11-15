@@ -40,6 +40,7 @@ class sitemapCliController extends CliResourceController
 
     private function generateSitemapForRecord($row)
     {
+        $this->echo("going to generate sitemap for " . $row['page_module']);
         $runTime = new SitemapJobRuntime();
         $runTime->load();
         $cleanupStatus = array(
