@@ -50,6 +50,14 @@ class SchemaDataPatcher
             $sql = "select 1 from " . $row['name'] . " limit 1";
             $qry = $db->query($sql, true);
             if ($qry) {
+
+                $sql = "select * from tableinfo where name='" . $row['name'] . "'";
+                $tbinfo = $db->getrow($sql);
+                if ($tbinfo) {
+                    $tbinfo['description'] = $row['description'];
+                    $db->update("tableinfo", $tbinfo, "name");
+                }
+
                 if (isset($desc['fields'])) {
                     foreach ($desc['fields'] as $field) {
                         if ($field['type'] == "nondb") {
