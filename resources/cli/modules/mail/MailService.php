@@ -180,7 +180,6 @@ class MailService
             $emails = $this->getAllNotSentEmails($contexts, 2);
             $pendingMailsContextCounts = array();
             // $restrictMailIds = $this->getQueueAliases();
-            $restrictMailIds = array();
 
             if (isset($emails['indexes'])) {
                 foreach ($emails['indexes'] as $index) {
@@ -267,137 +266,7 @@ class MailService
                         $contexts[$info['context']]['pointer'] ++;
                     }
 
-                    $mailer = new PHPMailer();
-                    if (lib_config::getInstance()->get("disable_smpt_cert_verification")) {
-                        $mailer->SMTPOptions = array(
-                            'ssl' => array(
-                                'verify_peer' => false,
-                                'verify_peer_name' => false,
-                                'allow_self_signed' => true
-                            )
-                        );
-                    }
-
-                    $mailer->IsSMTP();
-                    $protocol = "tls";
-                    if ($account_details['mail_ssl']) {
-                        $protocol = "ssl";
-                    }
-
-                    $mailer->Host = $protocol . "://" . $account_details['mail_server'];
-                    $mailer->Port = $account_details['mail_port'];
-                    // $mailer->SMTPSecure = 'ssl';
-                    // $mailer->SMTPDebug = true;
-                    $mailer->IsHTML(true); // send as HTML
-                    $mailer->SMTPAuth = true; // turn on SMTP authentication
-                    $mailer->Username = $account_details['user_name']; // SMTP username
-                    $mailer->Password = $account_details['mail_password']; // SMTP password
-                    $mailer->SetFrom($account_details['from_address'], $account_details['from_name']);
-                    $mailer->addCustomHeader('In-Reply-To', '<' . $account_details['reply_to_address'] . '>');
-
-                    if (! empty($info['embedded_images'])) {
-                        $embeddedImages = unserialize(base64_decode($info['embedded_images']));
-                        foreach ($embeddedImages as $key => $fileInfo) {
-                            $mailer->AddEmbeddedImage($fileInfo['filePath'], $fileInfo['imageCid'], "attachment", "base64", $fileInfo['fileType']);
-                        }
-                    }
-                    $mailer->AddReplyTo($account_details['reply_to_address'], $account_details['reply_to_name']);
-                    if (! empty($info['attachments'])) {
-                        $attachments = json_decode($info['attachments'], 1);
-                        $attachmentsFilePath = "";
-                        $attachmentsFileName = "";
-                        foreach ($attachments as $value) {
-                            if (isset($value['path']) && ! empty($value['path'])) {
-                                $attachmentsFilePath = $value['path'];
-                                $attachmentsFileName = $value['name'];
-                                $mailer->AddAttachment($attachmentsFilePath, $attachmentsFileName);
-                            }
-                        }
-                    } else {
-                        $attachments = array();
-                    }
-
-                    $to_array = $this->extractAndSaniTizeEmailFromString($info['email_to']);
-                    $to_array = array_diff($to_array, $restrictMailIds);
-
-                    /*
-                     * foreach ($info['email_to'] as $emailId => $emailValue) {
-                     * if (in_array($emailValue, $vjconfig['customer_notification_exception'])) {
-                     * unset($emails[$emailId]);
-                     * }
-                     * }
-                     */
-                    if (count($to_array) > 0) {
-                        foreach ($to_array as $value) {
-                            if (! empty($value))
-                                $mailer->AddAddress($value, '');
-                        }
-                    }
-                    /*
-                     * foreach ($info['email_cc'] as $emailId => $emailValue) {
-                     * if (in_array($emailValue, $vjconfig['customer_notification_exception'])) {
-                     * unset($emails[$emailId]);
-                     * }
-                     * }
-                     */
-                    $cc_array = $this->extractAndSaniTizeEmailFromString($info['email_cc']);
-                    $cc_array = array_diff($cc_array, $restrictMailIds);
-                    if (count($cc_array) > 0) {
-                        foreach ($cc_array as $value) {
-                            if (! empty($value))
-                                $mailer->addCustomHeader("CC: " . $value);
-                            // $mailer->AddCC ( $value, '' );
-                        }
-                    }
-
-                    /*
-                     * foreach ($info['email_bcc'] as $emailId => $emailValue) {
-                     * if (in_array($emailValue, $vjconfig['customer_notification_exception'])) {
-                     * unset($emails[$emailId]);
-                     * }
-                     * }
-                     */
-
-                    $bcc_array = $this->extractAndSaniTizeEmailFromString($info['email_bcc']);
-                    $bcc_array = array_diff($bcc_array, $restrictMailIds);
-                    if (count($bcc_array) > 0) {
-                        foreach ($bcc_array as $value) {
-                            if (! empty($value))
-                                $mailer->addCustomHeader("BCC: " . $value);
-                            // $mailer->AddCC ( $value, '' );
-                        }
-                    }
-
-                    if ($info['description'] == "") {
-                        $info['description'] = "EOM";
-                    }
-                    $mailer->Subject = html_entity_decode($info['name'], ENT_QUOTES);
-                    $mailer->Body = html_entity_decode($info['description'], ENT_QUOTES);
-                    $date = date('Y-m-d H:i:s');
-
-                    // SENDING THE MAIL
-                    if ($mailer->Send()) {
-                        // $this->updateEmailWiseCounter($to_array,$cc_array,$bcc_array,$mailer->Subject);
-                        foreach ($attachments as $value) {
-                            unlink($value);
-                            echo "File: $value Deleted successfully!<br>";
-                        }
-                        $db->query("UPDATE email_buffer SET is_sent_successfully=1, send_attempts = send_attempts +1, last_attempt='$date' WHERE id='{$info['id']}'");
-                        $date = date('Y-m-d');
-                        if ($account_details['date_last_used'] == $date) {
-                            $db->query("UPDATE outbound_email_accounts SET used_today = used_today +1  WHERE id='{$account_details['id']}'");
-                        } else {
-                            $db->query("UPDATE outbound_email_accounts SET used_today = 1, date_last_used='$date'  WHERE id='{$account_details['id']}'");
-                        }
-                        $db->query("UPDATE email_buffer SET sendfrom = '" . $account_details['user_name'] . "'  WHERE id='{$info['id']}'");
-                    } else {
-                        $reason = $mailer->ErrorInfo;
-                        $db->query("UPDATE email_buffer SET sendfrom = '" . $account_details['user_name'] . "',sending_error = '$reason', send_attempts = send_attempts +1, last_attempt='$date'  WHERE id='{$info['id']}'");
-
-                        // SEND MAIL TO ADMIN
-                        // $this->sendErrorMails ( $info, $reason, $account_details ['user_name'] );
-                    }
-                    // sleep(10);
+                    $this->sendMailFromAccount($info, $account_details);
                 }
             }
         }
@@ -409,6 +278,150 @@ class MailService
 
         echo "Lock file released -> Done\n";
         fclose($file);
+    }
+
+    public function sendMail($info)
+    {
+        $sql = "select * from outbound_email_accounts where context='" . $info['context'] . "'";
+        $row = lib_database::getInstance()->getrow($sql);
+        if ($row) {
+            $this->sendMailFromAccount($info, $row);
+        }
+    }
+
+    private function sendMailFromAccount($info, $account_details)
+    {
+        $restrictMailIds = array();
+        $mailer = new PHPMailer();
+        if (lib_config::getInstance()->get("disable_smpt_cert_verification")) {
+            $mailer->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+        }
+
+        $mailer->IsSMTP();
+        $protocol = "tls";
+        if ($account_details['mail_ssl']) {
+            $protocol = "ssl";
+        }
+
+        $mailer->Host = $protocol . "://" . $account_details['mail_server'];
+        $mailer->Port = $account_details['mail_port'];
+        // $mailer->SMTPSecure = 'ssl';
+        // $mailer->SMTPDebug = true;
+        $mailer->IsHTML(true); // send as HTML
+        $mailer->SMTPAuth = true; // turn on SMTP authentication
+        $mailer->Username = $account_details['user_name']; // SMTP username
+        $mailer->Password = $account_details['mail_password']; // SMTP password
+        $mailer->SetFrom($account_details['from_address'], $account_details['from_name']);
+        $mailer->addCustomHeader('In-Reply-To', '<' . $account_details['reply_to_address'] . '>');
+
+        if (! empty($info['embedded_images'])) {
+            $embeddedImages = unserialize(base64_decode($info['embedded_images']));
+            foreach ($embeddedImages as $key => $fileInfo) {
+                $mailer->AddEmbeddedImage($fileInfo['filePath'], $fileInfo['imageCid'], "attachment", "base64", $fileInfo['fileType']);
+            }
+        }
+        $mailer->AddReplyTo($account_details['reply_to_address'], $account_details['reply_to_name']);
+        if (! empty($info['attachments'])) {
+            $attachments = json_decode($info['attachments'], 1);
+            $attachmentsFilePath = "";
+            $attachmentsFileName = "";
+            foreach ($attachments as $value) {
+                if (isset($value['path']) && ! empty($value['path'])) {
+                    $attachmentsFilePath = $value['path'];
+                    $attachmentsFileName = $value['name'];
+                    $mailer->AddAttachment($attachmentsFilePath, $attachmentsFileName);
+                }
+            }
+        } else {
+            $attachments = array();
+        }
+
+        $to_array = $this->extractAndSaniTizeEmailFromString($info['email_to']);
+        $to_array = array_diff($to_array, $restrictMailIds);
+
+        /*
+         * foreach ($info['email_to'] as $emailId => $emailValue) {
+         * if (in_array($emailValue, $vjconfig['customer_notification_exception'])) {
+         * unset($emails[$emailId]);
+         * }
+         * }
+         */
+        if (count($to_array) > 0) {
+            foreach ($to_array as $value) {
+                if (! empty($value))
+                    $mailer->AddAddress($value, '');
+            }
+        }
+        /*
+         * foreach ($info['email_cc'] as $emailId => $emailValue) {
+         * if (in_array($emailValue, $vjconfig['customer_notification_exception'])) {
+         * unset($emails[$emailId]);
+         * }
+         * }
+         */
+        $cc_array = $this->extractAndSaniTizeEmailFromString($info['email_cc']);
+        $cc_array = array_diff($cc_array, $restrictMailIds);
+        if (count($cc_array) > 0) {
+            foreach ($cc_array as $value) {
+                if (! empty($value))
+                    $mailer->addCustomHeader("CC: " . $value);
+                // $mailer->AddCC ( $value, '' );
+            }
+        }
+
+        /*
+         * foreach ($info['email_bcc'] as $emailId => $emailValue) {
+         * if (in_array($emailValue, $vjconfig['customer_notification_exception'])) {
+         * unset($emails[$emailId]);
+         * }
+         * }
+         */
+
+        $bcc_array = $this->extractAndSaniTizeEmailFromString($info['email_bcc']);
+        $bcc_array = array_diff($bcc_array, $restrictMailIds);
+        if (count($bcc_array) > 0) {
+            foreach ($bcc_array as $value) {
+                if (! empty($value))
+                    $mailer->addCustomHeader("BCC: " . $value);
+                // $mailer->AddCC ( $value, '' );
+            }
+        }
+
+        if ($info['description'] == "") {
+            $info['description'] = "EOM";
+        }
+        $mailer->Subject = html_entity_decode($info['name'], ENT_QUOTES);
+        $mailer->Body = html_entity_decode($info['description'], ENT_QUOTES);
+        $date = date('Y-m-d H:i:s');
+        $db = lib_database::getInstance();
+        // SENDING THE MAIL
+        if ($mailer->Send()) {
+            // $this->updateEmailWiseCounter($to_array,$cc_array,$bcc_array,$mailer->Subject);
+            foreach ($attachments as $value) {
+                unlink($value);
+                echo "File: $value Deleted successfully!<br>";
+            }
+            $db->query("UPDATE email_buffer SET is_sent_successfully=1, send_attempts = send_attempts +1, last_attempt='$date' WHERE id='{$info['id']}'");
+            $date = date('Y-m-d');
+            if ($account_details['date_last_used'] == $date) {
+                $db->query("UPDATE outbound_email_accounts SET used_today = used_today +1  WHERE id='{$account_details['id']}'");
+            } else {
+                $db->query("UPDATE outbound_email_accounts SET used_today = 1, date_last_used='$date'  WHERE id='{$account_details['id']}'");
+            }
+            $db->query("UPDATE email_buffer SET sendfrom = '" . $account_details['user_name'] . "'  WHERE id='{$info['id']}'");
+        } else {
+            $reason = $mailer->ErrorInfo;
+            $db->query("UPDATE email_buffer SET sendfrom = '" . $account_details['user_name'] . "',sending_error = '$reason', send_attempts = send_attempts +1, last_attempt='$date'  WHERE id='{$info['id']}'");
+
+            // SEND MAIL TO ADMIN
+            // $this->sendErrorMails ( $info, $reason, $account_details ['user_name'] );
+        }
     }
 
     function updateEmailWiseCounter($toArray = array(), $ccArray = array(), $bccArray = array(), $mailSubject)
