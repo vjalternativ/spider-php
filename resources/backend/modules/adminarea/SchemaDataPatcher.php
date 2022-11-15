@@ -52,8 +52,13 @@ class SchemaDataPatcher
             if ($qry) {
 
                 $sql = "select * from tableinfo where name='" . $row['name'] . "'";
+                echo "check module for description " . $row['name'];
+
                 $tbinfo = $db->getrow($sql);
                 if ($tbinfo) {
+
+                    echo " module for description found " . $row['name'];
+
                     $tbinfo['description'] = $row['description'];
                     $db->update("tableinfo", $tbinfo, "name");
                 }
