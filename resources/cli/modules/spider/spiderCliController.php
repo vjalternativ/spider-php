@@ -14,7 +14,7 @@ class spiderCliController extends CliResourceController
 
         $isDisableDB = lib_config::getInstance()->get("disabledb");
         if (! $isDisableDB) {
-            $datapatch = new SchemaDataPatcher();
+            $datapatch = SchemaDataPatcher::getInstance();
             $datapatch->addRepairTable("user");
             $datapatch->repairFramework();
         }
