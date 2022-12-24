@@ -221,7 +221,8 @@ abstract class lib_database
                                 $temp[$row[$index]]['items'] = false;
                             }
                         } else {
-                            if (! isset($temp[$row[$index]])) {
+                            $temp = $temp ? $temp : array();
+                            if ($row && ! isset($temp[$row[$index]])) {
 
                                 if (! is_array($temp)) {
                                     $temp = array();
@@ -234,7 +235,9 @@ abstract class lib_database
                         if ($cols) {
                             $temp = &$temp[$row[$index]]['items'];
                         } else {
-                            $temp = &$temp[$row[$index]];
+                            if ($row) {
+                                $temp = &$temp[$row[$index]];
+                            }
                         }
                     }
 
