@@ -718,5 +718,22 @@
         "editviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":\"name\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"description\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"module\",\"gridsize\":\"6\"},{\"field\":\"alias\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"type\",\"gridsize\":\"6\"}]}]",
         "listviewdef": "{\"name\":\"name\",\"date_entered\":\"date_entered\"}",
         "searchviewdef": "{\"name\":\"name\",\"date_entered\":\"date_entered\"}"
+    },
+    "1849be23-5dd4-e2de-4e4a-636e8835f1a2": {
+        "id": "1849be23-5dd4-e2de-4e4a-636e8835f1a2",
+        "name": "seo_template",
+        "description": "eyJmaWVsZHMiOnsiaWQiOnsibmFtZSI6ImlkIiwidHlwZSI6ImlkIiwibm90bnVsbCI6dHJ1ZSwibGFiZWwiOiJMQkxfSUQifSwibmFtZSI6eyJuYW1lIjoibmFtZSIsInR5cGUiOiJ2YXJjaGFyIiwibGVuIjoyNTUsImxpbmsiOnRydWUsImxhYmVsIjoiTEJMX05BTUUifSwiZGVzY3JpcHRpb24iOnsibmFtZSI6ImRlc2NyaXB0aW9uIiwidHlwZSI6InRleHQiLCJsYWJlbCI6IkxCTF9ERVNDUklQVElPTiJ9LCJkYXRlX2VudGVyZWQiOnsibmFtZSI6ImRhdGVfZW50ZXJlZCIsInR5cGUiOiJkYXRldGltZSIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0RBVEVfRU5URVJFRCJ9LCJkYXRlX21vZGlmaWVkIjp7Im5hbWUiOiJkYXRlX21vZGlmaWVkIiwidHlwZSI6ImRhdGV0aW1lIiwibm90bnVsbCI6dHJ1ZSwibGFiZWwiOiJMQkxfREFURV9NT0RJRklFRCJ9LCJkZWxldGVkIjp7Im5hbWUiOiJkZWxldGVkIiwidHlwZSI6ImludCIsImRlZmF1bHQiOjAsImxhYmVsIjoiTEJMX0RFTEVURUQifSwibW9kaWZpZWRfdXNlcl9pZCI6eyJuYW1lIjoibW9kaWZpZWRfdXNlcl9pZCIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX01PRElGSUVEX1VTRVJfSUQifSwiY3JlYXRlZF9ieSI6eyJuYW1lIjoiY3JlYXRlZF9ieSIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0NSRUFURURfQlkifSwiYXNzaWduZWRfdXNlcl9pZCI6eyJuYW1lIjoiYXNzaWduZWRfdXNlcl9pZCIsInR5cGUiOiJyZWxhdGUiLCJybW9kdWxlIjoidXNlciIsIm5vdG51bGwiOnRydWUsImxhYmVsIjoiTEJMX0FTU0lHTkVEX1VTRVJfSUQifSwibWV0YV90aXRsZSI6eyJuYW1lIjoibWV0YV90aXRsZSIsInR5cGUiOiJ2YXJjaGFyIiwibGVuIjoyNTUsImxpbmsiOmZhbHNlLCJsYWJlbCI6Ik1ldGEgVGl0bGUifSwibWV0YV9kZXNjIjp7Im5hbWUiOiJtZXRhX2Rlc2MiLCJ0eXBlIjoidGV4dCIsImxhYmVsIjoiTWV0YSBEZXNjcmlwdGlvbiJ9LCJtZXRhX2tleSI6eyJuYW1lIjoibWV0YV9rZXkiLCJ0eXBlIjoidGV4dCIsImxhYmVsIjoiTWV0YSBLZXl3b3JkcyJ9LCJhbGlhcyI6eyJuYW1lIjoiYWxpYXMiLCJ0eXBlIjoidmFyY2hhciIsImxlbiI6MjU1LCJsaW5rIjp0cnVlLCJsYWJlbCI6IkFsaWFzIn0sInNpdGVtYXAiOnsibmFtZSI6InNpdGVtYXAiLCJ0eXBlIjoidmFyY2hhciIsImxpbmsiOmZhbHNlLCJsYWJlbCI6InNpdGVtYXAiLCJsZW4iOjI1NX0sIm1vZHVsZSI6eyJuYW1lIjoibW9kdWxlIiwidHlwZSI6ImVudW0iLCJ0YWJsZSI6InByaW1hcnkiLCJvcHRpb25zIjoibW9kdWxlX2xpc3QiLCJsZW4iOiIyNTUifSwic3RhdHVzIjp7Im5hbWUiOiJzdGF0dXMiLCJ0eXBlIjoidmFyY2hhciIsInRhYmxlIjoicHJpbWFyeSIsImxlbiI6IjI1NSJ9LCJyb3dpbmRleCI6eyJuYW1lIjoicm93aW5kZXgiLCJ0eXBlIjoidmFyY2hhciIsInRhYmxlIjoicHJpbWFyeSIsImxlbiI6IjI1NSJ9fX0=",
+        "date_entered": "2022-11-11 23:06:05",
+        "date_modified": "2022-11-13 01:32:38",
+        "deleted": "0",
+        "modified_user_id": "8b7aeb0f-8f38-4c98-2699-5d7cc0b9bef1",
+        "created_by": "8b7aeb0f-8f38-4c98-2699-5d7cc0b9bef1",
+        "assigned_user_id": "",
+        "label": "Seo_template",
+        "tabletype": "page",
+        "detailviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":\"name\",\"gridsize\":\"6\"},{\"field\":\"date_entered\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"description\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"meta_title\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"meta_desc\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"meta_key\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"module\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"status\",\"gridsize\":\"6\"},{\"field\":\"rowindex\",\"gridsize\":\"6\"}]}]",
+        "editviewdef": "[{\"type\":\"row\",\"fields\":[{\"field\":\"name\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"description\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"meta_title\",\"gridsize\":\"6\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"meta_desc\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"meta_key\",\"gridsize\":\"12\"}]},{\"type\":\"row\",\"fields\":[{\"field\":\"module\",\"gridsize\":\"6\"}]}]",
+        "listviewdef": "{\"name\":\"name\",\"date_entered\":\"date_entered\",\"status\":\"status\",\"rowindex\":\"rowindex\"}",
+        "searchviewdef": "{\"name\":\"name\",\"date_entered\":\"date_entered\",\"status\":\"status\",\"rowindex\":\"rowindex\"}"
     }
 }
