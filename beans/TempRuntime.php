@@ -30,7 +30,8 @@ class TempRuntime extends RuntimeBean
     {
         $data = array();
         $data['lastCreationDate'] = $this->lastCreationDate;
-        $this->doWrite($data);
+        $this->data = $data;
+        parent::write();
     }
 
     public function moveToTemp($source)
