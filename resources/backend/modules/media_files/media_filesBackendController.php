@@ -35,6 +35,13 @@ class media_filesBackendController extends BackendResourceController
             $id = $_REQUEST['id'];
             $media = $entity->get("media_files", $id);
             $url = $media['file_path'];
+            $storageBasepath = lib_config::getInstance()->get("storage_basepath");
+            if (substr($url, 0, 1) == "/") {
+                $arr = explode("media_files", $url);
+                $url = $storageBasepath . 'media_files' . $arr[1];
+            } else {
+                $url = $storageBasepath . $url;
+            }
             $this->readFile($url, $media['name'], $media['file_type']);
         }
     }

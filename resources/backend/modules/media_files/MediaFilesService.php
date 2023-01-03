@@ -53,11 +53,13 @@ class MediaFilesService implements IMediaFilesService
                 }
             }
             $fileId = lib_util::create_guid();
-            $dir = $vjconfig['storage_basepath'] . "media_files/" . date("Y") . '/' . date("m") . '/' . date("d") . '/' . $_FILES[$field['name']]['type'];
+            $targetDir = "media_files/" . date("Y") . '/' . date("m") . '/' . date("d") . '/' . $_FILES[$field['name']]['type'];
+            $dir = $vjconfig['storage_basepath'] . $targetDir;
             if (! is_dir($dir)) {
                 mkdir($dir, 0755, true);
             }
-            $target = $dir . '/' . $fileId;
+            $targetPath = $targetDir . '/' . $fileId;
+            $target = $vjconfig['storage_basepath'] . $targetPath;
             $tmp = $_FILES[$field['name']]['tmp_name'];
             if ($rename) {
                 rename($tmp, $target);
@@ -65,7 +67,7 @@ class MediaFilesService implements IMediaFilesService
                 move_uploaded_file($tmp, $target);
             }
             $mediaKeyValue['name'] = $_FILES[$field['name']]['name'];
-            $mediaKeyValue['file_path'] = $target;
+            $mediaKeyValue['file_path'] = $targetPath;
             $mediaKeyValue['file_type'] = $_FILES[$field['name']]['type'];
             $mediaId = $entity->save("media_files", $mediaKeyValue);
         }
