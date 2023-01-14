@@ -41,6 +41,13 @@ class TempRuntime extends RuntimeBean
         return move_uploaded_file($source, $this->tempPath . $file);
     }
 
+    public function writeToTemp($name, $data)
+    {
+        $file = $name;
+
+        return file_put_contents($this->tempPath . $file, $data);
+    }
+
     /**
      *
      * @return string
