@@ -54,7 +54,7 @@ class TempRuntime extends RuntimeBean
      */
     public function getTempFilePath($source)
     {
-        $file = substr($source, strrpos($source, "/") + 1);
+        $file = substr($source, 0, 1) == "/" ? substr($source, strrpos($source, "/") + 1) : $source;
         return $this->tempPath . $file;
     }
 
