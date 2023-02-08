@@ -3,7 +3,6 @@ $vjconfig = lib_config::getInstance()->getConfig();
 
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/SMTP.php';
 require_once $vjconfig['fwbasepath'] . 'thirdparty/server/PHPMailer-master/src/PHPMailer.php';
-use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService
 {
@@ -31,7 +30,7 @@ class MailService
     function sendAccountReachedNotification($account_details)
     {
         return false;
-        $mailer = new PHPMailer();
+        $mailer = new PHPMailer\PHPMailer\PHPMailer();
         $mailer->AddAddress("vj.alternativ@gmail.com", '');
         $mailer->Host = $account_details['mail_server'];
         $mailer->Port = $account_details['mail_port'];
@@ -292,7 +291,7 @@ class MailService
     private function sendMailFromAccount($info, $account_details)
     {
         $restrictMailIds = array();
-        $mailer = new PHPMailer();
+        $mailer = new PHPMailer\PHPMailer\PHPMailer();
         if (lib_config::getInstance()->get("disable_smpt_cert_verification")) {
             $mailer->SMTPOptions = array(
                 'ssl' => array(
@@ -519,7 +518,7 @@ class MailService
         }
         $account_details = $db->fetch($res_account);
 
-        $mailer = new PHPMailer();
+        $mailer = new PHPMailer\PHPMailer\PHPMailer();
         $mailer->Host = $account_details['mail_server'];
         $mailer->Port = $account_details['mail_port'];
         $mailer->SMTPSecure = 'ssl';
