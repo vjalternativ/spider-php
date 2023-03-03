@@ -100,7 +100,7 @@ class ResourceController
                 foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $child) {
                     $out .= $dom->saveXML($child);
                 }
-                return htmlentities($out);
+                return $out;
             }
         } else {
             echo "controller path not found " . 'resources/' . $this->resource . '/modules/' . $mod . '/';
