@@ -90,7 +90,17 @@ class ResourceController
                 $this->params['controller_tpl_path'] = $this->params['controller_path'];
             }
             if ($this->params['controller_tpl_path']) {
-                return $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
+                $html = $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
+                $dom = new DOMDocument();
+                libxml_use_internal_errors(true);
+                $dom->loadHTML($html);
+                libxml_clear_errors();
+
+                $out = '';
+                foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $child) {
+                    $out .= $dom->saveXML($child);
+                }
+                return htmlentities($out);
             }
         } else {
             echo "controller path not found " . 'resources/' . $this->resource . '/modules/' . $mod . '/';
