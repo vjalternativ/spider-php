@@ -91,11 +91,13 @@ class ResourceController
             }
             if ($this->params['controller_tpl_path']) {
                 $html = $smarty->fetch($this->params['controller_tpl_path'] . $tpl);
-                $doc = new DOMDocument();
-                $doc->substituteEntities = false;
-                $content = mb_convert_encoding($html, 'html-entities', 'utf-8');
-                $doc->loadHTML($content);
-                $html = $doc->saveHTML();
+                if ($html) {
+                    $doc = new DOMDocument();
+                    $doc->substituteEntities = false;
+                    $content = mb_convert_encoding($html, 'html-entities', 'utf-8');
+                    $doc->loadHTML($content);
+                    $html = $doc->saveHTML();
+                }
                 return $html;
             }
         } else {

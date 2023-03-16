@@ -212,13 +212,13 @@ abstract class lib_database
                         }
 
                         if ($cols) {
-                            if (! isset($temp[$row[$index]])) {
+                            if (! isset($temp[$row[$dimkey]])) {
                                 foreach ($cols as $col) {
-                                    if (isset($row[$col])) {
-                                        $temp[$row[$index]][$col] = $row[$col];
+                                    if (array_key_exists($col, $row)) {
+                                        $temp[$row[$dimkey]][$col] = $row[$col];
                                     }
                                 }
-                                $temp[$row[$index]]['items'] = false;
+                                $temp[$row[$dimkey]]['items'] = false;
                             }
                         } else {
                             $temp = $temp ? $temp : array();
@@ -254,6 +254,7 @@ abstract class lib_database
                         $rows[] = $row;
                     }
                 }
+
                 $temp = &$rows;
             }
 
