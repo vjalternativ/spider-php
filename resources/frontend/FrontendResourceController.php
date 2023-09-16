@@ -52,13 +52,18 @@ class FrontendResourceController extends ResourceController
                         }
                     }
                 } else {
-                    $sql = "select * from page where alias='" . $this->page . "' and deleted=0 ";
-                    $row = $db->getrow($sql);
-                    if ($row) {
-                        lib_datawrapper::getInstance()->set("pagedata", $row);
-                    }
+                    
                     if ($this->backendPageModel && isset($seoParams[1])) {
-                        $sql = "select * from " . $this->backendPageModel . " where alias='" . $seoParams[1] . "' and deleted=0 ";
+                        $alias = end($seoParams);
+                        
+                        $sql = "select * from " . $this->backendPageModel . " where alias='" . $alias . "' and deleted=0 ";
+                        $row = $db->getrow($sql);
+                        if ($row) {
+                            lib_datawrapper::getInstance()->set("pagedata", $row);
+                        }
+                    } else {
+
+                        $sql = "select * from page where alias='" . $this->page . "' and deleted=0 ";
                         $row = $db->getrow($sql);
                         if ($row) {
                             lib_datawrapper::getInstance()->set("pagedata", $row);
