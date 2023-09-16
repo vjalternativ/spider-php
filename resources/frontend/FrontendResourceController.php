@@ -57,7 +57,7 @@ class FrontendResourceController extends ResourceController
                     if ($row) {
                         lib_datawrapper::getInstance()->set("pagedata", $row);
                     }
-                    if ($this->backendPageModel) {
+                    if ($this->backendPageModel && isset($seoParams[1])) {
                         $sql = "select * from " . $this->backendPageModel . " where alias='" . $seoParams[1] . "' and deleted=0 ";
                         $row = $db->getrow($sql);
                         if ($row) {
