@@ -46,7 +46,6 @@ class lib_seo
                 }
             }
         }
-        echo "<pre>";print_r($this->params);die;
     }
 }
 ?>
