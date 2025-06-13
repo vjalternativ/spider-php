@@ -43,6 +43,9 @@ class lib_config
             }
             $docRoot = $_SERVER['DOCUMENT_ROOT'];
             $dir = $dir;
+            echo "docroot is ".$docRoot ."<br />";
+            echo "project path is ".$projectpath ."<br/>";
+            
             $projectpath = str_replace($docRoot, "", $dir);
             $this->config['urlbasepath'] = $projectpath;
             $this->config['baseurl'] = $prefix . $this->config['urlbasepath'];
