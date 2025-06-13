@@ -28,8 +28,7 @@ class ResourceController
 
         $this->resource = $arr[0];
 
-        echo "filepath is ".$filepath." and resource is ".$this->resource."<br />";
-
+        
         $this->module = isset($arr[2]) ? $arr[2] : $_REQUEST['module'];
 
         $action = $_GET['action'];
@@ -70,9 +69,6 @@ class ResourceController
     function rendorTpl($tpl, $params = array(), $sitetpl = false, $module = false)
     {
         
-        echo "<pre>";
-        debug_print_backtrace();
-        die;
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
