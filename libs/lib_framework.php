@@ -32,7 +32,7 @@ class lib_framework
         if(isset($_SERVER["SCRIPT_FILENAME"])) {
           $strarray = explode("/",$_SERVER["SCRIPT_FILENAME"]);
           array_pop($strarray);
-          $path = implode($strarray);
+          $path = implode("/",$strarray);
         }
         set_include_path($path);
         $this->configpath = $path;
