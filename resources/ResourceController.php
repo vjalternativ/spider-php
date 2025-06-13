@@ -19,7 +19,6 @@ class ResourceController
     {
         $reflector = new \ReflectionObject($this);
         $filepath = $reflector->getFileName();
-        $filepath = str_replace("\\","/",$filepath);
         $arr = explode("resources/", $filepath);
 
         $str = $arr[1];
@@ -28,7 +27,7 @@ class ResourceController
 
         $this->resource = $arr[0];
 
-        echo "filepath is ".$filepath."<br />";
+        echo "filepath is ".$filepath." and resource is ".$this->resource."<br />";
 
         $this->module = isset($arr[2]) ? $arr[2] : $_REQUEST['module'];
 
