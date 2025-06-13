@@ -47,6 +47,7 @@ class ResourceController
     {
         $libConfig = lib_config::getInstance();
         $path = $libConfig->get("basepath") . $dir;
+        echo "path is ".$path."<br />";
         $fwpath = $libConfig->get("fwbasepath") . $dir;
         if ($isFile) {
             if (file_exists($path)) {
@@ -77,6 +78,10 @@ class ResourceController
         $siteTpl = $sitetpl ? $sitetpl : $vjconfig['sitetpl'];
 
         $mod = $module ? $module : $this->module;
+
+        echo "resource is ".$this->resource ." module is ".$mod ."<br />";
+
+
         $this->params['controller_path'] = $this->getRealPath('resources/' . $this->resource . '/modules/' . $mod . '/');
 
         if ($this->params['controller_path']) {
