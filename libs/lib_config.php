@@ -18,7 +18,6 @@ class lib_config
     {
         $configPath = self::$configpath;
         $dir = __DIR__;
-        echo "initial dir is ".$dir."<br />";
         $fwbasepath = str_replace("libs", "", $dir);
         if (isset($_SERVER['argv'])) {
             if (substr($_SERVER['SCRIPT_FILENAME'], 0, 1) == "/") {
@@ -29,11 +28,9 @@ class lib_config
             }
         } else if (isset($_SERVER['SCRIPT_FILENAME'])) {
             $dir = substr($_SERVER['SCRIPT_FILENAME'], 0, strrpos($_SERVER['SCRIPT_FILENAME'], "/")) . '/';
-            echo "dir line 32 ".$dir."<br />";
         }
 
-        echo "config path line 35 ".$configPath."<br />";
-
+        
         if ($configPath) {
             $dir = $configPath . '/';
         }
@@ -47,15 +44,11 @@ class lib_config
             }
             $docRoot = $_SERVER['DOCUMENT_ROOT'];
             $dir = $dir;
-            echo "docroot is ".$docRoot ."<br />";
-            echo "dir path is ".$dir ."<br/>";
-
+        
             $projectpath = str_replace($docRoot, "", $dir);
-            echo "libconfig projectpath" . $projectpath."<br />";
- 
+        
             $this->config['urlbasepath'] = $projectpath;
             $this->config['baseurl'] = $prefix . $this->config['urlbasepath'];
-            echo "libconfig baseurl prefix ". $prefix ." and urlbasedpath" . $this->config['urlbasepath']."<br />";
             if (substr($this->config['fwbasepath'], 0, strlen($docRoot)) == $docRoot) {
                 $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
             } else {
