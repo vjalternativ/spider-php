@@ -18,6 +18,7 @@ class lib_config
     {
         $configPath = self::$configpath;
         $dir = __DIR__;
+        echo "initial dir is ".$dir."<br />";
         $fwbasepath = str_replace("libs", "", $dir);
         if (isset($_SERVER['argv'])) {
             if (substr($_SERVER['SCRIPT_FILENAME'], 0, 1) == "/") {
@@ -44,8 +45,8 @@ class lib_config
             $docRoot = $_SERVER['DOCUMENT_ROOT'];
             $dir = $dir;
             echo "docroot is ".$docRoot ."<br />";
-            echo "project path is ".$projectpath ."<br/>";
-            
+            echo "dir path is ".$dir ."<br/>";
+
             $projectpath = str_replace($docRoot, "", $dir);
             $this->config['urlbasepath'] = $projectpath;
             $this->config['baseurl'] = $prefix . $this->config['urlbasepath'];
