@@ -34,13 +34,7 @@ class lib_seo
         if(isset($_SERVER['HTTP_HOST'])) {
             $url = $httpProtocol . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
             $canurlArray = explode("?", $url);
-            echo "URL is ".$url;
-            echo "<br>";
-            echo "BASEURL is ".$config->get('baseurl');
-            echo "</br>";
             $url = str_replace($config->get('baseurl'), "", $url);
-            echo "URL after replace is ".$url;
-            echo "<br>";
             $strArray = explode("?", $url);
             $url = $strArray[0];
             $_REQUEST['canonicalurl'] = $canurlArray[0];
@@ -52,15 +46,6 @@ class lib_seo
                 }
             }
         }
-        echo "<pre>";
-        print_r($_SERVER);
-        echo "</pre>";
-
-        echo "REQUEST";
-
-        echo "<pre>";
-        print_r($_REQUEST);
-        echo "</pre>";
         echo "<pre>";print_r($this->params);die;
     }
 }
