@@ -51,7 +51,7 @@ class lib_seo
         print_r($_SERVER);
         echo "</pre>";
 
-        ehco "REQUEST";
+        echo "REQUEST";
 
         echo "<pre>";
         print_r($_REQUEST);
