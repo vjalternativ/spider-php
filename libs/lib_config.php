@@ -48,9 +48,11 @@ class lib_config
             echo "dir path is ".$dir ."<br/>";
 
             $projectpath = str_replace($docRoot, "", $dir);
+            echo "libconfig projectpath" . $projectpath."<br />";
+ 
             $this->config['urlbasepath'] = $projectpath;
             $this->config['baseurl'] = $prefix . $this->config['urlbasepath'];
-
+            echo "libconfig baseurl prefix ". $prefix ." and urlbasedpath" . $this->config['urlbasepath']."<br />";
             if (substr($this->config['fwbasepath'], 0, strlen($docRoot)) == $docRoot) {
                 $projectpath = str_replace($docRoot, "", $this->config['fwbasepath']);
             } else {
