@@ -47,7 +47,15 @@ class lib_seo
                 }
             }
         }
+        echo "<pre>";
+        print_r($_SERVER);
+        echo "</pre>";
 
+        ehco "REQUEST";
+
+        echo "<pre>";
+        print_r($_REQUEST);
+        echo "</pre>";
         echo "<pre>";print_r($this->params);die;
     }
 }
