@@ -28,6 +28,8 @@ class ResourceController
 
         $this->resource = $arr[0];
 
+        echo "filepath is ".$filepath."<br />";
+
         $this->module = isset($arr[2]) ? $arr[2] : $_REQUEST['module'];
 
         $action = $_GET['action'];
@@ -47,7 +49,6 @@ class ResourceController
     {
         $libConfig = lib_config::getInstance();
         $path = $libConfig->get("basepath") . $dir;
-        echo "path is ".$path."<br />";
         $fwpath = $libConfig->get("fwbasepath") . $dir;
         if ($isFile) {
             if (file_exists($path)) {
@@ -68,6 +69,10 @@ class ResourceController
 
     function rendorTpl($tpl, $params = array(), $sitetpl = false, $module = false)
     {
+        
+        echo "<pre>";
+        debug_print_backtrace();
+        die;
         $smarty = lib_smarty::getSmartyInstance();
         $vjconfig = lib_config::getInstance()->getConfig();
 
