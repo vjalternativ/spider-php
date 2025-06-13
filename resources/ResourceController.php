@@ -80,8 +80,7 @@ class ResourceController
 
         $mod = $module ? $module : $this->module;
 
-        echo "resource is ".$this->resource ." module is ".$mod ."<br />";
-
+        
 
         $this->params['controller_path'] = $this->getRealPath('resources/' . $this->resource . '/modules/' . $mod . '/');
 
