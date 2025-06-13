@@ -28,6 +28,12 @@ class lib_framework
 
     function __construct($path, $sessionName = false)
     {
+
+        if(isset($_SERVER["SCRIPT_FILENAME"])) {
+          $strarray = explode("/",$_SERVER["SCRIPT_FILENAME"]);
+          array_pop($strarray);
+          $path = implode($strarray);
+        }
         set_include_path($path);
         $this->configpath = $path;
         $this->init($sessionName);
