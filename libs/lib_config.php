@@ -29,7 +29,10 @@ class lib_config
             }
         } else if (isset($_SERVER['SCRIPT_FILENAME'])) {
             $dir = substr($_SERVER['SCRIPT_FILENAME'], 0, strrpos($_SERVER['SCRIPT_FILENAME'], "/")) . '/';
+            echo "dir line 32 ".$dir."<br />";
         }
+
+        echo "config path line 35 ".$configPath."<br />";
 
         if ($configPath) {
             $dir = $configPath . '/';
