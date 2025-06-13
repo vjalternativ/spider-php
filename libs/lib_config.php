@@ -11,8 +11,9 @@ class lib_config
 
     public static function setConfigPath($path)
     {
+        echo "<pre>";
         debug_print_backtrace();
-        
+        echo "</pre>";
         self::$configpath = $path;
     }
 
