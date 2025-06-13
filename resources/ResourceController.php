@@ -19,7 +19,7 @@ class ResourceController
     {
         $reflector = new \ReflectionObject($this);
         $filepath = $reflector->getFileName();
-
+        $filepath = str_replace("\\","/",$filepath);
         $arr = explode("resources/", $filepath);
 
         $str = $arr[1];
