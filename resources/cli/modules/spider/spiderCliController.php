@@ -20,6 +20,22 @@ class spiderCliController extends CliResourceController
         }
     }
 
+    function action_repair()
+    {
+        $config = lib_config::getInstance();
+        $fwbasepath = $config->get("fwbasepath");
+        $basepath = $config->get("basepath");
+      
+        require_once $fwbasepath . 'resources/backend/modules/adminarea/SchemaDataPatcher.php';
+
+        echo "repairing..." . PHP_EOL;
+        
+        $schemaDataPatcher = SchemaDataPatcher::getInstance();
+        $data = json_decode(file_get_contents($basepath . "schemajson/schema.json"), 1);
+        $schemaDataPatcher->processSchemaAndDataPatch($data);
+        echo "repair done" . PHP_EOL;
+    }
+
     private function _init()
     {
         $config = lib_config::getInstance();
