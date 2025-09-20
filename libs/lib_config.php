@@ -40,7 +40,7 @@ class lib_config
             
             $httpscheme =  "http";
             if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-                echo "https";
+                $httpscheme = "https";
             } 
             $prefix = $httpscheme . "://" . $_SERVER["HTTP_HOST"];
             if (! ($_SERVER['SERVER_PORT'] == "80" || $_SERVER['SERVER_PORT'] == "443")) {
