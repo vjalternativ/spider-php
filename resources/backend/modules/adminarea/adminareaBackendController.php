@@ -181,7 +181,9 @@ class adminareaBackendController extends BackendResourceController
 
     function action_deploy() {
 
-        $cmd = "cd /var/www/html/emeasurebox.in;pwd;git pull";
+        $config = lib_config::getInstance()->getConfig();
+        $basepath = $config['basepath'];
+        $cmd = "cd ".$basepath.";pwd;git pull";
         $op = shell_exec($cmd);
         echo $op;
         die;
