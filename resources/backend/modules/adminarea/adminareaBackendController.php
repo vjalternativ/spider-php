@@ -178,4 +178,12 @@ class adminareaBackendController extends BackendResourceController
         $this->action_showPatch();
         SchemaDataPatcher::getInstance()->updateFrameworkPatch();
     }
+
+    function action_deploy() {
+
+        $cmd = "cd /var/www/html/emeasurebox.in;pwd;git pull";
+        $op = shell_exec($cmd);
+        echo $op;
+        die;
+    }
 }
