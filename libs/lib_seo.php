@@ -32,7 +32,12 @@ class lib_seo
         }
 
         if(isset($_SERVER['HTTP_HOST'])) {
-            $url = $httpProtocol . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+            $http_host = $_SERVER['HTTP_HOST'];
+            $strArray = explode(":", $http_host);
+            if(isset($_SERVER['SERVER_PORT']) && count($strArray) ==1 && $_SERVER['SERVER_PORT'] != "80") {
+                $http_host = $_SERVER['HTTP_HOST'] . ":" . $_SERVER['SERVER_PORT'];
+            }
+            $url = $httpProtocol . "://" . $http_host . $_SERVER["REQUEST_URI"];
             $canurlArray = explode("?", $url);
             $url = str_replace($config->get('baseurl'), "", $url);
             $strArray = explode("?", $url);
