@@ -12,6 +12,7 @@ Hierarchical index for the spider-php framework. Start with
 | [Guides](guides/index.md) | Task recipes: modules, pages, widgets, menus, headers and footers. |
 | [Reference](reference/index.md) | Library classes, beans, services/utilities and configuration. |
 | [Assignments](assignments/index.md) | Practice exercises that exercise the framework end to end. |
+| [Reviews](reviews/pr-1-review.md) | Code review notes for incoming pull requests. |
 
 ## Feature inventory
 
@@ -34,6 +35,7 @@ Hierarchical index for the spider-php framework. Start with
 | Configuration | [Configuration reference](reference/configuration.md) | `config.php`, `cliconfig.php`, `cronconfig.php`, `extraconfig.php`, `admindb.php` |
 | Hooks | [Architecture overview](architecture/overview.md) | `include/hooks/hook.php` |
 | Runtime beans | [Beans reference](reference/beans.md) | `beans/` |
+| Agent workspace / git bootstrap | [Installation](getting-started/installation.md#agent-workspace--git-access) | `scripts/workspace-git-bootstrap.sh` |
 
 ## Conventions
 

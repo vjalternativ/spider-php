@@ -84,6 +84,51 @@ username : vjalternativ
 password : workst@48
 
 
+## Agent workspace / git access
+
+Automated agents inspect this checkout with plain `git`, which fails unless the
+checkout is trusted by the shell user. Two problems otherwise come back after
+every container restart or workspace re-provisioning:
+
+1. **Dubious ownership** — `fatal: detected dubious ownership in repository at
+   '<path>'`. The working tree is owned by a user other than the one running the
+   shell.
+2. **Pull request refs are missing** — a default clone only maps
+   `+refs/heads/*:refs/remotes/origin/*`, so `refs/pull/N/head` is never fetched
+   and PRs cannot be diffed locally (or reviewed when the shell has no ad-hoc
+   GitHub access).
+
+Run the bootstrap script once per workspace prepare, as the agent shell user
+(or as root with `WORKSPACE_OWNER` set):
+
+```bash
+scripts/workspace-git-bootstrap.sh --workspace /home/claude/workspace --verify
+```
+
+What it does, idempotently:
+
+- Makes the checkout owned by the current user (`chown -R`). When chown is not
+  permitted it falls back to `git config --global --add safe.directory <path>`,
+  which persists in the shell user's global git config across restarts.
+- Adds `+refs/pull/*/head:refs/remotes/origin/pr/*` to `remote.origin.fetch`, so
+  `git fetch origin` populates `origin/pr/<number>`.
+- `--verify` also checks that `git status` works and that `origin` exposes
+  `refs/pull/*/head`; it exits non-zero when a check fails.
+
+The script must be invoked by the provisioning / workspace-prepare hook after
+the checkout exists — running it by hand fixes only the current session.
+
+Verify manually:
+
+```bash
+git -C /home/claude/workspace/spider-php status
+git -C /home/claude/workspace/spider-php fetch origin 'refs/pull/1/head:refs/remotes/origin/pr/1'
+git -C /home/claude/workspace/spider-php diff origin/master...origin/pr/1 --stat
+```
+
+All three must exit 0 and the last one must print a diffstat.
+
+
 
 
 
