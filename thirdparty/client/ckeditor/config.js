@@ -7,7 +7,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.uiColor = '#AADC6E';
 	config.extraPlugins = 'tabletools,mathjax';
-	config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML';
+	config.mathJaxLib = 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_SVG';
 
 	config.specialChars = config.specialChars.concat([  [ '\u20b9', 'Rupees' ]]);
 };

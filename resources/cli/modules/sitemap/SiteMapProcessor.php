@@ -92,7 +92,7 @@ class SiteMapProcessor
 
     private function getPageSql($module)
     {
-        $sql = "select id,name,alias,date_modified from " . $module . " where   alias is not null  and (sitemap is null or sitemap != '" . $this->job['token'] . "')";
+        $sql = "select id,name,alias,date_modified from " . $module . " where deleted=0 and alias is not null and (sitemap is null or sitemap != '" . $this->job['token'] . "')";
 
         $sql .= "   limit " . $this->processpages;
         echo $sql . PHP_EOL;

@@ -24,7 +24,7 @@
 
 <script src="{$fwbaseurl}resources/backend/assets/js/bootoast.js" ></script>
 <script type="text/javascript"
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_SVG">
 </script>
 <script> 
 var resource = "backend";
