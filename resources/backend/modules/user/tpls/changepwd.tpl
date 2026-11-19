@@ -4,6 +4,12 @@
     <div  class="panel panel-info" >
       <div  class="panel-heading" >Users | Change Password</div>
         <div  class="panel-body" >
+{if $success}
+{$bs.alert.success} {$success.msg} {$bs.close}
+{/if}
+{if $error}
+{$bs.alert.danger} {$error.msg} {$bs.close}
+{/if}
           <div  class="form-group" >
             <div  class="row" >
               <div  class="col-md-6" >
@@ -29,7 +35,7 @@
 <div  class="col-md-6" >
 <div  class="form-group" >
 <div  class="input-group" ><span  class="input-group-addon" >New Password</span>
-<input  id="user_hash_new"  name="user_hash_new"  type="text"  value=""  class="form-control"  />
+<input  id="user_hash_new"  name="user_hash_new"  type="password"  autocomplete="new-password"  value=""  class="form-control"  />
 </div>
 </div>
 
@@ -39,7 +45,7 @@
 <div  class="col-md-6" >
 <div  class="form-group" >
 <div  class="input-group" ><span  class="input-group-addon" >Confirm Password</span>
-<input  id="confirm_user_hash"  name="confirm_user_hash"  type="text"  value=""  class="form-control"  />
+<input  id="confirm_user_hash"  name="confirm_user_hash"  type="password"  autocomplete="new-password"  value=""  class="form-control"  />
 </div>
 </div>
 </div>
