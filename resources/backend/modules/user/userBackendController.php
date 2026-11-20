@@ -103,6 +103,8 @@ class userBackendController extends BackendResourceController  {
 	        $this->params['error']['type'] = "danger";
 	        $this->params['error']['msg'] = "User record not found.";
 	    }
+	    // $row comes from "select *", so changepwd.tpl can render user_name,
+	    // name and description as read-only fields (no rename from this screen).
 	    $this->params['changepwd']=$row;
 
 	    $this->view="changepwd";
@@ -133,7 +135,20 @@ class userBackendController extends BackendResourceController  {
 	    // so the stored hash must be a single md5 of the new password.
 	    $password=md5($newPassword);
 	    $userId = $row['id'];
-	    $sql="update user set user_hash='".$password."', date_modified='".date('Y-m-d H:i:s')."' where id='".addslashes($userId)."' and deleted=0";
+	    // Explicit write whitelist: this screen may only change the password.
+	    // $_REQUEST['name'], $_REQUEST['description'], $_REQUEST['user_name']
+	    // and $_REQUEST['username'] are deliberately ignored and never written,
+	    // so an account cannot be renamed through the change-password form
+	    // (changepwd.tpl renders those fields read-only).
+	    $updateFields = array(
+	        'user_hash' => $password,
+	        'date_modified' => date('Y-m-d H:i:s'),
+	    );
+	    $setParts = array();
+	    foreach ($updateFields as $column => $value) {
+	        $setParts[] = $column."='".addslashes($value)."'";
+	    }
+	    $sql="update user set ".implode(', ', $setParts)." where id='".addslashes($userId)."' and deleted=0";
 	    $db->query($sql);
 
 	    // The update query itself returns no affected-row count, so verify the

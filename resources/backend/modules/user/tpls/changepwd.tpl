@@ -1,4 +1,4 @@
-<div class="container-fluid margin-top-10"> 
+<div class="container-fluid margin-top-10">
 
   <form  id ="form" name="editview"  method="post"  action="index.php?module=user&action=getNewpwd"  enctype="multipart/form-data" >
     <div  class="panel panel-info" >
@@ -13,16 +13,22 @@
           <div  class="form-group" >
             <div  class="row" >
               <div  class="col-md-6" >
-                <div  class="input-group" ><span  class="input-group-addon" >Name</span><input  id="name"  name="name"  type="text"  value="{$changepwd.user_name}"  class="form-control"  />
+                <div  class="input-group" ><span  class="input-group-addon" >Username</span>
+                  <input  id="user_name"  type="text"  value="{$changepwd.user_name|escape}"  class="form-control"  readonly="readonly"  tabindex="-1"  />
                 </div>
               </div>
-</div>
-</div>
+              <div  class="col-md-6" >
+                <div  class="input-group" ><span  class="input-group-addon" >Name</span>
+                  <input  id="name"  type="text"  value="{$changepwd.name|escape}"  class="form-control"  readonly="readonly"  tabindex="-1"  />
+                </div>
+              </div>
+            </div>
+          </div>
 <div  class="form-group" >
 <div  class="row" >
 <div  class="col-md-12" >
 <div  class="input-group" ><span  class="input-group-addon" >Description</span>
-<textarea  id="description"  name="description"  class="form-control" ></textarea>
+<textarea  id="description"  class="form-control"  readonly="readonly"  tabindex="-1" >{$changepwd.description|escape}</textarea>
 </div>
 </div>
 </div>
@@ -53,7 +59,7 @@
 
 
 
-<input id="pwdid" name="id"  value="{$changepwd.id}"  type="hidden" >
+<input id="pwdid" name="id"  value="{$changepwd.id|escape}"  type="hidden" >
 </input>
 </div>
 <div  class="panel-footer" >
